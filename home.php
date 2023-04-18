@@ -29,9 +29,9 @@ session_start();
   <!-- navbar-->
   <?php
   include('database/condb.php');
-  $email = $_SESSION['email'];
+  $id = $_SESSION['id'];
 
-  $sql1 = "SELECT * FROM member WHERE m_email = '$email'";
+  $sql1 = "SELECT * FROM member WHERE m_id = '$id '";
   $result1 = mysqli_query($conn, $sql1);
   $row1 = mysqli_fetch_array($result1);
 
@@ -39,7 +39,7 @@ session_start();
     include('bar/topbar_user.php');
   }
   
-  if ($email == NULL) {
+  if ($id == NULL) {
     include('bar/topbar.php');
   }
 
@@ -176,10 +176,10 @@ session_start();
     <div class="container pt-5 mb-4">
       <div class="card card_header">
         <div class="card-body mx-5 my-5">
-          <h1 style="color: white;">สวัสดีคุณ <?= $_SESSION['fname'] . " " . $_SESSION['lname'] ?></h1>
+          <h1 style="color: white;">สวัสดีคุณ <?= $row1['m_fname'] . " " . $row1['m_lname'] ?></h1>
           <h3 style="color: white;">เราคือร้านจำหน่ายและรับซ่อมสินค้า <br> ประเภทเครื่องดนตรีทุกชนิด</h3>
           <p class="col-md-5" style="color: white;">เราหวังว่าจะคุณจะพอใจในการบริการของเราหากต้องการส่งซ่อม<br> คุณสามารถส่งรูปภาพเข้ามาสอบถามก่อนได้</p>
-          <a href="#" class="btn btn_custom ">ส่งซ่อม</a>
+          <a href="home_repair.php" class="btn btn_custom ">ส่งซ่อม</a>
         </div>
       </div>
     </div>
