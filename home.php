@@ -3,13 +3,6 @@ session_start();
 
 // git remote add origin https://github.com/Ammarit2545/Final-Project-2023.git
 
-
-// if($_SESSION["Error"] == null ){
-//   echo "<script> alert(' ข้อมูลถูกต้อง '); </script>";
-// }elseif($_SESSION["Error"] != null || isset($_SESSION["Error"])){
-//   echo "<script> alert(' ข้อมูลไม่ถูกต้อง '); </script>";
-// }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,7 +14,14 @@ session_start();
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
   <link rel="stylesheet" href="css/index.css">
-  <title>Home</title>
+  <title>ANE - Home</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+
+  <link rel="icon" type="image/x-icon" href="img brand/anelogo.jpg">
 </head>
 
 <body>
@@ -38,7 +38,7 @@ session_start();
   if ($row1 > 0) {
     include('bar/topbar_user.php');
   }
-  
+
   if ($id == NULL) {
     include('bar/topbar.php');
   }
@@ -217,16 +217,18 @@ session_start();
   </div>
 
   <!-- footer-->
-  <div class="container-fluid fixed-bottom" style="background-color: #000141;">
-    <footer class="my-4 px-5">
-      <div class="">
-        <p style="color: white;">Copyright © 2023 MY SHOP. สงวนสิทธิ์ทุกประการ</p>
-        <p style="color: white;">ติดต่อ 0000-00-0000 </p>
-      </div>
-    </footer>
-  </div>
+  <?php include('footer/footer.php') ?>
   <!-- end footer-->
 
+  <script>
+    // Show full page LoadingOverlay
+    $.LoadingOverlay("show");
+
+    // Hide it after 3 seconds
+    setTimeout(function() {
+      $.LoadingOverlay("hide");
+    }, 10);
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

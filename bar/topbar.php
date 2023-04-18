@@ -4,7 +4,7 @@
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <a class="navbar-brand" href="#" style="color: #000141;"><h4>MY SHOP</h4></a>
+      <a class="navbar-brand" href="#" style="color: #000141;"><h4>Anan Electronic</h4></a>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav ps-5">
           <a class="nav-link active" aria-current="page" href="#">หน้าหลัก</a>

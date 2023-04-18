@@ -20,9 +20,11 @@
         // Store user information in the session
         $_SESSION["email"] = $row['m_email'];
         $_SESSION["id"] = $row['m_id'];
+        $_SESSION["tel"] = $row['m_tel'];
         $_SESSION["fname"] = $row['m_fname'];
         $_SESSION["lname"] = $row['m_lname'];
         $_SESSION['Error'] = "";
+        $_SESSION["address"] = $row['m_add'];
         echo "ture";
 
         // Redirect to the user's dashboard or home page

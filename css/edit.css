@@ -1,6 +1,21 @@
 #navcolor{
     backdrop-filter: blur(10px);
 }
+    /* Set width to 50% for desktop screens */
+    @media (min-width: 768px) {
+        .background{
+            width: 814px;
+            height: 661px;
+        }
+    } 
+    /* Set width to 100% for mobile screens */
+    @media (max-width: 767px) {
+        .background{
+            width: 814px;
+            height: 100px;
+        }
+    }
+
 .background{
     position: absolute;
     width: 814px;

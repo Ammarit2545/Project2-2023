@@ -5,17 +5,21 @@
 
     /* Set width to 50% for desktop screens */
     @media (min-width: 768px) {
-        .input {
+        #borderinput1 {
             width: 50%;
         }
-    }
-    
+    } 
     /* Set width to 100% for mobile screens */
     @media (max-width: 767px) {
-        .input {
+        #borderinput1 {
             width: 100%;
         }
     }
+    
+#borderinput1{
+    border: 1px solid rgb(172, 172, 172); 
+    border-radius: 25px;
+}
 
 #borderinput{
     border: 1px solid rgb(172, 172, 172); 
