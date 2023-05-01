@@ -26,6 +26,7 @@ include('database/condb.php');
 
   <!-- navbar-->
   <?php
+
   include('bar/topbar_invisible.php');
 
   $id = $_SESSION["id"];
@@ -33,6 +34,7 @@ include('database/condb.php');
   $sql = "SELECT * FROM member WHERE m_id = '$id'";
   $result = mysqli_query($conn, $sql);
   $row = mysqli_fetch_array($result);
+
   ?>
   <!-- end navbar-->
 
@@ -64,7 +66,6 @@ include('database/condb.php');
       </div>
     </form>
   </div>
-
 
   <!-- footer-->
   <?php include('footer/footer.php') ?>

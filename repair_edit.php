@@ -40,6 +40,16 @@ $row = mysqli_fetch_array($result);
     $sql = "SELECT * FROM member WHERE m_id = '$id'";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($result);
+
+    $name_brand = $_SESSION["name_brand"];
+    $serial_number = $_SESSION["serial_number"];
+    $name_model = $_SESSION["name_model"];
+    $number_model = $_SESSION["number_model"];
+    $tel = $_SESSION["tel"];
+    $description = $_SESSION["description"];
+
+    $id = $_SESSION["id"];
+
     ?>
     <!-- end navbar-->
 
@@ -56,20 +66,20 @@ $row = mysqli_fetch_array($result);
                     <div class="col-12">
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="name_brand" placeholder="ชื่อยี่ห้อ" required>
+                                <input type="text" class="form-control input" id="borderinput" name="name_brand" placeholder="ชื่อยี่ห้อ" value="<?= $name_brand ?>" required>
                             </div>
                             <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="เลข Serial Number  (ไม่จำเป็น)">
+                                <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="เลข Serial Number  (ไม่จำเป็น)" value="<?= $serial_number ?>">
                             </div>
                         </div>
                         <br>
 
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="name_model" placeholder="ชื่อรุ่น" required>
+                                <input type="text" class="form-control input" id="borderinput" name="name_model" placeholder="ชื่อรุ่น" value="<?= $name_model ?>" required>
                             </div>
                             <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="number_model" placeholder="หมายเลขรุ่น  (ไม่จำเป็น)">
+                                <input type="text" class="form-control input" id="borderinput" name="number_model" placeholder="หมายเลขรุ่น  (ไม่จำเป็น)" value="<?= $number_model ?>">
                             </div>
                         </div>
                         <br>
@@ -77,7 +87,7 @@ $row = mysqli_fetch_array($result);
                         <div class="row">
                             <div class="col">
                                 <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
-                                <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $row['m_tel'] ?>" required>
+                                <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $tel ?>" required>
                             </div>
                         </div>
                         <br>
@@ -85,7 +95,7 @@ $row = mysqli_fetch_array($result);
                         <div class="row">
                             <div class="mb-3">
                                 <label for="inputtext" class="form-label">กรุณากรอกรายละเอียด</label>
-                                <textarea class="form-control" id="inputtext" rows="3" name="description" required></textarea>
+                                <textarea class="form-control" id="inputtext" rows="3" name="description" required><?= $description  ?></textarea>
                             </div>
 
                             <div class="text-center pt-4">

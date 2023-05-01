@@ -29,14 +29,22 @@
     $row = mysqli_fetch_array($result);
 
     if($row == NULL){
-        // $sql = "INSERT INTO repair (m_id, r_brand, r_model, r_number_model, r_serial_number)
-        // VALUES ('$id', '$name_brand', '$name_model', '$number_model', '$serial_number');";
-        // $result = mysqli_query($conn, $sql);
+        $sql = "INSERT INTO repair (m_id, r_brand, r_model, r_number_model, r_serial_number)
+        VALUES ('$id', '$name_brand', '$name_model', '$number_model', '$serial_number')";
+        $result = mysqli_query($conn, $sql);
 
-        header("location:../repair_check.php");
+        $sql1 = "SELECT * FROM repair WHERE r_serial_number = '$serial_number' AND m_id = '$id'";
+        $result1 = mysqli_query($conn, $sql1);
+        $row1 = mysqli_fetch_array($result1);
+        $id_r = $row1['r_id'];
+
+        $sql2 = "INSERT INTO get_repair ( r_id, get_r_record, get_r_date_in, get_r_detail)
+        VALUES ( '$id_r', '1', NOW(), '$description')";
+        $result2 = mysqli_query($conn, $sql2);
+
+        header("location:../repair_wait.php");
     }else{
         echo ("ever"); 
-        header("location:../repair_ever.php");
+        header("location:../repair_wait.php");
+        // header("location:../repair_ever.php");
     }
-
-?>

@@ -72,8 +72,13 @@ session_start();
             </div><br>
             <p class="text-center fw-bold mx-3 mb-0 text-muted">OR</p><br>
             <p class="text-center">
-              <a href="#" style="color: #0066CC; text-decoration:none;" data-bs-toggle="modal" data-bs-target="#Register">Register</a>
+              <center>
+
+                <p>Don’t have an Account?
+                  <a href="#" style="color: #0066CC; text-decoration:none;" data-bs-toggle="modal" data-bs-target="#Register">Create yours now.</a>
+                </p>
             </p>
+            </center>
           </form>
         </div>
       </div>

@@ -1,0 +1,107 @@
+#navcolor{
+    backdrop-filter: blur(10px);
+}
+.background{
+    position: absolute;
+    width: 814px;
+    height: 661px;
+    left: -318px;
+    top: -258px;
+
+    background: linear-gradient(153.91deg, #453CC9 57.82%, rgba(34, 175, 241, 0) 122.45%);
+    border-radius: 50%;
+}
+.repair{
+    position: absolute;
+    width: 100%;
+}
+.btn_custom{
+    background-color: #74CC14;
+    border-color: #74B62C;
+    background: #74CC14;
+    color: black;
+    width: 100px;
+    height: 40px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 30px;
+}
+.btn_custom:hover,.btn_custom:focus,.btn_custom.focus{
+    background-color: #74B62C;
+    border-color: #74B62C;
+    background: #74B62C;
+    color: black;
+    width: 100px;
+    height: 40px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 30px;
+}
+.btn_custom_no{
+    background-color: #ED2020;
+    border-color: #FF0000;
+    background: #ED2020;
+    color: black;
+    width: 100px;
+    height: 40px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 30px;
+}
+.btn_custom_no:hover,.btn_custom_no:focus,.btn_custom_no.focus{
+    background-color: #FF0000;
+    border-color: #FF0000;
+    background: #FF0000;
+    color: black;
+    width: 100px;
+    height: 40px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 30px;
+}
+.btn_custom_wearn{
+    background-color: #F5B501;
+    border-color: #F5B501;
+    background: #F5B501;
+    color: black;
+    width: 100px;
+    height: 40px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 30px;
+}
+.btn_custom_wearn:hover,.btn_custom_wearn:focus,.btn_custom_wearn.focus{
+    background-color: #FFC933;
+    border-color: #FFC933;
+    background: #FFC933;
+    color: black;
+    width: 100px;
+    height: 40px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 30px;
+}
+ul.timeline-3 {
+    list-style-type: none;
+    position: relative;
+  }
+  ul.timeline-3:before {
+    content: " ";
+    background: #d4d9df;
+    display: inline-block;
+    position: absolute;
+    left: 29px;
+    width: 2px;
+    height: 100%;
+    z-index: 400;
+  }
+  ul.timeline-3 > li {
+    margin: 20px 0;
+    padding-left: 20px;
+  }
+  ul.timeline-3 > li:before {
+    content: " ";
+    background: white;
+    display: inline-block;
+    position: absolute;
+    border-radius: 50%;
+    border: 3px solid #22c0e8;
+    left: 20px;
+    width: 20px;
+    height: 20px;
+    z-index: 400;
+  }

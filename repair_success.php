@@ -56,7 +56,7 @@ $row = mysqli_fetch_array($result);
                     <div class="col-12">
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="name_brand" placeholder="ชื่อยี่ห้อ" required>
+                                <input type="text" class="form-control input" id="borderinput" name="name_brand" placeholder="ชื่อยี่ห้อ">
                             </div>
                             <div class="col-6">
                                 <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="เลข Serial Number  (ไม่จำเป็น)">
@@ -66,7 +66,7 @@ $row = mysqli_fetch_array($result);
 
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="name_model" placeholder="ชื่อรุ่น" required>
+                                <input type="text" class="form-control input" id="borderinput" name="name_model" placeholder="ชื่อรุ่น">
                             </div>
                             <div class="col-6">
                                 <input type="text" class="form-control input" id="borderinput" name="number_model" placeholder="หมายเลขรุ่น  (ไม่จำเป็น)">
@@ -77,7 +77,7 @@ $row = mysqli_fetch_array($result);
                         <div class="row">
                             <div class="col">
                                 <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
-                                <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $row['m_tel'] ?>" required>
+                                <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $row['m_tel'] ?>">
                             </div>
                         </div>
                         <br>
@@ -85,7 +85,7 @@ $row = mysqli_fetch_array($result);
                         <div class="row">
                             <div class="mb-3">
                                 <label for="inputtext" class="form-label">กรุณากรอกรายละเอียด</label>
-                                <textarea class="form-control" id="inputtext" rows="3" name="description" required></textarea>
+                                <textarea class="form-control" id="inputtext" rows="3" name="description"></textarea>
                             </div>
 
                             <div class="text-center pt-4">

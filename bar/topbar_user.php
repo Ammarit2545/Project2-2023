@@ -9,12 +9,12 @@
         <div class="navbar-nav ps-5">
           <a class="nav-link active" aria-current="page" href="#">หน้าหลัก</a>
           <a class="nav-link" href="home_repair.php">ส่งซ่อม</a>
-          <a class="nav-link" href="#">สถานะ</a>
+          <a class="nav-link" href="status.php">สถานะ</a>
           <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">ประวัติ</a>
         </div>
       </div>
       <div class="dropdown col-md-3 text-end">
-        <?= $_SESSION['fname'] . " " . $_SESSION['lname']  ?>
+        <!-- <?= $_SESSION['fname'] . " " . $_SESSION['lname']  ?> -->
         <i class="uil uil-user-circle" style="font-size: 40px; cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false"></i>
        
         

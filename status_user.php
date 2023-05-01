@@ -1,0 +1,91 @@
+<?php
+session_start();
+include('database/condb.php');
+$id = $_SESSION['id'];
+
+$sql1 = "SELECT * FROM member WHERE m_id = '$id '";
+$result1 = mysqli_query($conn, $sql1);
+$row1 = mysqli_fetch_array($result1);
+if ($id == NULL) {
+    header('Location: home.php');
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+    <link rel="stylesheet" href="css/status.css">
+    <title>สถานะการซ่อม - User</title>
+</head>
+<body>
+
+  <!-- navbar-->
+  <nav class="navbar fixed-top navbar-expand-lg navbar-light " id="navcolor">
+    <div class="container">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="#" style="color: #000141;"><h4>MY SHOP</h4></a>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav ps-5">
+          <a class="nav-link" style="color: black; text-decoration:none; " href="#">หน้าหลัก</a>
+          <a class="nav-link" style="color: black; text-decoration:none; " href="#">ส่งซ่อม</a>
+          <a class="nav-link" style="color: black; text-decoration:none; " href="#">สถานะ</a>
+          <a class="nav-link" style="color: black; text-decoration:none; " href="#">ประวัติ</a>
+        </div>
+      </div>
+      <div class="dropdown col-md-3 text-end">
+        <i class="uil uil-user-circle" style="font-size: 40px; cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false"></i>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="#">แก้ไขข้อมูล</a></li>
+          <li><a class="dropdown-item" href="#">Log out</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- end navbar-->
+  
+  <div class="px-5 pt-5 repair">
+    <h1 class="pt-5 text-center">การบริการส่งซ่อม MY SHOP</h1>
+    <p class="pt-4 text-center">กรุณาคลิกที่ปุ่มเพื่อดู</p>
+    <div class="container pt-4" id="card-container">
+        <div class="body_input">
+            <div class="card w-75 mx-auto viewstatus">
+                <div class="card-body">
+                    <div class="row justify-content-between">
+                        <div class="col-4 text-center">
+                            <h4 style="padding-top: 1.5rem;">รุ่น ............. มีประกัน</h4>
+                        </div>
+                        <div class="col-4 text-center">
+                          <h4 class="fw-bold" style="color: red;">กรุณายืนยันการส่งซ่อม</h4>
+                          <p>วันที่ 00/00/0000 เวลา 00.00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="body_input pt-5">
+            <div class="card w-75 mx-auto viewstatus_2">
+                <div class="card-body">
+                    <div class="row justify-content-between">
+                        <div class="col-4 text-center">
+                            <h4 style="padding-top: 1.5rem;">รุ่น ............. มีประกัน</h4>
+                        </div>
+                        <div class="col-4 text-center">
+                            <h4 class="fw-bold" style="color: green;">ยืนยันการส่งซ่อมแล้ว</h4>
+                          <p >วันที่ 00/00/0000 เวลา 00.00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -10,12 +10,12 @@
       <div class="navbar-nav ps-5">
         <a class="nav-link" style="color: black; text-decoration:none; " href="home.php">หน้าหลัก</a>
         <a class="nav-link" style="color: black; text-decoration:none; " href="home_repair.php">ส่งซ่อม</a>
-        <a class="nav-link" style="color: black; text-decoration:none; " href="#">สถานะ</a>
+        <a class="nav-link" style="color: black; text-decoration:none; " href="status.php">สถานะ</a>
         <a class="nav-link" style="color: black; text-decoration:none; " href="#">ประวัติ</a>
       </div>
     </div>
     <div class="dropdown col-md-3 text-end">
-      <?= $_SESSION['fname'] . " " . $_SESSION['lname']  ?>
+      <!-- <?= $_SESSION['fname'] . " " . $_SESSION['lname']  ?> -->
       <i class="uil uil-user-circle" style="font-size: 40px; cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false"></i>
       <ul class="dropdown-menu dropdown-menu-end">
         <li><a class="dropdown-item" href="edit_user.php">แก้ไขข้อมูล</a></li>

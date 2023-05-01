@@ -40,36 +40,47 @@ $row = mysqli_fetch_array($result);
     $sql = "SELECT * FROM member WHERE m_id = '$id'";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($result);
-    ?>
+
+    $name_brand = $_SESSION["name_brand"];
+    $serial_number = $_SESSION["serial_number"];
+    $name_model = $_SESSION["name_model"];
+    $number_model = $_SESSION["number_model"];
+    $tel = $_SESSION["tel"];
+    $description = $_SESSION["description"];
+
+    $id = $_SESSION["id"];
+
+?>
     <!-- end navbar-->
 
     <div class="background"></div>
 
     <div class="px-5 pt-5 edit">
-        <h1 class="pt-5 text-center">การบริการส่งซ่อม</h1>
+        <h1 class="pt-5 text-center">ตรวจเช็คข้อมูลก่อนทำการบันทึก</h1>
         <center>
-            <p>แบบไม่มีกับมีประกันทางร้าน</p>
+            <p>ข้อมูลถูกต้องหรือไม่</p>
         </center>
-        <form action="action/add_repair_non_gua.php" method="POST">
+        <br>
+        <form action="action/add_repair_db.php" method="POST">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="name_brand" placeholder="ชื่อยี่ห้อ" required>
+                                <input type="text" class="form-control input" id="borderinput" name="name_brand" placeholder="ชื่อยี่ห้อ" value="<?= $name_brand ?>" readonly require>
                             </div>
                             <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="เลข Serial Number  (ไม่จำเป็น)">
+                                <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="ไม่มีเลข Serial Number" value="<?= $serial_number ?>" readonly>
                             </div>
                         </div>
                         <br>
 
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="name_model" placeholder="ชื่อรุ่น" required>
+                                <input type="text" class="form-control input" id="borderinput" name="name_model" placeholder="ชื่อรุ่น" value="<?= $name_model ?>" readonly require>
                             </div>
                             <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="number_model" placeholder="หมายเลขรุ่น  (ไม่จำเป็น)">
+                                <input type="text" class="form-control input" id="borderinput" name="number_model" placeholder="ไม่มีหมายเลขรุ่น" value="<?= $number_model ?>" readonly>
                             </div>
                         </div>
                         <br>
@@ -77,7 +88,7 @@ $row = mysqli_fetch_array($result);
                         <div class="row">
                             <div class="col">
                                 <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
-                                <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $row['m_tel'] ?>" required>
+                                <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $tel ?>" readonly require>
                             </div>
                         </div>
                         <br>
@@ -85,10 +96,11 @@ $row = mysqli_fetch_array($result);
                         <div class="row">
                             <div class="mb-3">
                                 <label for="inputtext" class="form-label">กรุณากรอกรายละเอียด</label>
-                                <textarea class="form-control" id="inputtext" rows="3" name="description" required></textarea>
+                                <textarea class="form-control" id="inputtext" rows="3" name="description" readonly require><?= $description ?></textarea>
                             </div>
 
                             <div class="text-center pt-4">
+                                <a href="repair_edit.php" class="btn btn-danger">แก้ไขข้อมูล</a>
                                 <button type="submit" class="btn btn-success">ยืนยัน</button>
                             </div>
 

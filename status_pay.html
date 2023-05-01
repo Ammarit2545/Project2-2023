@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+    <link rel="stylesheet" href="css/status_pay.css">
+    <title>สถานะการซ่อม/การชำระเงิน/QR CODE - User</title>
+</head>
+<body>
+
+  <!-- navbar-->
+  <nav class="navbar fixed-top navbar-expand-lg navbar-light " id="navcolor">
+    <div class="container">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="#" style="color: #000141;"><h4>MY SHOP</h4></a>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav ps-5">
+          <a class="nav-link" style="color: black; text-decoration:none; " href="#">หน้าหลัก</a>
+          <a class="nav-link" style="color: black; text-decoration:none; " href="#">ส่งซ่อม</a>
+          <a class="nav-link" style="color: black; text-decoration:none; " href="#">สถานะ</a>
+          <a class="nav-link" style="color: black; text-decoration:none; " href="#">ประวัติ</a>
+        </div>
+      </div>
+      <div class="dropdown col-md-3 text-end">
+        <i class="uil uil-user-circle" style="font-size: 40px; cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false"></i>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="#">แก้ไขข้อมูล</a></li>
+          <li><a class="dropdown-item" href="#">Log out</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- end navbar-->
+
+  <div class="background"></div>
+  
+  <div class="px-5 pt-5 repair">
+    <h1 class="pt-5 text-center">รุ่น ............. </h1>
+    <h1 class="pt-2 text-center">เลข Serial Number .....................</h1>
+    <h1 class="pt-2 text-center">เลขที่ใบรับซ่อม ........................</h1>
+    <div class="container my-5">
+        <h4>ช่องทางการชำระ</h4>
+        <div class="row row-cols-1 row-cols-md-3 g-4 pt-3">
+            <div class="col">
+                <a class="QR" data-bs-toggle="modal" data-bs-target="#exampleModal" style="color:black; text-decoration:none;">
+                    <div class="card text-center pay">
+                    <div class="card-body">
+                        <center><img src="img/qr-code-scan.png" width="40%" alt="..."></center>
+                        <h5 class="card-title text-center">QR CODE</h5>
+                    </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+              <div class="card pay">
+                <div class="card-body">
+                    <center><img src="img/qr-code-scan.png" width="40%" alt="..."></center>
+                  <h5 class="card-title text-center">QR CODE</h5>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card pay">
+                <div class="card-body">
+                    <center><img src="img/qr-code-scan.png" width="40%" alt="..."></center>
+                  <h5 class="card-title text-center">QR CODE</h5>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card pay">
+                <div class="card-body">
+                    <center><img src="img/qr-code-scan.png" width="40%" alt="..."></center>
+                  <h5 class="card-title text-center">QR CODE</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+  </div>
+
+  <!-- Modal QR-->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: 39px;">
+        <div class="modal-body pt-5 mx-3">
+            <center><img src="img/qr-code-scan.png" width="40%" alt="..."></center>
+            <h5 class="card-title text-center">QR CODE</h5>
+            <p>รุ่น .........</p>
+            <p>เลข ..........</p>
+            <p>เลขที่ใบแจ้งซ่อม ..........</p>
+            <p>กรุณาเลือกการรับของ</p>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                <label class="form-check-label" for="inlineRadio1">รับที่ร้าน</label>
+              </div>
+              <div class="form-check form-check-inline mb-2">
+                <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="inlineRadio2" value="option2" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <label class="form-check-label" for="inlineRadio2">จัดส่งไปรษณีย์</label>
+              </div>
+              <div class="collapse mb-3" id="collapseExample">
+                <div class="card card-body">
+                  <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">กรุณากรอกที่อยู่</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                  </div>
+                  <!-- -------------- กรณีมีที่อยู่แล้ว --------------------- -->
+                  <!-- <div class="mb-3">
+                    <select class="form-select" aria-label="Default select example">
+                      <option selected>Open this select menu</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div> -->
+                  <!-- -------------- กรณีมีที่อยู่แล้ว --------------------- -->
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="inlineRadio1" value="option3">
+                    <label class="form-check-label" for="inlineRadio1">ตั้งเป็นที่อยู่เริ่มต้น</label>
+                  </div>
+                </div>
+              </div>
+              <div class="alert alert-primary d-flex" role="alert">
+                จำนวนที่ต้องชำระ 510 บาท
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn_custom1" type="button" data-bs-toggle="modal" data-bs-target="#address">ยืนยัน</button>
+                <button class="btn btn_custom2" type="button">ยกเลิก</button>
+              </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
