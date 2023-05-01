@@ -1,6 +1,10 @@
 <?php
 session_start();
 include('database/condb.php');
+
+if(!isset($_SESSION["id"])){
+    header('Location:home.php');
+}
 ?>
 
 <!DOCTYPE html>
