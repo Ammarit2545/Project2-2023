@@ -2,7 +2,7 @@
 session_start();
 include('database/condb.php');
 
-if(!isset($_SESSION["id"])){
+if (!isset($_SESSION["id"])) {
     header('Location:home.php');
 }
 
@@ -13,6 +13,7 @@ $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
 $search = $_GET["search"];
+$search = rtrim($search);
 
 ?>
 
@@ -64,13 +65,17 @@ $search = $_GET["search"];
         }
 
         @media only screen and (max-width: 600px) {
-            #date_time,#body_text{
+
+            #date_time,
+            #body_text {
                 font-size: 14px;
             }
-            #title_main{
+
+            #title_main {
                 font-size: 24px;
             }
-            #head_text{
+
+            #head_text {
                 font-size: 16px;
             }
         }
@@ -158,21 +163,25 @@ $search = $_GET["search"];
                                             <p style="text-align:start" id="body_text"> Serial Number : <?= $row1['r_serial_number'] ?></p>
                                             <p style="text-align:start" id="body_text">Model : <?= $row1['r_number_model'] ?></p>
                                         </li>
-                                        <?php if ($row_c['get_r_detail'] != NULL) { 
+                                        <?php if ($row_c['get_r_detail'] != NULL) {
                                             $text = $row_c['get_r_detail'];
 
                                             $summary = strlen($text) > 100 ? substr($text, 0, 200) . "..." : $text;
                                             // echo $summary;
-                                            ?>
+                                        ?>
                                             <li class="list-group-item">
                                                 <h5 style="color:blue" id="head_text">รายละเอียดการส่งซ่อม : </h5>
                                                 <br>
                                                 <p><?= $summary ?></p>
                                             </li>
-                                        <?php } ?>
+                                        <?php }
+                                        $dateString = date('d-m-Y', strtotime($row_c['get_r_date_in']));
+                                        $date = DateTime::createFromFormat('d-m-Y', $dateString);
+                                        $formattedDate = $date->format('d F Y');
+                                        ?>
                                         <li class="list-group-item">
                                             <br>
-                                            <h5 style="color : gray" id="date_time">ส่งเรื่องล่าสุดวันที่ : <?= date('Y-m-d H:i:s', strtotime($row_c['get_r_date_in'])); ?></h5>
+                                            <h5 style="color : gray" id="date_time">ส่งเรื่องล่าสุดวันที่ : <?= $formattedDate ?>, เวลา : <?= date('H:i:s', strtotime($row_c['get_r_date_in'])); ?></h5>
                                         </li>
                                     </ul>
                                 </div>
