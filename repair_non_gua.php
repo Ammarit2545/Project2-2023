@@ -89,7 +89,9 @@ $row = mysqli_fetch_array($result);
                             </div>
 
                             <div class="text-center pt-4">
+                                <a href="repair_have.php" class="btn btn-primary" style="color:white">เคยซ่อมแล้วหรือไม่?</a>
                                 <button type="submit" class="btn btn-success">ยืนยัน</button>
+
                             </div>
 
                         </div>

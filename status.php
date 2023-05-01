@@ -7,111 +7,123 @@ $sql1 = "SELECT * FROM member WHERE m_id = '$id '";
 $result1 = mysqli_query($conn, $sql1);
 $row1 = mysqli_fetch_array($result1);
 if ($id == NULL) {
-    header('Location: home.php');
+  header('Location: home.php');
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
-    <link rel="stylesheet" href="css/status_ok_problem_ok.css">
-    <link rel="icon" type="image/x-icon" href="img brand/anelogo.jpg">
-    <title>Status - ANE</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+  <link rel="stylesheet" href="css/status.css">
+  <title>Status - ANE</title>
+  <link rel="icon" type="image/x-icon" href="img brand/anelogo.jpg">
 </head>
 
 <body>
+  <!-- navbar-->
+  <?php
+  if ($row1 > 0) {
+    include('bar/topbar_invisible.php');
+  }
+  ?>
+  <!-- end navbar-->
 
-    <!-- navbar-->
-    <?php
-    if ($row1 > 0) {
-        include('bar/topbar_invisible.php');
-    }
+  <div class="background"></div>
+
+  <div class="px-5 pt-5 repair">
+    <h1 class="pt-5 text-center">การบริการส่งซ่อม MY SHOP</h1>
+    <p class="pt-4 text-center">กรุณาคลิกที่ปุ่มเพื่อดู</p>
+    <div class="container pt-4" id="card-container">
 
 
-    ?>
-    <!-- end navbar-->
-
-    <div class="background"></div>
-
-    <div class="px-5 pt-5 repair">
-        <h1 class="pt-5 text-center">รุ่น ............. <?= $id  ?></h1>
-        <h1 class="pt-2 text-center">เลข Serial Number .....................</h1>
-        <h1 class="pt-2 text-center">เลขที่ใบรับซ่อม ........................</h1>
-        <div class="container my-5">
-            <div class="row">
-                <div class="">
-                    <h4 style="margin-left: 1.2rem;">Latest News</h4>
-                    <ul class="timeline-3">
-                        <li>
-                            <h6><i class="uil uil-clock"></i>&nbsp;21 March, 2014</h6>
-                            <h5>ชำระเงินเรียบร้อย</h5>
-                            <p class="mt-2">แจ้งการนัดรับสินค้าหรือแจ้งการจัดส่งสินค้าหลังชำระเงิน</p>
-                            <button class="btn btn_custom" type="button">ยืนยัน</button>
-                        </li>
-                        <li>
-                            <h6><i class="uil uil-clock"></i>&nbsp;21 March, 2014</h6>
-                            <h5>การซ่อมเสร็จสิ้น/รอการชำระเงิน</h5>
-                            <p class="mt-2">แจ้งการนัดรับสินค้าหรือแจ้งการจัดส่งสินค้าหลังชำระเงิน</p>
-                            <button class="btn btn_custom_wearn" type="button">ชำระเงิน</button>
-                        </li>
-                        <li>
-                            <h6><i class="uil uil-clock"></i>&nbsp;21 March, 2014</h6>
-                            <h5>กำลังดำเนินการซ่อม</h5>
-                        </li>
-                        <li>
-                            <h6><i class="uil uil-clock"></i>&nbsp;21 March, 2014</h6>
-                            <h5>เกิดปัญหาขึ้นระหว่างซ่อม (ซ่อมต่อ)</h5>
-                            <p class="mt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque scelerisque diam
-                                non nisi semper, et elementum lorem ornare. Maecenas placerat facilisis mollis. Duis sagittis
-                                ligula in sodales vehicula....</p>
-                            <div class="row">
-                                <div class="col-4">
-                                    <img src="img/1.jpg" alt="" class="img-fluid">
-                                </div>
-                                <div class="col-4">
-                                    <p>หย่องล่างกีต้าร์ไฟฟ้าแบบเดียว PS-001 ZX</p>
-                                    <p>ราคา 55.00 บาท </p>
-                                    <p>จำนวน 2 ชิ้น</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4">
-                                    <img src="img/2.png" alt="" class="img-fluid">
-                                </div>
-                                <div class="col-4">
-                                    <p>หย่องล่างกีต้าร์ไฟฟ้าแบบคู่ PS-001 ZX</p>
-                                    <p>ราคา 100.00 บาท </p>
-                                    <h5>จำนวน 2 ชิ้น</h5>
-                                    <p style="color: red;">รอของ 3 วัน</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <h6><i class="uil uil-clock"></i>&nbsp;21 March, 2014</h6>
-                            <h5>อยู่ระหว่างการซ่อม</h5>
-                        </li>
-                        <li>
-                            <h6><i class="uil uil-clock"></i>&nbsp;21 March, 2014</h6>
-                            <h5>ได้รับเครื่องของคุณแล้ว</h5>
-                        </li>
-                        <li>
-                            <h6><i class="uil uil-clock"></i>&nbsp;21 March, 2014</h6>
-                            <h5>ยืนยันการซ่อมแล้ว</h5>
-                            <button class="btn btn_custom_wearn" type="button">ใบแจ้งซ่อม</button>
-                        </li>
-                    </ul>
-                </div>
+      <!-- <div class="body_input">
+        <div class="card w-75 mx-auto viewstatus">
+          <div class="card-body">
+            <div class="row justify-content-between">
+              <div class="col-4 text-center">
+                <h4 style="padding-top: 1.5rem;">รุ่น ............. มีประกัน</h4>
+              </div>
+              <div class="col-4 text-center">
+                <h4 class="fw-bold" style="color: red;">กรุณายืนยันการส่งซ่อม</h4>
+                <p>วันที่ 00/00/0000 เวลา 00.00</p>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
+      </div> -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+      <?php
+      $sql = "SELECT * FROM get_repair 
+      LEFT JOIN repair ON repair.r_id = get_repair.r_id 
+      WHERE m_id = ?";
+      $stmt = mysqli_prepare($conn, $sql);
+      mysqli_stmt_bind_param($stmt, "i", $id);
+      mysqli_stmt_execute($stmt);
+      $result = mysqli_stmt_get_result($stmt);
+
+      $i = 0;
+      while ($row = mysqli_fetch_assoc($result)) {
+        $i = $i + 1;
+        $id_com = $row['com_id'];
+
+        // if ($result == NULL){
+        //   echo "ไม่มีข้อมูล";
+        // }
+      ?>
+
+        <a href="status_detail.php" style="text-decoration:none">
+          <div class="body_input pt-5">
+            <div class="card w-75 mx-auto viewstatus_2">
+              <div class="card-body">
+                <div class="row justify-content-between">
+                  <div class="col-1 mt-4" style="color:black">
+                    <center>
+                      <h2><?= $i ?></h2>
+                    </center>
+                  </div>
+                  <div class="col-5 text-center">
+                    <h4 style="padding-top: 1.5rem; color : black">ยี่ห้อ : <?= $row['r_brand'] ?> </h4>
+                    <h5>
+                      <p style="color : black">รุ่น : <?= $row['r_model'] ?> 
+                      <? if($id_com == NULL){
+                        echo "ไม่มีประกัน";
+                      }
+                      else{
+                        echo "มีประกัน";
+                        } 
+                        ?>
+                    </p>
+                    </h5>
+
+                  </div>
+                  <div class="col-6 text-center mt-1">
+                    <?php
+                    $id_r = $row['get_r_id'];
+                    $sql2 = "SELECT * FROM repair_status LEFT JOIN status_type ON status_type.status_id = repair_status.status_id WHERE get_r_id = '$id_r' ORDER BY rs_id DESC;";
+                    $result2 = mysqli_query($conn, $sql2);
+                    $row2 = mysqli_fetch_array($result2);
+                    ?>
+                    <h4 class="fw-bold mt-4" style="color: <?= $row2['status_color'] ?>;"><?= $row2['status_name'] ?></h4>
+                    <p><?=date('Y-m-d H:i:s', strtotime($row2['rs_date_time'])); ?></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+
+      <?php } ?>
+
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

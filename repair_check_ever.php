@@ -41,6 +41,7 @@ $row = mysqli_fetch_array($result);
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($result);
 
+    $id_r = $_SESSION["id_repair"];
     $name_brand = $_SESSION["name_brand"];
     $serial_number = $_SESSION["serial_number"];
     $name_model = $_SESSION["name_model"];
@@ -61,13 +62,14 @@ $row = mysqli_fetch_array($result);
             <p>ข้อมูลถูกต้องหรือไม่</p>
         </center>
         <br>
-        <form action="action/add_repair_db.php" method="POST">
+        <form action="action/add_repair_ever_db.php" method="POST">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <div class="row">
                             <div class="col-6">
                                 <input type="text" class="form-control input" id="borderinput" name="name_brand" placeholder="ชื่อยี่ห้อ" value="<?= $name_brand ?>" readonly require>
+                                <input type="text" class="form-control input" id="borderinput" name="id_repair" readonly placeholder="ไอดี" value="<?= $id_r ?>" style="display:none">
                             </div>
                             <div class="col-6">
                                 <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="ไม่มีเลข Serial Number" value="<?= $serial_number ?>" readonly>
@@ -100,7 +102,7 @@ $row = mysqli_fetch_array($result);
                             </div>
 
                             <div class="text-center pt-4">
-                                <a href="repair_edit.php" class="btn btn-danger">แก้ไขข้อมูล</a>
+                                <a href="repair_edit.php?id=1" class="btn btn-danger">แก้ไขข้อมูล</a>
                                 <button type="submit" class="btn btn-success">ยืนยัน</button>
                             </div>
 

@@ -7,7 +7,7 @@
             echo $key . ': ' . $value . '<br>';
         }
     }
-
+    $id_r = $_POST['id_repair'];
     $name_brand = $_POST['name_brand'];
     $serial_number = $_POST['serial_number'];
     $name_model = $_POST['name_model'];
@@ -15,6 +15,7 @@
     $tel = $_POST['tel'];
     $description = $_POST['description'];
 
+    $_SESSION["id_repair"] = $_POST['id_repair'];
     $_SESSION["name_brand"] = $_POST['name_brand'];
     $_SESSION["serial_number"] = $_POST['serial_number'];
     $_SESSION["name_model"] = $_POST['name_model'];
@@ -24,20 +25,12 @@
 
     $id = $_SESSION["id"];
 
-    $sql = "SELECT * FROM repair WHERE r_serial_number = '$serial_number' AND m_id = '$id'";
-    $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_array($result);
-
     if($row == NULL){
-        // $sql = "INSERT INTO repair (m_id, r_brand, r_model, r_number_model, r_serial_number)
-        // VALUES ('$id', '$name_brand', '$name_model', '$number_model', '$serial_number');";
-        // $result = mysqli_query($conn, $sql);
-
-        header("location:../repair_check.php");
+        header("location:../repair_check_ever.php");
     }else{
         echo ("ever"); 
         $id = $row[0];
-        header("location:../repair_ever.php?id=$id");
+        header("location:../repair_check_ever.php?id=$id");
     }
 
 ?>

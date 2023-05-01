@@ -36,6 +36,17 @@ $row = mysqli_fetch_array($result);
     include('bar/topbar_invisible.php');
 
     $id = $_SESSION["id"];
+    $id_r = $_GET["id"];
+
+    $sql1 = "SELECT * FROM repair WHERE r_id = '$id_r ' AND m_id = '$id'";
+    $result1 = mysqli_query($conn, $sql1);
+    $row1 = mysqli_fetch_array($result1);
+
+    $sql2 = "SELECT * FROM get_repair WHERE r_id = '$id_r'";
+    $result2 = mysqli_query($conn, $sql2);
+    $row2 = mysqli_fetch_array($result2);
+
+    $description = $row2['get_r_detail'];
 
     $sql = "SELECT * FROM member WHERE m_id = '$id'";
     $result = mysqli_query($conn, $sql);
@@ -48,29 +59,30 @@ $row = mysqli_fetch_array($result);
     <div class="px-5 pt-5 edit">
         <h1 class="pt-5 text-center">ระบบได้ตรวจพบหมายเลขรุ่นนี้ในระบบ</h1>
         <center>
-            <p>คุณต้องการใช้ข้อมูลเก่าหรือไม่</p>
+            <p>คุณต้องการใช้รายละเอียดการซ่อม"เดิม"หรือไม่ ถ้าใช่กด "ยืนยัน"</p>
         </center>
         <br>
-        <form action="action/add_repair_non_gua.php" method="POST">
+        <form action="action/add_rapair_ever.php" method="POST">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="name_brand" placeholder="ชื่อยี่ห้อ">
+                            <input type="text" class="form-control input" id="borderinput" name="name_brand" readonly placeholder="ชื่อยี่ห้อ" value="<?= $row1['r_brand'] ?>">
+                            <input type="text" class="form-control input" id="borderinput" name="id_repair" readonly placeholder="ไอดี" value="<?= $id_r ?>" style="display:none">
                             </div>
                             <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="เลข Serial Number  (ไม่จำเป็น)">
+                                <input type="text" class="form-control input" id="borderinput" name="serial_number" readonly placeholder="เลข Serial Number(ไม่จำเป็น)" value="<?= $row1['r_serial_number'] ?>">
                             </div>
                         </div>
                         <br>
 
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="name_model" placeholder="ชื่อรุ่น">
+                                <input type="text" class="form-control input" id="borderinput" name="name_model" readonly placeholder="ชื่อรุ่น" value="<?= $row1['r_model'] ?>">
                             </div>
                             <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="number_model" placeholder="หมายเลขรุ่น  (ไม่จำเป็น)">
+                                <input type="text" class="form-control input" id="borderinput" name="number_model" readonly placeholder="หมายเลขรุ่น  (ไม่จำเป็น)" value="<?= $row1['r_number_model'] ?>">
                             </div>
                         </div>
                         <br>
@@ -78,19 +90,20 @@ $row = mysqli_fetch_array($result);
                         <div class="row">
                             <div class="col">
                                 <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
-                                <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $row['m_tel'] ?>">
+                                <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" readonly value="<?= $row['m_tel'] ?>">
                             </div>
                         </div>
                         <br>
 
                         <div class="row">
                             <div class="mb-3">
-                                <label for="inputtext" class="form-label">กรุณากรอกรายละเอียด</label>
-                                <textarea class="form-control" id="inputtext" rows="3" name="description"></textarea>
+                                <label for="inputtext" class="form-label" style="color:red">กรุณากรอกรายละเอียด (กรณีไม่ใช้ข้อมูลเดิม)</label>
+                                <textarea class="form-control" id="inputtext" rows="3" name="description" required><?=$description?></textarea>
                             </div>
 
                             <div class="text-center pt-4">
-                                <button type="submit" class="btn btn-success">ยืนยัน</button>
+                            <button type="submit" class="btn btn-success">ยืนยัน</button>
+                                <!-- <a herf="repair_non_gua.php" class="btn btn-warning">กลับไปหน้าส่งซ่อม</a> -->
                             </div>
 
                         </div>

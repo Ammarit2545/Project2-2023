@@ -41,6 +41,7 @@ $row = mysqli_fetch_array($result);
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($result);
 
+    $id_repair = $_SESSION["id_repair"];
     $name_brand = $_SESSION["name_brand"];
     $serial_number = $_SESSION["serial_number"];
     $name_model = $_SESSION["name_model"];
@@ -60,13 +61,26 @@ $row = mysqli_fetch_array($result);
         <center>
             <p>แบบไม่มีกับมีประกันทางร้าน</p>
         </center>
-        <form action="action/add_repair_non_gua.php" method="POST">
+        <?php 
+        $id = $_GET["id"];
+        if($id != NULL){
+           ?><form action="action/add_rapair_ever.php" method="POST"><?php
+        }else{
+            ?><form action="action/add_repair_non_gua.php" method="POST">
+            <?php
+        }
+        ?>
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <div class="row">
                             <div class="col-6">
                                 <input type="text" class="form-control input" id="borderinput" name="name_brand" placeholder="ชื่อยี่ห้อ" value="<?= $name_brand ?>" required>
+                                <?php
+                                    if($id != NULL){
+                                    ?><input type="text" class="form-control input" id="borderinput" name="id_repair" placeholder="ไอดี" value="<?= $id_repair ?>" required style="display:none"><?php
+                                    }
+                                    ?>
                             </div>
                             <div class="col-6">
                                 <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="เลข Serial Number  (ไม่จำเป็น)" value="<?= $serial_number ?>">

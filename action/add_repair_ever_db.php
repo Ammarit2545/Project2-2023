@@ -8,13 +8,14 @@
         }
     }
 
+    $id_repair = $_SESSION["id_repair"];
     $name_brand = $_POST['name_brand'];
     $serial_number = $_POST['serial_number'];
     $name_model = $_POST['name_model'];
     $number_model = $_POST['number_model'];
     $tel = $_POST['tel'];
     $description = $_POST['description'];
-
+    
     $_SESSION["name_brand"] = $_POST['name_brand'];
     $_SESSION["serial_number"] = $_POST['serial_number'];
     $_SESSION["name_model"] = $_POST['name_model'];
@@ -24,31 +25,29 @@
 
     $id = $_SESSION["id"];
 
-    $sql = "SELECT * FROM repair WHERE r_serial_number = '$serial_number' AND m_id = '$id'";
+    $sql = "SELECT COUNT(*) FROM get_repair WHERE r_id = '$id_repair'";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($result);
 
-    if($row == NULL){
-        $sql = "INSERT INTO repair (m_id, r_brand, r_model, r_number_model, r_serial_number)
-        VALUES ('$id', '$name_brand', '$name_model', '$number_model', '$serial_number')";
-        $result = mysqli_query($conn, $sql);
+    echo $row[0];
 
-        $sql1 = "SELECT * FROM repair WHERE r_serial_number = '$serial_number' AND m_id = '$id'";
-        $result1 = mysqli_query($conn, $sql1);
-        $row1 = mysqli_fetch_array($result1);
-        $id_r = $row1['r_id'];
+    $round_repair = $row[0] + 1;
+
+    echo $round_repair;
+
+    if($row != 0){
 
         $sql2 = "INSERT INTO get_repair ( r_id, get_r_record, get_r_date_in, get_r_detail)
-        VALUES ( '$id_r', '1', NOW(), '$description')";
+        VALUES ( '$id_repair', '$round_repair', NOW(), '$description')";
         $result2 = mysqli_query($conn, $sql2);
         
-        $sql4 = "SELECT * FROM get_repair WHERE r_id = '$id_r' ORDER BY get_r_id DESC;";
+        $sql4 = "SELECT * FROM get_repair WHERE r_id = '$id_repair' ORDER BY get_r_id DESC;";
         $result4 = mysqli_query($conn, $sql4);
         $row4 = mysqli_fetch_array($result4);
         $id_r_g = $row4['get_r_id'];
 
         $sql3 = "INSERT INTO repair_status (get_r_id, rs_date_time, rs_detail, status_id)
-         VALUES ('$id_r_g', NOW(), 'ยื่นเรื่องซ่อม','1')";
+         VALUES ('$id_r_g', NOW(), 'ยื่นเรื่องซ่อม ครั้งที่ $round_repair','1')";
         $result3 = mysqli_query($conn, $sql3);
 
         header("location:../repair_wait.php");
