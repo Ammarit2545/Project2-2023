@@ -100,7 +100,7 @@ $search = rtrim($search);
 
     <div class="px-5 pt-5 edit">
 
-        <?php if (!isset($search)) { ?>
+        <?php if (!isset($_GET["search"])) { ?>
             <h1 class="pt-5 text-center" id="title_main">ข้อมูลการซ่อมทั้งหมดของคุณ <?= $row['m_fname'] . " " . $row['m_lname'] ?></h1>
         <?php } else { ?>
             <h1 class="pt-5 text-center">ผลการหาข้อมูล "<?= $search ?>" </h1>

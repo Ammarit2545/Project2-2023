@@ -136,54 +136,65 @@ session_start();
   <!-- End Modal Login-->
 
   <!-- Modal Register-->
-  <div class="modal fade" id="Register" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content" style="border-radius: 39px; background-color: #D4E8FF;">
-        <div class="modal-body py-5 mx-3">
-          <div class="text-center mb-3">
-            <h2>ยินดีต้อนรับสู่ร้าน MY SHOP</h2><br>
-            <h4>เข้าสู่ระบบ</h4>
+  <div class="container">
+    <div class="row">
+      <div class="col-1">
+      </div>
+      <div class="col">
+        <div class="modal fade" id="Register" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 39px; background-color: #D4E8FF;">
+              <div class="modal-body py-5 mx-3">
+                <div class="text-center mb-3">
+                  <h2>ยินดีต้อนรับสู่ร้าน MY SHOP</h2><br>
+                  <h4>เข้าสู่ระบบ</h4>
+                </div>
+                <form action="action/register.php" method="POST">
+                  <div class="input-group">
+                    <input type="email" class="input-field" id="email" name="email" required>
+                    <label for="email">Email</label>
+                  </div>
+                  <div class="input-group">
+                    <input type="password" class="input-field" id="password" name="password" required>
+                    <label for="password">Password</label>
+                  </div>
+
+                  <div class="input-group">
+                    <input type="text" class="input-field" id="fname" name="fname" required>
+                    <label for="fname">ชื่อ</label>
+                  </div>
+                  <div class="input-group">
+                    <input type="text" class="input-field" id="lname" name="lname" required>
+                    <label for="lname">นามสกุล</label>
+                  </div>
+
+                  <div class="input-group">
+                    <input type="text" class="input-field" id="tel" name="tel" required>
+                    <label for="tel">เบอร์โทรศัพท์</label>
+                  </div><br>
+                  <div class="d-grid gap-2">
+                    <button class="btn btn-primary btn-lg" type="submit">Sign up</button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
-          <form action="action/register.php" method="POST">
-            <div class="input-group">
-              <input type="email" class="input-field" id="email" name="email" required>
-              <label for="email">Email</label>
-            </div>
-            <div class="input-group">
-              <input type="password" class="input-field" id="password" name="password" required>
-              <label for="password">Password</label>
-            </div>
-
-            <div class="input-group">
-              <input type="text" class="input-field" id="fname" name="fname" required>
-              <label for="fname">ชื่อ</label>
-            </div>
-            <div class="input-group">
-              <input type="text" class="input-field" id="lname" name="lname" required>
-              <label for="lname">นามสกุล</label>
-            </div>
-
-            <div class="input-group">
-              <input type="text" class="input-field" id="tel" name="tel" required>
-              <label for="tel">เบอร์โทรศัพท์</label>
-            </div><br>
-            <div class="d-grid gap-2">
-              <button class="btn btn-primary btn-lg" type="submit">Sign up</button>
-            </div>
-          </form>
         </div>
+      </div>
+      <div class="col-1">
       </div>
     </div>
   </div>
+
   <!-- End Modal Register-->
 
-  <div class="p-5 mb-4">
-    <div class="container pt-5 mb-4">
+  <div class="p-5">
+    <div class="container pt-5">
       <div class="card card_header">
         <div class="card-body mx-5 my-5">
           <h1 style="color: white;">สวัสดีคุณ <?= $row1['m_fname'] . " " . $row1['m_lname'] ?></h1>
           <h3 style="color: white;">เราคือร้านจำหน่ายและรับซ่อมสินค้า <br> ประเภทเครื่องดนตรีทุกชนิด</h3>
-          <p class="col-md-5" style="color: white;">เราหวังว่าจะคุณจะพอใจในการบริการของเราหากต้องการส่งซ่อม<br> คุณสามารถส่งรูปภาพเข้ามาสอบถามก่อนได้</p>
+          <p class="col" style="color: white;">เราหวังว่าจะคุณจะพอใจในการบริการของเราหากต้องการส่งซ่อม<br> คุณสามารถส่งรูปภาพเข้ามาสอบถามก่อนได้</p>
           <a href="home_repair.php" class="btn btn_custom ">ส่งซ่อม</a>
         </div>
       </div>
