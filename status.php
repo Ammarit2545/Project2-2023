@@ -141,13 +141,24 @@ if (isset($_GET["status_id"])) {
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" style="box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);">ทั้งหมด</a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="status.php">ทั้งหมด</a></li>
+                <?php
+              $sql_s = "SELECT * FROM `status_type`";
+              $result_s = mysqli_query($conn, $sql_s);
+
+              while ($row_s = mysqli_fetch_array($result_s)) {
+              ?>
+                <li class="nav-item">
+                  <li> <a class="dropdown-item" href="status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>"><?= $row_s['status_name'] ?></a></li>
+                </li>
+              <?php } ?>
+                  <!-- <li><a class="dropdown-item" href="#">Action</a></li>
                   <li><a class="dropdown-item" href="#">Another action</a></li>
                   <li><a class="dropdown-item" href="#">Something else here</a></li>
                   <li>
                     <hr class="dropdown-divider">
                   </li>
-                  <li><a class="dropdown-item" href="#">Separated link</a></li>
+                  <li><a class="dropdown-item" href="#">Separated link</a></li> -->
                 </ul>
               </li>
 
@@ -212,7 +223,7 @@ if (isset($_GET["status_id"])) {
       <div class="container">
         <div class="row">
           <?php
-          if ($search == NULL) {
+          if (!isset($search) && !isset($status_id)) {
             $sql = "SELECT * FROM `get_repair` 
             LEFT JOIN repair ON get_repair.r_id = repair.r_id
             WHERE m_id= '$id' ORDER BY get_repair.get_r_date_in DESC;";
@@ -227,16 +238,18 @@ if (isset($_GET["status_id"])) {
                 GROUP BY get_r_id
               ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
               LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
-              WHERE repair.m_id = '$id' AND rs.status_id = '$status_id'
-              ORDER BY get_repair.get_r_date_in DESC;";
-          } 
-          else {
-            $sql = "SELECT * FROM repair WHERE m_id = '$id' 
-                AND (r_brand LIKE '%$search%' 
-                OR r_model LIKE '%$search%' 
-                OR r_serial_number LIKE '%$search%'
-                OR CONCAT(r_brand,' ',r_model) LIKE '%$search%' 
-                OR CONCAT(r_brand,'',r_model) LIKE '%$search%') ORDER BY r_id DESC";
+              WHERE repair.m_id = '$id' AND rs.status_id = '$status_id' AND rs.rs_date_time = subquery.max_date
+              ORDER BY get_repair.get_r_date_in DESC;
+              ";
+          } else {
+            $sql = "SELECT * FROM get_repair 
+            LEFT JOIN repair ON get_repair.r_id = repair.r_id 
+            WHERE m_id = '$id' AND (repair.r_brand LIKE '%$search%' 
+            OR repair.r_model LIKE '%$search%' 
+            OR repair.r_serial_number LIKE '%$search%' 
+            OR CONCAT(repair.r_brand,' ',repair.r_model) LIKE '%$search%' 
+            OR CONCAT(repair.r_brand,'',repair.r_model) LIKE '%$search%') 
+            ORDER BY get_repair.get_r_date_in DESC;";
           }
           $result = mysqli_query($conn, $sql);
           $i = 0;
