@@ -37,8 +37,8 @@
 
     if($row != 0){
 
-        $sql2 = "INSERT INTO get_repair ( r_id, get_r_record, get_r_date_in, get_r_detail)
-        VALUES ( '$id_repair', '$round_repair', NOW(), '$description')";
+        $sql2 = "INSERT INTO get_repair ( r_id, get_r_record, get_r_date_in, get_r_detail ,get_tel)
+        VALUES ( '$id_repair', '$round_repair', NOW(), '$description' ,'$tel')";
         $result2 = mysqli_query($conn, $sql2);
         
         $sql4 = "SELECT * FROM get_repair WHERE r_id = '$id_repair' ORDER BY get_r_id DESC;";

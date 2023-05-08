@@ -62,9 +62,11 @@ $row = mysqli_fetch_array($result);
             <p>แบบไม่มีกับมีประกันทางร้าน</p>
         </center>
         <?php 
+        $company_check = $_SESSION["company"];
+
         $id = $_GET["id"];
-        if($id != NULL){
-           ?><form action="action/add_rapair_ever.php" method="POST"><?php
+        if($company_check != NULL){
+           ?><form action="action/add_repair_gua.php" method="POST"><?php
         }else{
             ?><form action="action/add_repair_non_gua.php" method="POST">
             <?php
@@ -98,11 +100,159 @@ $row = mysqli_fetch_array($result);
                         </div>
                         <br>
 
+                        <?php 
+                        $company = $_SESSION["company"];
+                        if($company != NULL) {
+                                $sql_c = "SELECT * FROM company WHERE com_id = '$company' AND del_flg = '0'";
+                                $result_c = mysqli_query($conn, $sql_c);
+                                $row_c = mysqli_fetch_array($result_c);
+
+                                
+                            ?>
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
+                                <input type="text" class="form-control" id="borderinput" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $tel ?>" require>
+                            </div>
+                            <div class="col-6">
+                                <label for="borderinput1" class="form-label">ชื่อบริษัท</label>
+                                <select class="form-select" aria-label="Default select example" name="company">
+                                    <option value="<?= $row_c['com_id'] ?>"><?= $row_c['com_name'] ?></option>
+                                    <?php
+                                    $sql_c = "SELECT * FROM company WHERE del_flg = '0'";
+                                    $result_c = mysqli_query($conn, $sql_c);
+                                    while ($row_c = mysqli_fetch_array($result_c)) {
+                                    ?><option value="<?= $row_c['com_id'] ?>"><?= $row_c['com_name'] ?></option><?php
+                                    }
+                                ?>
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <?php }else{?>
+
                         <div class="row">
                             <div class="col">
                                 <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
-                                <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $tel ?>" required>
+                                <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $tel ?>" readonly require>
                             </div>
+                        </div>
+                        <br>
+                        <?php } ?>
+                        <label for="borderinput1" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ</label>
+                        <div class="row">
+                            <!-- <?php
+                                    if (isset($_POST['submit'])) {
+                                        // handle image upload
+                                        $fileNames = array();
+                                        $counter = 0; // initialize counter
+                                        foreach ($_FILES['image']['tmp_name'] as $key => $tmp_name) {
+                                            if ($counter >= 5) { // check counter against limit
+                                                break;
+                                            }
+                                            $file = $_FILES['image'];
+                                            $fileName = $file['name'][$key];
+                                            $fileTmpName = $file['tmp_name'][$key];
+                                            $fileSize = $file['size'][$key];
+                                            $fileError = $file['error'][$key];
+                                            $fileType = $file['type'][$key];
+
+                                            // check for errors
+                                            if ($fileError === UPLOAD_ERR_OK) {
+                                                $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                                                $allowedExt = array('jpg', 'jpeg', 'png', 'gif');
+                                                if (in_array($fileExt, $allowedExt)) {
+                                                    if ($fileSize < 5000000) { // 5 MB max file size
+                                                        // generate unique file name
+                                                        $newFileName = uniqid('', true) . '.' . $fileExt;
+                                                        $fileDest = 'uploads/' . $newFileName;
+                                                        // move uploaded file to destination folder
+                                                        move_uploaded_file($fileTmpName, $fileDest);
+                                                        $fileNames[] = $newFileName;
+                                                        $counter++; // increment counter
+                                                    } else {
+                                                        echo "File size too large.";
+                                                    }
+                                                } else {
+                                                    echo "Invalid file type.";
+                                                }
+                                            } else {
+                                                echo "Error uploading file.";
+                                            }
+                                        }
+
+                                        // insert image filenames into database
+                                        $db = new mysqli("localhost", "username", "password", "database_name");
+                                        $stmt = $db->prepare("INSERT INTO images (filename) VALUES (?)");
+                                        foreach ($fileNames as $fileName) {
+                                            $stmt->bind_param("s", $fileName);
+                                            $stmt->execute();
+                                        }
+                                        $stmt->close();
+                                        $db->close();
+                                        echo "Images inserted successfully.";
+
+                                        // display uploaded images
+                                        foreach ($fileNames as $fileName) {
+                                            echo '<img src="uploads/' . $fileName . '">';
+                                        }
+                                    }
+                                    ?>
+                            <div class="col-2">
+                                <label for="">กรูณาใส่รูปภาพ (ไม่เกิน 4 รูป)</label>
+                                <button type="button" class="btn btn-primary" onclick="addInput()">Add more images</button>
+                            </div>
+                            <div id="file-inputs">
+                                <input type="file" name="image[]">
+                            </div>
+
+                            <script>
+                                function addInput() {
+                                    var div = document.getElementById("file-inputs");
+                                    var inputCount = div.getElementsByTagName("input").length;
+                                    if (inputCount >= 4) { // check input count against limit
+                                        return;
+                                    }
+                                    var input = document.createElement("input");
+                                    input.type = "file";
+                                    input.name = "image[]";
+                                    div.appendChild(input);
+                                }
+                            </script> -->
+
+                            <div class="col-3">
+                                <input type="file" name="image1" onchange="previewImage('image-preview1')" id="fileToUpload">
+                            </div>
+                            <div class="col-3">
+                                <input type="file" name="image2" onchange="previewImage('image-preview2')" id="fileToUpload">
+                                <div id="image-preview2"></div>
+                            </div>
+                            <div class="col-3">
+                                <input type="file" name="image3" onchange="previewImage('image-preview3')" id="fileToUpload">
+                                <div id="image-preview3"></div>
+                            </div>
+                            <div class="col-3">
+                                <input type="file" name="image4" onchange="previewImage('image-preview4')" id="fileToUpload">
+                                <div id="image-preview4"></div>
+                            </div>
+
+                            <script>
+                                function previewImage(previewId) {
+                                    var input = event.target;
+                                    var previewContainer = document.getElementById(previewId);
+                                    var previewImage = document.createElement('img');
+
+                                    if (input.files && input.files[0]) {
+                                        var reader = new FileReader();
+                                        reader.onload = function(e) {
+                                            previewImage.setAttribute('src', e.target.result);
+                                            previewContainer.appendChild(previewImage);
+                                        };
+                                        reader.readAsDataURL(input.files[0]);
+                                    }
+                                }
+                            </script>
+
                         </div>
                         <br>
 

@@ -3,6 +3,7 @@ session_start();
 
 // git remote add origin https://github.com/Ammarit2545/Final-Project-2023.git
 
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -157,6 +158,7 @@ session_start();
                   <div class="input-group">
                     <input type="password" class="input-field" id="password" name="password" required>
                     <label for="password">Password</label>
+                    <p style="color : red; font-size:12px">รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัว และไม่เกิน 10 ตัว</p>
                   </div>
 
                   <div class="input-group">
@@ -233,7 +235,9 @@ session_start();
   </div>
 
   <!-- footer-->
-  <?php include('footer/footer.php') ?>
+  <?php 
+  include('footer/footer.php') 
+  ?>
   <!-- end footer-->
 
   <script>

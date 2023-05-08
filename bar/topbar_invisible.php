@@ -11,7 +11,7 @@
         <a class="nav-link" style="color: black; text-decoration:none; " href="home.php">หน้าหลัก</a>
         <a class="nav-link" style="color: black; text-decoration:none; " href="home_repair.php">ส่งซ่อม</a>
         <a class="nav-link" style="color: black; text-decoration:none; " href="status.php">สถานะ</a>
-        <a class="nav-link" style="color: black; text-decoration:none; " href="#">ประวัติ</a>
+        <a class="nav-link" style="color: black; text-decoration:none; " href="history_main.php">ประวัติ</a>
       </div>
     </div>
     <div class="dropdown col-md-3 text-end">

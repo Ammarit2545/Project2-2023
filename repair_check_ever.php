@@ -48,6 +48,7 @@ $row = mysqli_fetch_array($result);
     $number_model = $_SESSION["number_model"];
     $tel = $_SESSION["tel"];
     $description = $_SESSION["description"];
+    $company = $_SESSION["company"];
 
     $id = $_SESSION["id"];
 
@@ -87,6 +88,27 @@ $row = mysqli_fetch_array($result);
                         </div>
                         <br>
 
+                        <?php 
+                        if($company != NULL) {
+                                $sql_c = "SELECT * FROM company WHERE com_id = '$company' AND del_flg = '0'";
+                                $result_c = mysqli_query($conn, $sql_c);
+                                $row_c = mysqli_fetch_array($result_c);
+
+                                $company = $row_c['com_name'];
+                            ?>
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
+                                <input type="text" class="form-control" id="borderinput" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $tel ?>" readonly require>
+                            </div>
+                            <div class="col-6">
+                                <label for="borderinput1" class="form-label">ชื่อบริษัท</label>
+                                <input type="text" class="form-control" id="borderinput" name="company" placeholder="กรุณากรอกชื่อบริษัท" value="<?= $company ?>" readonly require>
+                            </div>
+                        </div>
+                        <br>
+                        <?php }else{?>
+
                         <div class="row">
                             <div class="col">
                                 <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
@@ -94,6 +116,8 @@ $row = mysqli_fetch_array($result);
                             </div>
                         </div>
                         <br>
+                        <?php } ?>
+
 
                         <div class="row">
                             <div class="mb-3">

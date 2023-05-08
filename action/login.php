@@ -26,7 +26,6 @@
         $_SESSION['Error'] = "";
         $_SESSION["address"] = $row['m_add'];
         echo "ture";
-
         // Redirect to the user's dashboard or home page
         header("location: ../home.php");
         // exit(); // Terminate the current script

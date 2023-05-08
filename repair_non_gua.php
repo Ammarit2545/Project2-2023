@@ -27,10 +27,24 @@ $row = mysqli_fetch_array($result);
 
     </script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+    <style>
+        .file-input {
+            display: inline-block;
+            width: 20px;
+        }
+
+        .preview-container {
+            display: inline-block;
+            width: 20px;
+        }
+
+        .preview_pic {
+            width: 0.02px;
+        }
+    </style>
 </head>
 
 <body>
-
     <!-- navbar-->
     <?php
     include('bar/topbar_invisible.php');
@@ -50,26 +64,30 @@ $row = mysqli_fetch_array($result);
         <center>
             <p>แบบไม่มีกับมีประกันทางร้าน</p>
         </center>
-        <form action="action/add_repair_non_gua.php" method="POST">
+        <form action="action/add_repair_non_gua.php" method="POST" enctype="multipart/form-data">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="name_brand" placeholder="ชื่อยี่ห้อ" required>
+                            <label for="borderinput1" class="form-label">ชื่อยี่ห้อ</label>
+                                <input type="text" class="form-control input" id="borderinput" name="name_brand" placeholder="กรุณากรอกชื่อยี่ห้อ" required>
                             </div>
                             <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="เลข Serial Number  (ไม่จำเป็น)">
+                            <label for="borderinput1" class="form-label">เลข Serial Number</label>
+                                <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)">
                             </div>
                         </div>
                         <br>
 
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="name_model" placeholder="ชื่อรุ่น" required>
+                            <label for="borderinput1" class="form-label">ชื่อรุ่น</label>
+                                <input type="text" class="form-control input" id="borderinput" name="name_model" placeholder="กรุณากรอกชื่อรุ่น" required>
                             </div>
                             <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="number_model" placeholder="หมายเลขรุ่น  (ไม่จำเป็น)">
+                            <label for="borderinput1" class="form-label">หมายเลขรุ่น</label>
+                                <input type="text" class="form-control input" id="borderinput" name="number_model" placeholder="กรุณากรอก หมายเลขรุ่น  (ไม่จำเป็น)">
                             </div>
                         </div>
                         <br>
@@ -81,16 +99,54 @@ $row = mysqli_fetch_array($result);
                             </div>
                         </div>
                         <br>
+                        <!-- <label for="borderinput1" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ</label>
+                        <div class="row">
+                           
 
+                            <div class="col-3">
+                                <input type="file" name="image1" onchange="previewImage('image-preview1')" id="fileToUpload">
+                            </div>
+                            <div class="col-3">
+                                <input type="file" name="image2" onchange="previewImage('image-preview2')" id="fileToUpload">
+                                <div id="image-preview2"></div>
+                            </div>
+                            <div class="col-3">
+                                <input type="file" name="image3" onchange="previewImage('image-preview3')" id="fileToUpload">
+                                <div id="image-preview3"></div>
+                            </div>
+                            <div class="col-3">
+                                <input type="file" name="image4" onchange="previewImage('image-preview4')" id="fileToUpload">
+                                <div id="image-preview4"></div>
+                            </div>
+
+                            <script>
+                                function previewImage(previewId) {
+                                    var input = event.target;
+                                    var previewContainer = document.getElementById(previewId);
+                                    var previewImage = document.createElement('img');
+
+                                    if (input.files && input.files[0]) {
+                                        var reader = new FileReader();
+                                        reader.onload = function(e) {
+                                            previewImage.setAttribute('src', e.target.result);
+                                            previewContainer.appendChild(previewImage);
+                                        };
+                                        reader.readAsDataURL(input.files[0]);
+                                    }
+                                }
+                            </script>
+
+                        </div>
+                        <br> -->
                         <div class="row">
                             <div class="mb-3">
                                 <label for="inputtext" class="form-label">กรุณากรอกรายละเอียด</label>
-                                <textarea class="form-control" id="inputtext" rows="3" name="description" required></textarea>
+                                <textarea class="form-control" id="inputtext" rows="3" name="description" required placeholder="กรุณากรอกรายละเอียด"></textarea>
                             </div>
 
                             <div class="text-center pt-4">
                                 <a href="repair_have.php" class="btn btn-primary" style="color:white">เคยซ่อมแล้วหรือไม่?</a>
-                                <button type="submit" class="btn btn-success">ยืนยัน</button>
+                                <button type="submit" class="btn btn-success" value="Upload Image" name="submit">ยืนยัน</button>
 
                             </div>
 
@@ -106,9 +162,10 @@ $row = mysqli_fetch_array($result);
     </div>
     </div>
 
-
     <!-- footer-->
-    <?php include('footer/footer.php') ?>
+    <?php
+    // include('footer/footer.php') 
+    ?>
     <!-- end footer-->
 
     <script>

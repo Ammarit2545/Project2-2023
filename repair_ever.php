@@ -41,6 +41,7 @@ $row = mysqli_fetch_array($result);
     $sql1 = "SELECT * FROM repair WHERE r_id = '$id_r ' AND m_id = '$id'";
     $result1 = mysqli_query($conn, $sql1);
     $row1 = mysqli_fetch_array($result1);
+    $company = $row1['com_id'];
 
     $sql2 = "SELECT * FROM get_repair WHERE r_id = '$id_r'";
     $result2 = mysqli_query($conn, $sql2);
@@ -68,8 +69,8 @@ $row = mysqli_fetch_array($result);
                     <div class="col-12">
                         <div class="row">
                             <div class="col-6">
-                            <input type="text" class="form-control input" id="borderinput" name="name_brand" readonly placeholder="ชื่อยี่ห้อ" value="<?= $row1['r_brand'] ?>">
-                            <input type="text" class="form-control input" id="borderinput" name="id_repair" readonly placeholder="ไอดี" value="<?= $id_r ?>" style="display:none">
+                                <input type="text" class="form-control input" id="borderinput" name="name_brand" readonly placeholder="ชื่อยี่ห้อ" value="<?= $row1['r_brand'] ?>">
+                                <input type="text" class="form-control input" id="borderinput" name="id_repair" readonly placeholder="ไอดี" value="<?= $id_r ?>" style="display:none">
                             </div>
                             <div class="col-6">
                                 <input type="text" class="form-control input" id="borderinput" name="serial_number" readonly placeholder="เลข Serial Number(ไม่จำเป็น)" value="<?= $row1['r_serial_number'] ?>">
@@ -87,22 +88,63 @@ $row = mysqli_fetch_array($result);
                         </div>
                         <br>
 
-                        <div class="row">
-                            <div class="col">
-                                <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
-                                <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" readonly value="<?= $row['m_tel'] ?>">
+                        <?php
+                        $com_check = $row1['com_id'];
+                        if ($com_check != NULL) {
+                            $sql_c = "SELECT * FROM company WHERE com_id = '$company' AND del_flg = '0'";
+                            $result_c = mysqli_query($conn, $sql_c);
+                            $row_c = mysqli_fetch_array($result_c);
+
+                            $company = $row_c['com_name'];
+                        ?>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
+                                    <input type="text" class="form-control" id="borderinput" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $row2['get_tel'] ?>" readonly require>
+                                </div>
+                                <div class="col-6">
+                                    <label for="borderinput1" class="form-label">ชื่อบริษัท</label>
+                                    <input type="text" class="form-control" id="borderinput" name="show_company" placeholder="กรุณากรอกชื่อบริษัท" value="<?= $company ?>" readonly require>
+                                    <input type="text" class="form-control" id="borderinput" name="company" placeholder="กรุณากรอกชื่อบริษัท" value="<?= $row_c['com_id'] ?>" readonly require style="display:none">
+                                </div>
                             </div>
-                        </div>
-                        <br>
+                            <br>
+                            <?php } else {
+                            $tel = $row2['get_tel'];
+                            if ($tel) {
+                            ?>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
+                                        <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $row2['get_tel'] ?>" readonly require>
+                                    </div>
+                                </div>
+                                <br>
+                            <?php
+                            } else {
+                            ?>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
+                                        <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" vlaue="<?= $_SESSION["tel"] ?>" require>
+                                    </div>
+                                </div>
+                                <br>
+                            <?php
+                            } ?>
+
+
+                        <?php } ?>
+
 
                         <div class="row">
                             <div class="mb-3">
                                 <label for="inputtext" class="form-label" style="color:red">กรุณากรอกรายละเอียด (กรณีไม่ใช้ข้อมูลเดิม)</label>
-                                <textarea class="form-control" id="inputtext" rows="3" name="description" required><?=$description?></textarea>
+                                <textarea class="form-control" id="inputtext" rows="3" name="description" required><?= $description ?></textarea>
                             </div>
 
                             <div class="text-center pt-4">
-                            <button type="submit" class="btn btn-success">ยืนยัน</button>
+                                <button type="submit" class="btn btn-success">ยืนยัน</button>
                                 <!-- <a herf="repair_non_gua.php" class="btn btn-warning">กลับไปหน้าส่งซ่อม</a> -->
                             </div>
 

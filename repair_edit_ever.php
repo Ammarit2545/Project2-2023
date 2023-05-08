@@ -41,6 +41,7 @@ $row = mysqli_fetch_array($result);
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($result);
 
+    $id_repair = $_SESSION["id_repair"];
     $name_brand = $_SESSION["name_brand"];
     $serial_number = $_SESSION["serial_number"];
     $name_model = $_SESSION["name_model"];
@@ -50,59 +51,54 @@ $row = mysqli_fetch_array($result);
 
     $id = $_SESSION["id"];
 
-    $image1 = $_SESSION["image1"];
-    $image2 = $_SESSION["image2"];
-    $image3 = $_SESSION["image3"];
-    $image4 = $_SESSION["image4"];
-
-    $folderName = "uploads/$id"; // the name of the new folder
-    if (!file_exists($folderName)) { // check if the folder already exists
-        mkdir($folderName); // create the new folder
-        // echo "Folder created successfully";
-    } else {
-        // echo "Folder already exists";
-    }
-
-
     ?>
     <!-- end navbar-->
 
     <div class="background"></div>
 
     <div class="px-5 pt-5 edit">
-        <h1 class="pt-5 text-center">ตรวจเช็คข้อมูลก่อนทำการบันทึก</h1>
+        <h1 class="pt-5 text-center">การบริการส่งซ่อม</h1>
         <center>
-            <p>ข้อมูลถูกต้องหรือไม่</p>
+            <p>แบบไม่มีกับมีประกันทางร้าน</p>
         </center>
-        <br>
-        <form action="action/add_repair_db.php" method="POST" enctype="multipart/form-data">
+        <?php 
+        $company_check = $_SESSION["company"];
+
+        $id = $_GET["id"];
+        if($company_check != NULL){
+           ?><form action="action/add_repair_gua.php" method="POST"><?php
+        }else{
+            ?><form action="action/add_repair_non_gua.php" method="POST">
+            <?php
+        }
+        ?>
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <div class="row">
                             <div class="col-6">
-                            <label for="borderinput" class="form-label">ชื่อยี่ห้อ</label>
-                                <input type="text" class="form-control input" id="borderinput" name="name_brand" placeholder="ชื่อยี่ห้อ" value="<?= $name_brand ?>" readonly require>
+                                <input type="text" class="form-control input" id="borderinput" name="name_brand" placeholder="ชื่อยี่ห้อ" value="<?= $name_brand ?>" required>
+                                <?php
+                                    if($id != NULL){
+                                    ?><input type="text" class="form-control input" id="borderinput" name="id_repair" placeholder="ไอดี" value="<?= $id_repair ?>" required style="display:none"><?php
+                                    }
+                                    ?>
                             </div>
                             <div class="col-6">
-                            <label for="borderinput" class="form-label">หมายเลข Serial Number</label>
-                                <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="ไม่มีเลข Serial Number" value="<?= $serial_number ?>" readonly>
+                                <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="เลข Serial Number  (ไม่จำเป็น)" value="<?= $serial_number ?>">
                             </div>
                         </div>
                         <br>
 
                         <div class="row">
                             <div class="col-6">
-                            <label for="borderinput" class="form-label">ชื่อรุ่น</label>
-                                <input type="text" class="form-control input" id="borderinput" name="name_model" placeholder="ชื่อรุ่น" value="<?= $name_model ?>" readonly require>
+                                <input type="text" class="form-control input" id="borderinput" name="name_model" placeholder="ชื่อรุ่น" value="<?= $name_model ?>" required>
                             </div>
                             <div class="col-6">
-                            <label for="borderinput" class="form-label">หมายเลขรุ่น</label>
-                                <input type="text" class="form-control input" id="borderinput" name="number_model" placeholder="ไม่มีหมายเลขรุ่น" value="<?= $number_model ?>" readonly>
+                                <input type="text" class="form-control input" id="borderinput" name="number_model" placeholder="หมายเลขรุ่น  (ไม่จำเป็น)" value="<?= $number_model ?>">
                             </div>
                         </div>
                         <br>
-
 
                         <?php 
                         $company = $_SESSION["company"];
@@ -111,7 +107,7 @@ $row = mysqli_fetch_array($result);
                                 $result_c = mysqli_query($conn, $sql_c);
                                 $row_c = mysqli_fetch_array($result_c);
 
-                                $company = $row_c['com_name'];
+                                
                             ?>
                         <div class="row">
                             <div class="col-6">
@@ -120,7 +116,16 @@ $row = mysqli_fetch_array($result);
                             </div>
                             <div class="col-6">
                                 <label for="borderinput1" class="form-label">ชื่อบริษัท</label>
-                                <input type="text" class="form-control" id="borderinput" name="company" placeholder="กรุณากรอกชื่อบริษัท" value="<?= $company ?>" readonly require>
+                                <select class="form-select" aria-label="Default select example" name="company">
+                                    <option value="<?= $row_c['com_id'] ?>"><?= $row_c['com_name'] ?></option>
+                                    <?php
+                                    $sql_c = "SELECT * FROM company WHERE del_flg = '0'";
+                                    $result_c = mysqli_query($conn, $sql_c);
+                                    while ($row_c = mysqli_fetch_array($result_c)) {
+                                    ?><option value="<?= $row_c['com_id'] ?>"><?= $row_c['com_name'] ?></option><?php
+                                    }
+                                ?>
+                                </select>
                             </div>
                         </div>
                         <br>
@@ -134,9 +139,6 @@ $row = mysqli_fetch_array($result);
                         </div>
                         <br>
                         <?php } ?>
-
-                        
-
                         <label for="borderinput1" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ</label>
                         <div class="row">
                             <!-- <?php
@@ -256,12 +258,11 @@ $row = mysqli_fetch_array($result);
 
                         <div class="row">
                             <div class="mb-3">
-                                <label for="inputtext" class="form-label">รายละเอียดการซ่อม</label>
-                                <textarea class="form-control" id="inputtext" rows="3" name="description" readonly require><?= $description ?></textarea>
+                                <label for="inputtext" class="form-label">กรุณากรอกรายละเอียด</label>
+                                <textarea class="form-control" id="inputtext" rows="3" name="description" required><?= $description  ?></textarea>
                             </div>
 
                             <div class="text-center pt-4">
-                                <a href="repair_edit.php" class="btn btn-danger">แก้ไขข้อมูล</a>
                                 <button type="submit" class="btn btn-success">ยืนยัน</button>
                             </div>
 
@@ -279,9 +280,7 @@ $row = mysqli_fetch_array($result);
 
 
     <!-- footer-->
-    <?php
-    //  include('footer/footer.php') 
-     ?>
+    <?php include('footer/footer.php') ?>
     <!-- end footer-->
 
     <script>

@@ -79,6 +79,22 @@ $search = rtrim($search);
                 font-size: 16px;
             }
         }
+
+        @media only screen and (max-width: 1215px) {
+            #select_under {
+                display: inline;
+            }
+
+            #bar_under {
+                display: none;
+            }
+        }
+
+        @media only screen and (min-width: 1215px) {
+            #select_under {
+                display: none;
+            }
+        }
     </style>
 </head>
 
@@ -87,12 +103,6 @@ $search = rtrim($search);
     <!-- navbar-->
     <?php
     include('bar/topbar_user.php');
-
-    $id = $_SESSION["id"];
-
-    $sql = "SELECT * FROM member WHERE m_id = '$id'";
-    $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_array($result);
     ?>
     <!-- end navbar-->
 
@@ -101,43 +111,44 @@ $search = rtrim($search);
     <div class="px-5 pt-5 edit">
 
         <?php if (!isset($_GET["search"])) { ?>
-            <h1 class="pt-5 text-center" id="title_main">ข้อมูลการซ่อมทั้งหมดของคุณ <?= $row['m_fname'] . " " . $row['m_lname'] ?></h1>
+            <h1 class="pt-5 text-center" id="title_main">ข้อมูลการซ่อมทั้งหมดของคุณ <?= $row['m_fname'] . " " . $row['m_lname']  ?></h1>
         <?php } else { ?>
             <h1 class="pt-5 text-center">ผลการหาข้อมูล "<?= $search ?>" </h1>
         <?php } ?>
         <br>
-
-        <center>
-            <p>เลือกข้อมูลที่ท่านต้องการ
-                <!-- <a href="#" style="text-decoration: none; color : green">(หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น)</a>  -->
-            </p>
-        </center>
-        <form class="search-form" action="repair_have.php" method="GET">
+        <form class="search-form" action="history_main.php" method="GET">
             <input type="text" name="search" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น" value="<?= $search ?>">
             <button type="submit">Search</button>
         </form>
         <br>
+        <!-- <center>
+      <hr width="70%">
+    </center> -->
+        <!-- <center>
+      <hr width="70%">
+    </center> -->
+
         <form action="action/add_repair_non_gua.php" method="POST">
             <div class="container">
                 <div class="row">
                     <?php
-                    if (!isset($search) and !isset($type)) {
-                        $sql = "SELECT * FROM repair 
-                        LEFT JOIN get_repair ON get_repair.r_id = repair.r_id 
-                        LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id 
-                        WHERE repair.m_id = '$id' AND repair_status.status_id = 3 ORDER BY repair.r_id DESC;";
-                        $result = mysqli_query($conn, $sql);
+                    if ($search == NULL) {
+                        $sql = "SELECT * FROM repair
+                                LEFT JOIN get_repair ON get_repair.r_id = repair.r_id
+                                LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id
+                                WHERE m_id = '$id'AND status_id = '3';";
                     } else {
-                        $sql = "SELECT * FROM repair 
-                        LEFT JOIN get_repair ON get_repair.r_id = repair.r_id 
-                        LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id 
-                        WHERE repair.m_id = '$id' AND repair_status.status_id = 3 
-                        AND repair.r_brand LIKE '%$search%' 
-                       
-                        ORDER BY repair.r_id DESC;";
-                $result = mysqli_query($conn, $sql);
+                        $sql = "SELECT * FROM repair
+                                LEFT JOIN get_repair ON get_repair.r_id = repair.r_id
+                                LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id
+                                WHERE m_id = '$id'AND repair_status.status_id = '3'
+                                AND r_brand LIKE '%$search%' 
+                                OR r_model LIKE '%$search%' 
+                                OR r_serial_number LIKE '%$search%'
+                                OR CONCAT(r_brand,' ',r_model) LIKE '%$search%' 
+                                OR CONCAT(r_brand,'',r_model) LIKE '%$search%' ORDER BY rs_id DESC";
                     }
-
+                    $result = mysqli_query($conn, $sql);
                     $i = 0;
                     $found_data = false;
 
@@ -147,6 +158,12 @@ $search = rtrim($search);
                         $sql_c = "SELECT * FROM get_repair WHERE r_id = '$id_r' AND del_flg = '0' ORDER BY get_r_id DESC LIMIT 1";
                         $result_c = mysqli_query($conn, $sql_c);
                         $row_c = mysqli_fetch_array($result_c);
+
+                        $id_g = $row_c[0];
+
+                        $sql_s = "SELECT * FROM repair_status LEFT JOIN status_type ON status_type.status_id = repair_status.status_id WHERE get_r_id = '$id_g'  ORDER BY rs_date_time DESC LIMIT 1";
+                        $result_s = mysqli_query($conn, $sql_s);
+                        $row_s = mysqli_fetch_array($result_s);
 
                         // Check if data is found
                         if ($row_c) {
@@ -158,7 +175,7 @@ $search = rtrim($search);
                             <a href="repair_ever.php?id=<?= $row1['r_id'] ?>" id="card_sent">
                                 <div class="card" style="box-shadow: 0px 10px 50px rgba(0, 1, 65, 0.18);">
                                     <div class="card-header">
-                                        <h2> <button type="button" class="btn btn-primary" style="font-size:16px"><?= $i ?></button> : <?= $row1['r_brand'] ?> <?= $row1['r_model'] ?> </h2>
+                                        <h2> <button type="button" class="btn btn-primary" style="font-size:16px; display:inline-block;"><?= $i ?></button> : <?= $row1['r_brand'] ?> <?= $row1['r_model'] ?> <button class="btn" style="background-color: <?= $row_s['status_color'] ?>; color:white;"><?= $row_s['status_name'] ?></button></h2>
                                     </div>
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item">
@@ -197,7 +214,7 @@ $search = rtrim($search);
                     if (!$found_data) { ?>
                         <center>
                             <br><br><br>
-                            <h1>"ไม่พบข้อมูลในระบบ"</h1>
+                            <h1>"ไม่พบประวัติการซ่อมในระบบ"</h1>
                         </center><?php } ?>
                 </div>
             </div>

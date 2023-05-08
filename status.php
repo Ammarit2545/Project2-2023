@@ -12,8 +12,14 @@ $sql = "SELECT * FROM member WHERE m_id = '$id'";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
-$search = $_GET["search"];
-$search = rtrim($search);
+if (isset($_GET["search"])) {
+  $search = $_GET["search"];
+  $search = rtrim($search);
+}
+
+if (isset($_GET["status_id"])) {
+  $status_id = $_GET["status_id"];
+}
 
 ?>
 
@@ -113,7 +119,7 @@ $search = rtrim($search);
     <?php if (!isset($_GET["search"])) { ?>
       <h1 class="pt-5 text-center" id="title_main">ข้อมูลการซ่อมทั้งหมดของคุณ <?= $row['m_fname'] . " " . $row['m_lname']  ?></h1>
     <?php } else { ?>
-      <h1 class="pt-5 text-center">ผลการหาข้อมูล "<?= $search ?>" </h1>
+      <h1 class="pt-5 text-center">ผลการหาข้อมูล "<?= $search ." ". $status_id ?>" </h1>
     <?php } ?>
     <br>
     <div class="container">
@@ -152,10 +158,17 @@ $search = rtrim($search);
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="status.php">ทั้งหมด</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link " href="#">ที่ต้องชำระ</a>
-              </li>
-              <li class="nav-item">
+              <?php
+              $sql_s = "SELECT * FROM `status_type`";
+              $result_s = mysqli_query($conn, $sql_s);
+
+              while ($row_s = mysqli_fetch_array($result_s)) {
+              ?>
+                <li class="nav-item">
+                  <a class="nav-link" href="status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>"><?= $row_s['status_name'] ?></a>
+                </li>
+              <?php } ?>
+              <!-- <li class="nav-item">
                 <a class="nav-link " href="#">กำลังดำเนินการ</a>
               </li>
               <li class="nav-item">
@@ -163,16 +176,16 @@ $search = rtrim($search);
               </li>
               <li class="nav-item">
                 <a class="nav-link " href="#">รอการยืนยัน</a>
-              </li>
+              </li> -->
               <!-- <li class="nav-item">
               <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
             </li> -->
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a class="nav-link" href="#">สำเร็จ</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">ยกเลิกแล้ว</a>
-              </li>
+                <a class="nav-link" href="status.php?status_id=11&search=<?= $search ?>">ยกเลิกแล้ว</a>
+              </li> -->
               <!-- <li class="nav-item">
               <a class="nav-link" href="#">การคืนเงิน</a>
             </li> -->
@@ -200,14 +213,30 @@ $search = rtrim($search);
         <div class="row">
           <?php
           if ($search == NULL) {
-            $sql = "SELECT * FROM `repair` WHERE m_id= '$id' ORDER BY r_id DESC";
-          } else {
+            $sql = "SELECT * FROM `get_repair` 
+            LEFT JOIN repair ON get_repair.r_id = repair.r_id
+            WHERE m_id= '$id' ORDER BY get_repair.get_r_date_in DESC;";
+          }
+          elseif ($status_id > 0) {
+              $sql="SELECT get_repair.*, repair.*, rs.status_id
+              FROM get_repair
+              LEFT JOIN repair ON get_repair.r_id = repair.r_id
+              LEFT JOIN (
+                SELECT get_r_id, MAX(rs_date_time) AS max_date
+                FROM repair_status
+                GROUP BY get_r_id
+              ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
+              LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
+              WHERE repair.m_id = '$id' AND rs.status_id = '$status_id'
+              ORDER BY get_repair.get_r_date_in DESC;";
+          } 
+          else {
             $sql = "SELECT * FROM repair WHERE m_id = '$id' 
-                                AND r_brand LIKE '%$search%' 
-                                OR r_model LIKE '%$search%' 
-                                OR r_serial_number LIKE '%$search%'
-                                OR CONCAT(r_brand,' ',r_model) LIKE '%$search%' 
-                                OR CONCAT(r_brand,'',r_model) LIKE '%$search%' ORDER BY r_id DESC";
+                AND (r_brand LIKE '%$search%' 
+                OR r_model LIKE '%$search%' 
+                OR r_serial_number LIKE '%$search%'
+                OR CONCAT(r_brand,' ',r_model) LIKE '%$search%' 
+                OR CONCAT(r_brand,'',r_model) LIKE '%$search%') ORDER BY r_id DESC";
           }
           $result = mysqli_query($conn, $sql);
           $i = 0;
@@ -216,15 +245,17 @@ $search = rtrim($search);
           while ($row1 = mysqli_fetch_array($result)) {
             $i = $i + 1;
             $id_r = $row1[0];
-            $sql_c = "SELECT * FROM get_repair WHERE r_id = '$id_r' ORDER BY get_r_id DESC LIMIT 1";
+            $sql_c = "SELECT * FROM get_repair WHERE r_id = '$id_r' AND del_flg = '0' ORDER BY get_r_id DESC LIMIT 1";
             $result_c = mysqli_query($conn, $sql_c);
             $row_c = mysqli_fetch_array($result_c);
 
             $id_g = $row_c[0];
 
-            $sql_s = "SELECT * FROM repair_status LEFT JOIN status_type ON status_type.status_id = repair_status.status_id WHERE get_r_id = '$id_g' ORDER BY get_r_id DESC LIMIT 1";
+            $sql_s = "SELECT status_type.status_name,status_type.status_color,repair_status.status_id FROM repair_status 
+            LEFT JOIN status_type ON status_type.status_id = repair_status.status_id 
+            WHERE get_r_id = '$id_r' ORDER BY rs_date_time DESC LIMIT 1;";
             $result_s = mysqli_query($conn, $sql_s);
-            $row_s = mysqli_fetch_array($result_s);
+            $row_status = mysqli_fetch_array($result_s);
 
             // Check if data is found
             if ($row_c) {
@@ -233,14 +264,21 @@ $search = rtrim($search);
             }
           ?>
             <div class="col-md-6 mt-5">
-              <a href="repair_ever.php?id=<?= $row1['r_id'] ?>" id="card_sent">
+              <a href="status_detail.php?id=<?= $id_r ?>" id="card_sent">
                 <div class="card" style="box-shadow: 0px 10px 50px rgba(0, 1, 65, 0.18);">
                   <div class="card-header">
-                    <h2> <button type="button" class="btn btn-primary" style="font-size:16px; display:inline-block;"><?= $i ?></button> : <?= $row1['r_brand'] ?> <?= $row1['r_model'] ?> <button class="btn" style="background-color: <?= $row_s['status_color'] ?>; color:white;"><?= $row_s['status_name'] ?></button></h2>
+                    <h2> <button type="button" class="btn btn-primary" style="font-size:16px; display:inline-block;"><?= $i ?></button> : <?= $row1['r_brand'] ?> <?= $row1['r_model'] ?>
+                      <button class="btn" style="background-color: <?= $row_status['status_color'] ?>; color:white;"><?= $row_status['status_name'] ?></button>
+
+                      <?php if ($row1['get_r_record'] != 1) {
+                      ?><button class="btn btn-outline-secondary">#ครั้งที่ <?= $row1['get_r_record'] ?> </button><?php
+                                                                                                                } ?>
+
+                    </h2>
                   </div>
                   <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                      <h5 style="color:blue" id="head_text">หมายเลขประจำเครื่อง : </h5>
+                      <h5 style="color:blue" id="head_text"><?= $id_r ?> หมายเลขประจำเครื่อง : </h5>
                       <br>
                       <p style="text-align:start" id="body_text"> Serial Number : <?= $row1['r_serial_number'] ?></p>
                       <p style="text-align:start" id="body_text">Model : <?= $row1['r_number_model'] ?></p>
