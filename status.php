@@ -118,8 +118,15 @@ if (isset($_GET["status_id"])) {
 
     <?php if (!isset($_GET["search"])) { ?>
       <h1 class="pt-5 text-center" id="title_main">ข้อมูลการซ่อมทั้งหมดของคุณ <?= $row['m_fname'] . " " . $row['m_lname']  ?></h1>
-    <?php } else { ?>
-      <h1 class="pt-5 text-center">ผลการหาข้อมูล "<?= $search ." ". $status_id ?>" </h1>
+    <?php }elseif($status_id == ""){
+      ?><h1 class="pt-5 text-center" id="title_main">ข้อมูลการซ่อมทั้งหมดของคุณ <?= $row['m_fname'] . " " . $row['m_lname']  ?></h1><?php
+    } 
+    else {
+      $sql_s = "SELECT * FROM `status_type` WHERE status_id = $status_id";
+      $result_s = mysqli_query($conn, $sql_s);
+      $row_sk = mysqli_fetch_array($result_s);
+    ?>
+      <h1 class="pt-5 text-center">ผลการหาข้อมูล "<?= $search . " " . "ประเภท - " .$row_sk['status_name'] ?>" </h1>
     <?php } ?>
     <br>
     <div class="container">
@@ -141,26 +148,26 @@ if (isset($_GET["status_id"])) {
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" style="box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);">ทั้งหมด</a>
                 <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="status.php">ทั้งหมด</a></li>
-                <?php
-              $sql_s = "SELECT * FROM `status_type`";
-              $result_s = mysqli_query($conn, $sql_s);
+                  <li><a class="dropdown-item" href="status.php">ทั้งหมด</a></li>
+                  <?php
+                  $sql_s = "SELECT * FROM `status_type`";
+                  $result_s = mysqli_query($conn, $sql_s);
 
-              while ($row_s = mysqli_fetch_array($result_s)) {
-              ?>
-                <li class="nav-item">
-                  <li> <a class="dropdown-item" href="status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>"><?= $row_s['status_name'] ?></a></li>
-                </li>
-              <?php } ?>
-                  <!-- <li><a class="dropdown-item" href="#">Action</a></li>
+                  while ($row_s = mysqli_fetch_array($result_s)) {
+                  ?>
+                    <li class="nav-item">
+                    <li> <a class="dropdown-item" href="status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>"><?= $row_s['status_name'] ?></a></li>
+              </li>
+            <?php } ?>
+            <!-- <li><a class="dropdown-item" href="#">Action</a></li>
                   <li><a class="dropdown-item" href="#">Another action</a></li>
                   <li><a class="dropdown-item" href="#">Something else here</a></li>
                   <li>
                     <hr class="dropdown-divider">
                   </li>
                   <li><a class="dropdown-item" href="#">Separated link</a></li> -->
-                </ul>
-              </li>
+            </ul>
+            </li>
 
             </ul>
           </center>
@@ -207,10 +214,13 @@ if (isset($_GET["status_id"])) {
       </div>
     </div>
     <br>
-    <form class="search-form" action="status.php" method="GET">
+    <?php if($status_id < 0 || !isset($status_id)){ ?>
+      <form class="search-form" action="status.php" method="GET">
       <input type="text" name="search" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น" value="<?= $search ?>">
+      <input type="text" name="status_id" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น" value="<?= $status_id ?>" style="display : none ">
       <button type="submit">Search</button>
     </form>
+      <?php } ?>
     <br>
     <!-- <center>
       <hr width="70%">
@@ -227,9 +237,8 @@ if (isset($_GET["status_id"])) {
             $sql = "SELECT * FROM `get_repair` 
             LEFT JOIN repair ON get_repair.r_id = repair.r_id
             WHERE m_id= '$id' ORDER BY get_repair.get_r_date_in DESC;";
-          }
-          elseif ($status_id > 0) {
-              $sql="SELECT get_repair.*, repair.*, rs.status_id
+          } elseif ($status_id > 0) {
+            $sql = "SELECT get_repair.*, repair.*, rs.status_id
               FROM get_repair
               LEFT JOIN repair ON get_repair.r_id = repair.r_id
               LEFT JOIN (
