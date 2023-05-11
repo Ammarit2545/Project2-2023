@@ -9,7 +9,11 @@ $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
 ?>
-
+<?php
+if(!isset($_SESSION['id_repair'])){
+    header("location:home.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -68,7 +72,7 @@ $row = mysqli_fetch_array($result);
         if($company_check != NULL){
            ?><form action="action/add_repair_gua.php" method="POST"><?php
         }else{
-            ?><form action="action/add_repair_non_gua.php" method="POST">
+            ?><form action="action/add_rapair_ever.php" method="POST">
             <?php
         }
         ?>
@@ -106,8 +110,6 @@ $row = mysqli_fetch_array($result);
                                 $sql_c = "SELECT * FROM company WHERE com_id = '$company' AND del_flg = '0'";
                                 $result_c = mysqli_query($conn, $sql_c);
                                 $row_c = mysqli_fetch_array($result_c);
-
-                                
                             ?>
                         <div class="row">
                             <div class="col-6">

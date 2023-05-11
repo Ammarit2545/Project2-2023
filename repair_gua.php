@@ -97,6 +97,7 @@ $row = mysqli_fetch_array($result);
                                 <label for="tel">หมายเลขโทรศัพท์</label>
                                 <input type="text" class="form-control" id="borderinput" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $row['m_tel'] ?>" required>
                             </div>
+                            
                             <div class="col-6">
                                 <label for="tel">ชื่อบริษัท</label>
                                 <select class="form-select" aria-label="Default select example" name="company">
@@ -111,6 +112,43 @@ $row = mysqli_fetch_array($result);
                                 </select>
                             </div>
                         </div>
+                        <br>
+                        <label for="borderinput1" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ</label>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <input type="file" name="image1" onchange="previewImage('image-preview1')" id="fileToUpload">
+                                    </div>
+                                    <div class="col-3">
+                                        <input type="file" name="image2" onchange="previewImage('image-preview2')" id="fileToUpload">
+                                        <div id="image-preview2"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <input type="file" name="image3" onchange="previewImage('image-preview3')" id="fileToUpload">
+                                        <div id="image-preview3"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <input type="file" name="image4" onchange="previewImage('image-preview4')" id="fileToUpload">
+                                        <div id="image-preview4"></div>
+                                    </div>
+
+                                    <script>
+                                        function previewImage(previewId) {
+                                            var input = event.target;
+                                            var previewContainer = document.getElementById(previewId);
+                                            var previewImage = document.createElement('img');
+
+                                            if (input.files && input.files[0]) {
+                                                var reader = new FileReader();
+                                                reader.onload = function(e) {
+                                                    previewImage.setAttribute('src', e.target.result);
+                                                    previewContainer.appendChild(previewImage);
+                                                };
+                                                reader.readAsDataURL(input.files[0]);
+                                            }
+                                        }
+                                    </script>
+
+                                </div>
                         <br>
 
 

@@ -64,7 +64,7 @@ $row = mysqli_fetch_array($result);
         <center>
             <p>แบบไม่มีกับมีประกันทางร้าน</p>
         </center>
-        <form action="action/add_repair_non_gua.php" method="POST" enctype="multipart/form-data">
+        <form action="action/add_repair_non_gua.php" method="POST" class="contact-form" name="inputname" enctype="multipart/form-data">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
@@ -99,10 +99,8 @@ $row = mysqli_fetch_array($result);
                             </div>
                         </div>
                         <br>
-                        <!-- <label for="borderinput1" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ</label>
+                        <label for="borderinput1" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ</label>
                         <div class="row">
-                           
-
                             <div class="col-3">
                                 <input type="file" name="image1" onchange="previewImage('image-preview1')" id="fileToUpload">
                             </div>
@@ -137,7 +135,7 @@ $row = mysqli_fetch_array($result);
                             </script>
 
                         </div>
-                        <br> -->
+                        <br>
                         <div class="row">
                             <div class="mb-3">
                                 <label for="inputtext" class="form-label">กรุณากรอกรายละเอียด</label>

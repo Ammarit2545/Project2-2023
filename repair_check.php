@@ -9,7 +9,11 @@ $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
 ?>
-
+<?php
+if(!isset($_SESSION['id_repair'])){
+    header("location:home.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -81,11 +85,11 @@ $row = mysqli_fetch_array($result);
                     <div class="col-12">
                         <div class="row">
                             <div class="col-6">
-                            <label for="borderinput" class="form-label">ชื่อยี่ห้อ</label>
+                                <label for="borderinput" class="form-label">ชื่อยี่ห้อ</label>
                                 <input type="text" class="form-control input" id="borderinput" name="name_brand" placeholder="ชื่อยี่ห้อ" value="<?= $name_brand ?>" readonly require>
                             </div>
                             <div class="col-6">
-                            <label for="borderinput" class="form-label">หมายเลข Serial Number</label>
+                                <label for="borderinput" class="form-label">หมายเลข Serial Number</label>
                                 <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="ไม่มีเลข Serial Number" value="<?= $serial_number ?>" readonly>
                             </div>
                         </div>
@@ -93,49 +97,48 @@ $row = mysqli_fetch_array($result);
 
                         <div class="row">
                             <div class="col-6">
-                            <label for="borderinput" class="form-label">ชื่อรุ่น</label>
+                                <label for="borderinput" class="form-label">ชื่อรุ่น</label>
                                 <input type="text" class="form-control input" id="borderinput" name="name_model" placeholder="ชื่อรุ่น" value="<?= $name_model ?>" readonly require>
                             </div>
                             <div class="col-6">
-                            <label for="borderinput" class="form-label">หมายเลขรุ่น</label>
+                                <label for="borderinput" class="form-label">หมายเลขรุ่น</label>
                                 <input type="text" class="form-control input" id="borderinput" name="number_model" placeholder="ไม่มีหมายเลขรุ่น" value="<?= $number_model ?>" readonly>
                             </div>
                         </div>
                         <br>
 
 
-                        <?php 
+                        <?php
                         $company = $_SESSION["company"];
-                        if($company != NULL) {
-                                $sql_c = "SELECT * FROM company WHERE com_id = '$company' AND del_flg = '0'";
-                                $result_c = mysqli_query($conn, $sql_c);
-                                $row_c = mysqli_fetch_array($result_c);
+                        if ($company != NULL) {
+                            $sql_c = "SELECT * FROM company WHERE com_id = '$company' AND del_flg = '0'";
+                            $result_c = mysqli_query($conn, $sql_c);
+                            $row_c = mysqli_fetch_array($result_c);
 
-                                $company = $row_c['com_name'];
-                            ?>
-                        <div class="row">
-                            <div class="col-6">
-                                <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
-                                <input type="text" class="form-control" id="borderinput" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $tel ?>" readonly require>
+                            $company = $row_c['com_name'];
+                        ?>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
+                                    <input type="text" class="form-control" id="borderinput" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $tel ?>" readonly require>
+                                </div>
+                                <div class="col-6">
+                                    <label for="borderinput1" class="form-label">ชื่อบริษัท</label>
+                                    <input type="text" class="form-control" id="borderinput" name="company" placeholder="กรุณากรอกชื่อบริษัท" value="<?= $company ?>" readonly require>
+                                </div>
                             </div>
-                            <div class="col-6">
-                                <label for="borderinput1" class="form-label">ชื่อบริษัท</label>
-                                <input type="text" class="form-control" id="borderinput" name="company" placeholder="กรุณากรอกชื่อบริษัท" value="<?= $company ?>" readonly require>
-                            </div>
-                        </div>
-                        <br>
-                        <?php }else{?>
+                            <br>
+                        <?php } else { ?>
 
-                        <div class="row">
-                            <div class="col">
-                                <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
-                                <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $tel ?>" readonly require>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
+                                    <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $tel ?>" readonly require>
+                                    <td class="image"><img src="<?php echo $target_file; ?>" /></td>
+                                </div>
                             </div>
-                        </div>
-                        <br>
+                            <br>
                         <?php } ?>
-
-                        
 
                         <label for="borderinput1" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ</label>
                         <div class="row">
@@ -218,7 +221,7 @@ $row = mysqli_fetch_array($result);
                                 }
                             </script> -->
 
-                            <div class="col-3">
+                            <!-- <div class="col-3">
                                 <input type="file" name="image1" onchange="previewImage('image-preview1')" id="fileToUpload">
                             </div>
                             <div class="col-3">
@@ -232,7 +235,20 @@ $row = mysqli_fetch_array($result);
                             <div class="col-3">
                                 <input type="file" name="image4" onchange="previewImage('image-preview4')" id="fileToUpload">
                                 <div id="image-preview4"></div>
-                            </div>
+                            </div> -->
+                            <?php
+                            foreach (new DirectoryIterator("uploads/$id/Holder/") as $file) {
+                                if ($file->isFile()) {
+                                    // print $file->getFilename() . "\n";
+                            ?>
+                                    <div class="col-3">
+                                        <img src="uploads/<?= $id ?>/Holder/<?= $file ?>" style="max-width: 100%; height: auto;" alt="picture error">
+                                    </div>
+                            <?php
+                                }
+                            }
+                            ?>
+
 
                             <script>
                                 function previewImage(previewId) {
@@ -281,7 +297,7 @@ $row = mysqli_fetch_array($result);
     <!-- footer-->
     <?php
     //  include('footer/footer.php') 
-     ?>
+    ?>
     <!-- end footer-->
 
     <script>

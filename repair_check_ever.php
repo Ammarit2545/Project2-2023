@@ -9,6 +9,11 @@ $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
 ?>
+<?php
+if(!isset($_SESSION['id_repair'])){
+    header("location:home.php");
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -52,7 +57,7 @@ $row = mysqli_fetch_array($result);
 
     $id = $_SESSION["id"];
 
-?>
+    ?>
     <!-- end navbar-->
 
     <div class="background"></div>
@@ -88,37 +93,162 @@ $row = mysqli_fetch_array($result);
                         </div>
                         <br>
 
-                        <?php 
-                        if($company != NULL) {
-                                $sql_c = "SELECT * FROM company WHERE com_id = '$company' AND del_flg = '0'";
-                                $result_c = mysqli_query($conn, $sql_c);
-                                $row_c = mysqli_fetch_array($result_c);
+                        <?php
+                        if ($company != NULL) {
+                            $sql_c = "SELECT * FROM company WHERE com_id = '$company' AND del_flg = '0'";
+                            $result_c = mysqli_query($conn, $sql_c);
+                            $row_c = mysqli_fetch_array($result_c);
 
-                                $company = $row_c['com_name'];
-                            ?>
-                        <div class="row">
-                            <div class="col-6">
-                                <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
-                                <input type="text" class="form-control" id="borderinput" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $tel ?>" readonly require>
+                            $company = $row_c['com_name'];
+                        ?>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
+                                    <input type="text" class="form-control" id="borderinput" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $tel ?>" readonly require>
+                                </div>
+                                <div class="col-6">
+                                    <label for="borderinput1" class="form-label">ชื่อบริษัท</label>
+                                    <input type="text" class="form-control" id="borderinput" name="company" placeholder="กรุณากรอกชื่อบริษัท" value="<?= $company ?>" readonly require>
+                                </div>
                             </div>
-                            <div class="col-6">
-                                <label for="borderinput1" class="form-label">ชื่อบริษัท</label>
-                                <input type="text" class="form-control" id="borderinput" name="company" placeholder="กรุณากรอกชื่อบริษัท" value="<?= $company ?>" readonly require>
-                            </div>
-                        </div>
-                        <br>
-                        <?php }else{?>
+                            <br>
+                        <?php } else { ?>
 
-                        <div class="row">
-                            <div class="col">
-                                <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
-                                <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $tel ?>" readonly require>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
+                                    <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $tel ?>" readonly require>
+                                </div>
                             </div>
-                        </div>
-                        <br>
+                            <br>
                         <?php } ?>
+                        <label for="borderinput1" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ</label>
+                        <div class="row">
+                            <!-- <?php
+                                    if (isset($_POST['submit'])) {
+                                        // handle image upload
+                                        $fileNames = array();
+                                        $counter = 0; // initialize counter
+                                        foreach ($_FILES['image']['tmp_name'] as $key => $tmp_name) {
+                                            if ($counter >= 5) { // check counter against limit
+                                                break;
+                                            }
+                                            $file = $_FILES['image'];
+                                            $fileName = $file['name'][$key];
+                                            $fileTmpName = $file['tmp_name'][$key];
+                                            $fileSize = $file['size'][$key];
+                                            $fileError = $file['error'][$key];
+                                            $fileType = $file['type'][$key];
 
+                                            // check for errors
+                                            if ($fileError === UPLOAD_ERR_OK) {
+                                                $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                                                $allowedExt = array('jpg', 'jpeg', 'png', 'gif');
+                                                if (in_array($fileExt, $allowedExt)) {
+                                                    if ($fileSize < 5000000) { // 5 MB max file size
+                                                        // generate unique file name
+                                                        $newFileName = uniqid('', true) . '.' . $fileExt;
+                                                        $fileDest = 'uploads/' . $newFileName;
+                                                        // move uploaded file to destination folder
+                                                        move_uploaded_file($fileTmpName, $fileDest);
+                                                        $fileNames[] = $newFileName;
+                                                        $counter++; // increment counter
+                                                    } else {
+                                                        echo "File size too large.";
+                                                    }
+                                                } else {
+                                                    echo "Invalid file type.";
+                                                }
+                                            } else {
+                                                echo "Error uploading file.";
+                                            }
+                                        }
 
+                                        // insert image filenames into database
+                                        $db = new mysqli("localhost", "username", "password", "database_name");
+                                        $stmt = $db->prepare("INSERT INTO images (filename) VALUES (?)");
+                                        foreach ($fileNames as $fileName) {
+                                            $stmt->bind_param("s", $fileName);
+                                            $stmt->execute();
+                                        }
+                                        $stmt->close();
+                                        $db->close();
+                                        echo "Images inserted successfully.";
+
+                                        // display uploaded images
+                                        foreach ($fileNames as $fileName) {
+                                            echo '<img src="uploads/' . $fileName . '">';
+                                        }
+                                    }
+                                    ?>
+                            <div class="col-2">
+                                <label for="">กรูณาใส่รูปภาพ (ไม่เกิน 4 รูป)</label>
+                                <button type="button" class="btn btn-primary" onclick="addInput()">Add more images</button>
+                            </div>
+                            <div id="file-inputs">
+                                <input type="file" name="image[]">
+                            </div>
+
+                            <script>
+                                function addInput() {
+                                    var div = document.getElementById("file-inputs");
+                                    var inputCount = div.getElementsByTagName("input").length;
+                                    if (inputCount >= 4) { // check input count against limit
+                                        return;
+                                    }
+                                    var input = document.createElement("input");
+                                    input.type = "file";
+                                    input.name = "image[]";
+                                    div.appendChild(input);
+                                }
+                            </script> -->
+
+                            <!-- <div class="col-3">
+                                <input type="file" name="image1" onchange="previewImage('image-preview1')" id="fileToUpload">
+                            </div>
+                            <div class="col-3">
+                                <input type="file" name="image2" onchange="previewImage('image-preview2')" id="fileToUpload">
+                                <div id="image-preview2"></div>
+                            </div>
+                            <div class="col-3">
+                                <input type="file" name="image3" onchange="previewImage('image-preview3')" id="fileToUpload">
+                                <div id="image-preview3"></div>
+                            </div>
+                            <div class="col-3">
+                                <input type="file" name="image4" onchange="previewImage('image-preview4')" id="fileToUpload">
+                                <div id="image-preview4"></div>
+                            </div> -->
+                            <?php
+                            foreach (new DirectoryIterator("uploads/$id/Holder/") as $file) {
+                                if ($file->isFile()) {
+                                    // print $file->getFilename() . "\n";
+                            ?>
+                                    <div class="col-3">
+                                        <img src="uploads/<?= $id ?>/Holder/<?= $file ?>" style="max-width: 100%; height: auto;" alt="picture error">
+                                    </div>
+                            <?php
+                                }
+                            }
+                            ?>
+                            <script>
+                                function previewImage(previewId) {
+                                    var input = event.target;
+                                    var previewContainer = document.getElementById(previewId);
+                                    var previewImage = document.createElement('img');
+
+                                    if (input.files && input.files[0]) {
+                                        var reader = new FileReader();
+                                        reader.onload = function(e) {
+                                            previewImage.setAttribute('src', e.target.result);
+                                            previewContainer.appendChild(previewImage);
+                                        };
+                                        reader.readAsDataURL(input.files[0]);
+                                    }
+                                }
+                            </script>
+
+                        </div>
+                        <br>
                         <div class="row">
                             <div class="mb-3">
                                 <label for="inputtext" class="form-label">รายละเอียดการซ่อม</label>
@@ -126,7 +256,7 @@ $row = mysqli_fetch_array($result);
                             </div>
 
                             <div class="text-center pt-4">
-                                <a href="repair_edit.php?id=1" class="btn btn-danger">แก้ไขข้อมูล</a>
+                                <a href="repair_edit.php?id=1&ever=1" class="btn btn-danger">แก้ไขข้อมูล</a>
                                 <button type="submit" class="btn btn-success">ยืนยัน</button>
                             </div>
 
@@ -141,10 +271,13 @@ $row = mysqli_fetch_array($result);
 
     </div>
     </div>
+    <br><br><br>
 
 
     <!-- footer-->
-    <?php include('footer/footer.php') ?>
+    <?php 
+    // include('footer/footer.php') 
+    ?>
     <!-- end footer-->
 
     <script>

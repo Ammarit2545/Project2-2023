@@ -58,21 +58,17 @@ if ($id == NULL) {
         <div class="container">
             <div class="row">
 
-                <div class="col-6">
-                    <div style="background-color: #F1F1F1;">
-                        <h1 class="pt-5 text-center">ยี่ห้อ : <?= $row_c['r_brand'] ?> , รุ่น : <?= $row_c['r_model'] ?><h1>
-                                <h1 class="pt-2 text-center">เลข Serial Number : <?= $row_c['r_serial_number'] ?><h1>
-                                        <h1 class="pt-2 text-center">เลขที่ใบรับซ่อมที่ : <?= $row_c['get_r_id'] ?></h1>
-                                        <br><br>
-                    </div>
+                <div class="col-6 text-left" style="background-color: #F1F1F1;">
+                    <h3 class="pt-5"><button class="btn btn-primary">ยี่ห้อ : <?= $row_c['r_brand'] ?> , รุ่น : <?= $row_c['r_model'] ?></button></h3>
+                    <h3 class="pt-2">เลข Serial Number : <?= $row_c['r_serial_number'] ?></h3>
+                    <h3 class="pb-5">เลขที่ใบรับซ่อมที่ : <?= $row_c['get_r_id'] ?></h3>
                 </div>
-                <div class="col-6">
-                    <div style="background-color: #F1F1F1;">
-                        <h1 class="pt-5 text-center">ยี่ห้อ : <?= $row_c['r_brand'] ?> , รุ่น : <?= $row_c['r_model'] ?><h1>
-                                <h1 class="pt-2 text-center">เลข Serial Number : <?= $row_c['r_serial_number'] ?><h1>
-                                        <h1 class="pt-2 text-center">เลขที่ใบรับซ่อมที่ : <?= $row_c['get_r_id'] ?></h1>
-                                        <br><br>
-                    </div>
+                <div class="col-6" style="background-color: #F1F1F1;">
+                    <h3 class="pt-5 text-center"><button class="btn btn-primary">รายละเอียดการซ่อม : </button></h3>
+
+                    <p class="pt-2 text-center"><?= $row_c['get_r_detail'] ?>
+                    <p>
+
                 </div>
                 <br>
             </div>
@@ -113,6 +109,20 @@ if ($id == NULL) {
                                 <h5><button class="btn btn-outline-secondary" style="color : white; background-color : <?= $row1['status_color'] ?>; border : 2px solid <?= $row1['status_color'] ?>;"><?= $row1['status_name'] ?></button></h5>
                                 <p class="mt-2"><?= $row1['rs_detail'] ?></p>
                                 <!-- <button class="btn btn_custom" type="button">ยืนยัน</button> -->
+                                <div class="col text-left" style="background-color: #F1F1F1;">
+                                    <!-- <h3 class="pt-5"><button class="btn btn-primary">รูปภาพ : </button></h3>
+                                     -->
+                                    <?php 
+                                    $status_id = $row1['status_id'];
+                                    $sql_pic = "SELECT * FROM repair_pic WHERE get_r_id = $id_get_r AND status_id = '$status_id'";
+                                    $result_pic = mysqli_query($conn, $sql_pic);
+                                    
+                                    while ($row_pic = mysqli_fetch_array($result_pic)) {
+                                    ?>
+                                        <img src="<?= $row_pic['rp_pic'] ?>" width="100px">
+                                    <?php
+                                    } ?>
+                                </div>
                             </li>
                             <br>
                         <?php } ?>

@@ -118,15 +118,15 @@ if (isset($_GET["status_id"])) {
 
     <?php if (!isset($_GET["search"])) { ?>
       <h1 class="pt-5 text-center" id="title_main">ข้อมูลการซ่อมทั้งหมดของคุณ <?= $row['m_fname'] . " " . $row['m_lname']  ?></h1>
-    <?php }elseif($status_id == ""){
-      ?><h1 class="pt-5 text-center" id="title_main">ข้อมูลการซ่อมทั้งหมดของคุณ <?= $row['m_fname'] . " " . $row['m_lname']  ?></h1><?php
-    } 
-    else {
+    <?php } elseif ($status_id == "") {
+    ?><h1 class="pt-5 text-center" id="title_main">ข้อมูลการซ่อมทั้งหมดของคุณ <?= $row['m_fname'] . " " . $row['m_lname']  ?></h1>
+    <?php
+    } else {
       $sql_s = "SELECT * FROM `status_type` WHERE status_id = $status_id";
       $result_s = mysqli_query($conn, $sql_s);
       $row_sk = mysqli_fetch_array($result_s);
     ?>
-      <h1 class="pt-5 text-center">ผลการหาข้อมูล "<?= $search . " " . "ประเภท - " .$row_sk['status_name'] ?>" </h1>
+      <h1 class="pt-5 text-center">ผลการหาข้อมูล "<?= $search . " " . "ประเภท - " . $row_sk['status_name'] ?>" </h1>
     <?php } ?>
     <br>
     <div class="container">
@@ -134,15 +134,6 @@ if (isset($_GET["status_id"])) {
         <div class="col-2"></div>
         <div class="col">
           <center>
-            <!-- <select class="form-select" aria-label="Default select example" id="select_under">
-              <option selected>ทั้งหมด</option>
-              <option value="1"><a href="home.php">ที่ต้องชำระ</a></option>
-              <option value="2">กำลังดำเนินการ</option>
-              <option value="3">ที่ต้องจัดส่ง</option>
-              <option value="2">รอการยืนยัน</option>
-              <option value="3">สำเร็จ</option>
-              <option value="2">ยกเลิกแล้ว</option>
-            </select> -->
             <ul class="nav nav-tabs" id="select_under">
 
               <li class="nav-item dropdown">
@@ -150,22 +141,24 @@ if (isset($_GET["status_id"])) {
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="status.php">ทั้งหมด</a></li>
                   <?php
-                  $sql_s = "SELECT * FROM `status_type`";
+                  $sql_s = "SELECT status_type.status_id, status_type.status_name, COUNT(*) ,status_type.status_color  as count
+                  FROM repair_status 
+                  LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
+                  LEFT JOIN repair ON repair.r_id = get_repair.r_id
+                  LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
+                  WHERE repair.m_id = '$id'
+                  GROUP BY status_type.status_id 
+                  ORDER BY status_type.status_id ASC;";
                   $result_s = mysqli_query($conn, $sql_s);
 
                   while ($row_s = mysqli_fetch_array($result_s)) {
                   ?>
                     <li class="nav-item">
-                    <li> <a class="dropdown-item" href="status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>"><?= $row_s['status_name'] ?></a></li>
+                    <li> <a class="dropdown-item" href="status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>"><?= $row_s['status_name'] ?>
+                        <p style="display: inline-block; color:<?= $row_s[3] ?>; ">(<?= $row_s[2] ?>)</p>
+                      </a></li>
               </li>
             <?php } ?>
-            <!-- <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  <li><a class="dropdown-item" href="#">Separated link</a></li> -->
             </ul>
             </li>
 
@@ -177,36 +170,24 @@ if (isset($_GET["status_id"])) {
                 <a class="nav-link active" aria-current="page" href="status.php">ทั้งหมด</a>
               </li>
               <?php
-              $sql_s = "SELECT * FROM `status_type`";
+              $sql_s = "SELECT status_type.status_id, status_type.status_name, COUNT(*) ,status_type.status_color  as count
+              FROM repair_status 
+              LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
+              LEFT JOIN repair ON repair.r_id = get_repair.r_id
+              LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
+              WHERE repair.m_id = '$id'
+              GROUP BY status_type.status_id 
+              ORDER BY status_type.status_id ASC;";
               $result_s = mysqli_query($conn, $sql_s);
 
               while ($row_s = mysqli_fetch_array($result_s)) {
               ?>
                 <li class="nav-item">
-                  <a class="nav-link" href="status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>"><?= $row_s['status_name'] ?></a>
+                  <a class="nav-link" href="status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>"><?= $row_s['status_name'] ?>
+                    <p style="display: inline-block; color:<?= $row_s[3] ?>; ">(<?= $row_s[2] ?>)</p>
+                  </a>
                 </li>
               <?php } ?>
-              <!-- <li class="nav-item">
-                <a class="nav-link " href="#">กำลังดำเนินการ</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link " href="#">ที่ต้องจัดส่ง</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link " href="#">รอการยืนยัน</a>
-              </li> -->
-              <!-- <li class="nav-item">
-              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-            </li> -->
-              <!-- <li class="nav-item">
-                <a class="nav-link" href="#">สำเร็จ</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="status.php?status_id=11&search=<?= $search ?>">ยกเลิกแล้ว</a>
-              </li> -->
-              <!-- <li class="nav-item">
-              <a class="nav-link" href="#">การคืนเงิน</a>
-            </li> -->
             </ul>
           </center>
         </div>
@@ -214,20 +195,22 @@ if (isset($_GET["status_id"])) {
       </div>
     </div>
     <br>
-    <?php if($status_id < 0 || !isset($status_id)){ ?>
+    <?php if ($status_id < 0 || !isset($status_id)) { ?>
       <form class="search-form" action="status.php" method="GET">
-      <input type="text" name="search" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น" value="<?= $search ?>">
-      <input type="text" name="status_id" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น" value="<?= $status_id ?>" style="display : none ">
-      <button type="submit">Search</button>
-    </form>
-      <?php } ?>
+        <input type="text" name="search" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น" value="<?= $search ?>">
+        <input type="text" name="status_id" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น" value="<?= $status_id ?>" style="display : none ">
+        <button type="submit">Search</button>
+      </form>
+    <?php } else {
+    ?>
+      <form class="search-form" action="status.php" method="GET">
+        <input type="text" name="search" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น" value="<?= $search ?>">
+        <input type="text" name="status_id" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น" value="<?= $status_id ?>" style="display : none ">
+        <button type="submit">Search</button>
+      </form>
+    <?php
+    } ?>
     <br>
-    <!-- <center>
-      <hr width="70%">
-    </center> -->
-    <!-- <center>
-      <hr width="70%">
-    </center> -->
 
     <form action="action/add_repair_non_gua.php" method="POST">
       <div class="container">
@@ -267,7 +250,8 @@ if (isset($_GET["status_id"])) {
           while ($row1 = mysqli_fetch_array($result)) {
             $i = $i + 1;
             $id_r = $row1[0];
-            $sql_c = "SELECT * FROM get_repair WHERE r_id = '$id_r' AND del_flg = '0' ORDER BY get_r_id DESC LIMIT 1";
+            $id_r_get = $row1['r_id'];
+            $sql_c = "SELECT * FROM get_repair WHERE r_id = '$id_r_get' AND del_flg = '0' ORDER BY get_r_id DESC LIMIT 1";
             $result_c = mysqli_query($conn, $sql_c);
             $row_c = mysqli_fetch_array($result_c);
 
@@ -290,12 +274,11 @@ if (isset($_GET["status_id"])) {
                 <div class="card" style="box-shadow: 0px 10px 50px rgba(0, 1, 65, 0.18);">
                   <div class="card-header">
                     <h2> <button type="button" class="btn btn-primary" style="font-size:16px; display:inline-block;"><?= $i ?></button> : <?= $row1['r_brand'] ?> <?= $row1['r_model'] ?>
-                      <button class="btn" style="background-color: <?= $row_status['status_color'] ?>; color:white;"><?= $row_status['status_name'] ?></button>
+                      <a class="btn" style="background-color: <?= $row_status['status_color'] ?>; color:white;"><?= $row_status['status_name'] ?></a>
 
                       <?php if ($row1['get_r_record'] != 1) {
-                      ?><button class="btn btn-outline-secondary">#ครั้งที่ <?= $row1['get_r_record'] ?> </button><?php
-                                                                                                                } ?>
-
+                      ?><a class="btn btn-outline-secondary">#ครั้งที่ <?= $row1['get_r_record'] ?> </a><?php
+                                                                                                      } ?>
                     </h2>
                   </div>
                   <ul class="list-group list-group-flush">
@@ -316,7 +299,8 @@ if (isset($_GET["status_id"])) {
                         <br>
                         <p><?= $summary ?></p>
                       </li>
-                    <?php }
+                    <?php 
+                    }
                     $dateString = date('d-m-Y', strtotime($row_c['get_r_date_in']));
                     $date = DateTime::createFromFormat('d-m-Y', $dateString);
                     $formattedDate = $date->format('d F Y');
@@ -342,10 +326,9 @@ if (isset($_GET["status_id"])) {
     </form>
   </div>
   </div>
-
   <!-- footer-->
   <?php
-  // include('footer/footer.php') 
+  include('footer/footer.php') 
   ?>
   <!-- end footer-->
 

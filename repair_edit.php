@@ -9,7 +9,11 @@ $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
 ?>
-
+<?php
+if(!isset($_SESSION['id_repair'])){
+    header("location:home.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -63,12 +67,15 @@ $row = mysqli_fetch_array($result);
         </center>
         <?php 
         $company_check = $_SESSION["company"];
-
+        // add_rapair_ever
         $id = $_GET["id"];
-        if($company_check != NULL){
-           ?><form action="action/add_repair_gua.php" method="POST"><?php
+        $ever = $_GET["ever"];
+        if($company_check != NULL && !isset($_GET["ever"])){
+           ?><form action="action/add_repair_gua.php" method="POST" enctype="multipart/form-data"><?php
+        }elseif(isset($_GET["ever"])){
+            ?><form action="action/add_rapair_ever.php" method="POST" enctype="multipart/form-data"><?php
         }else{
-            ?><form action="action/add_repair_non_gua.php" method="POST">
+            ?><form action="action/add_repair_non_gua.php" method="POST" enctype="multipart/form-data">
             <?php
         }
         ?>
@@ -134,7 +141,7 @@ $row = mysqli_fetch_array($result);
                         <div class="row">
                             <div class="col">
                                 <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
-                                <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $tel ?>" readonly require>
+                                <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $tel ?>" require>
                             </div>
                         </div>
                         <br>
@@ -280,7 +287,9 @@ $row = mysqli_fetch_array($result);
 
 
     <!-- footer-->
-    <?php include('footer/footer.php') ?>
+    <?php 
+    // include('footer/footer.php') 
+    ?>
     <!-- end footer-->
 
     <script>

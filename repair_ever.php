@@ -46,8 +46,13 @@ $row = mysqli_fetch_array($result);
     $sql2 = "SELECT * FROM get_repair WHERE r_id = '$id_r'";
     $result2 = mysqli_query($conn, $sql2);
     $row2 = mysqli_fetch_array($result2);
-
-    $description = $row2['get_r_detail'];
+    
+    if($row2['get_r_detail'] == NULL){
+        $description = $_SESSION["description"];
+    }else{
+        $description = $row2['get_r_detail'];
+    }
+    
 
     $sql = "SELECT * FROM member WHERE m_id = '$id'";
     $result = mysqli_query($conn, $sql);
@@ -63,7 +68,7 @@ $row = mysqli_fetch_array($result);
             <p>คุณต้องการใช้รายละเอียดการซ่อม"เดิม"หรือไม่ ถ้าใช่กด "ยืนยัน"</p>
         </center>
         <br>
-        <form action="action/add_rapair_ever.php" method="POST">
+        <form action="action/add_rapair_ever.php" method="POST" enctype="multipart/form-data">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
@@ -100,7 +105,12 @@ $row = mysqli_fetch_array($result);
                             <div class="row">
                                 <div class="col-6">
                                     <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
-                                    <input type="text" class="form-control" id="borderinput" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $row2['get_tel'] ?>" readonly require>
+                                    <?php if($row2['get_tel'] != NULL){
+                                        ?><input type="text" class="form-control" id="borderinput" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $row2['get_tel'] ?>" readonly require><?php
+                                    }else{
+                                        ?><input type="text" class="form-control" id="borderinput" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $_SESSION['tel'] ?>" readonly require><?php
+                                    } ?>
+                                    
                                 </div>
                                 <div class="col-6">
                                     <label for="borderinput1" class="form-label">ชื่อบริษัท</label>
@@ -108,6 +118,44 @@ $row = mysqli_fetch_array($result);
                                     <input type="text" class="form-control" id="borderinput" name="company" placeholder="กรุณากรอกชื่อบริษัท" value="<?= $row_c['com_id'] ?>" readonly require style="display:none">
                                 </div>
                             </div>
+                            <br>
+                            <label for="borderinput1" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ</label>
+                            <div class="row">
+                                <div class="col-3">
+                                    <input type="file" name="image1" onchange="previewImage('image-preview1')" id="fileToUpload">
+                                </div>
+                                <div class="col-3">
+                                    <input type="file" name="image2" onchange="previewImage('image-preview2')" id="fileToUpload">
+                                    <div id="image-preview2"></div>
+                                </div>
+                                <div class="col-3">
+                                    <input type="file" name="image3" onchange="previewImage('image-preview3')" id="fileToUpload">
+                                    <div id="image-preview3"></div>
+                                </div>
+                                <div class="col-3">
+                                    <input type="file" name="image4" onchange="previewImage('image-preview4')" id="fileToUpload">
+                                    <div id="image-preview4"></div>
+                                </div>
+
+                                <script>
+                                    function previewImage(previewId) {
+                                        var input = event.target;
+                                        var previewContainer = document.getElementById(previewId);
+                                        var previewImage = document.createElement('img');
+
+                                        if (input.files && input.files[0]) {
+                                            var reader = new FileReader();
+                                            reader.onload = function(e) {
+                                                previewImage.setAttribute('src', e.target.result);
+                                                previewContainer.appendChild(previewImage);
+                                            };
+                                            reader.readAsDataURL(input.files[0]);
+                                        }
+                                    }
+                                </script>
+
+                            </div>
+                            <br>
                             <br>
                             <?php } else {
                             $tel = $row2['get_tel'];
@@ -120,23 +168,57 @@ $row = mysqli_fetch_array($result);
                                     </div>
                                 </div>
                                 <br>
+
                             <?php
                             } else {
                             ?>
                                 <div class="row">
                                     <div class="col">
                                         <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
-                                        <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" vlaue="<?= $_SESSION["tel"] ?>" require>
+                                        <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $_SESSION['tel'] ?>" require>
                                     </div>
+                                </div>
+                                <br>
+                                <label for="borderinput1" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ</label>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <input type="file" name="image1" onchange="previewImage('image-preview1')" id="fileToUpload">
+                                    </div>
+                                    <div class="col-3">
+                                        <input type="file" name="image2" onchange="previewImage('image-preview2')" id="fileToUpload">
+                                        <div id="image-preview2"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <input type="file" name="image3" onchange="previewImage('image-preview3')" id="fileToUpload">
+                                        <div id="image-preview3"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <input type="file" name="image4" onchange="previewImage('image-preview4')" id="fileToUpload">
+                                        <div id="image-preview4"></div>
+                                    </div>
+
+                                    <script>
+                                        function previewImage(previewId) {
+                                            var input = event.target;
+                                            var previewContainer = document.getElementById(previewId);
+                                            var previewImage = document.createElement('img');
+
+                                            if (input.files && input.files[0]) {
+                                                var reader = new FileReader();
+                                                reader.onload = function(e) {
+                                                    previewImage.setAttribute('src', e.target.result);
+                                                    previewContainer.appendChild(previewImage);
+                                                };
+                                                reader.readAsDataURL(input.files[0]);
+                                            }
+                                        }
+                                    </script>
+
                                 </div>
                                 <br>
                             <?php
                             } ?>
-
-
                         <?php } ?>
-
-
                         <div class="row">
                             <div class="mb-3">
                                 <label for="inputtext" class="form-label" style="color:red">กรุณากรอกรายละเอียด (กรณีไม่ใช้ข้อมูลเดิม)</label>
@@ -145,6 +227,9 @@ $row = mysqli_fetch_array($result);
 
                             <div class="text-center pt-4">
                                 <button type="submit" class="btn btn-success">ยืนยัน</button>
+
+                                <a href="">ข้อมูลไม่ถูกต้อง?</a>
+
                                 <!-- <a herf="repair_non_gua.php" class="btn btn-warning">กลับไปหน้าส่งซ่อม</a> -->
                             </div>
 
@@ -162,7 +247,9 @@ $row = mysqli_fetch_array($result);
 
 
     <!-- footer-->
-    <?php include('footer/footer.php') ?>
+    <?php
+    // include('footer/footer.php') 
+    ?>
     <!-- end footer-->
 
     <script>
