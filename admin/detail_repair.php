@@ -81,51 +81,81 @@ if (!isset($_SESSION['role_id'])) {
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <?php
+                    $get_r_id = $_GET['id'];
 
+                    $sql = "SELECT * FROM get_repair
+                    LEFT JOIN repair ON repair.r_id = get_repair.r_id 
+                    LEFT JOIN member ON member.m_id = repair.m_id
+                    WHERE del_flg = '0' AND get_r_id = '$get_r_id'";
+                    $result = mysqli_query($conn,$sql);
+                    $row = mysqli_fetch_array($result);
+
+                    $dateString = date('d-m-Y', strtotime($row['get_r_date_in']));
+                    $date = DateTime::createFromFormat('d-m-Y', $dateString);
+                    $formattedDate = $date->format('F / d / Y');
+                    ?>
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h1 class="m-0 font-weight-bold text-primary">Serial Number : NPX8859</h1>
+                            <h1 class="m-0 font-weight-bold text-primary">Serial Number : <?= $row['r_serial_number'] ?></h1>
                             <h2 style="color: #f6c23e;">สถานะ : ส่งเรื่อง (เคลม)</h2>
-                            <h6>2011-04-25</h6>
+                            <h6><?= $formattedDate ?></h6>
                         </div>
                         <div class="card-body">
                             <div class="mb-3 row">
                                 <h6 for="staticEmail" class="col-sm-1 col-form-label">ชื่อ</h6>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="staticEmail" placeholder="สวย" disabled>
+                                    <input type="text" class="form-control" id="staticEmail" value="<?= $row['m_fname']  ?>" placeholder="สวย" disabled>
                                 </div>
                                 <label for="inputPassword" class="col-sm-1 col-form-label">นามสกุล</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="inputPassword" placeholder="สวย" disabled="disabled">
+                                    <input type="text" class="form-control" id="inputPassword" value="<?= $row['m_lname']  ?>" disabled="disabled">
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="inputPassword" class="col-sm-1 col-form-label">Brand :</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="inputPassword" placeholder="Yamaha" disabled="disabled">
+                                    <input type="text" class="form-control" id="inputPassword" value="<?= $row['r_brand']  ?>"  placeholder="Yamaha" disabled="disabled">
                                 </div>
                                 <label for="inputPassword" class="col-sm-1 col-form-label">Model :</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="inputPassword" placeholder="NPX8859" disabled="disabled">
+                                    <input type="text" class="form-control" id="inputPassword" value="<?= $row['r_model']  ?>" placeholder="NPX8859" disabled="disabled">
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="inputPassword" class="col-sm-1 col-form-label">เบอร์โทรศัพท์</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="inputPassword" placeholder="000000000" disabled="disabled">
+                                    <input type="text" class="form-control" id="inputPassword" placeholder="000000000"  value="<?= $row['get_tel']  ?>" disabled="disabled">
                                 </div>
                                 <label for="inputPassword" class="col-sm-1 col-form-label">บริษัท</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="inputPassword" placeholder="ไทยคมนาคม" disabled="disabled">
+                                    <input type="text" class="form-control" id="inputPassword" placeholder="ไทยคมนาคม" value="<?php
+                                     if($row['com_id'] == NULL){
+                                        echo "ไม่มีข้อมูล";
+                                     } else{
+                                        $com_id = $row['com_id'];
+                                        $sql_com = "SELECT * FROM company WHERE com_id = '$com_id'";
+                                        $result_com = mysqli_query($conn,$sql_com);
+                                        $row_com = mysqli_fetch_array($result_com);
+
+                                        echo $row_com['com_name'];
+                                     }
+                                     ?>"   disabled="disabled">
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label for="exampleFormControlTextarea1" class="col-form-label">ที่อยู่ :</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled">111111111111111</textarea>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?php
+                                if ($row['get_add'] == NULL){
+                                    echo "ไม่มีข้อมูล";
+                                }else{
+                                    echo ($row['get_add']);
+                                }
+                                ?></textarea>
                             </div>
                             <div class="mb-3">
                                 <label for="exampleFormControlTextarea1" class="col-form-label">รายละเอียด :</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled">สายขาด เสียงออกข้างเดียว</textarea>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?= $row['get_r_detail']  ?></textarea>
                             </div>
                             <div class="card-footer">
                                 <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ</h1>

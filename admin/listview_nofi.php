@@ -8,6 +8,7 @@ if (!isset($_SESSION['role_id'])) {
 
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,18 +20,15 @@ if (!isset($_SESSION['role_id'])) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Admin - Edit Employee Information</title>
+    <title>View Details - User Information</title>
     <link rel="icon" type="image/x-icon" href="../img brand/anelogo.jpg">
 
-    <!-- Custom fonts for this template -->
+    <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
+    <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this page -->
-    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 </head>
 
@@ -59,58 +57,61 @@ if (!isset($_SESSION['role_id'])) {
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <?php
+                    $sql_nofi = "SELECT * FROM get_repair 
+                    LEFT JOIN repair ON get_repair.r_id = repair.r_id 
+                    WHERE del_flg = '0'
+                    ORDER BY get_r_id DESC ";
+                    $result_nofi = mysqli_query($conn, $sql_nofi);
+                    $num_rows = mysqli_fetch_array($result_nofi_count);
+                    while ($row = mysqli_fetch_array($result_nofi)) {
+                        $dateString = date('d-m-Y', strtotime($row['get_r_date_in']));
+                        $date = DateTime::createFromFormat('d-m-Y', $dateString);
+                        $formattedDate = $date->format('F / d / Y');
+                    ?>
 
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">ข้อมูลพนักงาน</h1>
-
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">ข้อมูลพนักงาน</h6>
+                        <div class="pt-4">
+                            <div class="card">
+                                <a class="dropdown-item align-items-center" href="detail_repair.php?id=<?= $row[0] ?>">
+                                    <div class="card-body">
+                                        <span class="small text-gray-500"><?= $formattedDate ?></span>
+                                        <h6 class="font-weight-bold">หมายเลขแจ้งซ่อม : <button class="btn btn-primary" style="font-size: 15px;"><?= $row[0] ?></button></h6>
+                                        <h6 class="font-weight-bold"><?= $row['get_r_detail'] ?></h6>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>ชื่อ-นามสกุล</th>
-                                            <th>ตำแหน่ง</th>
-                                            <th>เบอร์โทรศัพท์</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
-                                            <th>ปุ่มดำเนินการ</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
 
-                                    <?php 
+                    <?php
+                    }
+                    ?>
+                    <!-- Page Heading -->
+                    <div class="pt-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <span class="small text-gray-500"><?= $formattedDate ?></span>
+                                <h6 class="font-weight-bold">หมายเลขแจ้งซ่อม : <button class="btn btn-primary" style="font-size: 15px;"><?= $row_nofi['get_r_id'] ?></button></h6>
+                                <h6 class="font-weight-bold"><?= $row_nofi['get_r_detail'] ?></h6>
+                            </div>
+                        </div>
+                    </div>
 
-                                    $sql = "SELECT * FROM employee WHERE del_flg = '0'";
-                                    $result = mysqli_query($conn,$sql);
-                                    while($row = mysqli_fetch_array($result)){ ?>
 
-                                        <tr>
-                                            <td><?= $row['e_fname'] ." ". $row['e_lname'] ?></td>
-                                            <td><?= $row['role_id'] ?></td>
-                                            <td><?= $row['e_tel'] ?></td>
-                                            <td><?php 
-                                            if($row['e_date_in'] == NULL){
-                                                echo "ไม่มีข้อมูล";
-                                            }else{
-                                                echo $row['e_date_in'];
-                                            }
-                                            ?></td>
-                                            <td><?= number_format($row['e_salary'], 0, '.', ',') ?> ฿</td>
-
-                                            <td>
-                                            <a href="action/del_employee.php?id=<?=$row['e_id']?>" class="btn btn-danger" 
-                                            onclick="return confirm('Are you sure you want to delete this employee?')">ลบ</a>&nbsp; &nbsp;
-
-                                            <a class="btn btn-warning" href="edit_employee.php?id=<?=$row['e_id']?>">แก้ไข</a></td>
-                                        </tr>
-                                        <?php } ?>
-                                    </tbody>
-                                </table>
+                    <div class="pt-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <span class="small text-gray-500">December 7, 2019</span>
+                                <h6 class="font-weight-bold">Garrett Winters</h6>
+                                <h6 class="font-weight-bold">ปฏิเสธการส่งซ่อม</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <span class="small text-gray-500">December 7, 2019</span>
+                                <h6 class="font-weight-bold">Garrett Winters</h6>
+                                <h6 class="font-weight-bold">ปฏิเสธการส่งซ่อม</h6>
                             </div>
                         </div>
                     </div>
@@ -125,7 +126,7 @@ if (!isset($_SESSION['role_id'])) {
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2020</span>
+                        <span>Copyright &copy; Your Website 2021</span>
                     </div>
                 </div>
             </footer>
@@ -172,11 +173,12 @@ if (!isset($_SESSION['role_id'])) {
     <script src="js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="vendor/chart.js/Chart.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="js/demo/datatables-demo.js"></script>
+    <script src="js/demo/chart-area-demo.js"></script>
+    <script src="js/demo/chart-pie-demo.js"></script>
+    <script src="js/demo/chart-bar-demo.js"></script>
 
 </body>
 

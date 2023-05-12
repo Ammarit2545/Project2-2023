@@ -194,7 +194,13 @@ session_start();
     <div class="container pt-5">
       <div class="card card_header">
         <div class="card-body mx-5 my-5">
-          <h1 style="color: white;">สวัสดีคุณ <?= $row1['m_fname'] . " " . $row1['m_lname'] ?></h1>
+          <?php
+          if (!isset($_SESSION['id'])) {
+          ?>
+            <h1 style="color: white;">สวัสดีท่านสมาชิกใหม่</h1>
+          <?php } else { ?>
+            <h1 style="color: white;">สวัสดีคุณ <?= $row1['m_fname'] . " " . $row1['m_lname'] ?></h1>
+          <?php } ?>
           <h3 style="color: white;">เราคือร้านจำหน่ายและรับซ่อมสินค้า <br> ประเภทเครื่องดนตรีทุกชนิด</h3>
           <p class="col" style="color: white;">เราหวังว่าจะคุณจะพอใจในการบริการของเราหากต้องการส่งซ่อม<br> คุณสามารถส่งรูปภาพเข้ามาสอบถามก่อนได้</p>
           <a href="home_repair.php" class="btn btn_custom ">ส่งซ่อม</a>
@@ -235,8 +241,8 @@ session_start();
   </div>
 
   <!-- footer-->
-  <?php 
-  include('footer/footer.php') 
+  <?php
+  include('footer/footer.php')
   ?>
   <!-- end footer-->
 

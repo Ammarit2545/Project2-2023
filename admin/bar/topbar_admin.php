@@ -119,7 +119,7 @@
                         <span class="font-weight-bold">ชำระเงินแล้ว</span>
                     </div>
                 </a>  -->
-                <a class="dropdown-item text-center small text-gray-500" href="show_warn.html">Show All Alerts</a>
+                <a class="dropdown-item text-center small text-gray-500" href="listview_nofi.php">Show All Alerts</a>
             </div>
         </li>
 

@@ -24,9 +24,7 @@ if (!isset($_SESSION['role_id'])) {
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
@@ -39,7 +37,7 @@ if (!isset($_SESSION['role_id'])) {
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <?php 
+        <?php
         include('bar/sidebar.php');
         ?>
         <!-- End of Sidebar -->
@@ -53,52 +51,81 @@ if (!isset($_SESSION['role_id'])) {
                 <!-- Topbar -->
                 <?php
                 include('bar/topbar_admin.php');
+
+                $e_id = $_GET['id'];
                 ?>
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
+                <form action="action/edit_employee.php?id=<?= $e_id ?>" method="POST">
+                    <div class="container-fluid">
 
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">แก้ไขข้อมูลพนักงาน</h1>
-                    </div>
+                        <!-- Page Heading -->
+                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                            <h1 class="h3 mb-0 text-gray-800">แก้ไขข้อมูลพนักงาน</h1>
+                        </div>
+                        <?php
 
-                    <div class="mb-3 row">
-                        <label for="staticEmail" class="col-sm-1 col-form-label">ชื่อ</label>
-                        <div class="col-sm-4">
-                          <input type="text" class="form-control" id="staticEmail" placeholder="Garrett">
+                        $sql = "SELECT * FROM employee WHERE del_flg = '0' AND e_id = '$e_id'";
+                        $result = mysqli_query($conn, $sql);
+                        $row = mysqli_fetch_array($result);
+                        ?>
+                        <div class="mb-3 row">
+                            <label for="staticEmail" class="col-sm-1 col-form-label">ชื่อ</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" name="e_fname" id="staticEmail" value="<?= $row['e_fname'] ?>" placeholder="Garrett">
+                            </div>
+                            <label for="inputPassword" class="col-sm-1 col-form-label">นามสกุล</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" name="e_lname" id="inputPassword" value="<?= $row['e_lname'] ?>" placeholder="Winters">
+                            </div>
                         </div>
-                        <label for="inputPassword" class="col-sm-1 col-form-label">นามสกุล</label>
-                        <div class="col-sm-4">
-                          <input type="text" class="form-control" id="inputPassword" placeholder="Winters">
+                        <div class="mb-3 row">
+                            <label for="inputPassword" class="col-sm-1 col-form-label">เบอร์โทรศัพท์</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" name="e_tel" id="inputPassword" value="<?= $row['e_tel'] ?>" placeholder="5544">
+                            </div>
+                            <label for="inputPassword" class="col-sm-1 col-form-label">เงินเดือน</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" name="e_salary" id="inputPassword" value="<?= $row['e_salary'] ?>" placeholder="5000">
+                            </div>
                         </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="inputPassword" class="col-sm-1 col-form-label">เบอร์โทรศัพท์</label>
-                        <div class="col-sm-4">
-                          <input type="text" class="form-control" id="inputPassword" placeholder="5544">
-                        </div>
-                        <label for="inputPassword" class="col-sm-1 col-form-label">เงินเดือน</label>
-                        <div class="col-sm-4">
-                          <input type="text" class="form-control" id="inputPassword" placeholder="5000">
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="inputPassword" class="col-sm-1 col-form-label">email</label>
-                        <div class="col-sm-4">
-                          <input type="text" class="form-control" id="inputPassword" placeholder="admin2@gmail.com">
-                        </div>
-                        <label for="inputPassword" class="col-sm-1 col-form-label">ตำแหน่ง</label>
-                        <div class="col-sm-4">
-                          <input type="text" class="form-control" id="inputPassword" placeholder="Accountant">
-                        </div>
-                    </div>
-                    <div class="text-center pt-4">
-                        <button type="button" class="btn btn-success">ยืนยัน</button>
-                    </div>
+                        <div class="mb-3 row">
+                            <label for="inputPassword" class="col-sm-1 col-form-label">email</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="inputPassword" value="<?= $row['e_email'] ?>" placeholder="ไม่มีข้อมูล" readonly>
+                            </div>
+                            <label for="inputPassword" class="col-sm-1 col-form-label">ตำแหน่ง</label>
+                            <div class="col-sm-4">
+                                <!-- <input type="text" class="form-control" name="role_id" id="inputPassword" value="<?= $row['role_id'] ?>" placeholder="Accountant"> -->
+                                <select class="mt-2 form-select" aria-label="Default select example">
+                                    <?php
+                                    $role_id = $row['role_id'];
+                                    $sql_s1 = "SELECT * FROM role WHERE del_flg = '0' AND role_id = '$role_id'";
+                                    $result_s1 = mysqli_query($conn, $sql_s1);
+                                    $row_s1 = mysqli_fetch_array($result_s1);
+                                    ?>
 
-                </div>
+                                    <option value="<?= $row_s1['role_id'] ?>"><?= $row_s1['role_name'] ?></option>
+                                    <?php
+                                    $sql_s = "SELECT * FROM role WHERE del_flg = '0' AND role_id <> '$role_id' ORDER BY role_id ASC";
+                                    $result_s = mysqli_query($conn, $sql_s);
+                                    while ($row_s = mysqli_fetch_array($result_s)) {
+                                    ?>
+                                        <option value="<?= $row_s['role_id'] ?>"><?= $row_s['role_name'] ?></option>
+                                    <?php
+                                    }
+                                    ?>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="text-center pt-4">
+                            <button type="submit" class="btn btn-success" onclick="return confirm('Are You Sure You Want to Edit This Employee Information?')">ยืนยัน</button>
+                        </div>
+
+                    </div>
+                </form>
                 <!-- /.container-fluid -->
 
             </div>
@@ -126,8 +153,7 @@ if (!isset($_SESSION['role_id'])) {
     </a>
 
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

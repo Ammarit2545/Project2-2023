@@ -7,7 +7,6 @@ if (!isset($_SESSION['role_id'])) {
 }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,7 +18,7 @@ if (!isset($_SESSION['role_id'])) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Admin - Edit Employee Information</title>
+    <title>Admin - Member Information</title>
     <link rel="icon" type="image/x-icon" href="../img brand/anelogo.jpg">
 
     <!-- Custom fonts for this template -->
@@ -61,12 +60,12 @@ if (!isset($_SESSION['role_id'])) {
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">ข้อมูลพนักงาน</h1>
+                    <h1 class="h3 mb-2 text-gray-800">ข้อมูลลูกค้า</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">ข้อมูลพนักงาน</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">ข้อมูลลูกค้า</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -74,41 +73,34 @@ if (!isset($_SESSION['role_id'])) {
                                     <thead>
                                         <tr>
                                             <th>ชื่อ-นามสกุล</th>
-                                            <th>ตำแหน่ง</th>
+                                            <th>Email</th>
+                                            <th>ที่อยู่</th>
                                             <th>เบอร์โทรศัพท์</th>
                                             <th>Start date</th>
-                                            <th>Salary</th>
                                             <th>ปุ่มดำเนินการ</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-
-                                    <?php 
-
-                                    $sql = "SELECT * FROM employee WHERE del_flg = '0'";
-                                    $result = mysqli_query($conn,$sql);
-                                    while($row = mysqli_fetch_array($result)){ ?>
-
-                                        <tr>
-                                            <td><?= $row['e_fname'] ." ". $row['e_lname'] ?></td>
-                                            <td><?= $row['role_id'] ?></td>
-                                            <td><?= $row['e_tel'] ?></td>
-                                            <td><?php 
-                                            if($row['e_date_in'] == NULL){
-                                                echo "ไม่มีข้อมูล";
-                                            }else{
-                                                echo $row['e_date_in'];
-                                            }
-                                            ?></td>
-                                            <td><?= number_format($row['e_salary'], 0, '.', ',') ?> ฿</td>
-
-                                            <td>
-                                            <a href="action/del_employee.php?id=<?=$row['e_id']?>" class="btn btn-danger" 
-                                            onclick="return confirm('Are you sure you want to delete this employee?')">ลบ</a>&nbsp; &nbsp;
-
-                                            <a class="btn btn-warning" href="edit_employee.php?id=<?=$row['e_id']?>">แก้ไข</a></td>
-                                        </tr>
-                                        <?php } ?>
+                                        <?php
+                                        $sql = "SELECT * FROM member WHERE del_flg = '0' ORDER BY m_id DESC";
+                                        $result = mysqli_query($conn, $sql);
+                                        while ($row = mysqli_fetch_array($result)) {
+                                        ?>
+                                            <tr>
+                                                <td><?= $row['m_fname'] . " " . $row['m_lname']  ?></td>
+                                                <td><?= $row['m_email'] ?></td>
+                                                <td><?= $row['m_add'] ?></td>
+                                                <td><?= $row['m_tel'] ?></td>
+                                                <td><?= $row['m_date_in'] ?></td>
+                                                <td>
+                                                <a href="action/delete_member.php?id=<?= $row['m_id'] ?>" class="btn btn-danger" onclick="return confirm('Are You Sure You Want to Delete This Member Information?')">ลบ</a>
+                                                <button type="button" class="btn btn-warning">แก้ไข</button>
+                                                </td>
+                                            </tr>
+                                        <?php
+                                        }
+                                        ?>
+                                       
                                     </tbody>
                                 </table>
                             </div>

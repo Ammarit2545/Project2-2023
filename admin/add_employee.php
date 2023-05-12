@@ -55,58 +55,80 @@ if (!isset($_SESSION['role_id'])) {
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
+                <form action="action/add_employee.php" method="POST">
+                    <div class="container-fluid">
+                        <!-- Page Heading -->
+                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                            <h1 class="h3 mb-0 text-gray-800">เพิ่มข้อมูลพนักงาน</h1>
+                        </div>
 
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">เพิ่มข้อมูลพนักงาน</h1>
-                    </div>
+                        <div class="mb-3 row">
 
-                    <div class="mb-3 row">
-                        <label for="inputPassword" class="col-sm-1 col-form-label">Email</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="inputPassword">
-                        </div>
-                        <label for="inputPassword" class="col-sm-1 col-form-label">Password</label>
-                        <div class="col-sm-4">
-                            <input type="password" class="form-control" id="inputPassword">
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="staticEmail" class="col-sm-1 col-form-label">ชื่อ</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="staticEmail">
-                        </div>
-                        <label for="inputPassword" class="col-sm-1 col-form-label">นามสกุล</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="inputPassword">
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="inputPassword" class="col-sm-1 col-form-label">เบอร์โทรศัพท์</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="inputPassword">
-                        </div>
-                        <label for="inputPassword" class="col-sm-1 col-form-label">เงินเดือน</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="inputPassword">
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="inputPassword" class="col-sm-1 col-form-label">ตำแหน่ง</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="inputPassword">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlTextarea1" class="col-form-label">ที่อยู่ :</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                    </div>
-                    <div class="text-center pt-4">
-                        <button type="button" class="btn btn-success">ยืนยัน</button>
-                    </div>
+                            <label for="inputPassword" class="col-sm-1 col-form-label">Email</label>
+                            <div class="col-sm-4">
+                                <input type="email" name="e_email" class="form-control" id="inputPassword" onblur="checkEmail()" required>
+                                <span id="email-error" style="color:red;display:none;">This email is already registered.</span>
+                            </div>
 
-                </div>
+                            <label for="inputPassword" class="col-sm-1 col-form-label">Password</label>
+                            <div class="col-sm-4">
+                                <input type="password" name="e_password" class="form-control" id="inputPassword">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="staticEmail" class="col-sm-1 col-form-label">ชื่อ</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="e_fname" class="form-control" id="staticEmail">
+                            </div>
+                            <label for="inputPassword" class="col-sm-1 col-form-label">นามสกุล</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="e_lname" class="form-control" id="inputPassword">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="inputPassword" class="col-sm-1 col-form-label">เบอร์โทรศัพท์</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="e_tel" class="form-control" id="inputPassword">
+                            </div>
+                            <label for="inputPassword" class="col-sm-1 col-form-label">เงินเดือน</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="e_salary" class="form-control" id="inputPassword">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="inputPassword" class="col-sm-1 col-form-label">ตำแหน่ง</label>
+                            <div class="col-sm-4">
+                                <select name="role_id" class="mt-2 form-select" aria-label="Default select example">
+                                    <?php
+                                    $sql = "SELECT * FROM role WHERE del_flg = '0'";
+                                    $result = mysqli_query($conn, $sql);
+                                    while ($row = mysqli_fetch_array($result)) {
+                                    ?>
+                                        <option value="<?= $row['role_id'] ?>"><?= $row['role_name'] ?></option>
+                                    <?php
+                                    }
+                                    ?>
+                                    <!-- <option selected>Open this select menu</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option> -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlTextarea1" class="col-form-label">ที่อยู่ :</label>
+                            <textarea class="form-control" name="e_add" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        </div>
+                        <div class="text-center pt-4">
+                            <!-- <button type="submit" class="btn btn-success" 
+                            onclick="return confirm('Are You Sure You Want to Add This Employee Information?')"
+                            >ยืนยัน</button> -->
+
+                            <button type="submit" class="btn btn-success" 
+                            >ยืนยัน</button>
+                        </div>
+                    </div>
+                </form>
                 <!-- /.container-fluid -->
 
             </div>
@@ -151,6 +173,26 @@ if (!isset($_SESSION['role_id'])) {
             </div>
         </div>
     </div>
+
+    <script>
+        function checkEmail() {
+            var email = document.getElementById('inputPassword').value;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    if (this.responseText == 'exists') {
+                        document.getElementById('email-error').style.display = 'block';
+                        document.getElementById('inputPassword').setCustomValidity('invalid');
+                    } else {
+                        document.getElementById('email-error').style.display = 'none';
+                        document.getElementById('inputPassword').setCustomValidity('');
+                    }
+                }
+            };
+            xhttp.open('GET', 'action/check_email.php?email=' + email, true);
+            xhttp.send();
+        }
+    </script>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>

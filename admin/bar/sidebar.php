@@ -2,7 +2,7 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
         <img src="../img brand/anelogo.jpg" style="width : 30%; border-radius : 20%;" alt="">
         <div class="sidebar-brand-text mx-3" style="font-size: 70%;">Admin Anan Electronic</div>
     </a>
@@ -49,7 +49,7 @@
         <div id="collapsecustomer" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">รายละเอียด :</h6>
-                <a class="collapse-item" href="customer.html">ข้อมูลลูกค้า</a>
+                <a class="collapse-item" href="listview_member.php">ข้อมูลลูกค้า</a>
                 <a class="collapse-item" href="repair.html">การส่งซ่อม</a>
             </div>
         </div>
