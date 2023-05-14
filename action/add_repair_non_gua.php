@@ -68,13 +68,6 @@ for ($i = 1; $i <= 4; $i++) {
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-        // Check if image file is a actual image or fake image
-        // $check = getimagesize($_FILES[$image_name]["tmp_name"]);
-        // if($check === false) {
-        //     echo "File is not an image.";
-        //     $uploadOk = 0;
-        // }
-
         // Check if file already exists
         if (file_exists($target_file)) {
             echo "Sorry, file already exists.";
@@ -148,10 +141,7 @@ $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
 if ($row == NULL) {
-    // $sql = "INSERT INTO repair (m_id, r_brand, r_model, r_number_model, r_serial_number)
-    // VALUES ('$id', '$name_brand', '$name_model', '$number_model', '$serial_number');";
-    // $result = mysqli_query($conn, $sql);
-
+    // header("location:../repair_check.php");
     header("location:../repair_check.php");
 } else {
     echo ("ever");

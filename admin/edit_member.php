@@ -52,7 +52,7 @@ if (!isset($_SESSION['role_id'])) {
                 <?php
                 include('bar/topbar_admin.php');
 
-                $e_id = $_GET['id'];
+                $m_id = $_GET['id'];
                 ?>
                 <!-- End of Topbar -->
 
@@ -62,72 +62,37 @@ if (!isset($_SESSION['role_id'])) {
 
                         <!-- Page Heading -->
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                            <h1 class="h3 mb-0 text-gray-800">แก้ไขข้อมูลพนักงาน</h1>
+                            <h1 class="h3 mb-0 text-gray-800">แก้ไขข้อมูลลูกค้า</h1>
                         </div>
                         <?php
 
-                        $sql = "SELECT * FROM employee WHERE del_flg = '0' AND e_id = '$e_id'";
+                        $sql = "SELECT * FROM member WHERE del_flg = '0' AND m_id = '$m_id'";
                         $result = mysqli_query($conn, $sql);
                         $row = mysqli_fetch_array($result);
                         ?>
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-1 col-form-label">ชื่อ</label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="e_fname" id="staticEmail" value="<?= $row['e_fname'] ?>" placeholder="กรุณากรอกชื่อ">
+                                <input type="text" class="form-control" name="e_fname" id="staticEmail" value="<?= $row['m_fname'] ?>" placeholder="กรุณากรอกชื่อ">
                             </div>
                             <label for="inputPassword" class="col-sm-1 col-form-label">นามสกุล</label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="e_lname" id="inputPassword" value="<?= $row['e_lname'] ?>" placeholder="กรุณากรอกนามสกุล">
+                                <input type="text" class="form-control" name="e_lname" id="inputPassword" value="<?= $row['m_lname'] ?>" placeholder="กรุณากรอกนามสกุล">
                             </div>
                         </div>
                         <div class="mb-3 row">
                             <label for="inputPassword" class="col-sm-1 col-form-label">เบอร์โทรศัพท์</label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="e_tel" id="inputPassword" value="<?= $row['e_tel'] ?>" placeholder="กรุณากรอกเบอร์โทร">
+                                <input type="text" class="form-control" name="e_tel" id="inputPassword" value="<?= $row['m_tel'] ?>" placeholder="กรุณากรอกเบอร์โทร">
                             </div>
-                            <label for="inputPassword" class="col-sm-1 col-form-label">เงินเดือน</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" name="e_salary" id="inputPassword" value="<?= $row['e_salary'] ?>" placeholder="กรุณากรอกชื่อ">
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
                             <label for="inputPassword" class="col-sm-1 col-form-label">email</label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" id="inputPassword" value="<?= $row['e_email'] ?>" placeholder="ไม่มีข้อมูล" readonly>
-                            </div>
-                            <label for="inputPassword" class="col-sm-1 col-form-label">ตำแหน่ง</label>
-                            <div class="col-sm-4">
-                                <!-- <input type="text" class="form-control" name="role_id" id="inputPassword" value="<?= $row['role_id'] ?>" placeholder="Accountant"> -->
-                                <select name="role_id" class="mt-2 form-select" aria-label="Default select example">
-                                    <?php
-                                    $role_id = $row['role_id'];
-                                    $sql_s1 = "SELECT * FROM role WHERE del_flg = '0' AND role_id = '$role_id'";
-                                    $result_s1 = mysqli_query($conn, $sql_s1);
-                                    $row_s1 = mysqli_fetch_array($result_s1);
-                                    if ($row_s1['role_id'] > 0) {
-                                        $sql_s = "SELECT * FROM role WHERE del_flg = '0' AND role_id <> '$role_id' ORDER BY role_id ASC";
-                                        $result_s = mysqli_query($conn, $sql_s);
-                                    ?>
-                                        <option value="<?= $row_s1['role_id'] ?>"><?= $row_s1['role_name'] ?></option>
-                                    <?php
-                                    } else {
-                                        $sql_s = "SELECT * FROM role WHERE del_flg = '0' AND role_id <> '$role_id' ORDER BY role_id ASC";
-                                        $result_s = mysqli_query($conn, $sql_s);
-                                    } ?>
-                                    <?php
-                                    while ($row_s = mysqli_fetch_array($result_s)) {
-                                    ?>
-                                        <option value="<?= $row_s['role_id'] ?>"><?= $row_s['role_name'] ?></option>
-                                    <?php
-                                    }
-                                    ?>
-
-                                </select>
+                                <input type="text" class="form-control" id="inputPassword" value="<?= $row['m_email'] ?>" placeholder="ไม่มีข้อมูล" readonly>
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="exampleFormControlTextarea1" class="col-form-label">ที่อยู่ :</label>
-                            <textarea name="e_add" class="form-control" id="exampleFormControlTextarea1" rows="3"><?= $row['e_add'] ?></textarea>
+                            <textarea name="p_description" class="form-control" id="exampleFormControlTextarea1" rows="3"><?= $row['m_add'] ?></textarea>
                         </div>
                         <br>
                         <div class="text-center pt-4">

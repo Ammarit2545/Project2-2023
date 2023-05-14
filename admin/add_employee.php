@@ -96,24 +96,40 @@ if (!isset($_SESSION['role_id'])) {
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <label for="inputPassword" class="col-sm-1 col-form-label">ตำแหน่ง</label>
-                            <div class="col-sm-4">
-                                <select name="role_id" class="mt-2 form-select" aria-label="Default select example">
-                                    <?php
-                                    $sql = "SELECT * FROM role WHERE del_flg = '0'";
-                                    $result = mysqli_query($conn, $sql);
-                                    while ($row = mysqli_fetch_array($result)) {
-                                    ?>
-                                        <option value="<?= $row['role_id'] ?>"><?= $row['role_name'] ?></option>
-                                    <?php
+                          
+                                <label for="inputPassword" class="col-sm-1 col-form-label">ตำแหน่ง</label>
+                                <div class="col-sm-4">
+                                    <select name="role_id" id="role_id" class="mt-2 form-select" aria-label="Default select example">
+                                        <?php
+                                        if (isset($conn)) {
+                                            $sql = "SELECT * FROM role WHERE del_flg = '0'";
+                                            $result = mysqli_query($conn, $sql);
+                                            while ($row = mysqli_fetch_array($result)) {
+                                                echo '<option value="' . $row['role_id'] . '">' . $row['role_name'] . '</option>';
+                                            }
+                                        }
+                                        ?>
+                                        <option value="-1">*เพิ่มตำแหน่งใหม่</option>
+                                    </select>
+                                    <label for="new_role_name" style="display:none;">ชื่อตำแหน่งใหม่:</label>
+                                    <input type="text" name="new_role_name" class="form-control mt-2" style="display:none;" required>
+                                </div>
+                       
+
+                            <script>
+                                const roleSelect = document.querySelector('#role_id');
+                                const newRoleInput = document.querySelector('input[name="new_role_name"]');
+                                roleSelect.addEventListener('change', function() {
+                                    if (roleSelect.value == '-1') {
+                                        newRoleInput.style.display = 'block';
+                                        newRoleInput.setAttribute('required', 'required');
+                                    } else {
+                                        newRoleInput.style.display = 'none';
+                                        newRoleInput.removeAttribute('required');
                                     }
-                                    ?>
-                                    <!-- <option selected>Open this select menu</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option> -->
-                                </select>
-                            </div>
+                                });
+                            </script>
+
                         </div>
                         <div class="mb-3">
                             <label for="exampleFormControlTextarea1" class="col-form-label">ที่อยู่ :</label>
@@ -124,8 +140,7 @@ if (!isset($_SESSION['role_id'])) {
                             onclick="return confirm('Are You Sure You Want to Add This Employee Information?')"
                             >ยืนยัน</button> -->
 
-                            <button type="submit" class="btn btn-success" 
-                            >ยืนยัน</button>
+                            <button type="submit" class="btn btn-success">ยืนยัน</button>
                         </div>
                     </div>
                 </form>

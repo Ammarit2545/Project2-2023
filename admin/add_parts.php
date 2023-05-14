@@ -96,11 +96,34 @@ if (!isset($_SESSION['role_id'])) {
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-1 col-form-label">Brand</label>
                             <div class="col-sm-4">
-                                <input type="text" name="p_brand" class="form-control" id="staticEmail" placeholder="กรุณาใส่ชื่อ Brand" required>
+                                <input type="text" name="p_brand" class="form-control" id="staticEmail" placeholder="กรุณากรอกชื่อ Brand" required>
                             </div>
                             <label for="inputPassword" class="col-sm-0 col-form-label ml-4">Model</label>
                             <div class="col-sm-5">
-                                <input type="text" name="p_model" class="form-control" id="inputPassword" placeholder="กรุณาใส่ชื่อ Model" required>
+                                <!-- <input type="text" name="p_model" class="form-control" id="inputPassword" placeholder="กรุณาใส่ชื่อ Model" required> -->
+                                <input type="text" name="p_model" id="inputPart" class="form-control" onblur="checkPartType()" placeholder="กรุณากรอกชื่อ Model" required>
+                                <span id="part-error" style="color:red;display:none;">รหัสโมเดลนี้มีอยู่ในระบบแล้ว</span>
+                                <script>
+                                    function checkPartType() {
+                                        var p_name = document.getElementById('inputPart').value;
+                                        var xhttp = new XMLHttpRequest();
+                                        xhttp.onreadystatechange = function() {
+                                            if (this.readyState == 4 && this.status == 200) {
+                                                if (this.responseText == 'exists') {
+                                                    document.getElementById('part-error').style.display = 'block';
+                                                    document.getElementById('inputPart').setCustomValidity('มีข้อมูลอยู่แล้ว');
+                                                    document.getElementById('submit-button').disabled = true; // disable the submit button
+                                                } else {
+                                                    document.getElementById('part-error').style.display = 'none';
+                                                    document.getElementById('inputPart').setCustomValidity('');
+                                                    document.getElementById('submit-button').disabled = false; // enable the submit button
+                                                }
+                                            }
+                                        };
+                                        xhttp.open('GET', 'action/check_part_model.php?p_name=' + p_name, true);
+                                        xhttp.send();
+                                    }
+                                </script>
                             </div>
                         </div>
                         <div class="mb-3 row">
@@ -121,11 +144,14 @@ if (!isset($_SESSION['role_id'])) {
                                 <select name="p_type_id" class="form-select" aria-label="Default select example">
                                     <option selected>กรุณาเลือกประเภทอะไหล่</option>
                                     <?php
-                                    $sql = "SELECT * FROM parts_type ";
+                                    $sql = "SELECT * FROM parts_type WHERE del_flg = '0'";
                                     $result = mysqli_query($conn, $sql);
-                                    $row = mysqli_fetch_array($result);
+                                    while ($row = mysqli_fetch_array($result)) {
                                     ?>
-                                    <option value="<?= $row['p_type_id'] ?>"><?= $row['p_type_name'] ?></option>
+                                        <option value="<?= $row['p_type_id'] ?>"><?= $row['p_type_name'] ?></option>
+                                    <?php
+                                    }
+                                    ?>
 
                                 </select>
                             </div>

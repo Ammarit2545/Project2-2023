@@ -62,7 +62,11 @@ if (!isset($_SESSION['role_id'])) {
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">ข้อมูลอะไหล่</h1>
+                    <br>
+                    <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ข้อมูลอะไหล่</h1>
+                    <a href="add_parts.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มอะไหล่หรือไม่?</a>
+                    <br>
+                    <br>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -74,9 +78,12 @@ if (!isset($_SESSION['role_id'])) {
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+                                            <th>ลำดับ</th>
                                             <th>ชื่อ</th>
                                             <th>Brand</th>
                                             <th>Model</th>
+                                            <th>Name</th>
+                                            <th>ประเภท</th>
                                             <th>รายละเอียด</th>
                                             <th>ราคา</th>
                                             <th>จำนวน</th>
@@ -85,22 +92,94 @@ if (!isset($_SESSION['role_id'])) {
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $sql = "SELECT * FROM parts WHERE del_flg = '0'";
+                                        $sql = "SELECT * FROM parts LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id WHERE parts.del_flg = '0' ";
                                         $result = mysqli_query($conn, $sql);
 
                                         while ($row = mysqli_fetch_array($result)) {
                                         ?>
                                             <tr>
-                                                <td><?= $row['p_name'] ?></td>
-                                                <td><?= $row['p_brand'] ?></td>
-                                                <td><?= $row['p_model'] ?></td>
-                                                <td>
-                                                    <p><?= substr($row['p_detail'], 0, 50) . '...' ?></p>
+                                                <td><?php
+                                                    if ($row['p_id'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['p_id'];
+                                                    }
+                                                    ?>
                                                 </td>
 
-                                                <td><?= $row['p_price'] ?></td>
-                                                <th><?= $row['p_stock'] ?></th>
-                                                <td><button onclick="confirmDelete(<?= $row['p_id'] ?>)" class="btn btn-danger">ลบ</button>
+                                                <td><?php
+                                                    if ($row['p_pic'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                    ?>
+                                                        <img src="../<?= $row['p_pic'] ?>" width="50px" alt="Not Found">
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </td>
+
+
+                                                <td><?php
+                                                    if ($row['p_name'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['p_name'];
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['p_brand'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['p_brand'];
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['p_model'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['p_model'];
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['p_type_name'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['p_type_name'];
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['p_detail'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                    ?>
+                                                        <p><?= substr($row['p_detail'], 0, 50) . '...' ?></p>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </td>
+
+                                                <td><?php
+                                                    if ($row['p_price'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['p_price'];
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['p_stock'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['p_stock'];
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <button onclick="confirmDelete(<?= $row['p_id'] ?>)" class="btn btn-danger" onclick="return confirm('Are You Sure You Want to Edit This Parts Information? \nPlease Check Your Information')">ลบ</button>
                                                     <a class="btn btn-warning" href="edit_parts.php?id=<?= $row['p_id'] ?>">แก้ไข</a>
                                                 </td>
                                             </tr>

@@ -87,7 +87,7 @@ if (!isset($_SESSION['role_id'])) {
                     $sql = "SELECT * FROM get_repair
                     LEFT JOIN repair ON repair.r_id = get_repair.r_id 
                     LEFT JOIN member ON member.m_id = repair.m_id
-                    WHERE del_flg = '0' AND get_r_id = '$get_r_id'";
+                    WHERE get_repair.del_flg = '0' AND get_r_id = '$get_r_id'";
                     $result = mysqli_query($conn,$sql);
                     $row = mysqli_fetch_array($result);
 

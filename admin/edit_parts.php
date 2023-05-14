@@ -18,7 +18,8 @@ if (!isset($_SESSION['role_id'])) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>แก้ไขข้อมูลเครื่องเสียง</title>
+    <title>View Part - Edit Part Information</title>
+    <link rel="icon" type="image/x-icon" href="../img brand/anelogo.jpg">
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -68,7 +69,6 @@ if (!isset($_SESSION['role_id'])) {
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
-
             <!-- Main Content -->
             <div id="content">
 
@@ -81,64 +81,90 @@ if (!isset($_SESSION['role_id'])) {
                 <?php
                 $p_id = $_GET['id'];
 
-                $sql = "SELECT * FROM parts WHERE del_flg = '0' AND p_id = '$p_id'";
+                $sql = "SELECT * FROM parts LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id WHERE parts.del_flg = '0' AND p_id = '$p_id'";
                 $result = mysqli_query($conn, $sql);
                 $row = mysqli_fetch_array($result); {
                 ?>
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
+                        <form action="action/edit_parts.php" method="POST" enctype="multipart/form-data">
 
-                        <!-- Page Heading -->
-                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                            <h1 class="h3 mb-0 text-gray-800">แก้ไขข้อมูลเครื่องเสียง</h1>
-                        </div>
+                            <!-- Page Heading -->
+                            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                                <h1 class="h3 mb-0 text-gray-800">แก้ไขข้อมูลเครื่องเสียง</h1>
+                            </div>
 
-                        <div class="mb-3 row">
-                            <label for="staticEmail" class="col-sm-1 col-form-label">Brand</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" id="staticEmail" value="<?= $row['p_brand'] ?>" placeholder="Yamaha">
+                            <div class="mb-3 row">
+                                <label for="staticEmail" class="col-sm-1 col-form-label">Brand</label>
+                                <div class="col-sm-4">
+                                <input type="text" name="p_brand" class="form-control" id="staticEmail" value="<?= $row['p_brand'] ?>" placeholder="กรุณากรอกยี่ห้ออะไหล่">
+                                <input type="text" name="p_id" class="form-control" id="staticEmail" value="<?= $row['p_id'] ?>" placeholder="กรุณากรอกยี่ห้ออะไหล่">
+                                </div>
+                                <label for="inputPassword" class="col-sm-1 col-form-label">Model</label>
+                                <div class="col-sm-4">
+                                    <input type="text" name="p_model" class="form-control" id="inputPassword" placeholder="กรุณากรอกรหัสโมเดล" value="<?= $row['p_model'] ?>">
+                                </div>
                             </div>
-                            <label for="inputPassword" class="col-sm-1 col-form-label">Model</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" id="inputPassword" placeholder="cc61" value="<?= $row['p_model'] ?>">
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label for="inputPassword" class="col-sm-1 col-form-label">ชื่อ</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" id="inputPassword" placeholder="Garrett Winters" value="<?= $row['p_name'] ?>">
-                            </div>
-                            <label for="inputPassword" class="col-sm-1 col-form-label">ราคา</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control col-3" id="inputPassword" placeholder="450000" value="<?= $row['p_price'] ?>">
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label for="inputPassword" class="col-sm-1 col-form-label">จำนวน</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control col-3" id="inputPassword" placeholder="2" value="<?= $row['p_stock'] ?>">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="exampleFormControlTextarea1" class="col-form-label">รายละเอียด :</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"><?= $row['p_detail'] ?></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <input type="file" name="p_pic"  id="upload" hidden multiple onchange="displayImages(this)">
-                            <h6>เพิ่มรูป</h6>
-                            <label for="upload" style="display: block; color: blue;">Choose file</label>
-                            <div id="image-container">
-                                <img id="original-image" src="../<?= $row['p_pic'] ?>" style="max-width: 100%; max-height: 200px;">
-                            </div>
-                        </div>
-                        <div class="text-center pt-4">
-                            <button type="button" class="btn btn-success">ยืนยัน</button>
-                        </div>
+                            <div class="mb-3 row">
+                                <label for="inputPassword" class="col-sm-1 col-form-label">ชื่อ</label>
+                                <div class="col-sm-2 mr-4">
+                                    <input type="text" name="p_name" class="form-control" id="inputPassword" placeholder="กรุณาใส่ชื่ออะไหล่" value="<?= $row['p_name'] ?>" required>
+                                </div>
+                                <label for="inputPassword" class="col-sm-0 col-form-label">ราคา</label>
+                                <div class="col-sm-2 mr-4">
+                                    <input type="text" name="p_price" class="form-control" id="inputPassword" placeholder="กรุณาใส่ราคา" value="<?= $row['p_price'] ?>" required>
+                                </div>
+                                <label for="inputPassword" class="col-sm-0 col-select-label mt-2">ประเภทอะไหล่</label>
+                                <div class="col-sm-2 mr-4 mt-2">
+                                    <select name="p_type_id" class="form-select" aria-label="Default select example">
+                                        <?php if ($row['p_type_id']) {
+                                            $p_type_id = $row['p_type_id'];
+                                            $sql = "SELECT * FROM parts_type WHERE del_flg = '0' AND p_type_id <> $p_type_id";
+                                            $result = mysqli_query($conn, $sql);
+                                        ?>
+                                            <option value="<?= $row['p_type_id'] ?>"><?= $row['p_type_name'] ?></option>
 
+                                        <?php
+                                        } else {
+                                            $sql = "SELECT * FROM parts_type WHERE del_flg = '0'";
+                                            $result = mysqli_query($conn, $sql);
+                                        ?>
+                                            <option selected>กรุณาเลือกประเภทอะไหล่</option>
+                                        <?php
+
+                                        } ?>
+
+                                        <?php
+                                        while ($row1 = mysqli_fetch_array($result)) {
+                                        ?>
+                                            <option value="<?= $row1['p_type_id'] ?>"><?= $row1['p_type_name'] ?></option>
+                                        <?php
+                                        }
+                                        ?>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleFormControlTextarea1" class="col-form-label">รายละเอียด :</label>
+                                <textarea name="p_description" class="form-control" id="exampleFormControlTextarea1" rows="3"><?= $row['p_detail'] ?></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <input type="file" name="p_pic" id="upload" hidden multiple onchange="displayImages(this)">
+                                <h6>เพิ่มรูป</h6>
+                                <label for="upload" style="display: block; color: blue;">Choose file</label>
+                                <div id="image-container">
+                                    <img id="original-image" src="../<?= $row['p_pic'] ?>" style="max-width: 100%; max-height: 200px;" alt=" img not found">
+                                </div>
+                            </div>
+                            <div class="text-center pt-4">
+                                <a href="listview_parts.php" class="btn btn-danger" onclick="return confirm('คุณต้องการยกเลิกการแก้ไขข้อมูลนี้หรือไม่? \nข้อมูลทั้งหมดจะไม่ถูกบันทึก')">ยกเลิก</a>
+                                <button type="submit" class="btn btn-success" onclick="return confirm('Are You Sure You Want to Edit This Parts Information? \nPlease Check Your Information')">ยืนยัน</button>
+                            </div>
                     </div>
                     <!-- /.container-fluid -->
                 <?php } ?>
-
+                </form>
             </div>
             <!-- End of Main Content -->
 

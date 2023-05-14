@@ -36,6 +36,9 @@
                 <h6 class="collapse-header">รายละเอียด :</h6>
                 <a class="collapse-item" href="employee_listview.php">ข้อมูลพนักงาน</a>
                 <a class="collapse-item" href="add_employee.php">เพิ่มข้อมูล</a>
+                <hr>
+                <h6 class="collapse-header">แผนกพนักงาน :</h6>
+                <a class="collapse-item" href="add_em_type.php">เพิ่มแผนก</a>
             </div>
         </div>
     </li>
@@ -65,7 +68,10 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">รายละเอียด :</h6>
                 <a class="collapse-item" href="listview_parts.php">ข้อมูลอะไหล่</a>
-                <a class="collapse-item" href="add_parts.php">เพิ่มข้อมูล</a>
+                <a class="collapse-item" href="add_parts.php">เพิ่มข้อมูลอะไหล่</a>
+                <hr>
+                <h6 class="collapse-header">ประเภทอะไหล่ :</h6>
+                <a class="collapse-item" href="add_parts_type.php">ประเภทอะไหล่</a>
             </div>
         </div>
     </li>
@@ -79,8 +85,8 @@
         <div id="collapsecompany" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">รายละเอียด :</h6>
-                <a class="collapse-item" href="company.html">ข้อมูลบริษัท</a>
-                <a class="collapse-item" href="addcompany.html">เพิ่มข้อมูล</a>
+                <a class="collapse-item" href="listview_company.php">ข้อมูลบริษัท</a>
+                <a class="collapse-item" href="add_company.php">เพิ่มข้อมูล</a>
             </div>
         </div>
     </li>

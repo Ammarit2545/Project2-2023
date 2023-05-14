@@ -8,12 +8,9 @@
     // Hash the password using SHA-512 algorithm
     $password = hash('sha512', $password);
 
-    $sql = "SELECT * FROM member WHERE m_email = '$email' AND m_password = '$password';";
+    $sql = "SELECT * FROM member WHERE m_email = '$email' AND m_password = '$password' AND del_flg = 0;";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($result);
-
-    // echo $email."<br>".$password."<br>".$row."<br>";
-    // print_r ($row);
 
     if ($row > 0) {
 
@@ -40,9 +37,10 @@
 
         // Redirect to the user's dashboard or home page
         header("location: ../home.php");
+        
         // exit(); // Terminate the current script
     } else {
-        $sql = "SELECT * FROM employee WHERE e_email = '$email' AND e_password = '$password';";
+        $sql = "SELECT * FROM employee WHERE e_email = '$email' AND e_password = '$password' AND del_flg = 0;";
         $result = mysqli_query($conn, $sql);
         $row_e = mysqli_fetch_array($result);
         if($row_e > 0){
