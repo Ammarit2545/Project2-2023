@@ -96,25 +96,58 @@ if (!isset($_SESSION['role_id'])) {
                             </div>
                         </div>
                         <div class="mb-3 row">
-                          
-                                <label for="inputPassword" class="col-sm-1 col-form-label">ตำแหน่ง</label>
-                                <div class="col-sm-4">
-                                    <select name="role_id" id="role_id" class="mt-2 form-select" aria-label="Default select example">
-                                        <?php
-                                        if (isset($conn)) {
-                                            $sql = "SELECT * FROM role WHERE del_flg = '0'";
-                                            $result = mysqli_query($conn, $sql);
-                                            while ($row = mysqli_fetch_array($result)) {
-                                                echo '<option value="' . $row['role_id'] . '">' . $row['role_name'] . '</option>';
-                                            }
+                            <label for="inputPassword" class="col-sm-1 col-form-label">ตำแหน่ง</label>
+                            <div class="col-sm-4">
+                                <select name="role_id" id="role_id" class="mt-2 form-select" aria-label="Default select example">
+                                    <?php
+                                    if (isset($conn)) {
+                                        $sql = "SELECT * FROM role WHERE del_flg = '0'";
+                                        $result = mysqli_query($conn, $sql);
+                                        while ($row = mysqli_fetch_array($result)) {
+                                            echo '<option value="' . $row['role_id'] . '">' . $row['role_name'] . '</option>';
                                         }
-                                        ?>
-                                        <option value="-1">*เพิ่มตำแหน่งใหม่</option>
-                                    </select>
-                                    <label for="new_role_name" style="display:none;">ชื่อตำแหน่งใหม่:</label>
-                                    <input type="text" name="new_role_name" class="form-control mt-2" style="display:none;" required>
-                                </div>
-                       
+                                    }
+                                    ?>
+                                    <option value="-1">*เพิ่มตำแหน่งใหม่</option>
+                                </select>
+                                <!-- <label for="new_role_name" style="display:none;">ชื่อตำแหน่งใหม่:</label> -->
+                                <!-- <input type="text" name="new_role_name" class="form-control mt-2" style="display:none;" required> -->
+                                <label for="p_type_name" style="display:none;">ชื่อตำแหน่งใหม่:</label>
+                                <input type="text" name="new_role_name" id="inputTypePart" class="form-control mt-2" onblur="checkRole()" placeholder="กรุณากรอกประเภทที่ต้องการ" style="display:none;" required>
+                                <span id="part-type-error" style="color:red;display:none;">มีแผนกนี้อยู่ในระบบแล้ว</span>
+                                <script>
+                                    function checkRole() {
+                                        var role_name = document.getElementById('inputTypePart').value;
+                                        var xhttp = new XMLHttpRequest();
+                                        xhttp.onreadystatechange = function() {
+                                            if (this.readyState == 4 && this.status == 200) {
+                                                if (this.responseText == 'exists') {
+                                                    document.getElementById('part-type-error').style.display = 'block';
+                                                    document.getElementById('inputTypePart').setCustomValidity('มีข้อมูลอยู่แล้ว');
+                                                    document.getElementById('submit-button').disabled = true; // disable the submit button
+                                                } else {
+                                                    document.getElementById('part-type-error').style.display = 'none';
+                                                    document.getElementById('inputTypePart').setCustomValidity('');
+                                                    document.getElementById('submit-button').disabled = false; // enable the submit button
+                                                }
+                                            }
+                                        };
+                                        xhttp.open('GET', 'action/check_role.php?role_name=' + role_name, true);
+                                        xhttp.send();
+                                    }
+
+                                    // Add the following code to hide the error message when a specific option is selected
+                                    var selectElement = document.getElementById('role_id');
+                                    selectElement.addEventListener('change', function() {
+                                        var selectedOption = this.value;
+                                        if (selectedOption !== "-1") {
+                                            document.getElementById('part-type-error').style.display = 'none';
+                                        }
+                                    });
+                                </script>
+                            </div>
+
+
 
                             <script>
                                 const roleSelect = document.querySelector('#role_id');

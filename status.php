@@ -115,7 +115,7 @@ if (isset($_GET["status_id"])) {
   <div class="background"></div>
 
   <div class="px-5 pt-5 edit">
-
+  <br>
     <?php if (!isset($_GET["search"])) { ?>
       <h1 class="pt-5 text-center" id="title_main">ข้อมูลการซ่อมทั้งหมดของคุณ <?= $row['m_fname'] . " " . $row['m_lname']  ?></h1>
     <?php } elseif ($status_id == "") {
@@ -299,7 +299,7 @@ if (isset($_GET["status_id"])) {
                         <br>
                         <p><?= $summary ?></p>
                       </li>
-                    <?php 
+                    <?php
                     }
                     $dateString = date('d-m-Y', strtotime($row_c['get_r_date_in']));
                     $date = DateTime::createFromFormat('d-m-Y', $dateString);
@@ -328,7 +328,7 @@ if (isset($_GET["status_id"])) {
   </div>
   <!-- footer-->
   <?php
-  include('footer/footer.php') 
+  include('footer/footer.php')
   ?>
   <!-- end footer-->
 
@@ -342,7 +342,6 @@ if (isset($_GET["status_id"])) {
     }, 10);
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>

@@ -15,6 +15,22 @@ session_start();
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
   <link rel="stylesheet" href="css/index.css">
+  <style>
+    .fade-in {
+      animation: fadein 0.5s ease-in-out;
+    }
+
+    @keyframes fadein {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+
   <title>ANE - Home</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
@@ -147,19 +163,106 @@ session_start();
             <div class="modal-content" style="border-radius: 39px; background-color: #D4E8FF;">
               <div class="modal-body py-5 mx-3">
                 <div class="text-center mb-3">
-                  <h2>ยินดีต้อนรับสู่ร้าน MY SHOP</h2><br>
+                  <h2>ยินดีต้อนรับสู่ร้าน Anan Electronic</h2><br>
                   <h4>เข้าสู่ระบบ</h4>
                 </div>
                 <form action="action/register.php" method="POST">
                   <div class="input-group">
-                    <input type="email" class="input-field" id="email" name="email" required>
+                    <input type="email" class="input-field" id="email" name="email" onblur="checkEmail()" placeholder="กรุณากรอกประเภทที่ต้องการ" required>
                     <label for="email">Email</label>
+                    <!-- <span id="email-error" style="color: red; font-size: 12px; display: none;">Email นี้มีผู้ใช้แล้ว</span> -->
+                    <span id="email-error" style="color: red; font-size: 12px; display: none;">
+                      <button class="btn btn-danger" style="font-size: 12px; padding : -2px">
+                        Email นี้มีผู้ใช้แล้ว
+                      </button>
+                    </span>
+
+                    <script>
+                      // Add the 'show' class to trigger the transition
+                      document.addEventListener("DOMContentLoaded", function() {
+                        var emailError = document.getElementById("email-error");
+                        emailError.style.display = "block";
+                        emailError.classList.add("fade-in");
+                        setTimeout(function() {
+                          emailError.classList.add("show");
+                        }, 100); // Delaying the 'show' class addition to ensure transition works
+                      });
+                    </script>
+
+                    <script>
+                      function checkEmail() {
+                        var email = document.getElementById('email').value;
+                        var emailInput = document.getElementById('email');
+                        var emailError = document.getElementById('email-error');
+
+                        if (emailInput.validity.valid) {
+                          emailError.style.display = 'none';
+                          emailInput.setCustomValidity('');
+
+                          var xhttp = new XMLHttpRequest();
+                          xhttp.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                              if (this.responseText === 'exists') {
+                                emailError.style.display = 'block';
+                                emailInput.setCustomValidity('มีข้อมูลอยู่แล้ว');
+                              } else {
+                                emailError.style.display = 'none';
+                                emailInput.setCustomValidity('');
+                              }
+                            }
+                          };
+                          xhttp.open('GET', 'action/check_email.php?email=' + encodeURIComponent(email), true);
+                          xhttp.send();
+                        } else {
+                          emailError.style.display = 'none';
+                          emailInput.setCustomValidity('');
+                        }
+                      }
+                    </script>
                   </div>
                   <div class="input-group">
-                    <input type="password" class="input-field" id="password" name="password" required>
+                    <input type="password" class="input-field" oninput="checkPasswordLength()" onblur="checkPasswordLength()" id="password_name" name="password" required>
                     <label for="password">Password</label>
-                    <p style="color : red; font-size:12px">รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัว และไม่เกิน 10 ตัว</p>
+                    <!-- <span id="password-error" style="color: red; font-size: 12px; display: none;">รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัว</span> -->
+
+                    <span id="password-error" style="color: red; font-size: 12px; display: none;">
+                      <button class="btn btn-danger" style="font-size: 12px; padding : -2px">
+                        รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร
+                      </button>
+                    </span>
+                    <script>
+                      // Add the 'fade-in' class to trigger the transition
+                      document.addEventListener("DOMContentLoaded", function() {
+                        var passwordError = document.getElementById("password-error");
+                        passwordError.style.display = "block";
+                        passwordError.classList.add("fade-in");
+                      });
+                    </script>
+                    <script>
+                      function checkPasswordLength() {
+                        // Get the password input element
+                        const passwordInput = document.getElementById('password_name');
+
+                        // Get the error message span element
+                        const errorMessage = document.getElementById('password-error');
+
+                        // Function to check the password length
+                        const password = passwordInput.value;
+
+                        if (password.length < 8) {
+                          // Display the error message if the password length is invalid
+                          errorMessage.style.display = 'inline';
+                        } else {
+                          // Hide the error message if the password meets the length requirement
+                          errorMessage.style.display = 'none';
+                        }
+                      }
+                    </script>
+
+
+
                   </div>
+
 
                   <div class="input-group">
                     <input type="text" class="input-field" id="fname" name="fname" required>

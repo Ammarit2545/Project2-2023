@@ -139,9 +139,11 @@ if (!isset($_SESSION['role_id'])) {
                             <div class="col-sm-2 mr-4">
                                 <input type="text" name="p_stock" class="form-control" id="inputPassword" placeholder="กรุณาใส่จำนวน" required>
                             </div>
-                            <label for="inputPassword" class="col-sm-0 col-select-label mt-2">ประเภทอะไหล่</label>
-                            <div class="col-sm-2 mr-4 mt-2">
-                                <select name="p_type_id" class="form-select" aria-label="Default select example">
+                            <!-- <label for="inputPassword" class="col-sm-0 col-select-label mt-2">ประเภทอะไหล่</label> -->
+                            <label for="inputPassword" class="col-sm-0 col-form-label">ตำแหน่ง</label>
+                            <div class="col-sm-0 mr-0 mt-0">
+
+                                <!-- <select name="p_type_id" class="form-select" aria-label="Default select example">
                                     <option selected>กรุณาเลือกประเภทอะไหล่</option>
                                     <?php
                                     $sql = "SELECT * FROM parts_type WHERE del_flg = '0'";
@@ -152,8 +154,72 @@ if (!isset($_SESSION['role_id'])) {
                                     <?php
                                     }
                                     ?>
+                                </select> -->
 
-                                </select>
+                                <div class="col">
+                                    <select name="p_type_id" id="p_type_id" class="mt-2 form-select" aria-label="Default select example">
+                                        <?php
+                                        if (isset($conn)) {
+                                            $sql = "SELECT * FROM parts_type WHERE del_flg = '0'";
+                                            $result = mysqli_query($conn, $sql);
+                                            while ($row = mysqli_fetch_array($result)) {
+                                                echo '<option value="' . $row['p_type_id'] . '">' . $row['p_type_name'] . '</option>';
+                                            }
+                                        }
+                                        ?>
+                                        <option value="-1">*เพิ่มประเภทใหม่</option>
+                                    </select>
+                                    <!-- <input type="text" name="p_type_name" class="form-control mt-2" style="display:none;" required> -->
+                                    <label for="p_type_name" style="display:none;">ชื่อประเภทใหม่:</label>
+                                    <input type="text" name="p_type_name" id="inputTypePart" class="form-control mt-2" onblur="checkPartType1()" placeholder="กรุณากรอกประเภทที่ต้องการ" style="display:none;" required>
+                                    <span id="part-type-error" style="color:red;display:none;">มีประเภทนี้อยู่ในระบบแล้ว</span>
+                                    <script>
+                                        function checkPartType1() {
+                                            var p_type_name = document.getElementById('inputTypePart').value;
+                                            var xhttp = new XMLHttpRequest();
+                                            xhttp.onreadystatechange = function() {
+                                                if (this.readyState == 4 && this.status == 200) {
+                                                    if (this.responseText == 'exists') {
+                                                        document.getElementById('part-type-error').style.display = 'block';
+                                                        document.getElementById('inputTypePart').setCustomValidity('มีข้อมูลอยู่แล้ว');
+                                                        document.getElementById('submit-button').disabled = true; // disable the submit button
+                                                    } else {
+                                                        document.getElementById('part-type-error').style.display = 'none';
+                                                        document.getElementById('inputTypePart').setCustomValidity('');
+                                                        document.getElementById('submit-button').disabled = false; // enable the submit button
+                                                    }
+                                                }
+                                            };
+                                            xhttp.open('GET', 'action/check_part_type.php?p_type_name=' + p_type_name, true);
+                                            xhttp.send();
+                                        }
+
+                                        // Add the following code to hide the error message when a specific option is selected
+                                        var selectElement = document.getElementById('p_type_id');
+                                        selectElement.addEventListener('change', function() {
+                                            var selectedOption = this.value;
+                                            if (selectedOption !== "-1") {
+                                                document.getElementById('part-type-error').style.display = 'none';
+                                            }
+                                        });
+                                    </script>
+                                </div>
+
+
+
+                                <script>
+                                    const roleSelect = document.querySelector('#p_type_id');
+                                    const newRoleInput = document.querySelector('input[name="p_type_name"]');
+                                    roleSelect.addEventListener('change', function() {
+                                        if (roleSelect.value == '-1') {
+                                            newRoleInput.style.display = 'block';
+                                            newRoleInput.setAttribute('required', 'required');
+                                        } else {
+                                            newRoleInput.style.display = 'none';
+                                            newRoleInput.removeAttribute('required');
+                                        }
+                                    });
+                                </script>
                             </div>
                         </div>
 
