@@ -74,7 +74,7 @@ session_start();
           </div>
           <form action="action/login.php" method="POST">
             <div class="input-group">
-              <input type="text" class="input-field" id="email" name="email" required>
+              <input type="text" class="input-field" name="email" required>
               <label for="email">Email</label>
             </div>
             <div class="input-group">
@@ -90,7 +90,6 @@ session_start();
             <p class="text-center fw-bold mx-3 mb-0 text-muted">OR</p><br>
             <p class="text-center">
               <center>
-
                 <p>Don’t have an Account?
                   <a href="#" style="color: #0066CC; text-decoration:none;" data-bs-toggle="modal" data-bs-target="#Register">Create yours now.</a>
                 </p>
@@ -170,7 +169,6 @@ session_start();
                   <div class="input-group">
                     <input type="email" class="input-field" id="email" name="email" onblur="checkEmail()" placeholder="กรุณากรอกประเภทที่ต้องการ" required>
                     <label for="email">Email</label>
-                    <!-- <span id="email-error" style="color: red; font-size: 12px; display: none;">Email นี้มีผู้ใช้แล้ว</span> -->
                     <span id="email-error" style="color: red; font-size: 12px; display: none;">
                       <button class="btn btn-danger" style="font-size: 12px; padding : -2px">
                         Email นี้มีผู้ใช้แล้ว
@@ -178,48 +176,48 @@ session_start();
                     </span>
 
                     <script>
-                      // Add the 'show' class to trigger the transition
                       document.addEventListener("DOMContentLoaded", function() {
                         var emailError = document.getElementById("email-error");
-                        emailError.style.display = "block";
-                        emailError.classList.add("fade-in");
-                        setTimeout(function() {
-                          emailError.classList.add("show");
-                        }, 100); // Delaying the 'show' class addition to ensure transition works
-                      });
-                    </script>
-
-                    <script>
-                      function checkEmail() {
-                        var email = document.getElementById('email').value;
                         var emailInput = document.getElementById('email');
-                        var emailError = document.getElementById('email-error');
 
-                        if (emailInput.validity.valid) {
-                          emailError.style.display = 'none';
-                          emailInput.setCustomValidity('');
+                        function showError() {
+                          emailError.style.display = 'block';
+                          emailInput.setCustomValidity('มีข้อมูลอยู่แล้ว');
+                        }
 
-                          var xhttp = new XMLHttpRequest();
-                          xhttp.onreadystatechange = function() {
-                            if (this.readyState == 4 && this.status == 200) {
-                              if (this.responseText === 'exists') {
-                                emailError.style.display = 'block';
-                                emailInput.setCustomValidity('มีข้อมูลอยู่แล้ว');
-                              } else {
-                                emailError.style.display = 'none';
-                                emailInput.setCustomValidity('');
-                              }
-                            }
-                          };
-                          xhttp.open('GET', 'action/check_email.php?email=' + encodeURIComponent(email), true);
-                          xhttp.send();
-                        } else {
+                        function hideError() {
                           emailError.style.display = 'none';
                           emailInput.setCustomValidity('');
                         }
-                      }
+
+                        emailInput.addEventListener('input', hideError); // Hide the error on input change
+
+                        function checkEmail() {
+                          var email = emailInput.value;
+
+                          if (emailInput.validity.valid) {
+                            var xhttp = new XMLHttpRequest();
+                            xhttp.onreadystatechange = function() {
+                              if (this.readyState == 4 && this.status == 200) {
+                                if (this.responseText === 'exists') {
+                                  showError();
+                                } else {
+                                  hideError();
+                                }
+                              }
+                            };
+                            xhttp.open('GET', 'action/check_email.php?email=' + encodeURIComponent(email), true);
+                            xhttp.send();
+                          } else {
+                            hideError();
+                          }
+                        }
+
+                        emailInput.addEventListener('blur', checkEmail); // Trigger checkEmail() on blur event
+                      });
                     </script>
                   </div>
+
                   <div class="input-group">
                     <input type="password" class="input-field" oninput="checkPasswordLength()" onblur="checkPasswordLength()" id="password_name" name="password" required>
                     <label for="password">Password</label>
