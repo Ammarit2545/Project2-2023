@@ -27,6 +27,24 @@
 
     <!-- Nav Item - employee Collapse Menu -->
     <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo1" aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-solid fa-envelope"></i>
+            <span>การแจ้งเตือนการซ่อม</span>
+        </a>
+        <div id="collapseTwo1" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">รายละเอียด :</h6>
+                <a class="collapse-item" href="listview_repair.php">รายการแจ้งซ่อม</a>
+                <!-- <a class="collapse-item" href="add_employee.php">เพิ่มข้อมูล</a> -->
+                <!-- <hr>
+                <h6 class="collapse-header">แผนกพนักงาน :</h6>
+                <a class="collapse-item" href="add_em_type.php">แผนก</a> -->
+            </div>
+        </div>
+    </li>
+
+    <!-- Nav Item - employee Collapse Menu -->
+    <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-solid fa-users"></i>
             <span>พนักงาน</span>
@@ -38,7 +56,7 @@
                 <a class="collapse-item" href="add_employee.php">เพิ่มข้อมูล</a>
                 <hr>
                 <h6 class="collapse-header">แผนกพนักงาน :</h6>
-                <a class="collapse-item" href="add_em_type.php">เพิ่มแผนก</a>
+                <a class="collapse-item" href="add_em_type.php">แผนก</a>
             </div>
         </div>
     </li>
@@ -53,7 +71,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">รายละเอียด :</h6>
                 <a class="collapse-item" href="listview_member.php">ข้อมูลลูกค้า</a>
-                <a class="collapse-item" href="repair.html">การส่งซ่อม</a>
+                <!-- <a class="collapse-item" href="repair.html">การส่งซ่อม</a> -->
             </div>
         </div>
     </li>
@@ -89,6 +107,26 @@
                 <a class="collapse-item" href="add_company.php">เพิ่มข้อมูล</a>
             </div>
         </div>
+    </li>
+
+    <!-- Nav Item - company Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsestatus" aria-expanded="true" aria-controls="collapsestatus">
+            <i class="fas fa-solid fa-bars"></i>
+            <span>สถานะ</span>
+        </a>
+        <div id="collapsestatus" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">รายละเอียด :</h6>
+                <a class="collapse-item" href="listview_status.php">ข้อมูลสถานะ</a>
+            </div>
+        </div>
+    </li>
+
+    <li class="nav-item">
+    <a class="nav-link" href="index.php">
+            <i class="fas fa-fw fa-arrow-down"></i>
+            <span>บันทึกการซ่อมด้วยตัวเอง</span></a>
     </li>
 </ul>
 <!-- End of Sidebar -->

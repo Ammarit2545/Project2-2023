@@ -72,6 +72,7 @@
                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                             <thead>
                                                 <tr>
+                                                    <th>ลำดับ</th>
                                                     <th>ชื่อ-นามสกุล</th>
                                                     <th>Email</th>
                                                     <th>ที่อยู่</th>
@@ -84,23 +85,49 @@
                                                 <?php
                                                 $sql = "SELECT * FROM member WHERE del_flg = '0' ORDER BY m_id DESC";
                                                 $result = mysqli_query($conn, $sql);
+                                                $i = 0;
                                                 while ($row = mysqli_fetch_array($result)) {
+                                                    $i = $i + 1;
                                                 ?>
                                                     <tr>
+                                                        <td><?= $i ?></td>
                                                         <td><?= $row['m_fname'] . " " . $row['m_lname']  ?></td>
                                                         <td><?= $row['m_email'] ?></td>
                                                         <td><?= $row['m_add'] ?></td>
                                                         <td><?= $row['m_tel'] ?></td>
                                                         <td><?= $row['m_date_in'] ?></td>
                                                         <td>
-                                                        <a href="action/delete_member.php?id=<?= $row['m_id'] ?>" class="btn btn-danger" onclick="return confirm('คุณต้องการลบรายชื่อสมาชิก <?= $row['m_fname'] . ' ' . $row['m_lname'] ?> ออกจากระบบหรือไม่?')">ลบ</a>
-                                                        <a href="edit_member.php?id=<?= $row['m_id'] ?>" class="btn btn-warning">แก้ไข</a>
+                                                            <a href="action/delete_member.php?id=<?= $row['m_id'] ?>" class="btn btn-danger" onclick="return confirmDelete(event)">ลบ</a>
+                                                            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+                                                            <!-- JavaScript function for confirmation -->
+                                                            <script>
+                                                                function confirmDelete(event) {
+                                                                    event.preventDefault(); // Prevent the default action of the link
+
+                                                                    Swal.fire({
+                                                                        title: 'คุณแน่ใจหรือไม่?',
+                                                                        text: 'คุณต้องการลบข้อมูลนี้หรือไม่',
+                                                                        icon: 'warning',
+                                                                        showCancelButton: true,
+                                                                        confirmButtonColor: '#dc3545',
+                                                                        cancelButtonColor: '#6c757d',
+                                                                        confirmButtonText: 'Yes, delete it!'
+                                                                    }).then((result) => {
+                                                                        if (result.isConfirmed) {
+                                                                            // If confirmed, continue with the deletion process
+                                                                            window.location.href = event.target.href; // Redirect to the deletion URL
+                                                                        }
+                                                                    });
+                                                                }
+                                                            </script>
+                                                            <a href="edit_member.php?id=<?= $row['m_id'] ?>" class="btn btn-warning">แก้ไข</a>
                                                         </td>
                                                     </tr>
                                                 <?php
                                                 }
                                                 ?>
-                                            
+
                                             </tbody>
                                         </table>
                                     </div>

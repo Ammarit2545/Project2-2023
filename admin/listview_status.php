@@ -18,7 +18,7 @@ if (!isset($_SESSION['role_id'])) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Company - View Company Information</title>
+    <title>Status - View Status Information</title>
     <link rel="icon" type="image/x-icon" href="../img brand/anelogo.jpg">
 
     <!-- Custom fonts for this template -->
@@ -55,32 +55,29 @@ if (!isset($_SESSION['role_id'])) {
                 include('bar/topbar_admin.php');
                 ?>
                 <!-- End of Topbar -->
-                <form action="action/add_part_type.php" method="POST">
+                <form action="action/add_status.php" method="POST">
 
                     <div class="container-fluid">
 
                         <!-- Page Heading -->
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                            <h1 class="h3 mb-0 text-gray-800">เพิ่มประเภทของอะไหล่</h1>
+                            <h1 class="h3 mb-0 text-gray-800">เพิ่มประเภทของสถานะ</h1>
                         </div>
 
                         <div class="mb-3 row">
-                            <label for="staticEmail" class="col-sm-1 col-form-label">ประเภทอะไหล่</label>
+                            <label for="staticEmail" class="col-sm-1 col-form-label">ประเภทสถานะ</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-9">
-                                            <input type="text" name="p_type_name" id="inputPartType" class="form-control" id="staticEmail" onblur="checkPartType()" placeholder="กรุณาใส่ประเภทที่ต้องการเพิ่มอะไหล่" required>
+                                            <input type="text" name="status_name" id="inputstatus_name" class="form-control" id="staticEmail" onblur="checkStatus()" placeholder="กรุณาใส่ประเภทที่ต้องการเพิ่มอะไหล่" required>
                                             <span id="part-type-error" style="color:red;display:none;">ข้อมูลนี้มีอยู่ในระบบแล้ว</span>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <button type="submit" class="btn btn-success" onclick="return confirm('Are You Sure You Want to Insert This New Parts Type Information?')">ยืนยัน</button>
                                         </div>
                                     </div>
                                 </div>
                                 <script>
-                                    function checkPartType() {
-                                        var p_type = document.getElementById('inputPartType').value;
+                                    function checkStatus() {
+                                        var status_name = document.getElementById('inputstatus_name').value;
                                         var xhttp = new XMLHttpRequest();
                                         xhttp.onreadystatechange = function() {
                                             if (this.readyState == 4 && this.status == 200) {
@@ -95,10 +92,25 @@ if (!isset($_SESSION['role_id'])) {
                                                 }
                                             }
                                         };
-                                        xhttp.open('GET', 'action/check_type_part.php?p_type=' + p_type, true);
+                                        xhttp.open('GET', 'action/check_status.php?status_name=' + status_name, true);
                                         xhttp.send();
                                     }
                                 </script>
+                            </div>
+                            <label for="staticEmail" class="col-sm-1 col-form-label">สีของสถานะ</label>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <input type="color" name="status_color" id="inputstatus_name" class="form-control" placeholder="กรุณากรอกสีที่ต้องการ (ตัวอย่าง 'red')" required>
+                                            <span id="part-type-error" style="color:red;display:none;">ข้อมูลนี้มีอยู่ในระบบแล้ว</span>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <button type="submit" class="btn btn-success" onclick="return confirm('Are You Sure You Want to Insert This New Parts Type Information?')">ยืนยัน</button>
+                                        </div>
+                                    </div>
+                                </div>
+                               
                             </div>
                         </div>
 
@@ -132,39 +144,50 @@ if (!isset($_SESSION['role_id'])) {
                                     <thead>
                                         <tr>
                                             <th>ลำดับที่</th>
-                                            <th>ประเภทอะไหล่</th>
+                                            <th>ชื่อ</th>
+                                            <th>สี</th>
                                             <th>ปุ่มดำเนินการ</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $sql = "SELECT * FROM `parts_type` WHERE del_flg = 0 ORDER BY p_type_name ASC";
+                                        $sql = "SELECT * FROM `status_type` WHERE del_flg = 0 ORDER BY status_id ASC";
                                         $result = mysqli_query($conn, $sql);
                                         while ($row = mysqli_fetch_array($result)) {
                                         ?>
                                             <tr>
 
                                                 <td><?php
-                                                    if ($row['p_type_id'] == NULL) {
+                                                    if ($row['status_id'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $row['p_type_id'];
+                                                        echo $row['status_id'];
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['status_name'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['status_name'];
                                                     }
                                                     ?>
                                                 </td>
 
                                                 <td><?php
-                                                    if ($row['p_type_name'] == NULL) {
+                                                    if ($row['status_color'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $row['p_type_name'];
+                                                        ?>
+                                                        <button class="btn btn-light" style="background-color:<?= $row['status_color']?>; color:white"><?= $row['status_color'] ?></button>
+                                                        <?php
                                                     }
                                                     ?>
                                                 </td>
 
                                                 <td>
-                                                    <button onclick="confirmDelete(<?= $row['p_type_id'] ?>)" class="btn btn-danger">ลบ</button>
-                                                    <button type="button" class="btn btn-warning" onclick="window.location.href='edit_part_type.php?id=<?= $row['p_type_id'] ?>'">แก้ไข</button>&nbsp; &nbsp;
+                                                    <button onclick="confirmDelete(<?= $row['status_id'] ?>)" class="btn btn-danger">ลบ</button>
+                                                    <button type="button" class="btn btn-warning" onclick="window.location.href='edit_status.php?id=<?= $row['status_id'] ?>'">แก้ไข</button>&nbsp; &nbsp;
                                                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
                                                     <!-- JavaScript function for confirmation -->
@@ -181,7 +204,7 @@ if (!isset($_SESSION['role_id'])) {
                                                             }).then((result) => {
                                                                 if (result.isConfirmed) {
                                                                     // If confirmed, continue with the deletion process
-                                                                    window.location.href = "action/delete_part_type.php?id=" + id;
+                                                                    window.location.href = "action/delete_status.php?status_id=" + id;
                                                                 }
                                                             });
                                                         }

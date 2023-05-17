@@ -76,6 +76,7 @@ if (!isset($_SESSION['role_id'])) {
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+                                            <th>ลำดับ</th>
                                             <th>ชื่อบริษัท</th>
                                             <th>ที่อยู่</th>
                                             <th>เบอร์โทรศัพท์</th>
@@ -87,9 +88,14 @@ if (!isset($_SESSION['role_id'])) {
                                         <?php
                                         $sql = "SELECT * FROM `company` WHERE del_flg = 0 ORDER BY com_name ASC";
                                         $result = mysqli_query($conn, $sql);
+                                        $i = 0;
                                         while ($row = mysqli_fetch_array($result)) {
+                                            $i = $i +1;
                                         ?>
                                             <tr>
+                                                <td>
+                                                    <?= $i ?>
+                                                </td>
                                                 <td><?php
                                                     if ($row['com_name'] == NULL) {
                                                         echo "-";

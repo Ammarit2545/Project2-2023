@@ -179,7 +179,29 @@ if (!isset($_SESSION['role_id'])) {
                                                     ?>
                                                 </td>
                                                 <td>
-                                                    <button onclick="confirmDelete(<?= $row['p_id'] ?>)" class="btn btn-danger" onclick="return confirm('Are You Sure You Want to Edit This Parts Information? \nPlease Check Your Information')">ลบ</button>
+                                                    <button onclick="confirmDelete(<?= $row['p_id'] ?>)" class="btn btn-danger">ลบ</button>
+                                                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+                                                    <!-- JavaScript function for confirmation -->
+                                                    <script>
+                                                        function confirmDelete(id) {
+                                                            Swal.fire({
+                                                                title: 'คุณแน่ใจหรือไม่?',
+                                                                text: 'คุณต้องการลบข้อมูลนี้หรือไม่',
+                                                                icon: 'warning',
+                                                                showCancelButton: true,
+                                                                confirmButtonColor: '#dc3545',
+                                                                cancelButtonColor: '#6c757d',
+                                                                confirmButtonText: 'Yes, delete it!'
+                                                            }).then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    // If confirmed, continue with the deletion process
+                                                                    window.location.href = "action/delete_part.php?id=" + id;
+                                                                }
+                                                            });
+                                                        }
+                                                    </script>
+
                                                     <a class="btn btn-warning" href="edit_parts.php?id=<?= $row['p_id'] ?>">แก้ไข</a>
                                                 </td>
                                             </tr>
@@ -277,14 +299,6 @@ if (!isset($_SESSION['role_id'])) {
         </div>
     </div>
 
-    <!-- Confirm To Delete -->
-    <script>
-        function confirmDelete(id) {
-            if (confirm("คุณต้องการลบข้อมูลนี้ใช่หรือไม่?")) {
-                window.location.href = "action/delete_part.php?id=" + id;
-            }
-        }
-    </script>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>

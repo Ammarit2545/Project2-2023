@@ -69,11 +69,47 @@ if (!isset($_SESSION['role_id'])) {
                                 <input type="email" name="e_email" class="form-control" id="inputPassword" onblur="checkEmail()" required>
                                 <span id="email-error" style="color:red;display:none;">This email is already registered.</span>
                             </div>
-
                             <label for="inputPassword" class="col-sm-1 col-form-label">Password</label>
-                            <div class="col-sm-4">
-                                <input type="password" name="e_password" class="form-control" id="inputPassword">
+                            <div class="col-sm-2">
+                                <input type="password" name="e_password" class="form-control" id="inputPassword" oninput="validatePassword(this)">
+                                <span id="passwordError" class="error-message" style="color:red; display: none;">Password should not exceed 8 characters.</span>
                             </div>
+
+                            <label for="inputConfirmPassword" class="col-sm-1 col-form-label">Confirm Password</label>
+                            <div class="col-sm-2">
+                                <input type="password" name="e_confirm_password" class="form-control" id="inputConfirmPassword" oninput="validateConfirmPassword(this)">
+                                <span id="confirmPasswordError1" class="error-message-comfirm" style="color:red; display: none;">Passwords do not match.</span>
+                            </div>
+
+                            <script>
+                                function validatePassword(input) {
+                                    var password = input.value;
+                                    var passwordError = document.getElementById("passwordError");
+
+                                    if (password.length < 8) {
+                                        passwordError.style.display = "block";
+                                    } else {
+                                        passwordError.style.display = "none";
+                                    }
+
+                                    validateConfirmPassword(document.getElementById("inputConfirmPassword"));
+                                }
+
+                                function validateConfirmPassword(input) {
+                                    var confirmPassword = input.value;
+                                    var password = document.getElementById("inputPassword").value;
+                                    var confirmPasswordError = document.getElementById("confirmPasswordError1");
+
+                                    if (password !== confirmPassword) {
+                                        confirmPasswordError.style.display = "block";
+                                    } else {
+                                        confirmPasswordError.style.display = "none";
+                                    }
+                                }
+                            </script>
+
+
+
                         </div>
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-1 col-form-label">ชื่อ</label>
@@ -113,7 +149,7 @@ if (!isset($_SESSION['role_id'])) {
                                 <!-- <label for="new_role_name" style="display:none;">ชื่อตำแหน่งใหม่:</label> -->
                                 <!-- <input type="text" name="new_role_name" class="form-control mt-2" style="display:none;" required> -->
                                 <label for="p_type_name" style="display:none;">ชื่อตำแหน่งใหม่:</label>
-                                <input type="text" name="new_role_name" id="inputTypePart" class="form-control mt-2" onblur="checkRole()" placeholder="กรุณากรอกประเภทที่ต้องการ" style="display:none;" required>
+                                <input type="text" name="new_role_name" id="inputTypePart" class="form-control mt-2" onblur="checkRole()" placeholder="กรุณากรอกตำแหน่งที่ต้องการ" style="display:none;" required>
                                 <span id="part-type-error" style="color:red;display:none;">มีแผนกนี้อยู่ในระบบแล้ว</span>
                                 <script>
                                     function checkRole() {

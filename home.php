@@ -167,11 +167,11 @@ session_start();
                 </div>
                 <form action="action/register.php" method="POST">
                   <div class="input-group">
-                    <input type="email" class="input-field" id="email" name="email" onblur="checkEmail()" placeholder="กรุณากรอกประเภทที่ต้องการ" required>
+                    <input type="email" class="input-field" id="email" name="email" onblur="checkEmail()" required>
                     <label for="email">Email</label>
                     <span id="email-error" style="color: red; font-size: 12px; display: none;">
                       <button class="btn btn-danger" style="font-size: 12px; padding : -2px">
-                        Email นี้มีผู้ใช้แล้ว
+                        อีเมลนี้ถูกใช้งานแล้วโดยบัญชีอื่น
                       </button>
                     </span>
 
@@ -221,13 +221,13 @@ session_start();
                   <div class="input-group">
                     <input type="password" class="input-field" oninput="checkPasswordLength()" onblur="checkPasswordLength()" id="password_name" name="password" required>
                     <label for="password">Password</label>
-                    <!-- <span id="password-error" style="color: red; font-size: 12px; display: none;">รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัว</span> -->
 
                     <span id="password-error" style="color: red; font-size: 12px; display: none;">
-                      <button class="btn btn-danger" style="font-size: 12px; padding : -2px">
+                      <button class="btn btn-danger" style="font-size: 12px; padding: -2px">
                         รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร
                       </button>
                     </span>
+
                     <script>
                       // Add the 'fade-in' class to trigger the transition
                       document.addEventListener("DOMContentLoaded", function() {
@@ -235,8 +235,7 @@ session_start();
                         passwordError.style.display = "block";
                         passwordError.classList.add("fade-in");
                       });
-                    </script>
-                    <script>
+
                       function checkPasswordLength() {
                         // Get the password input element
                         const passwordInput = document.getElementById('password_name');
@@ -256,9 +255,64 @@ session_start();
                         }
                       }
                     </script>
+                  </div>
 
+                  <div class="input-group">
+                    <input type="password" class="input-field" oninput="checkPasswordLengthAgain()" onblur="checkPasswordLengthAgain()" id="password_con" name="password" required>
+                    <label for="password">Confirm Password</label>
 
+                    <span id="password-again-error" style="color: red; font-size: 12px; display: none;">
+                      <button class="btn btn-danger" style="font-size: 12px; padding: -2px">
+                        รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร
+                      </button>
+                    </span>
 
+                    <span id="password-match-error" style="color: red; font-size: 12px; display: none;">
+                      <button class="btn btn-danger" style="font-size: 12px; padding: -2px">
+                        รหัสผ่านไม่ตรงกัน
+                      </button>
+                    </span>
+
+                    <script>
+                      // Add the 'fade-in' class to trigger the transition
+                      document.addEventListener("DOMContentLoaded", function() {
+                        var passwordError = document.getElementById("password-again-error");
+                        passwordError.style.display = "block";
+                        passwordError.classList.add("fade-in");
+                      });
+
+                      function checkPasswordLengthAgain() {
+                        // Get the password input element
+                        const passwordInput = document.getElementById('password_con');
+
+                        // Get the error message span elements
+                        const lengthErrorMessage = document.getElementById('password-again-error');
+                        const matchErrorMessage = document.getElementById('password-match-error');
+
+                        // Function to check the password length
+                        const password = passwordInput.value;
+
+                        if (password.length < 8) {
+                          // Display the length error message if the password length is invalid
+                          lengthErrorMessage.style.display = 'inline';
+                          matchErrorMessage.style.display = 'none';
+                        } else {
+                          // Hide the length error message if the password meets the length requirement
+                          lengthErrorMessage.style.display = 'none';
+                          // Get the original password input element
+                          const originalPasswordInput = document.getElementById('password_name');
+                          const originalPassword = originalPasswordInput.value;
+
+                          if (password !== originalPassword) {
+                            // Display the match error message if the passwords do not match
+                            matchErrorMessage.style.display = 'inline';
+                          } else {
+                            // Hide the match error message if the passwords match
+                            matchErrorMessage.style.display = 'none';
+                          }
+                        }
+                      }
+                    </script>
                   </div>
 
 

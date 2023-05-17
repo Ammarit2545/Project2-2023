@@ -167,7 +167,30 @@ if (!isset($_SESSION['role_id'])) {
                                                 </td>
 
                                                 <td>
-                                                    <a href="action/delete_role.php?id=<?= $row['role_id'] ?>" class="btn btn-danger" onclick="return confirm('คุณต้องการลบชื่อแผนกใหม่ในระบบหรือไม่?')">ลบ</a>&nbsp; &nbsp;
+                                                    <a href="action/delete_role.php?id=<?= $row['role_id'] ?>" class="btn btn-danger" onclick="return confirmDelete(event)">ลบ</a>&nbsp; &nbsp;
+                                                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+                                                    <!-- JavaScript function for confirmation -->
+                                                    <script>
+                                                        function confirmDelete(event) {
+                                                            event.preventDefault(); // Prevent the default action of the link
+
+                                                            Swal.fire({
+                                                                title: 'คุณแน่ใจหรือไม่?',
+                                                                text: 'คุณต้องการลบข้อมูลนี้หรือไม่',
+                                                                icon: 'warning',
+                                                                showCancelButton: true,
+                                                                confirmButtonColor: '#dc3545',
+                                                                cancelButtonColor: '#6c757d',
+                                                                confirmButtonText: 'Yes, delete it!'
+                                                            }).then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    // If confirmed, continue with the deletion process
+                                                                    window.location.href = event.target.href; // Redirect to the deletion URL
+                                                                }
+                                                            });
+                                                        }
+                                                    </script>
                                                     <button type="button" class="btn btn-warning" onclick="window.location.href='edit_role.php?id=<?= $row['role_id'] ?>'">แก้ไข</button>&nbsp; &nbsp;
                                             </tr>
 

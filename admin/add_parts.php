@@ -85,9 +85,7 @@ if (!isset($_SESSION['role_id'])) {
 
                 <!-- Begin Page Content -->
                 <form action="action/add_part.php" method="POST" enctype="multipart/form-data">
-
                     <div class="container-fluid">
-
                         <!-- Page Heading -->
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
                             <h1 class="h3 mb-0 text-gray-800">เพิ่มข้อมูลเครื่องเสียง</h1>
@@ -204,9 +202,6 @@ if (!isset($_SESSION['role_id'])) {
                                         });
                                     </script>
                                 </div>
-
-
-
                                 <script>
                                     const roleSelect = document.querySelector('#p_type_id');
                                     const newRoleInput = document.querySelector('input[name="p_type_name"]');
@@ -235,7 +230,29 @@ if (!isset($_SESSION['role_id'])) {
                             <div id="image-container"></div>
                         </div>
                         <div class="text-center pt-4">
-                            <button type="submit" onclick="return confirmSend()" class="btn btn-success">ยืนยัน</button>
+                            <button type="submit" class="btn btn-success">ยืนยัน</button>
+
+                            <script>
+                                function confirmSend() {
+                                    Swal.fire({
+                                        title: 'คุณต้องการยืนยันการส่งฟอร์มหรือไม่?',
+                                        icon: 'question',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'ตกลง',
+                                        cancelButtonText: 'ยกเลิก'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            // If user clicks "OK", submit the form
+                                            document.getElementById('your-form-id').submit();
+                                        }
+                                    });
+
+                                    // Prevent the default form submission
+                                    return false;
+                                }
+                            </script>
                         </div>
 
                     </div>
@@ -286,22 +303,29 @@ if (!isset($_SESSION['role_id'])) {
         </div>
     </div>
 
-    <script>
-        function confirmSend() {
-            if (confirm("คุณต้องการยืนยันการส่งฟอร์มหรือไม่?")) {
-                // If user clicks "OK", submit the form
-                return true;
-            } else {
-                // If user clicks "Cancel", do not submit the form
-                return false;
-            }
-        }
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-        // Display an alert message after the form is submitted
-        <?php if ($_SERVER['REQUEST_METHOD'] === 'POST') { ?>
-            alert("ฟอร์มถูกส่งเรียบร้อยแล้ว");
-        <?php } ?>
-    </script>
+    <!-- <script>
+        function confirmSend() {
+            Swal.fire({
+                title: 'คุณต้องการยืนยันการส่งฟอร์มหรือไม่?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'ตกลง',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // If user clicks "OK", submit the form
+                    document.getElementById('your-form-id').submit();
+                }
+            });
+
+            // Prevent the default form submission
+            return false;
+        }
+    </script> -->
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
