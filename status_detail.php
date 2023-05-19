@@ -112,11 +112,17 @@ if ($id == NULL) {
                                 <div class="col text-left" style="background-color: #F1F1F1;">
                                     <!-- <h3 class="pt-5"><button class="btn btn-primary">รูปภาพ : </button></h3>
                                      -->
-                                    <?php 
+                                    <?php
                                     $status_id = $row1['status_id'];
-                                    $sql_pic = "SELECT * FROM repair_pic WHERE get_r_id = $id_get_r AND status_id = '$status_id'";
+
+                                    $sql_s = "SELECT * FROM repair_status WHERE status_id = '$status_id' AND del_flg = '0' AND get_r_id = $id_get_r ORDER BY rs_date_time DESC LIMIT 1";
+                                    $result_s = mysqli_query($conn, $sql_s);
+                                    $row_s = mysqli_fetch_array($result_s);
+                                    $rs_id = $row_s['rs_id'];
+
+                                    $sql_pic = "SELECT * FROM repair_pic WHERE rs_id = $rs_id AND del_flg = 0 ";
                                     $result_pic = mysqli_query($conn, $sql_pic);
-                                    
+
                                     while ($row_pic = mysqli_fetch_array($result_pic)) {
                                     ?>
                                         <img src="<?= $row_pic['rp_pic'] ?>" width="100px">

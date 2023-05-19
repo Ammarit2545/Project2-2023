@@ -61,6 +61,11 @@ if ($row == NULL) {
          VALUES ('$id_r_g', NOW(), 'ยื่นเรื่องซ่อม','1')";
     $result3 = mysqli_query($conn, $sql3);
 
+    $sql5 = "SELECT * FROM repair_status WHERE get_r_id = $id_r_g AND status_id = 1";
+    $result5 = mysqli_query($conn, $sql5);
+    $row5 = mysqli_fetch_array($result5);
+    $rs_id = $row5['rs_id'];
+
     $folderName = "../uploads/$id/$id_r_g/"; // the name of the new folder
     if (!file_exists($folderName)) { // check if the folder already exists
         mkdir($folderName); // create the new folder
@@ -83,8 +88,8 @@ if ($row == NULL) {
             if (rename($file->getPathname(), $destination_file)) {
                 echo "File " . $file_name . " moved successfully<br>";
                 $path_file_pic = "uploads/$id/$id_r_g/$file_name";
-                $sql_p = "INSERT INTO repair_pic (r_get_id, rp_pic, rp_date)
-                       VALUES ('$id_r_g', '$path_file_pic', NOW(),'1')";
+                $sql_p = "INSERT INTO repair_pic (rp_pic, rp_date ,rs_id)
+                       VALUES ( '$path_file_pic', NOW(),'$rs_id')";
                 $result_p = mysqli_query($conn, $sql_p);
             } else {
                 echo "Error moving file " . $file_name . "<br>";

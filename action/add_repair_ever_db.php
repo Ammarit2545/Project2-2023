@@ -66,6 +66,11 @@ if ($row != 0) {
         mkdir($destination_dir, 0777, true); // Create the destination directory if it doesn't exist
     }
 
+    $sql5 = "SELECT * FROM repair_status WHERE get_r_id = $id_r_g AND status_id = 1 ORDER BY rs_date_time DESC";
+    $result5 = mysqli_query($conn, $sql5);
+    $row5 = mysqli_fetch_array($result5);
+    $rs_id = $row5['rs_id'];
+
     foreach (new DirectoryIterator($source_dir) as $file) {
         if ($file->isFile()) {
             $file_name = $file->getFilename();
@@ -73,8 +78,8 @@ if ($row != 0) {
             if (rename($file->getPathname(), $destination_file)) {
                 echo "File " . $file_name . " moved successfully<br>";
                 $path_file_pic = "uploads/$id/$id_r_g/$file_name";
-                $sql_p = "INSERT INTO repair_pic (r_get_id, rp_pic, rp_date)
-                       VALUES ('$id_r_g', '$path_file_pic', NOW(),'1')";
+                $sql_p = "INSERT INTO repair_pic (rp_pic, rp_date ,rs_id)
+                VALUES ( '$path_file_pic', NOW(),'$rs_id')";
                 $result_p = mysqli_query($conn, $sql_p);
             } else {
                 echo "Error moving file " . $file_name . "<br>";

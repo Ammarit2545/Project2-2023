@@ -119,7 +119,7 @@ include('database/condb.php');
 //         }
 
 ?>
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 
 <head>
@@ -190,8 +190,8 @@ include('database/condb.php');
     <div class="gallery">
         <img src="parts/1/K-1295.PNG" alt="Photo 1" onclick="openModal(this)">
         <img src="parts/1/K-1295.PNG" alt="Photo 2" onclick="openModal(this)">
-        <!-- Add more photos as needed -->
-    </div>
+    Add more photos as needed -->
+    <!-- </div>
 
     <div id="modal" class="modal">
         <span class="close" onclick="closeModal()">&times;</span>
@@ -215,4 +215,33 @@ include('database/condb.php');
     </script>
 </body>
 
+</html>  -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Picture Input</title>
+  <script>
+    function showInput() {
+      var input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.onchange = function(event) {
+        var file = event.target.files[0];
+        var reader = new FileReader();
+        reader.onload = function() {
+          var image = document.createElement('img');
+          image.src = reader.result;
+          document.body.appendChild(image);
+        };
+        reader.readAsDataURL(file);
+      };
+      document.body.appendChild(input);
+    }
+  </script>
+</head>
+<body>
+  <button onclick="showInput()">Add Picture Input</button>
+</body>
 </html>

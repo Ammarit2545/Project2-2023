@@ -124,9 +124,25 @@
     </li>
 
     <li class="nav-item">
-    <a class="nav-link" href="index.php">
+        <a class="nav-link" href="index.php">
             <i class="fas fa-fw fa-arrow-down"></i>
             <span>บันทึกการซ่อมด้วยตัวเอง</span></a>
+    </li>
+
+    <!-- Nav Item - company Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsereport" aria-expanded="true" aria-controls="collapsereport">
+            <i class="fas fa-solid fa-file"></i>
+            <span>รายงาน</span>
+        </a>
+        <div id="collapsereport" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">รายละเอียด :</h6>
+                <a class="collapse-item" href="report_parts.php">ยอดอะไหล่</a>
+                <a class="collapse-item" href="report_employee.php">ยอดบุคลากร</a>
+                <a class="collapse-item" href="report_repair.php">ยอดการซ่อม</a>
+            </div>
+        </div>
     </li>
 </ul>
 <!-- End of Sidebar -->
