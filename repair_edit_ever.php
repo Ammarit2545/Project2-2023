@@ -10,7 +10,7 @@ $row = mysqli_fetch_array($result);
 
 ?>
 <?php
-if(!isset($_SESSION['id_repair'])){
+if(!isset($_SESSION['id'])){
     header("location:home.php");
 }
 ?>

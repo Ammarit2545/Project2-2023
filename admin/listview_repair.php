@@ -74,8 +74,8 @@ if (!isset($_SESSION['role_id'])) {
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>ลำดับ</th>
-                                            <th>เลขที่ซ่อม</th>
+                                            <th width="20px">ลำดับ</th>
+                                            <th width="20px">เลขที่ซ่อม</th>
                                             <th>ยี่ห้อ</th>
                                             <th>รุ่น</th>
                                             <th>ครั้งที่</th>
@@ -95,7 +95,9 @@ if (!isset($_SESSION['role_id'])) {
                                         LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
                                         LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
                                         WHERE get_repair.del_flg = '0'
-                                        ORDER BY get_repair.get_r_id DESC;
+                                        GROUP BY get_repair.get_r_id
+                                        ORDER BY get_repair.get_r_id DESC
+                                        ;
                                          ";
                                         $result_nofi = mysqli_query($conn, $sql_nofi);
                                         $num_rows = mysqli_fetch_array($result_nofi_count);
@@ -105,6 +107,13 @@ if (!isset($_SESSION['role_id'])) {
                                             $date = DateTime::createFromFormat('d-m-Y', $dateString);
                                             $formattedDate = $date->format('F / d / Y');
                                             $i = $i + 1;
+                                            $get_r_id = $row['get_r_id'];
+                                            $sql_c = "SELECT * FROM repair_status
+                                                    LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
+                                                    WHERE repair_status.del_flg = '0' AND repair_status.get_r_id = '$get_r_id'
+                                                    ORDER BY repair_status.rs_date_time DESC LIMIT 1";
+                                            $result_c = mysqli_query($conn, $sql_c);
+                                            $row_c = mysqli_fetch_array($result_c);
                                         ?>
                                             <tr>
                                                 <td><?= $i ?></td>
@@ -160,7 +169,7 @@ if (!isset($_SESSION['role_id'])) {
                                                         echo "ไม่มีข้อมูล";
                                                     } ?>
                                                 </td>
-                                                <td style="color: <?= $row['status_color'] ?>;"><?= $row['status_name'] ?></td>
+                                                <td style="color: <?= $row_c['status_color'] ?>;"><?= $row_c['status_name'] ?></td>
                                                 <td>
 
                                                     <div class="text-center">

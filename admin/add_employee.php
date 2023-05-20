@@ -71,39 +71,94 @@ if (!isset($_SESSION['role_id'])) {
                             </div>
                             <label for="inputPassword" class="col-sm-1 col-form-label">Password</label>
                             <div class="col-sm-2">
-                                <input type="password" name="e_password" class="form-control" id="inputPassword" oninput="validatePassword(this)">
-                                <span id="passwordError" class="error-message" style="color:red; display: none;">Password should not exceed 8 characters.</span>
+                                <input type="password" class="form-control" oninput="checkPasswordLength()" onblur="checkPasswordLength()" id="password_name" name="e_password" required>
+
+                                <span id="password-error" style="color: red; font-size: 12px; display: none;">
+                                    <button class="btn btn-danger" style="font-size: 12px; padding: -2px">
+                                        รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร
+                                    </button>
+                                </span>
                             </div>
 
                             <label for="inputConfirmPassword" class="col-sm-1 col-form-label">Confirm Password</label>
                             <div class="col-sm-2">
-                                <input type="password" name="e_confirm_password" class="form-control" id="inputConfirmPassword" oninput="validateConfirmPassword(this)">
-                                <span id="confirmPasswordError1" class="error-message-comfirm" style="color:red; display: none;">Passwords do not match.</span>
+                                <!-- <input type="password" name="e_confirm_password" class="form-control" id="inputConfirmPassword" oninput="validateConfirmPassword(this)"> -->
+                                <input type="password" class="form-control" oninput="checkPasswordLengthAgain()" onblur="checkPasswordLengthAgain()" id="password_con" name="e_confirm_password" required>
+                                <span id="password-again-error" style="color: red; font-size: 12px; display: none;">
+                                    <button class="btn btn-danger" style="font-size: 12px; padding: -2px">
+                                        รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร
+                                    </button>
+                                </span>
+
+                                <span id="password-match-error" style="color: red; font-size: 12px; display: none;">
+                                    <button class="btn btn-danger" style="font-size: 12px; padding: -2px">
+                                        รหัสผ่านไม่ตรงกัน
+                                    </button>
+                                </span>
                             </div>
 
                             <script>
-                                function validatePassword(input) {
-                                    var password = input.value;
-                                    var passwordError = document.getElementById("passwordError");
+                                // Add the 'fade-in' class to trigger the transition
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    var passwordError = document.getElementById("password-error");
+                                    passwordError.style.display = "block";
+                                    passwordError.classList.add("fade-in");
+                                });
+
+                                function checkPasswordLength() {
+                                    // Get the password input element
+                                    const passwordInput = document.getElementById('password_name');
+
+                                    // Get the error message span element
+                                    const errorMessage = document.getElementById('password-error');
+
+                                    // Function to check the password length
+                                    const password = passwordInput.value;
 
                                     if (password.length < 8) {
-                                        passwordError.style.display = "block";
+                                        // Display the error message if the password length is invalid
+                                        errorMessage.style.display = 'inline';
                                     } else {
-                                        passwordError.style.display = "none";
+                                        // Hide the error message if the password meets the length requirement
+                                        errorMessage.style.display = 'none';
                                     }
-
-                                    validateConfirmPassword(document.getElementById("inputConfirmPassword"));
                                 }
+                                // Add the 'fade-in' class to trigger the transition
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    var passwordError = document.getElementById("password-again-error");
+                                    passwordError.style.display = "block";
+                                    passwordError.classList.add("fade-in");
+                                });
 
-                                function validateConfirmPassword(input) {
-                                    var confirmPassword = input.value;
-                                    var password = document.getElementById("inputPassword").value;
-                                    var confirmPasswordError = document.getElementById("confirmPasswordError1");
+                                function checkPasswordLengthAgain() {
+                                    // Get the password input element
+                                    const passwordInput = document.getElementById('password_con');
 
-                                    if (password !== confirmPassword) {
-                                        confirmPasswordError.style.display = "block";
+                                    // Get the error message span elements
+                                    const lengthErrorMessage = document.getElementById('password-again-error');
+                                    const matchErrorMessage = document.getElementById('password-match-error');
+
+                                    // Function to check the password length
+                                    const password = passwordInput.value;
+
+                                    if (password.length < 8) {
+                                        // Display the length error message if the password length is invalid
+                                        lengthErrorMessage.style.display = 'inline';
+                                        matchErrorMessage.style.display = 'none';
                                     } else {
-                                        confirmPasswordError.style.display = "none";
+                                        // Hide the length error message if the password meets the length requirement
+                                        lengthErrorMessage.style.display = 'none';
+                                        // Get the original password input element
+                                        const originalPasswordInput = document.getElementById('password_name');
+                                        const originalPassword = originalPasswordInput.value;
+
+                                        if (password !== originalPassword) {
+                                            // Display the match error message if the passwords do not match
+                                            matchErrorMessage.style.display = 'inline';
+                                        } else {
+                                            // Hide the match error message if the passwords match
+                                            matchErrorMessage.style.display = 'none';
+                                        }
                                     }
                                 }
                             </script>

@@ -180,7 +180,7 @@ if (!isset($_SESSION['role_id'])) {
                     LEFT JOIN member ON member.m_id = repair.m_id
                     LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id
                     LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
-                    WHERE get_repair.del_flg = '0' AND get_repair.get_r_id = '$get_r_id'";
+                    WHERE get_repair.del_flg = '0' AND get_repair.get_r_id = '$get_r_id' ORDER BY rs_date_time DESC";
                     $result = mysqli_query($conn, $sql);
                     $row = mysqli_fetch_array($result);
 
@@ -533,22 +533,23 @@ if (!isset($_SESSION['role_id'])) {
                                             </div>
                                         </div>
                                         <br>
-                                        <div class="mb-3 ">
+                                        <!-- <div class="mb-3 ">
                                             <label for="exampleFormControlInput1" class="form-label">รวมราคาอะไหร่</label>
                                             <input name="p_price_sum" type="text" class="form-control col-1" id="exampleFormControlInput1" required>
-                                        </div>
+                                        </div> -->
                                         <div class="mb-3 ">
                                             <label for="exampleFormControlInput1" class="form-label">ค่าแรงช่าง</label>
-                                            <input name="rate" type="text" class="form-control col-1" id="exampleFormControlInput1" required>
+                                            <input name="rate" type="text" class="form-control col-1" id="exampleFormControlInput1" required value="0">
                                         </div>
-                                        <div class="mb-3 ">
+                                        <!-- <div class="mb-3 ">
                                             <label for="exampleFormControlInput1" class="form-label">ราคารวม</label>
                                             <input name="total" type="text" class="form-control col-1" id="exampleFormControlInput1" required>
                                             <input type="hidden" name="cardCount" id="cardCountInput" value="0">
-                                            <input type="text" name="get_r_id" value="<?= $row['get_r_id'] ?>" hidden>
-                                        </div>
+                                            
+                                        </div> -->
                                     </div>
                                     <div class="text-center pt-4">
+                                    <input type="text" name="get_r_id" value="<?= $row['get_r_id'] ?>" hidden>
                                         <button type="submit" class="btn btn-success">ตอบกลับ</button>
                                     </div>
                             </form>

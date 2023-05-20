@@ -123,11 +123,11 @@
         </div>
     </li>
 
-    <li class="nav-item">
+    <!-- <li class="nav-item">
         <a class="nav-link" href="index.php">
             <i class="fas fa-fw fa-arrow-down"></i>
             <span>บันทึกการซ่อมด้วยตัวเอง</span></a>
-    </li>
+    </li> -->
 
     <!-- Nav Item - company Collapse Menu -->
     <li class="nav-item">
