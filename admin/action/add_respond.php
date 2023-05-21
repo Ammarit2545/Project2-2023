@@ -36,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $get_r_id = $_POST['get_r_id'];
+    $get_wages = $_POST['get_wages'];
 
     $sqll_c = "SELECT * FROM `repair`
         LEFT JOIN get_repair ON repair.r_id = get_repair.r_id
@@ -80,14 +81,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $row_re_c = mysqli_fetch_array($result4);
 
     if ($row_re_c['rs_id'] > 0) {
-        header("Location: ../detail_repair.php?id=$get_r_id");
+        // header("Location: ../detail_repair.php?id=$get_r_id");
     } else {
         // Insert data into repair_status table
         $sql3 = "INSERT INTO repair_status (get_r_id, rs_date_time, rs_detail, status_id ,e_id)
                 VALUES ('$get_r_id', NOW(), '$rs_detail','$status_id',$e_id )";
         $result3 = mysqli_query($conn, $sql3);
-
         $rs_id = mysqli_insert_id($conn);
+
+        $sql3 = "UPDATE get_repair SET get_wages = '$get_wages' WHERE get_r_id = '$get_r_id' AND del_flg = '0'";
+        $result3 = mysqli_query($conn, $sql3);
+
+        
 
         $folderName = "../../uploads/$m_id/$get_r_id/$rs_id"; // the name of the new folder
         if (!file_exists($folderName)) { // check if the folder already exists
@@ -142,58 +147,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         }
-    }
 
 
 
-    if ($result3) {
-        // Process parts data
-        foreach ($parts as $part) {
-            $partId = $part['partId'];
-            $quantity = $part['quantity'];
 
-            // Insert data into repair_detail table
-            $sql_s = "SELECT * FROM parts WHERE del_flg = '0' AND p_id = '$partId'";
-            $result_s = mysqli_query($conn, $sql_s);
+        if ($result3) {
+            // Process parts data
+            foreach ($parts as $part) {
+                $partId = $part['partId'];
+                $quantity = $part['quantity'];
 
-            if ($result_s && mysqli_num_rows($result_s) > 0) {
-                $row_s = mysqli_fetch_array($result_s);
-                $p_stock = $row_s['p_stock'] - $quantity;
-                $total_s = $row_s['p_price'] * $quantity;
+                // Insert data into repair_detail table
+                $sql_s = "SELECT * FROM parts WHERE del_flg = '0' AND p_id = '$partId'";
+                $result_s = mysqli_query($conn, $sql_s);
 
-                $sql3 = "INSERT INTO repair_detail (`p_id`, `rd_value_parts`, `rd_parts_price`, `rs_id`, `rd_date_in`)
+                if ($result_s && mysqli_num_rows($result_s) > 0) {
+                    $row_s = mysqli_fetch_array($result_s);
+                    $p_stock = $row_s['p_stock'] - $quantity;
+                    $total_s = $row_s['p_price'] * $quantity;
+
+                    $sql3 = "INSERT INTO repair_detail (`p_id`, `rd_value_parts`, `rd_parts_price`, `rs_id`, `rd_date_in`)
                 VALUES ('$partId', '$quantity', '$total_s', '$rs_id', NOW())";
-                $result3 = mysqli_query($conn, $sql3);
+                    $result3 = mysqli_query($conn, $sql3);
 
-                if ($result3) {
-                    // Update parts stock in the parts table
-                    $sql_u = "UPDATE `parts` SET `p_stock` = `p_stock` - '$quantity', `p_date_update` = NOW() WHERE `p_id` = '$partId'";
-                    $result_u = mysqli_query($conn, $sql_u);
+                    if ($result3) {
+                        // Update parts stock in the parts table
+                        $sql_u = "UPDATE `parts` SET `p_stock` = `p_stock` - '$quantity', `p_date_update` = NOW() WHERE `p_id` = '$partId'";
+                        $result_u = mysqli_query($conn, $sql_u);
 
-                    if (!$result_u) {
-                        // Handle the case when the update query fails
+                        if (!$result_u) {
+                            // Handle the case when the update query fails
+                            // ...
+                        }
+                    } else {
+                        // Handle the case when the insert query into repair_detail table fails
                         // ...
                     }
                 } else {
-                    // Handle the case when the insert query into repair_detail table fails
+                    // Handle the case when the select query for parts data fails or no rows are found
                     // ...
                 }
-            } else {
-                // Handle the case when the select query for parts data fails or no rows are found
-                // ...
             }
+
+            // Perform other necessary operations
+            // ...
+
+            // Redirect the user to a success page
+            header("Location: ../detail_repair.php?id=$get_r_id");
+            exit();
+        } else {
+            // Handle the case when the insert query into repair_status table fails
+            // ...
+            // header("Location: ../detail_repair.php?id=$get_r_id");
         }
-
-        // Perform other necessary operations
-        // ...
-
-
-        // Redirect the user to a success page
-        header("Location: ../detail_repair.php?id=$get_r_id");
-        exit();
-    } else {
-        // Handle the case when the insert query into repair_status table fails
-        // ...
-        header("Location: ../detail_repair.php?id=$get_r_id");
     }
 }

@@ -22,7 +22,7 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">
-        Interface
+        การแจ้งเตือน
     </div>
 
     <!-- Nav Item - employee Collapse Menu -->
@@ -42,7 +42,10 @@
             </div>
         </div>
     </li>
-
+    <br>
+    <div class="sidebar-heading">
+        ข้อมูลทั่วไป
+    </div>
     <!-- Nav Item - employee Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
@@ -122,13 +125,15 @@
             </div>
         </div>
     </li>
-
+    <br>
     <!-- <li class="nav-item">
         <a class="nav-link" href="index.php">
             <i class="fas fa-fw fa-arrow-down"></i>
             <span>บันทึกการซ่อมด้วยตัวเอง</span></a>
     </li> -->
-
+    <div class="sidebar-heading">
+        รายงาน
+    </div>
     <!-- Nav Item - company Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsereport" aria-expanded="true" aria-controls="collapsereport">

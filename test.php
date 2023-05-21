@@ -191,7 +191,7 @@ include('database/condb.php');
         <img src="parts/1/K-1295.PNG" alt="Photo 1" onclick="openModal(this)">
         <img src="parts/1/K-1295.PNG" alt="Photo 2" onclick="openModal(this)">
     Add more photos as needed -->
-    <!-- </div>
+<!-- </div>
 
     <div id="modal" class="modal">
         <span class="close" onclick="closeModal()">&times;</span>
@@ -217,7 +217,7 @@ include('database/condb.php');
 
 </html>  -->
 
-
+<!-- 
 <!DOCTYPE html>
 <html>
 <head>
@@ -243,5 +243,76 @@ include('database/condb.php');
 </head>
 <body>
   <button onclick="showInput()">Add Picture Input</button>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .dot {
+        position: absolute;
+        margin-top: -10px;
+        z-index: 1;
+        height: 40px;
+        width: 40px;
+        border-radius: 25px;
+    }
+
+    .primary-color {
+        background-color: #4989bd;
+    }
+
+    .success-color {
+        background-color: #5cb85c;
+    }
+
+    .danger-color {
+        background-color: #d9534f;
+    }
+
+    .warning-color {
+        background-color: #f0ad4e;
+    }
+
+    .info-color {
+        background-color: #5bc0de;
+    }
+
+    .no-color {
+        background-color: inherit;
+    }
+  </style>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="row"><br />
+      <div class="col-md-12">
+        <div class="progress" id="progress-bar">
+          <div class="progress-bar progress-bar-info" style="width: 100%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Number of status dots
+    var numStatus = 5;
+
+    // Get the progress bar container
+    var progressBar = document.getElementById('progress-bar');
+
+    // Generate status dots dynamically
+    for (var i = 0; i < numStatus; i++) {
+      var dot = document.createElement('div');
+      dot.classList.add('dot');
+      dot.classList.add('info-color');
+      dot.style.left = (i / (numStatus - 1)) * 100 + '%';
+      progressBar.appendChild(dot);
+    }
+  </script>
 </body>
 </html>

@@ -142,16 +142,17 @@ if (isset($_GET["status_id"])) {
                   <li><a class="dropdown-item" href="status.php">ทั้งหมด</a></li>
                   <?php
                   $sql_s = "SELECT status_type.status_id, status_type.status_name, COUNT(*) ,status_type.status_color  as count
-                  FROM repair_status 
-                  LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
+                  FROM get_repair 
+                  LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id
                   LEFT JOIN repair ON repair.r_id = get_repair.r_id
                   LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
-                  WHERE repair.m_id = '$id'
+                  WHERE repair.m_id = '$id' AND repair_status.del_flg = '0'
                   GROUP BY status_type.status_id 
                   ORDER BY status_type.status_id ASC;";
                   $result_s = mysqli_query($conn, $sql_s);
 
                   while ($row_s = mysqli_fetch_array($result_s)) {
+                    
                   ?>
                     <li class="nav-item">
                     <li> <a class="dropdown-item" href="status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>"><?= $row_s['status_name'] ?>
