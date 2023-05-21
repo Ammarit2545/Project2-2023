@@ -247,30 +247,33 @@ if (!isset($_SESSION['role_id'])) {
                                                                                                                                 }
                                                                                                                                 ?></textarea>
                             </div>
+                            <?php
+                            // $get_r_id = $row['get_r_id'];
+                            $status_id = $row['status_id'];
+                            // $get_r_id = $_GET['id'];
+
+                            $sql_s = "SELECT * FROM repair_status 
+                            WHERE del_flg = '0' AND get_r_id = '$get_r_id'
+                            ORDER BY rs_date_time DESC LIMIT 1";
+                            $result_s = mysqli_query($conn, $sql_s);
+                            // $row_s = mysqli_fetch_array($result_s);
+
+                            // $sql_s = "SELECT * FROM repair_status 
+                            //             WHERE status_id = '$status_id' AND del_flg = '0' AND get_r_id = $get_r_id 
+                            //             ORDER BY rs_date_time DESC LIMIT 1";
+                            // $result_s = mysqli_query($conn, $sql_s);
+                            $row_s = mysqli_fetch_array($result_s);
+                            $rs_id = $row_s['rs_id'];
+                            ?>
                             <div class="mb-3">
                                 <label for="exampleFormControlTextarea1" class="col-form-label">รายละเอียด :</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?= $row['get_r_detail']  ?></textarea>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?= $row_s['rs_detail']  ?></textarea>
                             </div>
                             <div class="mb-3">
                                 <label for="exampleFormControlTextarea1" class="col-form-label">รูปภาพประกอบ <?= $get_r_id ?>:</label>
                                 <div class="row">
                                     <?php
-                                    // $get_r_id = $row['get_r_id'];
-                                    $status_id = $row['status_id'];
-                                    // $get_r_id = $_GET['id'];
 
-                                    $sql_s = "SELECT * FROM repair_status 
-                                    WHERE del_flg = '0' AND get_r_id = '$get_r_id'
-                                    ORDER BY rs_date_time DESC LIMIT 1";
-                                    $result_s = mysqli_query($conn, $sql_s);
-                                    // $row_s = mysqli_fetch_array($result_s);
-
-                                    // $sql_s = "SELECT * FROM repair_status 
-                                    //             WHERE status_id = '$status_id' AND del_flg = '0' AND get_r_id = $get_r_id 
-                                    //             ORDER BY rs_date_time DESC LIMIT 1";
-                                    // $result_s = mysqli_query($conn, $sql_s);
-                                    $row_s = mysqli_fetch_array($result_s);
-                                    $rs_id = $row_s['rs_id'];
 
                                     $sql_pic = "SELECT * FROM repair_pic WHERE rs_id = '$rs_id' AND del_flg = 0 ";
                                     $result_pic = mysqli_query($conn, $sql_pic);
@@ -281,6 +284,7 @@ if (!isset($_SESSION['role_id'])) {
                                     while ($row_pic = mysqli_fetch_array($result_pic)) {
                                         if ($row_pic[0] != NULL) { ?>
                                             <a href="#"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModal(this)"></a>
+                                            <!-- <h2><?= $row_pic['rp_pic'] ?></h2> -->
                                         <?php
                                         } else { ?> <h2>ไม่มีข้อมูล</h2> <?php
                                                                         }
@@ -300,6 +304,8 @@ if (!isset($_SESSION['role_id'])) {
                                             var modalImg = document.getElementById("modal-image");
                                             modal.style.display = "block";
                                             modalImg.src = img.src;
+                                            modalImg.style.width = "1000px"; // Set the width to 1000 pixels
+                                            modalImg.style.borderRadius = "2%"; // Set the border radius to 20%
                                             modal.classList.add("show");
                                         }
 
@@ -549,7 +555,7 @@ if (!isset($_SESSION['role_id'])) {
                                         </div> -->
                                     </div>
                                     <div class="text-center pt-4">
-                                    <input type="text" name="get_r_id" value="<?= $row['get_r_id'] ?>" hidden>
+                                        <input type="text" name="get_r_id" value="<?= $row['get_r_id'] ?>" hidden>
                                         <button type="submit" class="btn btn-success">ตอบกลับ</button>
                                     </div>
                             </form>

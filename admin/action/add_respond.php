@@ -68,71 +68,85 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $e_id = $_SESSION["id"];
 
-    // Insert data into repair_status table
-    $sql3 = "INSERT INTO repair_status (get_r_id, rs_date_time, rs_detail, status_id ,e_id)
-    VALUES ('$get_r_id', NOW(), '$rs_detail','$status_id',$e_id )";
-    $result3 = mysqli_query($conn, $sql3);
+    $sql3 = "SELECT * FROM repair_status ORDER BY rs_date_time DESC LIMIT 1";
+    $result4 = mysqli_query($conn, $sql3);
+    $row_re = mysqli_fetch_array($result4);
 
-    $rs_id = mysqli_insert_id($conn);
+    $rs_id_c = $row_re['rs_id'];
 
-    $folderName = "../../uploads/$m_id/$get_r_id/$rs_id"; // the name of the new folder
-    if (!file_exists($folderName)) { // check if the folder already exists
-        mkdir($folderName, 0777, true); // create the new folder with permissions
-        echo "Folder created successfully";
+    $sql3 = "SELECT * FROM repair_status 
+            WHERE rs_id = '$rs_id_c' AND status_id = '$status_id' AND rs_detail = '$rs_detail' ";
+    $result4 = mysqli_query($conn, $sql3);
+    $row_re_c = mysqli_fetch_array($result4);
+
+    if ($row_re_c['rs_id'] > 0) {
+        header("Location: ../detail_repair.php?id=$get_r_id");
     } else {
-        echo "Folder already exists";
-    }
+        // Insert data into repair_status table
+        $sql3 = "INSERT INTO repair_status (get_r_id, rs_date_time, rs_detail, status_id ,e_id)
+                VALUES ('$get_r_id', NOW(), '$rs_detail','$status_id',$e_id )";
+        $result3 = mysqli_query($conn, $sql3);
 
-    // Loop over the four images
-    for ($i = 1; $i <= 4; $i++) {
-        $image_name = "picture_" . $i;
-        if (isset($_FILES[$image_name])) {
-            $target_dir = $folderName;
-            $target_file = $target_dir . '/' . basename($_FILES[$image_name]["name"]);
+        $rs_id = mysqli_insert_id($conn);
 
-            $target_file_db = "../../uploads/$m_id/$get_r_id/$rs_id/" . basename($_FILES[$image_name]["name"]);
+        $folderName = "../../uploads/$m_id/$get_r_id/$rs_id"; // the name of the new folder
+        if (!file_exists($folderName)) { // check if the folder already exists
+            mkdir($folderName, 0777, true); // create the new folder with permissions
+            echo "Folder created successfully";
+        } else {
+            echo "Folder already exists";
+        }
 
-            $uploadOk = 1;
-            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        // Loop over the four images
+        for ($i = 1; $i <= 4; $i++) {
+            $image_name = "picture_" . $i;
+            if (isset($_FILES[$image_name])) {
+                $target_dir = $folderName;
+                $target_file = $target_dir . '/' . basename($_FILES[$image_name]["name"]);
 
-            // Check if file already exists
-            if (file_exists($target_file)) {
-                echo "Sorry, file already exists.";
-                $uploadOk = 0;
-            }
+                $target_file_db = "uploads/$m_id/$get_r_id/$rs_id/" . basename($_FILES[$image_name]["name"]);
 
-            // Allow certain file formats
-            if (
-                $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-                && $imageFileType != "gif" && $imageFileType != "mp4" && $imageFileType != "mov"
-            ) {
-                echo "Sorry, only JPG, JPEG, PNG, GIF, MP4, and MOV files are allowed.";
-                $uploadOk = 0;
-            }
+                $uploadOk = 1;
+                $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-            // Check if $uploadOk is set to 0 by an error
-            if ($uploadOk == 0) {
-                echo "Sorry, your file was not uploaded.";
-                // if everything is ok, try to upload file
-            } else {
-                if (move_uploaded_file($_FILES[$image_name]["tmp_name"], $target_file)) {
-                    echo "The file " . htmlspecialchars(basename($_FILES[$image_name]["name"])) . " has been uploaded.";
+                // Check if file already exists
+                if (file_exists($target_file)) {
+                    echo "Sorry, file already exists.";
+                    $uploadOk = 0;
+                }
 
-                    // Insert To DATABASE
-                    $sql_p = "INSERT INTO repair_pic (rp_pic, rp_date, rs_id)
-                    VALUES ('$target_file_db', NOW(), '$rs_id')";
-                    $result_p = mysqli_query($conn, $sql_p);
+                // Allow certain file formats
+                if (
+                    $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+                    && $imageFileType != "gif" && $imageFileType != "mp4" && $imageFileType != "mov"
+                ) {
+                    echo "Sorry, only JPG, JPEG, PNG, GIF, MP4, and MOV files are allowed.";
+                    $uploadOk = 0;
+                }
+
+                // Check if $uploadOk is set to 0 by an error
+                if ($uploadOk == 0) {
+                    echo "Sorry, your file was not uploaded.";
+                    // if everything is ok, try to upload file
                 } else {
-                    echo "Sorry, there was an error uploading your file.";
+                    if (move_uploaded_file($_FILES[$image_name]["tmp_name"], $target_file)) {
+                        echo "The file " . htmlspecialchars(basename($_FILES[$image_name]["name"])) . " has been uploaded.";
+
+                        // Insert To DATABASE
+                        $sql_p = "INSERT INTO repair_pic (rp_pic, rp_date, rs_id)
+                    VALUES ('$target_file_db', NOW(), '$rs_id')";
+                        $result_p = mysqli_query($conn, $sql_p);
+                    } else {
+                        echo "Sorry, there was an error uploading your file.";
+                    }
                 }
             }
         }
     }
 
 
+
     if ($result3) {
-
-
         // Process parts data
         foreach ($parts as $part) {
             $partId = $part['partId'];
@@ -180,5 +194,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         // Handle the case when the insert query into repair_status table fails
         // ...
+        header("Location: ../detail_repair.php?id=$get_r_id");
     }
 }
