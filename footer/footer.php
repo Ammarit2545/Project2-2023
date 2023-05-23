@@ -43,29 +43,30 @@
 </style>
 <!-- Footer -->
 <br>
-<footer class="mt-4 bg-white">
-  <div class="container py-5">
+<footer class="mt-4 "style="background: #E7F0FE;">
+  <div class="container">
     <div class="row py-4">
-      <div class="col-lg-4 col-md-6 mb-4 mb-lg-0"><img src="img/logo.png" alt="" width="180" class="mb-3">
-        <p class="font-italic text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
-        <ul class="list-inline mt-4">
-          <li class="list-inline-item"><a href="#" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></li>
-          <li class="list-inline-item"><a href="#" target="_blank" title="facebook"><i class="fa fa-facebook"></i></a></li>
-          <li class="list-inline-item"><a href="#" target="_blank" title="instagram"><i class="fa fa-instagram"></i></a></li>
-          <li class="list-inline-item"><a href="#" target="_blank" title="pinterest"><i class="fa fa-pinterest"></i></a></li>
-          <li class="list-inline-item"><a href="#" target="_blank" title="vimeo"><i class="fa fa-vimeo"></i></a></li>
-        </ul>
+      <div class="col-lg-5 col-md-6 mb-4 mb-lg-0"><img src="img/logo.png" alt="" width="180" class="mb-3">
+        <h3 class="font-italic text-uppercase" style="color: #000141;">Anan Electronic</h3>
+        <p>Anan Electronic พร้อมให้บริการด้วยคุณภาพจากผู้ชำนาญการพิเศษด้านเครื่องดนตรี ที่มีประสบการณ์ด้านการซ่อมยาวนาน ผ่านการฝึกอบรม เพื่อรองรับทุกปัญหาของคุณด้วยคุณภาพสูงสุด</p>
+        <!-- <ul class="list-inline mt-4">
+          <li class="list-inline-item"><a href="#" target="_blank" title="twitter"><i class="fa fa-twitter" >a</i></a></li>
+          <li class="list-inline-item"><a href="#" target="_blank" title="facebook"><i class="fa fa-facebook" >a</i></a></li>
+          <li class="list-inline-item"><a href="#" target="_blank" title="instagram"><i class="fa fa-instagram" >a</i></a></li>
+          <li class="list-inline-item"><a href="#" target="_blank" title="pinterest"><i class="fa fa-pinterest">a</i></a></li>
+          <li class="list-inline-item"><a href="#" target="_blank" title="vimeo"><i class="fa fa-vimeo">a</i></a></li>
+        </ul> -->
       </div>
-      <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
-        <h6 class="text-uppercase font-weight-bold mb-4">Shop</h6>
+      <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+        <h5 class="text-uppercase font-weight-bold mb-4">ติดต่อเรา</h5>
         <ul class="list-unstyled mb-0">
-          <li class="mb-2"><a href="#" class="text-muted">For Women</a></li>
-          <li class="mb-2"><a href="#" class="text-muted">For Men</a></li>
-          <li class="mb-2"><a href="#" class="text-muted">Stores</a></li>
-          <li class="mb-2"><a href="#" class="text-muted">Our Blog</a></li>
+          <li class="mb-2"><a href="#" class="" style="text-decoration: none; color: black;">TEL : 00-0000-0000</a></li>
+          <li class="mb-2"><a href="#" class="" style="text-decoration: none; color: black;">E-MAIL : Anan_Electronic@gmail.com</a></li>
+          <li class="mb-2"><img src="img icon/line.png" alt="" style=" width: 30px; height: 30px; border-radius: 100%;"><a href="#" class="" style="text-decoration: none; color: black;"> : Anan_Electronic</a></li>
+          <li class="mb-2"><img src="img icon/Facebook.png" alt="" style=" width: 30px; height: 30px; border-radius: 100%;"><a href="#" class="" style="text-decoration: none; color: black;"> : Anan_Electronic</a></li>
         </ul>
       </div>
-      <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+      <!-- <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
         <h6 class="text-uppercase font-weight-bold mb-4">Company</h6>
         <ul class="list-unstyled mb-0">
           <li class="mb-2"><a href="#" class="text-muted">Login</a></li>
@@ -73,26 +74,26 @@
           <li class="mb-2"><a href="#" class="text-muted">Wishlist</a></li>
           <li class="mb-2"><a href="#" class="text-muted">Our Products</a></li>
         </ul>
-      </div>
-      <div class="col-lg-4 col-md-6 mb-lg-0">
-        <h6 class="text-uppercase font-weight-bold mb-4">Newsletter</h6>
-        <p class="text-muted mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. At itaque temporibus.</p>
-        <div class="p-1 rounded border">
+      </div> -->
+      <div class="col-lg-3 col-md-6 mb-lg-0">
+        <h5 class="text-uppercase font-weight-bold mb-4">ที่อยู่</h5>
+        <p class="mb-4">175 ถ.สุวรรณศร อ.เมืองสระแก้ว ต.สระแก้ว จ.สระแก้ว, Sa Kaeo, Thailand, Sa Kaeo</p>
+        <!-- <div class="p-1 rounded border">
           <div class="input-group">
             <input type="email" placeholder="Enter your email address" aria-describedby="button-addon1" class="form-control border-0 shadow-0">
             <div class="input-group-append">
               <button id="button-addon1" type="submit" class="btn btn-link"><i class="fa fa-paper-plane"></i></button>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
 
   <!-- Copyrights -->
-  <div class="bg-light py-4">
+  <div class=" py-3" style="background: #000141;">
     <div class="container text-center">
-      <p class="text-muted mb-0 py-2"> Copyright 2023 © Anan Electronic Sakaeo.</p>
+      <p class="mb-0 py-2" style="color: #8996a1;"> Copyright 2023 © Anan Electronic Sakaeo.</p>
     </div>
   </div>
 </footer>
