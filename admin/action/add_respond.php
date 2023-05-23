@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sql3 = "UPDATE get_repair SET get_wages = '$get_wages' WHERE get_r_id = '$get_r_id' AND del_flg = '0'";
         $result3 = mysqli_query($conn, $sql3);
 
-        
+
 
         $folderName = "../../uploads/$m_id/$get_r_id/$rs_id"; // the name of the new folder
         if (!file_exists($folderName)) { // check if the folder already exists
@@ -148,9 +148,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-
-
-
         if ($result3) {
             // Process parts data
             foreach ($parts as $part) {
@@ -188,10 +185,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // ...
                 }
             }
-
-            // Perform other necessary operations
-            // ...
-
             // Redirect the user to a success page
             header("Location: ../detail_repair.php?id=$get_r_id");
             exit();

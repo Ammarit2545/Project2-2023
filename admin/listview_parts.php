@@ -166,7 +166,7 @@ if (!isset($_SESSION['role_id'])) {
                                                     if ($row['p_price'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $row['p_price'];
+                                                        echo number_format($row['p_price']);
                                                     }
                                                     ?>
                                                 </td>

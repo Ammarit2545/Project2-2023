@@ -117,15 +117,12 @@ if ($id == NULL) {
                 </div>
                 <div class="col-6" style="background-color: #F1F1F1;">
                     <h3 class="pt-5 text-center"><button class="btn btn-primary">รายละเอียดการซ่อม : </button></h3>
-
                     <p class="pt-2 text-center"><?= $row_c['get_r_detail'] ?>
                     <p>
-
                 </div>
                 <br>
             </div>
         </div>
-
 
         <div class="container my-5 p-4" style="background-color: #F1F1F1; border-radius : 1%;">
             <?php if ($row_2['status_id'] == 3) { ?>
