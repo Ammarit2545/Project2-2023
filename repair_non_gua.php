@@ -116,7 +116,6 @@ $row = mysqli_fetch_array($result);
                                 <input type="file" name="image4" onchange="previewImage('image-preview4')" id="fileToUpload">
                                 <div id="image-preview4"></div>
                             </div>
-
                             <script>
                                 function previewImage(previewId) {
                                     var input = event.target;

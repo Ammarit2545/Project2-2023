@@ -30,6 +30,7 @@ if (!isset($_SESSION['role_id'])) {
 
 </head>
 <style>
+    /* Your existing CSS classes */
     .picture_modal {
         margin-right: 20px;
         border-radius: 10%;
@@ -101,7 +102,6 @@ if (!isset($_SESSION['role_id'])) {
         text-align: center;
     }
 
-
     .close {
         color: #fff;
         position: absolute;
@@ -131,7 +131,6 @@ if (!isset($_SESSION['role_id'])) {
         display: flex;
         flex-direction: row;
         align-items: center;
-
     }
 
     .file-input-container label {
@@ -143,7 +142,10 @@ if (!isset($_SESSION['role_id'])) {
         flex: 0 0 25%;
         max-width: 25%;
         padding: 0 5px;
+    }
 
+    .no-scrollbar {
+        overflow: hidden;
     }
 </style>
 
@@ -192,11 +194,83 @@ if (!isset($_SESSION['role_id'])) {
                         <div class="card-header py-3">
                             <h1 class="m-0 font-weight-bold text-primary">หมายเลขแจ้งซ่อม : <?= $row['get_r_id'] ?></h1>
                             <h1 class="m-0 font-weight-bold text-success">Serial Number : <?= $row['r_serial_number'] ?></h1>
-                            <h2>สถานะ : <button style="background-color: <?= $row['status_color'] ?>; color : white;" class="btn btn"> <?= $row['status_name'] ?></h2></button>
+                            <h2>สถานะล่าสุด : <button style="background-color: <?= $row['status_color'] ?>; color : white;" class="btn btn"> <?= $row['status_name'] ?></h2></button>
                             <h6><?= $formattedDate ?></h6>
                         </div>
+                        <br>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <center>
+                                        <!-- <h4><a href="#" onclick="openModalPart('status')">ติดตามสถานะ <i class="fa fa-chevron-right" style="color: gray; font-size: 17px;"></i></a></h4> -->
+                                        <h4><a href="#" onclick="openModalStatus('quantitystatus')">ติดตามสถานะ <i class="fa fa-chevron-right" style="color: gray; font-size: 17px;"></i></a></h4>
+                                    </center>
+                                </div>
+                                <div class="col">
+                                    <center>
+                                        <h3>|</h3>
+                                    </center>
+                                </div>
+                                <div class="col">
+                                    <center>
+                                        <h4><a href="#" onclick="openModalPart('quantitypart')">จำนวนอะไหล่ <i class="fa fa-chevron-right" style="color: gray; font-size: 17px;"></i></a></h4>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
 
-                        
+                        <!--  Part modal -->
+                        <div id="quantitypartModal" class="modal">
+                            <div class="modal-content">
+                                <h2>จำนวนอะไหล่ทั้งหมด</h2>
+                                <button class="close-button btn btn-primary" onclick="closeModalStatus('quantitypart')" width="200px">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                                <!--  content for Part modal -->
+                                <iframe src="mini_part_detail.php?id=<?= $get_r_id ?>" style="width: 100%; height: 1000px;" class="no-scrollbar"></iframe>
+                            </div>
+                        </div>
+
+                        <!--  Status modal -->
+                        <div id="quantitystatusModal" class="modal">
+                            <div class="modal-content">
+                                <h1>สถานะ</h1>
+                                <button class="close-button btn btn-primary" onclick="closeModalStatus('quantitystatus')" width="200px">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                                <!--  content for Status modal -->
+                                <iframe src="mini_status.php?id=<?= $get_r_id ?>" style="width: 100%; height: 1000px;" class="no-scrollbar"></iframe>
+                            </div>
+                        </div>
+
+
+                        <script>
+                            function openModalPart(modalName) {
+                                var modal = document.getElementById(modalName + "Modal");
+                                modal.style.display = "block";
+                                modal.classList.add("show");
+                            }
+
+                            function closeModalPart(modalName) {
+                                var modal = document.getElementById(modalName + "Modal");
+                                modal.style.display = "none";
+                                modal.classList.remove("show");
+                            }
+                            // ////////////////////////////////////////////////////////////
+
+                            function openModalStatus(modalName) {
+                                var modal = document.getElementById(modalName + "Modal");
+                                modal.style.display = "block";
+                                modal.classList.add("show");
+                            }
+
+                            function closeModalStatus(modalName) {
+                                var modal = document.getElementById(modalName + "Modal");
+                                modal.style.display = "none";
+                                modal.classList.remove("show");
+                            }
+                        </script>
+                        <hr>
                         <script>
                             // Number of status dots
                             var numStatus = 5;
@@ -590,7 +664,7 @@ if (!isset($_SESSION['role_id'])) {
                                             
                                             
                                         </div> -->
-                                        <input type="hidden" name="cardCount" id="cardCountInput" value="0">
+                                            <input type="hidden" name="cardCount" id="cardCountInput" value="0">
                                         </div>
                                         <div class="text-center pt-4">
                                             <input type="text" name="get_r_id" value="<?= $row['get_r_id'] ?>" hidden>
