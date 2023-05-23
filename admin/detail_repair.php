@@ -425,7 +425,7 @@ if (!isset($_SESSION['role_id'])) {
                                     <div class="card-footer">
                                         <!-- Other form elements... -->
                                         <br>
-                                        <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ <?= $rs_id ?></h1>
+                                        <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
                                         <br>
                                         <div class="card-footer">
 
@@ -482,6 +482,12 @@ if (!isset($_SESSION['role_id'])) {
                                                                 <td><img id="cardImg${i}" alt="Card image cap" style="max-width: 150px;"></td>
                                                                 <td id="cardTitle${i}"></td>
                                                                 <td>
+                                                                    <select name="p_id${i}" class="custom-select" id="inputGroupSelect${i}" onchange="showSelectedOption(${i})">
+                                                                        <option selected>Choose...</option>
+                                                                        ${partsOptions}
+                                                                    </select>
+                                                                </td>
+                                                                <td>
                                                                     <div class="input-group">
                                                                         <div class="col-6 px-0">
                                                                             <input type="number" name="value_p${i}" id="${cardId}" value="${cardValues[cardId]}" class="form-control" onchange="calculateTotalPrice(${i})">
@@ -495,12 +501,7 @@ if (!isset($_SESSION['role_id'])) {
                                                                         </div>
                                                                     </div>
                                                                 </td>
-                                                                <td>
-                                                                    <select name="p_id${i}" class="custom-select" id="inputGroupSelect${i}" onchange="showSelectedOption(${i})">
-                                                                        <option selected>Choose...</option>
-                                                                        ${partsOptions}
-                                                                    </select>
-                                                                </td>
+                                                               
                                                                 <td>
                                                                     <input type="text" name="p_price_total${i}" id="cardPrice${i}" class="form-control" readonly>
                                                                 </td>

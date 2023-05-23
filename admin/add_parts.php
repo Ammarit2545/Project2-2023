@@ -138,7 +138,7 @@ if (!isset($_SESSION['role_id'])) {
                                 <input type="text" name="p_stock" class="form-control" id="inputPassword" placeholder="กรุณาใส่จำนวน" required>
                             </div>
                             <!-- <label for="inputPassword" class="col-sm-0 col-select-label mt-2">ประเภทอะไหล่</label> -->
-                            <label for="inputPassword" class="col-sm-0 col-form-label">ตำแหน่ง</label>
+                            <label for="inputPassword" class="col-sm-0 col-form-label">ประเภท</label>
                             <div class="col-sm-0 mr-0 mt-0">
 
                                 <!-- <select name="p_type_id" class="form-select" aria-label="Default select example">

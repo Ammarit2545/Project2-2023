@@ -9,6 +9,18 @@ $row1 = mysqli_fetch_array($result1);
 if ($id == NULL) {
     header('Location: home.php');
 }
+
+$id_g = $_GET['id'];
+$sql1 = "SELECT * FROM get_repair 
+LEFT JOIN repair ON repair.r_id = get_repair.r_id
+WHERE repair.m_id = '$id' AND get_repair.get_r_id = '$id_g'";
+$result1 = mysqli_query($conn, $sql1);
+$row1 = mysqli_fetch_array($result1);
+if ($row1[0] == NULL) {
+    header('Location: status.php?search=ERROR 404');
+}
+
+
 ?>
 
 <!DOCTYPE html>

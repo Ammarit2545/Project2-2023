@@ -115,7 +115,7 @@ if (isset($_GET["status_id"])) {
   <div class="background"></div>
 
   <div class="px-5 pt-5 edit">
-  <br>
+    <br>
     <?php if (!isset($_GET["search"])) { ?>
       <h1 class="pt-5 text-center" id="title_main">ข้อมูลการซ่อมทั้งหมดของคุณ <?= $row['m_fname'] . " " . $row['m_lname']  ?></h1>
     <?php } elseif ($status_id == "") {
@@ -151,20 +151,23 @@ if (isset($_GET["status_id"])) {
                   ORDER BY status_type.status_id ASC;";
                   $result_s = mysqli_query($conn, $sql_s);
 
-                  while ($row_s = mysqli_fetch_array($result_s)) {
-                    
-                  ?>
+                  while ($row_s = mysqli_fetch_array($result_s)) { ?>
                     <li class="nav-item">
                     <li> <a class="dropdown-item" href="status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>"><?= $row_s['status_name'] ?>
                         <p style="display: inline-block; color:<?= $row_s[3] ?>; ">(<?= $row_s[2] ?>)</p>
                       </a></li>
               </li>
             <?php } ?>
+
+
             </ul>
             </li>
 
             </ul>
           </center>
+
+
+
           <center>
             <ul class="nav nav-tabs" id="bar_under">
               <li class="nav-item">
@@ -172,25 +175,53 @@ if (isset($_GET["status_id"])) {
               </li>
               <?php
               $sql_s = "SELECT status_type.status_id, status_type.status_name, COUNT(*) ,status_type.status_color  as count
-              FROM repair_status 
-              LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
-              LEFT JOIN repair ON repair.r_id = get_repair.r_id
-              LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
-              WHERE repair.m_id = '$id'
-              GROUP BY status_type.status_id 
-              ORDER BY status_type.status_id ASC;";
+                        FROM repair_status 
+                        LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
+                        LEFT JOIN repair ON repair.r_id = get_repair.r_id
+                        LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
+                        WHERE repair.m_id = '$id'
+                        GROUP BY status_type.status_id 
+                        ORDER BY status_type.status_id ASC;";
               $result_s = mysqli_query($conn, $sql_s);
-
+              $numItems = mysqli_num_rows($result_s);
+              $counter = 0;
               while ($row_s = mysqli_fetch_array($result_s)) {
+                $counter++;
+                if ($counter <= 5) { ?>
+                  <li class="nav-item">
+                    <a class="nav-link" href="status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>"><?= $row_s['status_name'] ?>
+                      <p style="display: inline-block; color:<?= $row_s[3] ?>; ">(<?= $row_s[2] ?>)</p>
+                    </a>
+                  </li>
+                  <?php
+                } else {
+                  if ($counter === 6) {
+                  ?>
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">อื่นๆ</a>
+                      <ul class="dropdown-menu">
+                      <?php
+                    }
+                      ?>
+                      <li>
+                        <a class="dropdown-item" href="status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>">
+                          <?= $row_s['status_name'] ?>
+                          <p style="display: inline-block; color:<?= $row_s[3] ?>; ">(<?= $row_s[2] ?>)</p>
+                        </a>
+                      </li>
+                      <?php
+                      if ($counter === $numItems) {
+                      ?>
+                      </ul>
+                    </li>
+              <?php
+                      }
+                    }
+                  }
               ?>
-                <li class="nav-item">
-                  <a class="nav-link" href="status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>"><?= $row_s['status_name'] ?>
-                    <p style="display: inline-block; color:<?= $row_s[3] ?>; ">(<?= $row_s[2] ?>)</p>
-                  </a>
-                </li>
-              <?php } ?>
             </ul>
           </center>
+
         </div>
         <div class="col-2"></div>
       </div>
