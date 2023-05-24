@@ -463,7 +463,7 @@ if ($_SESSION["log_login"] == 0) {
   ?>
   <!-- Sweet Alert Show End -->
 
-  <script>
+  <!-- <script>
     // Show full page LoadingOverlay
     $.LoadingOverlay("show");
 
@@ -471,7 +471,7 @@ if ($_SESSION["log_login"] == 0) {
     setTimeout(function() {
       $.LoadingOverlay("hide");
     }, 10);
-  </script>
+  </script> -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

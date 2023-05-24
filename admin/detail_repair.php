@@ -152,8 +152,10 @@ if (!isset($_SESSION['role_id'])) {
 
 <body id="page-top">
 
+
     <!-- Page Wrapper -->
     <div id="wrapper">
+
 
         <!-- Sidebar -->
         <?php
@@ -163,15 +165,16 @@ if (!isset($_SESSION['role_id'])) {
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Topbar -->
+            <?php
+            include('bar/topbar_admin.php');
+            ?>
+            <!-- End of Topbar -->
 
             <!-- Main Content -->
             <div id="content">
 
-                <!-- Topbar -->
-                <?php
-                include('bar/topbar_admin.php');
-                ?>
-                <!-- End of Topbar -->
+
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -196,6 +199,7 @@ if (!isset($_SESSION['role_id'])) {
                             <h1 class="m-0 font-weight-bold text-primary">หมายเลขแจ้งซ่อม : <?= $row['get_r_id'] ?></h1>
                             <h1 class="m-0 font-weight-bold text-success">Serial Number : <?= $row['r_serial_number'] ?></h1>
                             <h2>สถานะล่าสุด : <button style="background-color: <?= $row['status_color'] ?>; color : white;" class="btn btn"> <?= $row['status_name'] ?></h2></button>
+
                             <h6><?= $formattedDate ?></h6>
                         </div>
                         <br>
@@ -289,6 +293,33 @@ if (!isset($_SESSION['role_id'])) {
                             }
                         </script>
                         <div class="card-body">
+                            <?php
+                            if ($row['rs_conf'] == 1) {
+                            ?>
+                                <div class="alert alert-success" role="alert">
+                                    <center>
+                                        <h4>ได้รับการยืนยันการซ่อมแล้ว</h4>
+                                    </center>
+                                </div>
+                                <center>
+                                    <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะ "ดำเนินการ" ไปที่สมาชิก ***</p>
+                                </center>
+                                <br>
+                            <?php
+                            } else if ($row['rs_conf'] == 0 && $row['rs_conf'] != NULL) {
+                            ?>
+                                <div class="alert alert-danger" role="alert">
+                                    <center>
+                                        <h4>ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
+                                    </center>
+                                </div>
+                                <center>
+                                    <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะไปที่สมาชิก ***</p>
+                                </center>
+                                <br>
+                            <?php
+                            }
+                            ?>
                             <div class="mb-3 row">
                                 <h6 for="staticEmail" class="col-sm-1 col-form-label">ชื่อ</h6>
                                 <div class="col-sm-4">

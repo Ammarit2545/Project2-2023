@@ -37,6 +37,10 @@ if ($row1[0] == NULL) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Status - ANE</title>
 
+    <!-- Example CDNs, use appropriate versions and sources -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
     <style>
         .modal {
             display: none;
@@ -86,6 +90,14 @@ if ($row1[0] == NULL) {
             color: #bbb;
             text-decoration: none;
             cursor: pointer;
+        }
+
+        .iframe-container {
+            display: none;
+        }
+
+        .check_icon {
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -165,10 +177,27 @@ if ($row1[0] == NULL) {
                             $date = DateTime::createFromFormat('d-m-Y', $dateString);
                             $formattedDate = $date->format('d F Y');
                         ?>
+                            <hr style="border: 5px solid black;">
                             <li>
-                                <h6><i class="uil uil-clock"></i>&nbsp;<?= $formattedDate ?> เวลา <?= date('H:i:s', strtotime($row_c['get_r_date_in'])); ?></h6>
-                                <h5><button class="btn btn-outline-secondary" style="color : white; background-color : <?= $row1['status_color'] ?>; border : 2px solid <?= $row1['status_color'] ?>;"><?= $row1['status_name'] ?></button></h5>
+
+                                <h5 style="display:inline"><button class="btn btn-outline-secondary" style="color : white; background-color : <?= $row1['status_color'] ?>; border : 2px solid <?= $row1['status_color'] ?>;"><?= $row1['status_name'] ?></button></h5>
+                                <h6 style="display:inline"><i class="uil uil-book"></i>&nbsp;<?= $formattedDate ?></h6>
+                                <p style="display:inline-block"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row1['get_r_date_in'])); ?></p>
+                                <?php
+                                $rs_id = $row1['rs_id'];
+                                $sql_c = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id'";
+                                $result_c = mysqli_query($conn, $sql_c);
+                                $row = mysqli_fetch_array($result_c);
+                                if ($row[0] > 0) {
+                                    if ($row1['rs_conf'] != 1) { ?>
+                                        <a class="btn btn-outline-danger" style="margin-left:20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้ </a>
+                                <?php }
+                                }
+                                ?>
+                                <hr>
+                                <h5 class="btn btn-outline-primary">รายละเอียด</h5>
                                 <p class="mt-2"><?= $row1['rs_detail'] ?></p>
+
                                 <!-- <button class="btn btn_custom" type="button">ยืนยัน</button> -->
                                 <div class="col text-left" style="background-color: #F1F1F1;">
                                     <!-- <h3 class="pt-5"><button class="btn btn-primary">รูปภาพ : </button></h3>
@@ -191,6 +220,48 @@ if ($row1[0] == NULL) {
                                     <?php
                                     } ?>
                                 </div>
+
+
+                                <!--  Part modal -->
+                                <div id="quantitypartModal" class="modal">
+                                    <div class="modal-content">
+                                        <h2>จำนวนอะไหล่ทั้งหมด</h2>
+                                        <button class="close-button btn btn-primary" onclick="closeModalStatus('quantitypart')" width="200px">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                        <!--  content for Part modal -->
+                                        <iframe src="mini_part_detail.php?id=<?= $id_get_r ?>" style="width: 100%; height: 1000px;" class="no-scrollbar"></iframe>
+                                    </div>
+                                </div>
+
+                                <script>
+                                    function openModalPart(modalName) {
+                                        var modal = document.getElementById(modalName + "Modal");
+                                        modal.style.display = "block";
+                                        modal.classList.add("show");
+                                    }
+
+                                    function closeModalPart(modalName) {
+                                        var modal = document.getElementById(modalName + "Modal");
+                                        modal.style.display = "none";
+                                        modal.classList.remove("show");
+                                    }
+                                    // ////////////////////////////////////////////////////////////
+
+                                    function openModalStatus(modalName) {
+                                        var modal = document.getElementById(modalName + "Modal");
+                                        modal.style.display = "block";
+                                        modal.classList.add("show");
+                                    }
+
+                                    function closeModalStatus(modalName) {
+                                        var modal = document.getElementById(modalName + "Modal");
+                                        modal.style.display = "none";
+                                        modal.classList.remove("show");
+                                    }
+                                </script>
+
+
                                 <div id="modal" class="modal">
                                     <span class="close" onclick="closeModal()">&times;</span>
                                     <img id="modal-image" src="" alt="Modal Photo">
@@ -214,7 +285,52 @@ if ($row1[0] == NULL) {
                                     }
                                 </script>
                             </li>
-                            <br>
+                            <br><?php
+                                if ($row[0] > 0) {
+                                    if ($row1['rs_conf'] != 1) { ?>
+
+                                    <a class="btn btn-danger" style="margin-left : 2%">ไม่ทำการยืนยัน</a>
+                                    <!-- Add your button href="action/conf_part.php?id=<?= $id_get_r ?>" -->
+                                    <!-- <a  class="btn btn-success" id="confirmButtonSuccess">ยืนยัน</a> -->
+                                    <!-- <button class="btn btn-success" id="confirmButtonSuccess">ยืนยัน</button> -->
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            var id_get_r = <?php echo json_encode($id_get_r); ?>; // Pass PHP variable to JavaScript
+
+                                            document.getElementById('confirmButtonSuccess').addEventListener('click', function() {
+                                                Swal.fire({
+                                                    icon: 'question',
+                                                    title: 'ยืนยันดำเนินการส่งซ่อม',
+                                                    text: 'การ "ยืนยัน" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
+                                                    showCancelButton: true,
+                                                    confirmButtonText: 'ยืนยัน',
+                                                    cancelButtonText: 'ยกเลิก'
+                                                }).then((willConfirm) => {
+                                                    if (willConfirm.isConfirmed) {
+                                                        window.location.href = "action/conf_part.php?id=" + id_get_r; // Redirect with the passed value
+                                                    }
+                                                });
+                                            });
+                                        });
+                                    </script>
+
+                                    <!-- Update the anchor tag to include PHP code for the dynamic link -->
+                                    <a class="btn btn-success" id="confirmButtonSuccess">ยืนยัน</a>
+
+                                    <br><br>
+                                <?php
+                                    }
+                                }
+                                if ($row1['rs_conf'] == 1) {
+
+                                ?>
+                                <div class="alert alert-success" role="alert" style="margin-left : 10px">
+                                    คุณได้ทำการยืนยันการส่งซ่อมแล้ว "โปรดรอการตอบกลับ"
+                                </div>
+                                <span class="check_icon"><i class="fa fa-check"></i> ส่งวันที่ : <?= $row1['rs_conf_date'] ?></span>
+                                <!-- <button class="btn btn-success" style="margin-left : 10px"> คุณได้ทำการยืนยันการส่งซ่อมแล้ว "โปรดรอการตอบกลับ" </button> -->
+                            <?php }  ?>
+
                         <?php } ?>
 
                         <!-- <li>
@@ -274,6 +390,46 @@ if ($row1[0] == NULL) {
         </div>
     </div>
 
+    <!-- Sweet Alert Show Start -->
+    <?php
+    if (isset($_SESSION['add_data_alert'])) {
+        if ($_SESSION['add_data_alert'] == 0) {
+    ?>
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'ทำการยืนยันการส่งซ่อมเสร็จสิ้น',
+                    html: 'ระบบได้ทำการส่งข้อมูลการยืนยันไปที่พนักงานแล้ว<br>กด Accept เพื่อออก',
+                    confirmButtonText: 'Accept'
+                });
+            </script>
+        <?php
+            unset($_SESSION['add_data_alert']);
+        } else if ($_SESSION['add_data_alert'] == 1) {
+        ?>
+            <script>
+                Swal.fire({
+                    title: 'การยืนยันการส่งซ่อมไม่เสร็จสิ้น',
+                    text: 'กด Accept เพื่อออก',
+                    icon: 'error',
+                    confirmButtonText: 'Accept'
+                });
+            </script>
+
+    <?php
+            unset($_SESSION['add_data_alert']);
+        }
+    }
+    ?>
+    <!-- Sweet Alert Show End -->
+
+    <!-- Place this in the <head> section of your HTML document -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <!-- Place this before the closing </body> tag -->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.10/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
