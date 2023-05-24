@@ -38,17 +38,40 @@
   footer {
     background: #E5E5E5;
     background: -webkit-linear-gradient(to right, #E5E5E5, #FFFFFF);
-    background: linear-gradient(to right, #E5E5E5, #FFFFFF  );
+    background: linear-gradient(to right, #E5E5E5, #FFFFFF);
+  }
+
+  .copy-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: blue;
+    text-decoration: none;
+    display: inline;
+  }
+
+  .success-message {
+    display: none;
+    font-size: 12px;
+    color: green;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+
+  .fade-in {
+    opacity: 1;
   }
 </style>
 <!-- Footer -->
 <br>
-<footer class="mt-4 "style="background: #E7F0FE;">
+<footer class="mt-4 " style="background: #E7F0FE;">
   <div class="container">
     <div class="row py-4">
-      <div class="col-lg-5 col-md-6 mb-4 mb-lg-0"><img src="img/logo.png" alt="" width="180" class="mb-3">
-        <h3 class="font-italic text-uppercase" style="color: #000141;">Anan Electronic</h3>
-        <p>Anan Electronic พร้อมให้บริการด้วยคุณภาพจากผู้ชำนาญการพิเศษด้านเครื่องดนตรี ที่มีประสบการณ์ด้านการซ่อมยาวนาน ผ่านการฝึกอบรม เพื่อรองรับทุกปัญหาของคุณด้วยคุณภาพสูงสุด</p>
+      <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+        <img src="img brand/anelogo.png" alt="" width="180" class="mb-3">
+        <!-- <h3 class="font-italic text-uppercase" style="color: #000141;">Anan Electronic</h3> -->
+        <p> พร้อมให้บริการด้วยคุณภาพจากผู้ชำนาญการพิเศษด้านเครื่องดนตรี ที่มีประสบการณ์ด้านการซ่อมยาวนาน ผ่านการฝึกอบรม เพื่อรองรับทุกปัญหาของคุณด้วยคุณภาพสูงสุด</p>
         <!-- <ul class="list-inline mt-4">
           <li class="list-inline-item"><a href="#" target="_blank" title="twitter"><i class="fa fa-twitter" >a</i></a></li>
           <li class="list-inline-item"><a href="#" target="_blank" title="facebook"><i class="fa fa-facebook" >a</i></a></li>
@@ -60,10 +83,42 @@
       <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
         <h5 class="text-uppercase font-weight-bold mb-4">ติดต่อเรา</h5>
         <ul class="list-unstyled mb-0">
-          <li class="mb-2"><a href="#" class="" style="text-decoration: none; color: black;">TEL : 00-0000-0000</a></li>
-          <li class="mb-2"><a href="#" class="" style="text-decoration: none; color: black;">E-MAIL : Anan_Electronic@gmail.com</a></li>
-          <li class="mb-2"><img src="img icon/line.png" alt="" style=" width: 30px; height: 30px; border-radius: 100%;"><a href="#" class="" style="text-decoration: none; color: black;"> : Anan_Electronic</a></li>
-          <li class="mb-2"><img src="img icon/Facebook.png" alt="" style=" width: 30px; height: 30px; border-radius: 100%;"><a href="#" class="" style="text-decoration: none; color: black;"> : Anan_Electronic</a></li>
+          <!-- <li class="mb-2"><a href="#" class="" style="text-decoration: none; color: black;">Tel : 085-699-3391</a></li> -->
+          <p style="display: inline">Tel:</p>
+          <button onclick="copyHTML()" class="copy-button" style="display: inline;">085-699-3391<h6 style="display: inline; color: green; margin-left: 10px">Click to copy</h6></button>
+          <button class="success-message btn btn-success" id="successMessage" style="color: white; display: none;">Copied successfully!</button>
+
+          <script>
+            function copyHTML() {
+              var phoneNumber = '0856993391';
+              var tempElement = document.createElement('textarea');
+              tempElement.value = phoneNumber;
+              document.body.appendChild(tempElement);
+              tempElement.select();
+              document.execCommand('copy');
+              document.body.removeChild(tempElement);
+              showSuccessMessage();
+            }
+
+            function showSuccessMessage() {
+              var successMessage = document.getElementById('successMessage');
+              successMessage.style.display = 'block';
+              successMessage.classList.add('fade-in');
+              setTimeout(function() {
+                successMessage.classList.remove('fade-in');
+                successMessage.style.display = 'none';
+              }, 2000);
+            }
+          </script>
+
+          <li class="mb-2"><a href="#" class="" style="text-decoration: none; color: black;">Email : Anan_Electronic@gmail.com</a></li>
+
+          <button class="btn btn-success">
+            <li class="mb-2 mt-2"><img src="img icon/line.png" alt="" style=" width: 30px; height: 30px; border-radius: 20%;"><a href="#" class="" style="text-decoration: none; color: white;"> Anan_Electronic</a></li>
+          </button>
+          <button class="btn btn-primary">
+            <li class="mb-2 mt-2"><img src="img icon/Facebook.png" alt="" style=" width: 30px; height: 30px; border-radius: 20%;"><a href="https://www.facebook.com/Fresh.Pongsakorn" class="" style="text-decoration: none; color: white;" target="_blank"> Anan_Electronic</a></li>
+          </button>
         </ul>
       </div>
       <!-- <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
