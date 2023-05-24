@@ -126,11 +126,15 @@
         </div>
     </li>
     <br>
-    <!-- <li class="nav-item">
+    <div class="sidebar-heading">
+        บันทึกการซ่อมด้วยตัวเอง
+    </div>
+    <li class="nav-item">
         <a class="nav-link" href="index.php">
             <i class="fas fa-fw fa-arrow-down"></i>
             <span>บันทึกการซ่อมด้วยตัวเอง</span></a>
-    </li> -->
+    </li>
+    <br>
     <div class="sidebar-heading">
         รายงาน
     </div>

@@ -112,12 +112,12 @@
           </script>
 
           <li class="mb-2"><a href="#" class="" style="text-decoration: none; color: black;">Email : Anan_Electronic@gmail.com</a></li>
-
-          <button class="btn btn-success">
-            <li class="mb-2 mt-2"><img src="img icon/line.png" alt="" style=" width: 30px; height: 30px; border-radius: 20%;"><a href="#" class="" style="text-decoration: none; color: white;"> Anan_Electronic</a></li>
+<br>
+          <button class="btn btn-outline-light">
+            <li class="mb-2 mt-2"><img src="img icon/line.png" alt="" style=" width: 30px; height: 30px; border-radius: 20%;"><a href="#" class="" style="text-decoration: none; color: green;"> Anan_Electronic</a></li>
           </button>
-          <button class="btn btn-primary">
-            <li class="mb-2 mt-2"><img src="img icon/Facebook.png" alt="" style=" width: 30px; height: 30px; border-radius: 20%;"><a href="https://www.facebook.com/Fresh.Pongsakorn" class="" style="text-decoration: none; color: white;" target="_blank"> Anan_Electronic</a></li>
+          <button class="btn btn-outline-light">
+            <li class="mb-2 mt-2"><img src="img icon/Facebook.png" alt="" style=" width: 30px; height: 30px; border-radius: 20%;"><a href="https://www.facebook.com/Fresh.Pongsakorn" class="" style="text-decoration: none; color: blue;" target="_blank"> Anan_Electronic</a></li>
           </button>
         </ul>
       </div>

@@ -89,7 +89,7 @@ if (!isset($_SESSION['role_id'])) {
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $i = 2;
+                                        $i = 0;
                                         if($i > 0){
                                             $sql_nofi = "SELECT *
                                         FROM get_repair

@@ -27,6 +27,7 @@ if (!isset($_SESSION['role_id'])) {
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 </head>
 <style>
@@ -362,7 +363,21 @@ if (!isset($_SESSION['role_id'])) {
                                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?= $row_s['rs_detail']  ?></textarea>
                             </div>
                             <div class="mb-3">
-                                <label for="exampleFormControlTextarea1" class="col-form-label">รูปภาพประกอบ <?= $get_r_id ?>:</label>
+                                <?php
+                                $sql_pic3 = "SELECT * FROM repair_pic WHERE rs_id = '$rs_id' AND del_flg = 0 ";
+                                $result_pic3 = mysqli_query($conn, $sql_pic3);
+                                $roe_c =  mysqli_fetch_array($result_pic3);
+                                if ($roe_c[0] == NULL) {
+                                ?>
+                                    <label for="exampleFormControlTextarea1" class="col-form-label" style="display:none">รูปภาพประกอบ <?= $get_r_id ?>:</label>
+                                <?php
+                                } else {
+                                ?>
+                                    <label for="exampleFormControlTextarea1" class="col-form-label">รูปภาพประกอบ <?= $get_r_id ?>:</label>
+                                <?php
+                                }
+                                ?>
+                                <!-- <label for="exampleFormControlTextarea1" class="col-form-label">รูปภาพประกอบ <?= $get_r_id ?>:</label> -->
                                 <div class="row">
                                     <?php
 
@@ -380,10 +395,7 @@ if (!isset($_SESSION['role_id'])) {
                                         <?php
                                         } else { ?> <h2>ไม่มีข้อมูล</h2> <?php
                                                                         }
-                                                                    }
-
-                                                                            ?>
-
+                                                                    } ?>
                                     <div id="modal" class="modal">
                                         <span class="close" onclick="closeModal()">&times;</span>
                                         <img id="modal-image" src="" alt="Modal Photo">
@@ -408,9 +420,339 @@ if (!isset($_SESSION['role_id'])) {
                                     </script>
                                 </div>
                             </div>
+                            <!-- สถานะ "ส่งเรื่องแล้ว" -->
+                            <?php if ($row['value_code'] == "submit") {
+                            ?>
+
+                                <center>
+                                    <a class="btn btn-success" href="action/add_submit_repair.php?id=<?= $get_r_id ?>" onclick="confirmChangeStatus_received(event)">เปลี่ยนสถานะเป็น 'รับเรื่องแล้ว'</a>
+                                </center>
+
+                                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+                                <script>
+                                    function confirmChangeStatus_received(event) {
+                                        event.preventDefault(); // Prevent the default link action
+
+                                        Swal.fire({
+                                            title: "คุณต้องการเปลี่ยนสถานะเป็น 'รับเรื่องแล้ว' ใช่หรือไม่?",
+                                            text: "การเปลี่ยนสถานะจะไม่สามารถย้อนกลับได้",
+                                            icon: "warning",
+                                            showCancelButton: true,
+                                            confirmButtonColor: "#3085d6",
+                                            cancelButtonColor: "#d33",
+                                            confirmButtonText: "ยืนยัน",
+                                            cancelButtonText: "ยกเลิก",
+                                        }).then(function(result) {
+                                            if (result.isConfirmed) {
+                                                // Proceed with the link action
+                                                window.location.href = event.target.href;
+                                            }
+                                        });
+                                    }
+                                </script>
+
+
+
+
+                                <!-- สถานะ "รับเรื่องแล้ว" -->
+                            <?php
+                            } ?>
+                            <?php if ($row['value_code'] == "received") { ?>
+                                <center>
+                                    <button class="btn btn-danger" onclick="showCancelValue()">ปฏิเสธการซ่อม</button>
+                                    <button class="btn btn-success" onclick="showDetailValue()">เปลี่ยนสถานะเป็น 'รายละเอียด'</button>
+                                </center>
+
+                                <div id="cancel_value_code" style="display: none;">
+                                    <hr>
+                                    <br>
+                                    <form id="cancel_status_id" action="action/status/add_cencel_status.php" method="POST" enctype="multipart/form-data">
+                                        <label for="cancelFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : red"> ปฏิเสธการซ่อม</p> :</label>
+                                        <textarea class="form-control" name="rs_detail" id="cancelFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการปฏิเสธการซ่อม"></textarea>
+                                        <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
+                                        <br>
+                                        <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
+                                        <hr>
+                                        <label for="cancelFormControlTextarea" class="form-label">เพิ่มรูปภาพหรือวิดีโอ *ไม่จำเป็น (สูงสุด 4 ไฟล์):</label>
+                                        <a class="btn btn-primary" onclick="showInput()">เพิ่มรูปภาพหรือวิดีโอ</a>
+                                        <br>
+                                        <div id="inputContainer"></div>
+
+                                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+                                        <script>
+                                            var clickCount = 0;
+
+                                            function showInput() {
+                                                var textarea = document.getElementById('cancelFormControlTextarea');
+                                                var textValue = textarea.value.trim();
+                                                if (textValue === '') {
+                                                    return false; // Prevent form submission if there is no text input
+                                                }
+
+                                                clickCount++;
+
+                                                if (clickCount <= 4) {
+                                                    var inputElement = document.createElement('div');
+                                                    inputElement.classList.add('input-group', 'mb-3');
+
+                                                    var fileInput = document.createElement('input');
+                                                    fileInput.type = 'file';
+                                                    fileInput.name = 'file' + clickCount;
+                                                    fileInput.classList.add('form-control');
+                                                    fileInput.addEventListener('change', function(event) {
+                                                        showPreview(event.target);
+                                                    });
+
+                                                    var inputGroupText = document.createElement('span');
+                                                    inputGroupText.classList.add('input-group-text');
+                                                    inputGroupText.textContent = 'File ' + clickCount;
+
+                                                    var deleteButton = document.createElement('button');
+                                                    deleteButton.type = 'button';
+                                                    deleteButton.classList.add('btn', 'btn-danger');
+                                                    deleteButton.textContent = 'Delete';
+                                                    deleteButton.addEventListener('click', function() {
+                                                        inputElement.remove();
+                                                        removeFileInputValue(fileInput.name); // Remove corresponding value
+                                                    });
+
+                                                    var previewElement = document.createElement('div');
+                                                    previewElement.classList.add('preview');
+                                                    previewElement.style.marginTop = '10px';
+
+                                                    inputElement.appendChild(inputGroupText);
+                                                    inputElement.appendChild(fileInput);
+                                                    inputElement.appendChild(deleteButton);
+
+                                                    var inputContainer = document.getElementById('inputContainer');
+                                                    inputContainer.appendChild(inputElement);
+                                                    inputContainer.appendChild(previewElement);
+                                                }
+
+                                                return false; // Prevent form submission
+                                            }
+
+                                            function showPreview(input) {
+                                                var preview = input.parentNode.nextSibling; // Get the next sibling (preview element)
+                                                preview.innerHTML = '';
+
+                                                if (input.files && input.files[0]) {
+                                                    var file = input.files[0];
+                                                    var fileType = file.type;
+                                                    var validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                                                    var validVideoTypes = ['video/mp4', 'video/webm', 'video/ogg'];
+
+                                                    if (validImageTypes.includes(fileType)) {
+                                                        var img = document.createElement('img');
+                                                        img.src = URL.createObjectURL(file);
+                                                        img.style.maxWidth = '200px';
+                                                        preview.appendChild(img);
+                                                    } else if (validVideoTypes.includes(fileType)) {
+                                                        var video = document.createElement('video');
+                                                        video.src = URL.createObjectURL(file);
+                                                        video.style.maxWidth = '200px';
+                                                        video.autoplay = true;
+                                                        video.loop = true;
+                                                        video.muted = true;
+                                                        preview.appendChild(video);
+                                                    }
+                                                }
+                                            }
+
+                                            function removeFileInputValue(inputName) {
+                                                var fileInput = document.querySelector('input[name="' + inputName + '"]');
+                                                if (fileInput) {
+                                                    fileInput.value = ''; // Clear the file input value
+                                                }
+                                            }
+
+                                            function confirm_cen(event) {
+                                                event.preventDefault(); // Prevent the form from being submitted
+
+                                                Swal.fire({
+                                                    title: 'คุณแน่ใจหรือไม่?',
+                                                    text: 'คุณต้องการส่งข้อมูลนี้หรือไม่',
+                                                    icon: 'question',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: '#3085d6',
+                                                    cancelButtonColor: '#d33',
+                                                    confirmButtonText: 'ใช่',
+                                                    cancelButtonText: 'ไม่'
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        // User confirmed, submit the form
+                                                        document.getElementById('cancel_status_id').submit();
+                                                    }
+                                                });
+                                            }
+                                        </script>
+                                        <center>
+                                            <br>
+                                            <button class="btn btn-success" onclick="confirm_cen(event)">ยืนยัน</button>
+                                        </center>
+                                    </form>
+                                </div>
+
+                                <!-- ------------------------------------------------------------------ -->
+
+                                <div id="detail_value_code" style="display: none;">
+                                    <hr>
+                                    <br>
+                                    <form id="detail_status_id" action="action/status/add_detail_status.php" method="POST" enctype="multipart/form-data">
+                                        <label for="DetailFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : green"> รายละเอียด</p> :</label>
+                                        <textarea class="form-control" name="rs_detail" id="DetailFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม"></textarea>
+                                        <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
+                                        <br>
+
+                                        <div class="mb-3">
+                                            <h6>อะไหล่</h6>
+                                            <div id="cardContainer" style="display: none;">
+                                                <table class="table" id="cardSection"></table>
+                                            </div>
+                                            <button type="button" class="btn btn-primary" onclick="showNextCard()">เพิ่มอะไหล่</button>
+                                        </div>
+
+                                        <br>
+                                        <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
+                                        <hr>
+                                        <label for="DetailFormControlTextarea" class="form-label">เพิ่มรูปภาพหรือวิดีโอ *ไม่จำเป็น (สูงสุด 4 ไฟล์):</label>
+                                        <a class="btn btn-primary" onclick="showInputDetail()">เพิ่มรูปภาพหรือวิดีโอ</a>
+                                        <br>
+                                        <div id="inputContainerDetail"></div>
+
+                                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+                                        <script>
+                                            var clickCount = 0;
+
+                                            function showInputDetail() {
+                                                var textarea = document.getElementById('DetailFormControlTextarea');
+                                                var textValue = textarea.value.trim();
+                                                if (textValue === '') {
+                                                    return false; // Prevent form submission if there is no text input
+                                                }
+
+                                                clickCount++;
+
+                                                if (clickCount <= 4) {
+                                                    var inputElement = document.createElement('div');
+                                                    inputElement.classList.add('input-group', 'mb-3');
+
+                                                    var fileInput = document.createElement('input');
+                                                    fileInput.type = 'file';
+                                                    fileInput.name = 'file' + clickCount;
+                                                    fileInput.classList.add('form-control');
+                                                    fileInput.addEventListener('change', function(event) {
+                                                        showPreviewDetail(event.target);
+                                                    });
+
+                                                    var inputGroupText = document.createElement('span');
+                                                    inputGroupText.classList.add('input-group-text');
+                                                    inputGroupText.textContent = 'File ' + clickCount;
+
+                                                    var deleteButton = document.createElement('button');
+                                                    deleteButton.type = 'button';
+                                                    deleteButton.classList.add('btn', 'btn-danger');
+                                                    deleteButton.textContent = 'Delete';
+                                                    deleteButton.addEventListener('click', function() {
+                                                        inputElement.remove();
+                                                        removeFileInputValue(fileInput.name); // Remove corresponding value
+                                                    });
+
+                                                    var previewElement = document.createElement('div');
+                                                    previewElement.classList.add('preview');
+                                                    previewElement.style.marginTop = '10px';
+
+                                                    inputElement.appendChild(inputGroupText);
+                                                    inputElement.appendChild(fileInput);
+                                                    inputElement.appendChild(deleteButton);
+
+                                                    var inputContainer = document.getElementById('inputContainerDetail');
+                                                    inputContainer.appendChild(inputElement);
+                                                    inputContainer.appendChild(previewElement);
+                                                }
+
+                                                return false; // Prevent form submission
+                                            }
+
+                                            function showPreviewDetail(input) {
+                                                var preview = input.parentNode.nextSibling; // Get the next sibling (preview element)
+                                                preview.innerHTML = '';
+
+                                                if (input.files && input.files[0]) {
+                                                    var file = input.files[0];
+                                                    var fileType = file.type;
+                                                    var validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                                                    var validVideoTypes = ['video/mp4', 'video/webm', 'video/ogg'];
+
+                                                    if (validImageTypes.includes(fileType)) {
+                                                        var img = document.createElement('img');
+                                                        img.src = URL.createObjectURL(file);
+                                                        img.style.maxWidth = '200px';
+                                                        preview.appendChild(img);
+                                                    } else if (validVideoTypes.includes(fileType)) {
+                                                        var video = document.createElement('video');
+                                                        video.src = URL.createObjectURL(file);
+                                                        video.style.maxWidth = '200px';
+                                                        video.autoplay = true;
+                                                        video.loop = true;
+                                                        video.muted = true;
+                                                        preview.appendChild(video);
+                                                    }
+                                                }
+                                            }
+
+                                            function removeFileInputValue(inputName) {
+                                                var fileInput = document.querySelector('input[name="' + inputName + '"]');
+                                                if (fileInput) {
+                                                    fileInput.value = ''; // Clear the file input value
+                                                }
+                                            }
+
+                                            function confirm_cen(event) {
+                                                event.preventDefault(); // Prevent the form from being submitted
+
+                                                Swal.fire({
+                                                    title: 'คุณแน่ใจหรือไม่?',
+                                                    text: 'คุณต้องการส่งข้อมูลนี้หรือไม่',
+                                                    icon: 'question',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: '#3085d6',
+                                                    cancelButtonColor: '#d33',
+                                                    confirmButtonText: 'ใช่',
+                                                    cancelButtonText: 'ไม่'
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        // User confirmed, submit the form
+                                                        document.getElementById('detail_status_id').submit();
+                                                    }
+                                                });
+                                            }
+                                        </script>
+                                        <center>
+                                            <br>
+                                            <button class="btn btn-success" onclick="confirm_cen(event)">ยืนยัน</button>
+                                        </center>
+                                    </form>
+                                </div>
+
+                                <script>
+                                    function showCancelValue() {
+                                        document.getElementById('cancel_value_code').style.display = 'block';
+                                        document.getElementById('detail_value_code').style.display = 'none';
+                                    }
+
+                                    function showDetailValue() {
+                                        document.getElementById('cancel_value_code').style.display = 'none';
+                                        document.getElementById('detail_value_code').style.display = 'block';
+                                    }
+                                </script>
 
                             <?php
-                            if ($row['value_code'] == "succ" || $row['value_code'] == "cancel") {
+                            } ?>
+
+
+                            <?php
+                            if ($row['value_code'] == "succ" || $row['value_code'] == "cancel" || $row['value_code'] == "submit" || $row['value_code'] == "received" || $row['status_id'] == "11") {
                             ?>
                                 <form action="action/add_respond.php" method="POST" enctype="multipart/form-data" style="display:none">
                                 <?php
@@ -456,11 +798,14 @@ if (!isset($_SESSION['role_id'])) {
                                                 <textarea class="form-control" name="ex2" id="exampleFormControlTextarea2" rows="3" required></textarea>
                                             </div>
 
+
                                             <script>
                                                 function toggleEx1Textarea() {
                                                     var statusSelect = document.querySelector('select[name="status_id"]');
                                                     var ex1Textarea = document.getElementById('ex1Textarea');
                                                     var ex2Textarea = document.getElementById('ex2Textarea');
+                                                    var ex3Textarea = document.getElementById('ex3Textarea');
+                                                    var ex4Textarea = document.getElementById('ex4Textarea');
                                                     if (statusSelect.value == 2) {
                                                         ex1Textarea.style.display = 'block';
                                                         document.getElementById('exampleFormControlTextarea1').required = true;
@@ -479,8 +824,6 @@ if (!isset($_SESSION['role_id'])) {
                                                     }
                                                 }
                                             </script>
-
-
 
                                             <div class="mb-3">
                                                 <h6>อะไหล่</h6>
@@ -750,6 +1093,51 @@ if (!isset($_SESSION['role_id'])) {
                 </div>
             </div>
         </div>
+
+        <!-- Sweet Alert Show Start -->
+        <?php
+        if (isset($_SESSION['add_data_alert'])) {
+            if ($_SESSION['add_data_alert'] == 0) {
+                $id = 123; // Replace 123 with the actual ID you want to pass to the deletion action
+        ?>
+                <script>
+                    Swal.fire({
+                        title: 'ข้อมูลของคุณได้ถูกบันทึกแล้ว',
+                        text: 'กด Accept เพื่อออก',
+                        icon: 'success',
+                        confirmButtonText: 'Accept'
+                    });
+                </script>
+            <?php
+                unset($_SESSION['add_data_alert']);
+            } else if ($_SESSION['add_data_alert'] == 1) {
+            ?>
+                <script>
+                    Swal.fire({
+                        title: 'ข้อมูลของคุณไม่ได้ถูกบันทึก',
+                        text: 'กด Accept เพื่อออก',
+                        icon: 'error',
+                        confirmButtonText: 'Accept'
+                    });
+                </script>
+
+            <?php
+                unset($_SESSION['add_data_alert']);
+            } else if ($_SESSION['add_data_alert'] == 2) {
+            ?>
+                <script>
+                    Swal.fire({
+                        title: 'ข้อมูลของคุณได้ถูกลบแล้ว',
+                        text: 'กด Accept เพื่อออก',
+                        icon: 'success',
+                        confirmButtonText: 'Accept'
+                    });
+                </script>
+        <?php unset($_SESSION['add_data_alert']);
+            }
+        }
+        ?>
+        <!-- Sweet Alert Show End -->
 
         <!-- Bootstrap core JavaScript-->
         <script src="vendor/jquery/jquery.min.js"></script>
