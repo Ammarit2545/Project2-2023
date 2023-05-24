@@ -466,6 +466,8 @@ if (!isset($_SESSION['role_id'])) {
                                 <div id="cancel_value_code" style="display: none;">
                                     <hr>
                                     <br>
+                                    <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
+                                    <br>
                                     <form id="cancel_status_id" action="action/status/add_cencel_status.php" method="POST" enctype="multipart/form-data">
                                         <label for="cancelFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : red"> ปฏิเสธการซ่อม</p> :</label>
                                         <textarea class="form-control" name="rs_detail" id="cancelFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการปฏิเสธการซ่อม"></textarea>
@@ -598,10 +600,13 @@ if (!isset($_SESSION['role_id'])) {
                                 <div id="detail_value_code" style="display: none;">
                                     <hr>
                                     <br>
+                                    <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
+                                    <br>
                                     <form id="detail_status_id" action="action/status/add_detail_status.php" method="POST" enctype="multipart/form-data">
-                                        <label for="DetailFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : green"> รายละเอียด</p> :</label>
+                                        <label for="DetailFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการส่ง <p style="display:inline; color : green"> รายละเอียด</p> :</label>
                                         <textarea class="form-control" name="rs_detail" id="DetailFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม"></textarea>
                                         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
+                                        <input type="hidden" name="cardCount" id="cardCountInput" value="0">
                                         <br>
 
                                         <div class="mb-3">
@@ -797,7 +802,6 @@ if (!isset($_SESSION['role_id'])) {
                                                 <label for="exampleFormControlTextarea1" class="form-label">ex2 :</label>
                                                 <textarea class="form-control" name="ex2" id="exampleFormControlTextarea2" rows="3" required></textarea>
                                             </div>
-
 
                                             <script>
                                                 function toggleEx1Textarea() {
