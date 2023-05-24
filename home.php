@@ -4,29 +4,29 @@ session_start();
 include('database/condb.php');
 
 if ($_SESSION["log_login"] == 0) {
-    $_SESSION["log_login"] = 1;
+  $_SESSION["log_login"] = 1;
 ?>
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'SweetAlert!',
-            text: 'Your session login value is 0.',
-            showConfirmButton: false,
-            timer: 3000
-        });
-    </script>
+  <script>
+    Swal.fire({
+      icon: 'success',
+      title: 'SweetAlert!',
+      text: 'Your session login value is 0.',
+      showConfirmButton: false,
+      timer: 3000
+    });
+  </script>
 <?php
 } elseif ($_SESSION["log_login"] == 2) {
-    $_SESSION["log_login"] = 1;
+  $_SESSION["log_login"] = 1;
 ?>
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Something went wrong!',
-            footer: '<a href="home.php">Why do I have this issue?</a>'
-        });
-    </script>
+  <script>
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Something went wrong!',
+      footer: '<a href="home.php">Why do I have this issue?</a>'
+    });
+  </script>
 <?php
 }
 ?>
@@ -66,6 +66,7 @@ if ($_SESSION["log_login"] == 0) {
   <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 
   <link rel="icon" type="image/x-icon" href="img brand/anelogo.jpg">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 
 <body>
@@ -427,6 +428,40 @@ if ($_SESSION["log_login"] == 0) {
   include('footer/footer.php')
   ?>
   <!-- end footer-->
+
+  <!-- Sweet Alert Show Start -->
+  <?php
+  if (isset($_SESSION['add_data_alert'])) {
+    if ($_SESSION['add_data_alert'] == 0) {
+      $id = 123; // Replace 123 with the actual ID you want to pass to the deletion action
+  ?>
+      <script>
+        Swal.fire({
+          title: 'เข้าสู่ระบบเสร็จสิ้น',
+          text: 'กด Accept เพื่อออก',
+          icon: 'success',
+          confirmButtonText: 'Accept'
+        });
+      </script>
+    <?php
+      unset($_SESSION['add_data_alert']);
+    } else if ($_SESSION['add_data_alert'] == 1) {
+    ?>
+      <script>
+        Swal.fire({
+          title: 'ข้อมูล Email กับ Password \nไม่ถูกต้อง ',
+          text: 'กด Accept เพื่อออก',
+          icon: 'error',
+          confirmButtonText: 'Accept'
+        });
+      </script>
+
+    <?php
+      unset($_SESSION['add_data_alert']);
+    } 
+  }
+  ?>
+  <!-- Sweet Alert Show End -->
 
   <script>
     // Show full page LoadingOverlay

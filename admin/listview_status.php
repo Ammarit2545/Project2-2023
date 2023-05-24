@@ -336,19 +336,20 @@ if (!isset($_SESSION['role_id'])) {
                             confirmButtonText: 'Accept'
                         });
                     </script>
-            <?php
-                }else if ($_SESSION['add_data_alert'] == 2) {
-                    ?>
-                        <script>
-                            Swal.fire({
-                                title: 'ข้อมูลของคุณได้ถูกลบแล้ว',
-                                text: 'กด Accept เพื่อออก',
-                                icon: 'success',
-                                confirmButtonText: 'Accept'
-                            });
-                        </script>
-                <?php unset($_SESSION['add_data_alert']);
-                    }
+                <?php
+                    unset($_SESSION['add_data_alert']);
+                } else if ($_SESSION['add_data_alert'] == 2) {
+                ?>
+                    <script>
+                        Swal.fire({
+                            title: 'ข้อมูลของคุณได้ถูกลบแล้ว',
+                            text: 'กด Accept เพื่อออก',
+                            icon: 'success',
+                            confirmButtonText: 'Accept'
+                        });
+                    </script>
+            <?php unset($_SESSION['add_data_alert']);
+                }
             }
             ?>
 

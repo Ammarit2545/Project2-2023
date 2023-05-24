@@ -46,13 +46,13 @@ if(!isset($_SESSION["id"])){
             <div class="row">
                 <div class="col-6">
                     <center>
-                        <a href="repair_gua.php" type="button" class="button">มีประกันทางร้าน</a>
+                        <a href="repair_gua.php" type="button" style="font-size: 1.2rem;" class="button">มีประกันทางร้าน</a>
                     </center>
                 </div>
 
                 <div class="col-6">
                     <center>
-                        <a href="repair_non_gua.php" type="button" class="button">ไม่มีประกันทางร้าน</a>
+                        <a href="repair_non_gua.php" type="button" class="button" style="font-size: 1.2rem;">ไม่มีประกันทางร้าน</a>
                     </center>
                 </div>
             </div>
