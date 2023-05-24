@@ -199,7 +199,7 @@ if (!isset($_SESSION['role_id'])) {
                                                     <button type="button" class="btn btn-warning" onclick="window.location.href='edit_status.php?id=<?= $row['status_id'] ?>'">แก้ไข</button>&nbsp; &nbsp;
                                                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-                                                    <!-- JavaScript function for confirmation Sweet Alert-->
+                                                    <!-- JavaScript function for confirmation Sweet Alert Version2-->
                                                     <script>
                                                         function confirmDelete(id) {
                                                             Swal.fire({
