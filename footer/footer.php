@@ -46,9 +46,10 @@
 <footer class="mt-4 "style="background: #E7F0FE;">
   <div class="container">
     <div class="row py-4">
-      <div class="col-lg-5 col-md-6 mb-4 mb-lg-0"><img src="img/logo.png" alt="" width="180" class="mb-3">
-        <h3 class="font-italic text-uppercase" style="color: #000141;">Anan Electronic</h3>
-        <p>Anan Electronic พร้อมให้บริการด้วยคุณภาพจากผู้ชำนาญการพิเศษด้านเครื่องดนตรี ที่มีประสบการณ์ด้านการซ่อมยาวนาน ผ่านการฝึกอบรม เพื่อรองรับทุกปัญหาของคุณด้วยคุณภาพสูงสุด</p>
+      <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+        <img src="img brand/anelogo.png" alt="" width="180" class="mb-3">
+        <!-- <h3 class="font-italic text-uppercase" style="color: #000141;">Anan Electronic</h3> -->
+        <p> พร้อมให้บริการด้วยคุณภาพจากผู้ชำนาญการพิเศษด้านเครื่องดนตรี ที่มีประสบการณ์ด้านการซ่อมยาวนาน ผ่านการฝึกอบรม เพื่อรองรับทุกปัญหาของคุณด้วยคุณภาพสูงสุด</p>
         <!-- <ul class="list-inline mt-4">
           <li class="list-inline-item"><a href="#" target="_blank" title="twitter"><i class="fa fa-twitter" >a</i></a></li>
           <li class="list-inline-item"><a href="#" target="_blank" title="facebook"><i class="fa fa-facebook" >a</i></a></li>
@@ -60,8 +61,8 @@
       <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
         <h5 class="text-uppercase font-weight-bold mb-4">ติดต่อเรา</h5>
         <ul class="list-unstyled mb-0">
-          <li class="mb-2"><a href="#" class="" style="text-decoration: none; color: black;">TEL : 00-0000-0000</a></li>
-          <li class="mb-2"><a href="#" class="" style="text-decoration: none; color: black;">E-MAIL : Anan_Electronic@gmail.com</a></li>
+          <li class="mb-2"><a href="#" class="" style="text-decoration: none; color: black;">Tel : 085-699-3391</a></li>
+          <li class="mb-2"><a href="#" class="" style="text-decoration: none; color: black;">Email : Anan_Electronic@gmail.com</a></li>
           <li class="mb-2"><img src="img icon/line.png" alt="" style=" width: 30px; height: 30px; border-radius: 100%;"><a href="#" class="" style="text-decoration: none; color: black;"> : Anan_Electronic</a></li>
           <li class="mb-2"><img src="img icon/Facebook.png" alt="" style=" width: 30px; height: 30px; border-radius: 100%;"><a href="#" class="" style="text-decoration: none; color: black;"> : Anan_Electronic</a></li>
         </ul>
