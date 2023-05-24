@@ -1,4 +1,5 @@
 <?php
+session_start();
 include('../../database/condb.php');
 
 foreach($_POST as $key => $value) {
@@ -16,7 +17,9 @@ $result = mysqli_query($conn, $sql);
 if($result){
     echo "<script>alert('Update success');</script>";
     header('Location:../listview_status.php');
+    $_SESSION["add_data_alert"] = 0 ;
 }else{
     echo "<script>alert('Update unsuccess');</script>";
     header('Location:../listview_status.php');
+    $_SESSION["add_data_alert"] = 1 ;
 }

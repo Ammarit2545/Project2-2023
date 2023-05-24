@@ -30,6 +30,7 @@ if (!isset($_SESSION['role_id'])) {
 
     <!-- Custom styles for this page -->
     <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 </head>
 
@@ -59,7 +60,7 @@ if (!isset($_SESSION['role_id'])) {
                 $row = mysqli_fetch_array($result);
                 ?>
                 <!-- End of Topbar -->
-                <form action="action/edit_status.php" method="POST">
+                <form id="edit_status" action="action/edit_status.php" method="POST">
 
                     <div class="container-fluid">
 
@@ -161,7 +162,30 @@ if (!isset($_SESSION['role_id'])) {
 
 
                                         <div class="col-md-3">
-                                            <button type="submit" class="btn btn-success" onclick="return confirm('Are You Sure You Want to Insert This New Parts Type Information?')">ยืนยัน</button>
+                                            <button type="submit" class="btn btn-success" onclick="showConfirmation(event)">ยืนยัน</button>
+
+                                            <script>
+                                                function showConfirmation(event) {
+                                                    event.preventDefault(); // Prevent the form from being submitted
+
+                                                    Swal.fire({
+                                                        title: 'คุณแน่ใจหรือไม่?',
+                                                        text: 'คุณต้องการส่งข้อมูลนี้หรือไม่',
+                                                        icon: 'question',
+                                                        showCancelButton: true,
+                                                        confirmButtonColor: '#3085d6',
+                                                        cancelButtonColor: '#d33',
+                                                        confirmButtonText: 'ใช่',
+                                                        cancelButtonText: 'ไม่'
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            // User confirmed, submit the form
+                                                            document.getElementById('edit_status').submit();
+                                                        }
+                                                    });
+                                                }
+                                            </script>
+
                                         </div>
                                     </div>
                                 </div>
