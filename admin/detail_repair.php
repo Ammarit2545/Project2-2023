@@ -435,15 +435,51 @@ if (!isset($_SESSION['role_id'])) {
                                             </div>
                                             <div class="mb-3">
                                                 <label for="exampleFormControlInput1" class="form-label">สถานะ</label>&nbsp;&nbsp;
-                                                <select class="form-select" name="status_id" aria-label="Default select example">
+                                                <select class="form-select" name="status_id" aria-label="Default select example" onchange="toggleEx1Textarea()">
                                                     <option selected>เลือกสถานะ</option>
                                                     <?php
                                                     $sql_s = "SELECT * FROM status_type WHERE del_flg = '0' ORDER BY status_name ASC";
                                                     $result_s = mysqli_query($conn, $sql_s);
                                                     while ($row_s = mysqli_fetch_array($result_s)) {
-                                                    ?><option value="<?= $row_s['status_id'] ?>"><?= $row_s['status_name'] ?></option><?php } ?>
+                                                    ?><option value="<?= $row_s['status_id'] ?>"><?= $row_s['status_name'] ?></option><?php
+                                                                                                                                    }
+                                                                                                                                        ?>
                                                 </select>
                                             </div>
+
+                                            <div class="mb-3" id="ex1Textarea" style="display: none;">
+                                                <label for="exampleFormControlTextarea1" class="form-label">ex1 :</label>
+                                                <textarea class="form-control" name="ex1" id="exampleFormControlTextarea1" rows="3" required></textarea>
+                                            </div>
+                                            <div class="mb-3" id="ex2Textarea" style="display: none;">
+                                                <label for="exampleFormControlTextarea1" class="form-label">ex2 :</label>
+                                                <textarea class="form-control" name="ex2" id="exampleFormControlTextarea2" rows="3" required></textarea>
+                                            </div>
+
+                                            <script>
+                                                function toggleEx1Textarea() {
+                                                    var statusSelect = document.querySelector('select[name="status_id"]');
+                                                    var ex1Textarea = document.getElementById('ex1Textarea');
+                                                    var ex2Textarea = document.getElementById('ex2Textarea');
+                                                    if (statusSelect.value == 2) {
+                                                        ex1Textarea.style.display = 'block';
+                                                        document.getElementById('exampleFormControlTextarea1').required = true;
+                                                        ex2Textarea.style.display = 'block';
+                                                        document.getElementById('exampleFormControlTextarea2').required = true;
+                                                    } else if (statusSelect.value == 3) {
+                                                        ex1Textarea.style.display = 'block';
+                                                        document.getElementById('exampleFormControlTextarea1').required = true;
+                                                        ex2Textarea.style.display = 'none';
+                                                        document.getElementById('exampleFormControlTextarea2').required = false;
+                                                    } else {
+                                                        ex1Textarea.style.display = 'none';
+                                                        document.getElementById('exampleFormControlTextarea1').required = false;
+                                                        ex2Textarea.style.display = 'none';
+                                                        document.getElementById('exampleFormControlTextarea2').required = false;
+                                                    }
+                                                }
+                                            </script>
+
 
 
                                             <div class="mb-3">

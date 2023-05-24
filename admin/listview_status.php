@@ -110,7 +110,7 @@ if (!isset($_SESSION['role_id'])) {
                                         </div>
                                     </div>
                                 </div>
-                               
+
                             </div>
                         </div>
 
@@ -146,6 +146,7 @@ if (!isset($_SESSION['role_id'])) {
                                             <th>ลำดับที่</th>
                                             <th>ชื่อ</th>
                                             <th>สี</th>
+                                            <th>Value_code (ชื่อย่อ)</th>
                                             <th>ปุ่มดำเนินการ</th>
                                         </tr>
                                     </thead>
@@ -178,9 +179,17 @@ if (!isset($_SESSION['role_id'])) {
                                                     if ($row['status_color'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        ?>
-                                                        <button class="btn btn-light" style="background-color:<?= $row['status_color']?>; color:white"><?= $row['status_color'] ?></button>
-                                                        <?php
+                                                    ?>
+                                                        <button class="btn btn-light" style="background-color:<?= $row['status_color'] ?>; color:white"><?= $row['status_color'] ?></button>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['value_code'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['value_code'];
                                                     }
                                                     ?>
                                                 </td>

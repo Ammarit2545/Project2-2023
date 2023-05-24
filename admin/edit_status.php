@@ -55,7 +55,7 @@ if (!isset($_SESSION['role_id'])) {
                 include('bar/topbar_admin.php');
                 $status_id = $_GET['id'];
                 $sql = "SELECT * FROM status_type WHERE status_id = '$status_id' AND del_flg = '0'";
-                $result = mysqli_query($conn ,$sql);
+                $result = mysqli_query($conn, $sql);
                 $row = mysqli_fetch_array($result);
                 ?>
                 <!-- End of Topbar -->
@@ -70,10 +70,10 @@ if (!isset($_SESSION['role_id'])) {
 
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-1 col-form-label">ประเภทสถานะ</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <div class="form-group">
                                     <div class="row">
-                                        <div class="col-md-9">
+                                        <div class="col-md-10">
                                             <input type="text" name="status_name" id="inputstatus_name" class="form-control" id="staticEmail" onblur="checkStatus()" placeholder="กรุณาใส่ประเภทที่ต้องการเพิ่มอะไหล่" value="<?= $row['status_name'] ?>" required>
                                             <span id="part-type-error" style="color:red;display:none;">ข้อมูลนี้มีอยู่ในระบบแล้ว</span>
                                         </div>
@@ -101,21 +101,71 @@ if (!isset($_SESSION['role_id'])) {
                                     }
                                 </script>
                             </div>
-                            <label for="staticEmail" class="col-sm-1 col-form-label">สีของสถานะ</label>
+                            <label for="staticEmail" class="col-sm-0 col-form-label">สีของสถานะ</label>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <input type="color" name="status_color" id="inputstatus_name" class="form-control" id="staticEmail" placeholder="กรุณากรอกสีที่ต้องการ (ตัวอย่าง 'red')" value="<?= $row['status_color'] ?>" required>
+                                            <input type="text" name="status_id" class="form-control" id="staticEmail" placeholder="กรุณากรอกสีที่ต้องการ (ตัวอย่าง 'red')" value="<?= $row['status_id'] ?>" required hidden>
+                                            <span id="part-type-error" style="color:red;display:none;">ข้อมูลนี้มีอยู่ในระบบแล้ว</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <label for="staticEmail" class="col-sm-1 col-form-label" style="font-size: 80%;">Value Code (ชื่อย่อ)</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <div class="row">
-                                        <div class="col-md-9">
-                                        <input type="color" name="status_color" id="inputstatus_name" class="form-control" id="staticEmail" placeholder="กรุณากรอกสีที่ต้องการ (ตัวอย่าง 'red')" value="<?= $row['status_color'] ?>" required>
-                                        <input type="text" name="status_id"  class="form-control" id="staticEmail" placeholder="กรุณากรอกสีที่ต้องการ (ตัวอย่าง 'red')" value="<?= $row['status_id'] ?>" required hidden>
+                                        <!-- <div class="col-md-7">
+                                        <input type="text" name="status_color" id="inputstatus_name" class="form-control" id="staticEmail" placeholder="กรุณากรอกสีที่ต้องการ (ตัวอย่าง 'red')" value="<?= $row['value_code'] ?>" required>
                                             <span id="part-type-error" style="color:red;display:none;">ข้อมูลนี้มีอยู่ในระบบแล้ว</span>
+                                        </div> -->
+                                        <div class="col-md-7">
+                                            <input type="text" name="value_code" id="inputvalue_code" class="form-control" onblur="checkValue()" placeholder="กรุณาใส่ประเภทที่ต้องการเพิ่มอะไหล่" value="<?= $row['value_code'] ?>" required>
+                                            <span id="part-value-error" style="color: red; display: none;">ข้อมูลนี้มีอยู่ในระบบแล้ว</span>
+                                            <span id="word-count-error" style="color: red; display: none;">กรุณาใส่คำที่มีจำนวนมากกว่า 6 คำ</span>
                                         </div>
+
+                                        <script>
+                                            function checkValue() {
+                                                var value_code = document.getElementById('inputvalue_code').value;
+                                                var words = value_code.trim().split(/\s+/); // Split input value by whitespace
+                                                var xhttp = new XMLHttpRequest();
+                                                xhttp.onreadystatechange = function() {
+                                                    if (this.readyState == 4 && this.status == 200) {
+                                                        if (this.responseText == 'exists') {
+                                                            document.getElementById('part-value-error').style.display = 'block';
+                                                            document.getElementById('word-count-error').style.display = 'none';
+                                                            document.getElementById('inputvalue_code').setCustomValidity('มีข้อมูลอยู่แล้ว');
+                                                            document.getElementById('submit-button').disabled = true; // Disable the submit button
+                                                        } else {
+                                                            document.getElementById('part-value-error').style.display = 'none';
+                                                            if (words.length > 6) {
+                                                                document.getElementById('word-count-error').style.display = 'block';
+                                                                document.getElementById('inputvalue_code').setCustomValidity('กรุณาใส่คำที่มีจำนวนมากกว่า 6 คำ');
+                                                                document.getElementById('submit-button').disabled = true; // Disable the submit button
+                                                            } else {
+                                                                document.getElementById('word-count-error').style.display = 'none';
+                                                                document.getElementById('inputvalue_code').setCustomValidity('');
+                                                                document.getElementById('submit-button').disabled = false; // Enable the submit button
+                                                            }
+                                                        }
+                                                    }
+                                                };
+                                                xhttp.open('GET', 'action/check_value_code.php?value_code=' + value_code, true);
+                                                xhttp.send();
+                                            }
+                                        </script>
+
+
                                         <div class="col-md-3">
                                             <button type="submit" class="btn btn-success" onclick="return confirm('Are You Sure You Want to Insert This New Parts Type Information?')">ยืนยัน</button>
                                         </div>
                                     </div>
                                 </div>
-                               
+
                             </div>
                         </div>
                     </div>
@@ -128,9 +178,9 @@ if (!isset($_SESSION['role_id'])) {
 
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
-               <?php
-               include('bar/admin_footer.php');
-               ?>
+                <?php
+                include('bar/admin_footer.php');
+                ?>
             </footer>
             <!-- End of Footer -->
 

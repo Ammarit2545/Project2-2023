@@ -2,6 +2,8 @@
     session_start();
     include '../database/condb.php';
 
+
+
     $email = $_POST['email'];
     $password = $_POST['password'];
     
@@ -22,6 +24,7 @@
         $_SESSION["lname"] = $row['m_lname'];
         $_SESSION['Error'] = "";
         $_SESSION["address"] = $row['m_add'];
+        $_SESSION["log_login"] = 0;
         echo "ture";
 
         $m_id = $row['m_id'];
@@ -71,6 +74,7 @@
         header("location: ../admin");
         // exit(); // Terminate the current script
         }else{
+            $_SESSION["log_login"] = 2;
             $_SESSION["Error"] = "<p>Your username or password is invalid.</p>";
         echo "false";
         header("location: ../home.php");

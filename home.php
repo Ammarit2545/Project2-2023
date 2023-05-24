@@ -1,10 +1,37 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php
 session_start();
+include('database/condb.php');
 
-// git remote add origin https://github.com/Ammarit2545/Final-Project-2023.git
-
-
+if ($_SESSION["log_login"] == 0) {
+    $_SESSION["log_login"] = 1;
 ?>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'SweetAlert!',
+            text: 'Your session login value is 0.',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+<?php
+} elseif ($_SESSION["log_login"] == 2) {
+    $_SESSION["log_login"] = 1;
+?>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong!',
+            footer: '<a href="home.php">Why do I have this issue?</a>'
+        });
+    </script>
+<?php
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 

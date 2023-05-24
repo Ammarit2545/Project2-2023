@@ -8,8 +8,9 @@ foreach($_POST as $key => $value) {
 $status_id = $_POST['status_id'];
 $status_name = $_POST['status_name'];
 $status_color = $_POST['status_color'];
+$value_code = $_POST['value_code'];
 
-$sql = "UPDATE status_type SET status_name = '$status_name' , status_color = '$status_color' WHERE status_id = '$status_id'";
+$sql = "UPDATE status_type SET status_name = '$status_name' , status_color = '$status_color' ,value_code = '$value_code' WHERE status_id = '$status_id'";
 $result = mysqli_query($conn, $sql);
 
 if($result){

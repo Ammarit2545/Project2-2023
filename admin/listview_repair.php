@@ -89,6 +89,20 @@ if (!isset($_SESSION['role_id'])) {
                                     </thead>
                                     <tbody>
                                         <?php
+                                        $i = 2;
+                                        if($i > 0){
+                                            $sql_nofi = "SELECT *
+                                        FROM get_repair
+                                        LEFT JOIN repair ON get_repair.r_id = repair.r_id
+                                        LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
+                                        LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
+                                        WHERE get_repair.del_flg = '0' AND  repair_status.status_id = '$i'
+                                        GROUP BY get_repair.get_r_id
+                                        ORDER BY get_repair.get_r_id DESC
+                                        ;
+                                         ";
+                                        }
+                                      else{
                                         $sql_nofi = "SELECT *
                                         FROM get_repair
                                         LEFT JOIN repair ON get_repair.r_id = repair.r_id
@@ -99,6 +113,10 @@ if (!isset($_SESSION['role_id'])) {
                                         ORDER BY get_repair.get_r_id DESC
                                         ;
                                          ";
+
+                                      }
+
+
                                         $result_nofi = mysqli_query($conn, $sql_nofi);
                                         $num_rows = mysqli_fetch_array($result_nofi_count);
                                         $i = 0;
