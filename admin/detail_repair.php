@@ -505,9 +505,6 @@ if (!isset($_SESSION['role_id'])) {
                                     }
                                 </script>
 
-
-
-
                                 <!-- สถานะ "รับเรื่องแล้ว" -->
                             <?php
                             } ?>
@@ -814,13 +811,13 @@ if (!isset($_SESSION['role_id'])) {
                             <?php
                             } ?>
 
-                            <?php if ($row['status_id'] == "4" && $row['rs_conf'] == 0) {
+                            <?php if ($row['status_id'] == "4" || $row['status_id'] == '17' && $row['rs_conf'] == 0) {
                                 include('status_option/cancel_conf.php');
                             } ?>
 
 
                             <?php
-                            if ($row['value_code'] == "succ" || $row['value_code'] == "cancel" || $row['value_code'] == "submit" || $row['value_code'] == "received" || $row['status_id'] == "11" || $row['status_id'] == "4" || $row['status_id'] == "3") {
+                            if ($row['value_code'] == "succ" || $row['value_code'] == "cancel" || $row['value_code'] == "submit" || $row['value_code'] == "received" || $row['status_id'] == "11" || $row['status_id'] == "4" || $row['status_id'] == "3" || $row['status_id'] == '17' ) {
                             ?>
                                 <form action="action/add_respond.php" method="POST" enctype="multipart/form-data" style="display:none">
                                 <?php

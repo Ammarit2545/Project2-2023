@@ -10,6 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $get_r_id = $_POST['get_r_id'];
 $rs_detail = $_POST['rs_detail'];
+$status_id = $_POST['status_id'];
+$get_wages = $_POST['get_wages'];
 $e_id = $_SESSION["id"];
 
 // Retrieve the parts data
@@ -27,7 +29,7 @@ for ($i = 1; $i <= $cardCount; $i++) {
 $sql = "SELECT rd_value_parts ,p_id FROM repair_detail 
             LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id 
             LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id 
-            WHERE get_repair.get_r_id ='$get_r_id' AND repair_detail.del_flg = '1'";
+            WHERE get_repair.get_r_id ='$get_r_id' AND repair_detail.del_flg = '1' AND repair_detail.rs_id = '$status_id'";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
@@ -44,6 +46,7 @@ if ($row[0] > 0) {
     $result = mysqli_query($conn, $sql);
 
     if ($result) {
+
         // หาข้อมูลอะไหล่ ไอดี จำนวน
         $sql = "SELECT rd_value_parts ,p_id FROM repair_detail 
                 LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id 
@@ -62,6 +65,13 @@ if ($row[0] > 0) {
         $result = mysqli_query($conn, $sql);
 
         if ($result) {
+
+            if ($get_wages != NULL) {
+                // อัพเดตค่าอะไหล่ที่ไม่ใช่กลับคืนไปสู้คลัง
+                $sql = "UPDATE get_repair SET get_wages = '$get_wages' WHERE get_r_id = '$get_r_id '";
+                $result = mysqli_query($conn, $sql);
+            }
+
             // if it does not already have data
             $sql_e = "INSERT INTO repair_status (get_r_id, rs_detail, rs_date_time, status_id, e_id)
                     VALUES ('$get_r_id', '$rs_detail', NOW(), '17', '$e_id')";
@@ -128,30 +138,31 @@ if ($row[0] > 0) {
                             }
                         }
                     }
-                }if ($result_e) {
+                }
+                if ($result_e) {
                     // Process parts data
                     foreach ($parts as $part) {
                         $partId = $part['partId'];
                         $quantity = $part['quantity'];
-        
+
                         // Insert data into repair_detail table
                         $sql_s = "SELECT * FROM parts WHERE del_flg = '0' AND p_id = '$partId'";
                         $result_s = mysqli_query($conn, $sql_s);
-        
+
                         if ($result_s && mysqli_num_rows($result_s) > 0) {
                             $row_s = mysqli_fetch_array($result_s);
                             $p_stock = $row_s['p_stock'] - $quantity;
                             $total_s = $row_s['p_price'] * $quantity;
-        
+
                             $sql3 = "INSERT INTO repair_detail (`p_id`, `rd_value_parts`, `rd_parts_price`, `rs_id`, `rd_date_in`)
                         VALUES ('$partId', '$quantity', '$total_s', '$rs_id', NOW())";
                             $result3 = mysqli_query($conn, $sql3);
-        
+
                             if ($result3) {
                                 // Update parts stock in the parts table
                                 $sql_u = "UPDATE `parts` SET `p_stock` = `p_stock` - '$quantity', `p_date_update` = NOW() WHERE `p_id` = '$partId'";
                                 $result_u = mysqli_query($conn, $sql_u);
-        
+
                                 if (!$result_u) {
                                     // Handle the case when the update query fails
                                     // ...
