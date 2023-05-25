@@ -27,14 +27,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo $rs_detail;
 }
 $get_r_id = $_POST['get_r_id'];
+$status_id = $_POST['status_id'];
 echo $get_r_id;
 
-$sql = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' AND del_flg = '0' AND status_id = '4' ORDER BY rs_date_time DESC";
+$sql = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' AND del_flg = '0' AND status_id = '$status_id' ORDER BY rs_date_time DESC";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
 if ($row['rs_id'] > 0) {
-    $sql_c = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' AND del_flg = '0' AND status_id = '4' AND rs_conf = '1' ORDER BY rs_date_time DESC";
+    $sql_c = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' AND del_flg = '0' AND status_id = '$status_id' AND rs_conf = '1' ORDER BY rs_date_time DESC";
     $result_c = mysqli_query($conn, $sql_c);
     $row_c = mysqli_fetch_array($result_c);
 

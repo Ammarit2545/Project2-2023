@@ -151,7 +151,7 @@
                                         <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่</label>
                                         <div class="input-group mb-3">
                                             <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
-                                            <input name="get_wages" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" required>
+                                            <input name="get_wages" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="<?= $row['get_wages'] ?>" required>
                                         </div>
                                         <br>
                                         <div class="mb-3">

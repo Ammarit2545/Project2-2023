@@ -2,6 +2,8 @@
 session_start();
 include('database/condb.php');
 $id = $_SESSION['id'];
+$status_id = 0;
+
 
 $sql1 = "SELECT * FROM member WHERE m_id = '$id '";
 $result1 = mysqli_query($conn, $sql1);
@@ -175,6 +177,8 @@ if ($row1[0] == NULL) {
                             $dateString = date('d-m-Y', strtotime($row1['rs_date_time']));
                             $date = DateTime::createFromFormat('d-m-Y', $dateString);
                             $formattedDate = $date->format('d F Y');
+
+                            $status_id = $row1['status_id'];
                         ?>
                             <hr style="border: 5px solid black;">
                             <li>
@@ -281,7 +285,6 @@ if ($row1[0] == NULL) {
                                     }
                                 </script>
 
-
                                 <div id="modal" class="modal">
                                     <span class="close" onclick="closeModal()">&times;</span>
                                     <img id="modal-image" src="" alt="Modal Photo">
@@ -318,6 +321,7 @@ if ($row1[0] == NULL) {
                                     <script>
                                         document.addEventListener('DOMContentLoaded', function() {
                                             var id_get_r = <?php echo json_encode($id_get_r); ?>; // Pass PHP variable to JavaScript
+                                            var status_id = <?php echo json_encode($status_id); ?>; // Pass PHP variable to JavaScript
 
                                             document.getElementById('confirmButtonSuccess').addEventListener('click', function() {
                                                 Swal.fire({
@@ -329,7 +333,7 @@ if ($row1[0] == NULL) {
                                                     cancelButtonText: 'ยกเลิก'
                                                 }).then((willConfirm) => {
                                                     if (willConfirm.isConfirmed) {
-                                                        window.location.href = "action/conf_part.php?id=" + id_get_r; // Redirect with the passed value
+                                                        window.location.href = "action/conf_part.php?id=" + id_get_r + "&status_id=" + status_id; // Redirect with the passed value
                                                     }
                                                 });
                                             });
@@ -345,7 +349,7 @@ if ($row1[0] == NULL) {
                                             <hr>
                                             <h4 style="color: red">โปรดระบุเหตุผลที่ยกเลิก</h4>
                                             <input type="text" name="get_r_id" value="<?= $id_get_r ?>" hidden>
-
+                                            <input type="text" name="status_id" value="<?= $status_id ?>" hidden>
                                             <label>
                                                 <input class="form-check-input" type="checkbox" name="checkbox1" value="ต้องการยกเลิกคำสั่งซ่อม" onclick="uncheckOtherCheckboxes('checkbox1')">
                                                 ต้องการยกเลิกคำสั่งซ่อม
@@ -436,7 +440,6 @@ if ($row1[0] == NULL) {
                                             conf.style.display = "none";
                                         }
 
-
                                         function hideDiv() {
                                             var div = document.getElementById("myDiv");
                                             var conf = document.getElementById("confirmButtonSuccess");
@@ -518,7 +521,7 @@ if ($row1[0] == NULL) {
     }
     ?>
     <!-- Sweet Alert Show End -->
-
+    <br><br>
     <!-- Place this in the <head> section of your HTML document -->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
