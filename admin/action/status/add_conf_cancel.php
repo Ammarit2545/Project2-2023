@@ -10,24 +10,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $get_r_id = $_POST['get_r_id'];
 $rs_detail = $_POST['rs_detail'];
-$get_wages = $_POST['get_wages'];
 $e_id = $_SESSION["id"];
-
-// Retrieve the parts data
-$parts = array();
-$cardCount = $_POST['cardCount']; // Assuming you're passing the card count as a hidden input field
-for ($i = 1; $i <= $cardCount; $i++) {
-    $partId = $_POST['p_id' . $i];
-    $quantity = $_POST['value_p' . $i];
-    $parts[] = array(
-        'partId' => $partId,
-        'quantity' => $quantity
-    );
-}
 
 $sql = "SELECT * FROM repair_status 
         LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
-        WHERE repair_status.get_r_id = '$get_r_id' AND repair_status.rs_detail = '$rs_detail' AND repair_status.status_id = '4'  ";
+        WHERE repair_status.get_r_id = '$get_r_id' AND repair_status.rs_detail = '$rs_detail' AND repair_status.status_id = '12' OR status_type.value_code ='refuse' ";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
@@ -37,13 +24,9 @@ if ($row[0] > 0) {
     $_SESSION["add_data_alert"] = 1;
     header("Location: ../../detail_repair.php?id=$get_r_id");
 } else {
-
-    $sql_g = "UPDATE `get_repair` SET `get_wages` = '$get_wages' WHERE `get_r_id` = '$get_r_id' AND del_flg = 0";
-    $result_g = mysqli_query($conn, $sql_g);
-
     // if it does not already have data
     $sql_e = "INSERT INTO repair_status (get_r_id, rs_detail, rs_date_time, status_id, e_id)
-              VALUES ('$get_r_id', '$rs_detail', NOW(), '4', '$e_id')";
+              VALUES ('$get_r_id', '$rs_detail', NOW(), '12', '$e_id')";
     $result_e = mysqli_query($conn, $sql_e);
 
     $rs_id = mysqli_insert_id($conn);
@@ -108,50 +91,8 @@ if ($row[0] > 0) {
                 }
             }
         }
-        if ($result_e) {
-            // Process parts data
-            foreach ($parts as $part) {
-                $partId = $part['partId'];
-                $quantity = $part['quantity'];
-
-                // Insert data into repair_detail table
-                $sql_s = "SELECT * FROM parts WHERE del_flg = '0' AND p_id = '$partId'";
-                $result_s = mysqli_query($conn, $sql_s);
-
-                if ($result_s && mysqli_num_rows($result_s) > 0) {
-                    $row_s = mysqli_fetch_array($result_s);
-                    $p_stock = $row_s['p_stock'] - $quantity;
-                    $total_s = $row_s['p_price'] * $quantity;
-
-                    $sql3 = "INSERT INTO repair_detail (`p_id`, `rd_value_parts`, `rd_parts_price`, `rs_id`, `rd_date_in`)
-                VALUES ('$partId', '$quantity', '$total_s', '$rs_id', NOW())";
-                    $result3 = mysqli_query($conn, $sql3);
-
-                    if ($result3) {
-                        // Update parts stock in the parts table
-                        $sql_u = "UPDATE `parts` SET `p_stock` = `p_stock` - '$quantity', `p_date_update` = NOW() WHERE `p_id` = '$partId'";
-                        $result_u = mysqli_query($conn, $sql_u);
-
-                        if (!$result_u) {
-                            // Handle the case when the update query fails
-                            // ...
-                        }
-                    } else {
-                        // Handle the case when the insert query into repair_detail table fails
-                        // ...
-                    }
-                } else {
-                    // Handle the case when the select query for parts data fails or no rows are found
-                    // ...
-                }
-            }
-            // Redirect the user to a success page
-            $_SESSION["add_data_alert"] = 0;
-            header("Location: ../../detail_repair.php?id=$get_r_id");
-        } else {
-            // Handle the case when the insert query into repair_status table fails
-            $_SESSION["add_data_alert"] = 1;
-            header("Location: ../../detail_repair.php?id=$get_r_id");
-        }
+        $_SESSION["add_data_alert"] = 0;
+        header("Location: ../../detail_repair.php?id=$get_r_id");
     }
 }
+?>

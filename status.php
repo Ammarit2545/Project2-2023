@@ -135,7 +135,6 @@ if (isset($_GET["status_id"])) {
         <div class="col">
           <center>
             <ul class="nav nav-tabs" id="select_under">
-
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" style="box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);">ทั้งหมด</a>
                 <ul class="dropdown-menu">
@@ -150,7 +149,6 @@ if (isset($_GET["status_id"])) {
                   GROUP BY status_type.status_id 
                   ORDER BY status_type.status_id ASC;";
                   $result_s = mysqli_query($conn, $sql_s);
-
                   while ($row_s = mysqli_fetch_array($result_s)) { ?>
                     <li class="nav-item">
                     <li> <a class="dropdown-item" href="status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>"><?= $row_s['status_name'] ?>
@@ -158,16 +156,10 @@ if (isset($_GET["status_id"])) {
                       </a></li>
               </li>
             <?php } ?>
-
-
             </ul>
             </li>
-
             </ul>
           </center>
-
-
-
           <center>
             <ul class="nav nav-tabs" id="bar_under">
               <li class="nav-item">
@@ -229,15 +221,15 @@ if (isset($_GET["status_id"])) {
     <br>
     <?php if ($status_id < 0 || !isset($status_id)) { ?>
       <form class="search-form" action="status.php" method="GET">
-        <input type="text" name="search" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น" value="<?= $search ?>">
-        <input type="text" name="status_id" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น" value="<?= $status_id ?>" style="display : none ">
+        <input type="text" name="search" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น ,หมายเลขแจ้งซ่อม . . ." value="<?= $search ?>">
+        <input type="text" name="status_id" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น ,หมายเลขแจ้งซ่อม . . ." value="<?= $status_id ?>" style="display : none ">
         <button type="submit">Search</button>
       </form>
     <?php } else {
     ?>
       <form class="search-form" action="status.php" method="GET">
-        <input type="text" name="search" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น" value="<?= $search ?>">
-        <input type="text" name="status_id" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น" value="<?= $status_id ?>" style="display : none ">
+        <input type="text" name="search" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น ,หมายเลขแจ้งซ่อม . . ." value="<?= $search ?>">
+        <input type="text" name="status_id" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น ,หมายเลขแจ้งซ่อม . . ." value="<?= $status_id ?>" style="display : none ">
         <button type="submit">Search</button>
       </form>
     <?php
@@ -271,6 +263,8 @@ if (isset($_GET["status_id"])) {
             WHERE m_id = '$id' AND (repair.r_brand LIKE '%$search%' 
             OR repair.r_model LIKE '%$search%' 
             OR repair.r_serial_number LIKE '%$search%' 
+            OR repair.r_number_model LIKE '%$search%' 
+            OR get_repair.get_r_id LIKE '%$search%' 
             OR CONCAT(repair.r_brand,' ',repair.r_model) LIKE '%$search%' 
             OR CONCAT(repair.r_brand,'',repair.r_model) LIKE '%$search%') 
             ORDER BY get_repair.get_r_date_in DESC;";

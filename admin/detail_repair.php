@@ -186,7 +186,7 @@ if (!isset($_SESSION['role_id'])) {
                     LEFT JOIN member ON member.m_id = repair.m_id
                     LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id
                     LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
-                    WHERE get_repair.del_flg = '0' AND get_repair.get_r_id = '$get_r_id' ORDER BY rs_date_time DESC";
+                    WHERE get_repair.del_flg = '0' AND repair_status.del_flg = '0' AND get_repair.get_r_id = '$get_r_id' ORDER BY rs_date_time DESC";
                     $result = mysqli_query($conn, $sql);
                     $row = mysqli_fetch_array($result);
 
@@ -318,6 +318,15 @@ if (!isset($_SESSION['role_id'])) {
                                 </center>
                                 <br>
                             <?php
+                            } else if ($row['status_id'] == 4 || $row['status_id'] == 17 && $row['rs_conf'] == NULL) {
+                            ?>
+                                <div class="alert alert-warning" role="alert">
+                                    <center>
+                                        <h4>รอการตอบกลับจากสมาชิก</h4>
+                                    </center>
+                                </div>
+                                <br>
+                            <?php
                             }
                             ?>
                             <div class="mb-3 row">
@@ -393,6 +402,20 @@ if (!isset($_SESSION['role_id'])) {
                                 <label for="exampleFormControlTextarea1" class="col-form-label">รายละเอียด :</label>
                                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?= $row_s['rs_detail']  ?></textarea>
                             </div>
+
+                            <?php
+                            if($row_s['rs_cancel_detail'] != NULL ){
+                            ?>
+                            <hr>
+                            <div class="mb-3">
+                                <label for="exampleFormControlTextarea1" class="col-form-label btn btn-danger">เหตุผลการไม่ยืนยันกรซ่อม </label>
+                                <br><br>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?= $row_s['rs_cancel_detail']  ?></textarea>
+                            </div>
+                            <?php
+                            }
+                            ?>
+
                             <div class="mb-3">
                                 <?php
                                 $sql_pic3 = "SELECT * FROM repair_pic WHERE rs_id = '$rs_id' AND del_flg = 0 ";
@@ -421,7 +444,7 @@ if (!isset($_SESSION['role_id'])) {
                                     // $result_pic = mysqli_query($conn, $sql_pic);
                                     while ($row_pic = mysqli_fetch_array($result_pic)) {
                                         if ($row_pic[0] != NULL) { ?>
-                                            <a href="#"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModal(this)"></a>
+                                            <a href="#" style="margin-left: 20px;"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModal(this)"></a>
                                             <!-- <h2><?= $row_pic['rp_pic'] ?></h2> -->
                                         <?php
                                         } else { ?> <h2>ไม่มีข้อมูล</h2> <?php
@@ -639,7 +662,12 @@ if (!isset($_SESSION['role_id'])) {
                                         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
                                         <input type="hidden" name="cardCount" id="cardCountInput" value="0">
                                         <br>
-
+                                        <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่</label>
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
+                                            <input name="get_wages" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" required>
+                                        </div>
+                                        <br>
                                         <div class="mb-3">
                                             <h6>อะไหล่</h6>
                                             <div id="cardContainer" style="display: none;">
@@ -786,9 +814,13 @@ if (!isset($_SESSION['role_id'])) {
                             <?php
                             } ?>
 
+                            <?php if ($row['status_id'] == "4" && $row['rs_conf'] == 0) {
+                                include('status_option/cancel_conf.php');
+                            } ?>
+
 
                             <?php
-                            if ($row['value_code'] == "succ" || $row['value_code'] == "cancel" || $row['value_code'] == "submit" || $row['value_code'] == "received" || $row['status_id'] == "11") {
+                            if ($row['value_code'] == "succ" || $row['value_code'] == "cancel" || $row['value_code'] == "submit" || $row['value_code'] == "received" || $row['status_id'] == "11" || $row['status_id'] == "4" || $row['status_id'] == "3") {
                             ?>
                                 <form action="action/add_respond.php" method="POST" enctype="multipart/form-data" style="display:none">
                                 <?php

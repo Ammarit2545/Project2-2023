@@ -105,19 +105,19 @@ if (!isset($_SESSION['id'])) {
                                         JOIN parts ON parts.p_id = repair_detail.p_id
                                         LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
                                       WHERE
-                                        get_repair.del_flg = 0
+                                        get_repair.del_flg = 0 AND repair_detail.del_flg = 0
                                         AND get_repair.get_r_id = '$get_id'
                                       GROUP BY
                                         p_id;
                                         ";
                                         $result = mysqli_query($conn, $sql);
-
                                         while ($row = mysqli_fetch_array($result)) {
                                             $p_id = $row['p_id'];
                                             $rs_id = $row['rs_id'];
                                             $sql_count = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id' AND p_id = '$p_id'";
                                             $result_count = mysqli_query($conn, $sql_count);
                                             $row_count = mysqli_fetch_array($result_count);
+                                           
                                         ?>
                                             <tr>
                                                 <td><?php
@@ -220,6 +220,23 @@ if (!isset($_SESSION['id'])) {
                                             <td><?= number_format($total) ?></td>
                                             <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
                                         </tr>
+                                        <tr>
+                                            <?php
+                                            $sql_w = "SELECT get_wages FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
+                                            $result_w = mysqli_query($conn ,$sql_w);
+                                            $row_w = mysqli_fetch_array($result_w);
+                                            ?>
+                                            <td colspan="5">ค่าแรงช่าง</td>
+                                            <td colspan="2">ค่าแรง</td>
+                                            <td><?= number_format($row_w['get_wages']) ?></td>
+                                            <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5"></td>
+                                            <td colspan="2">ราคารวมทั้งหมด</td>
+                                            <td><h5><?= number_format($total + $row_w['get_wages']) ?> </h5></td>
+                                            <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -229,9 +246,9 @@ if (!isset($_SESSION['id'])) {
                 </div>
                 <!-- /.container-fluid -->
                 <center>
-                    <a class="btn btn-danger">ไม่ทำการยืนยัน</a>
+                    <!-- <a class="btn btn-danger">ไม่ทำการยืนยัน</a> -->
                     <!-- Add your button -->
-                    <a class="btn btn-success" id="confirmButton">ยืนยัน</a>
+                    <!-- <a class="btn btn-success" id="confirmButton">ยืนยัน</a> -->
 
                     <!-- <a class="btn btn-danger">ไม่ทำการยืนยัน</a>
                     <a class="btn btn-success" id="confirmButton">ยืนยัน</a>  -->

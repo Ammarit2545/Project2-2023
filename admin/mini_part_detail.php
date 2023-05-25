@@ -99,7 +99,7 @@ if (!isset($_SESSION['role_id'])) {
                                         JOIN parts ON parts.p_id = repair_detail.p_id
                                         LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
                                       WHERE
-                                        get_repair.del_flg = 0
+                                        get_repair.del_flg = 0 AND repair_detail.del_flg = '0'
                                         AND get_repair.get_r_id = '$get_id'
                                       GROUP BY
                                         p_id;

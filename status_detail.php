@@ -20,7 +20,6 @@ if ($row1[0] == NULL) {
     header('Location: status.php?search=ERROR 404');
 }
 
-
 ?>
 
 <!DOCTYPE html>
@@ -112,13 +111,13 @@ if ($row1[0] == NULL) {
     $sql = "SELECT * FROM get_repair
         LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id 
         LEFT JOIN status_type ON repair_status.status_id  = status_type.status_id 
-        WHERE get_repair.get_r_id = $id_get_r ORDER BY repair_status.rs_date_time DESC;";
+        WHERE get_repair.get_r_id = $id_get_r AND repair_status.del_flg = '0' ORDER BY repair_status.rs_date_time DESC;";
     $result = mysqli_query($conn, $sql);
 
     $sql2 = "SELECT * FROM get_repair
         LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id 
         LEFT JOIN status_type ON repair_status.status_id  = status_type.status_id 
-        WHERE get_repair.get_r_id = $id_get_r ORDER BY repair_status.rs_date_time DESC;";
+        WHERE get_repair.get_r_id = $id_get_r AND repair_status.del_flg = '0' ORDER BY repair_status.rs_date_time DESC;";
     $result2 = mysqli_query($conn, $sql2);
     $row_2 = mysqli_fetch_array($result2);
 
@@ -156,7 +155,7 @@ if ($row1[0] == NULL) {
             <?php } ?>
 
             <div class="row">
-                <div class="">
+                <div class="col">
                     <h4 style="margin-left: 1.2rem;">Status (สถานะ)</h4>
 
                     <ul class="timeline-3">
@@ -181,8 +180,8 @@ if ($row1[0] == NULL) {
                             <li>
 
                                 <h5 style="display:inline"><button class="btn btn-outline-secondary" style="color : white; background-color : <?= $row1['status_color'] ?>; border : 2px solid <?= $row1['status_color'] ?>;"><?= $row1['status_name'] ?></button></h5>
-                                <h6 style="display:inline"><i class="uil uil-book"></i>&nbsp;<?= $formattedDate ?></h6>
-                                <p style="display:inline-block"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row1['get_r_date_in'])); ?></p>
+                                <h6 style="display:inline;"><i class="uil uil-book"></i>&nbsp;<?= $formattedDate ?></h6>
+                                <p style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row1['rs_date_time'])); ?></p>
                                 <?php
                                 $rs_id = $row1['rs_id'];
                                 $sql_c = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id'";
@@ -197,9 +196,31 @@ if ($row1[0] == NULL) {
                                 <hr>
                                 <h5 class="btn btn-outline-primary">รายละเอียด</h5>
                                 <p class="mt-2"><?= $row1['rs_detail'] ?></p>
+                                <?php if ($row1['rs_cancel_detail'] != NULL) {
+                                ?>
+                                    <hr>
+                                    <h5 class="btn btn-outline-danger">เหตุผลการไม่ยืนยัน</h5>
+                                    <p class="mt-2"><?= $row1['rs_cancel_detail'] ?></p>
+                                <?php
+
+                                }
+                                ?>
 
                                 <!-- <button class="btn btn_custom" type="button">ยืนยัน</button> -->
                                 <div class="col text-left" style="background-color: #F1F1F1;">
+                                    <?php
+                                    $sql_pic = "SELECT * FROM repair_pic WHERE rs_id = $rs_id AND del_flg = 0 ";
+                                    $result_pic = mysqli_query($conn, $sql_pic);
+                                    $row_pic_check = mysqli_fetch_array($result_pic);
+
+                                    if ($row_pic_check[0] > 0) {
+                                    ?>
+                                    <hr>
+                                    <h6 class="btn btn-outline-secondary">รูปภาพประกอบ</h6>
+                                    <br><br>
+                                    <?php
+                                    }
+                                    ?>
                                     <!-- <h3 class="pt-5"><button class="btn btn-primary">รูปภาพ : </button></h3>
                                      -->
                                     <?php
@@ -220,7 +241,6 @@ if ($row1[0] == NULL) {
                                     <?php
                                     } ?>
                                 </div>
-
 
                                 <!--  Part modal -->
                                 <div id="quantitypartModal" class="modal">
@@ -287,9 +307,11 @@ if ($row1[0] == NULL) {
                             </li>
                             <br><?php
                                 if ($row[0] > 0) {
-                                    if ($row1['rs_conf'] != 1) { ?>
+                                    if ($row1['rs_conf'] == NULL) { ?>
+                                    <hr>
+                                    <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
+                                    <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน</a>
 
-                                    <a class="btn btn-danger" style="margin-left : 2%">ไม่ทำการยืนยัน</a>
                                     <!-- Add your button href="action/conf_part.php?id=<?= $id_get_r ?>" -->
                                     <!-- <a  class="btn btn-success" id="confirmButtonSuccess">ยืนยัน</a> -->
                                     <!-- <button class="btn btn-success" id="confirmButtonSuccess">ยืนยัน</button> -->
@@ -313,9 +335,115 @@ if ($row1[0] == NULL) {
                                             });
                                         });
                                     </script>
-
                                     <!-- Update the anchor tag to include PHP code for the dynamic link -->
-                                    <a class="btn btn-success" id="confirmButtonSuccess">ยืนยัน</a>
+                                    <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a>
+                                    <br>
+
+
+                                    <div id="myDiv" style="display: none; margin: 20px 30px;">
+                                        <form id="canf_cancel" action="action/conf_cancel.php" method="POST">
+                                            <hr>
+                                            <h4 style="color: red">โปรดระบุเหตุผลที่ยกเลิก</h4>
+                                            <input type="text" name="get_r_id" value="<?= $id_get_r ?>" hidden>
+
+                                            <label>
+                                                <input class="form-check-input" type="checkbox" name="checkbox1" value="ต้องการยกเลิกคำสั่งซ่อม" onclick="uncheckOtherCheckboxes('checkbox1')">
+                                                ต้องการยกเลิกคำสั่งซ่อม
+                                            </label><br>
+
+                                            <label>
+                                                <input class="form-check-input" type="checkbox" name="checkbox2" value="ไม่อยากใช้อะไหล่ข้างต้น" onclick="uncheckOtherCheckboxes('checkbox2')">
+                                                ไม่อยากใช้อะไหล่ข้างต้น
+                                            </label><br>
+
+                                            <label>
+                                                <input class="form-check-input" type="checkbox" name="checkbox3" value="อยากได้อะไหล่ที่ถูกกว่านี้" onclick="uncheckOtherCheckboxes('checkbox3')">
+                                                อยากได้อะไหล่ที่ถูกกว่านี้
+                                            </label><br>
+
+                                            <label>
+                                                <input class="form-check-input" type="checkbox" name="checkbox4" onclick="showTextarea(); uncheckOtherCheckboxes('checkbox4')">
+                                                อื่นๆ (หรือยื่นข้อเสนอ)
+                                            </label><br>
+
+                                            <textarea id="myTextarea" name="detail_cancel" style="display: none;" placeholder="โปรดระบุสาเหตุ"></textarea>
+
+                                            <br>
+                                            <a class="btn btn-danger" onclick="hideDiv()">ยกเลิก</a>
+                                            <a class="btn btn-success" id="confirmButtoncancel">ยืนยัน</a>
+
+                                            <script>
+                                                document.addEventListener('DOMContentLoaded', function() {
+                                                    var id_get_r = <?php echo json_encode($id_get_r); ?>; // Pass PHP variable to JavaScript
+                                                    var dialogShown = false; // Flag variable to track if the dialog is already displayed
+
+                                                    document.getElementById('confirmButtoncancel').addEventListener('click', function() {
+                                                        if (dialogShown) {
+                                                            return; // Exit if the dialog is already shown
+                                                        }
+
+                                                        dialogShown = true; // Set the flag to true to indicate that the dialog is displayed
+
+                                                        Swal.fire({
+                                                            icon: 'warning',
+                                                            title: 'ยืนยันดำเนินการส่งซ่อม',
+                                                            text: 'การ "ยืนยันเพื่อยกเลิก" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
+                                                            showCancelButton: true,
+                                                            confirmButtonText: 'ยืนยัน',
+                                                            cancelButtonText: 'ยกเลิก'
+                                                        }).then((willConfirm) => {
+                                                            if (willConfirm.isConfirmed) {
+                                                                var form = document.getElementById('canf_cancel');
+                                                                form.submit(); // Submit the form
+                                                            }
+
+                                                            dialogShown = false; // Reset the flag when the dialog is closed
+                                                        });
+                                                    });
+                                                });
+                                            </script>
+
+                                        </form>
+                                    </div>
+
+                                    <script>
+                                        function uncheckOtherCheckboxes(currentCheckboxName) {
+                                            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+                                            checkboxes.forEach(function(checkbox) {
+                                                if (checkbox.name !== currentCheckboxName) {
+                                                    checkbox.checked = false;
+                                                }
+                                            });
+                                        }
+
+                                        function showTextarea() {
+                                            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                                            var lastCheckbox = checkboxes[checkboxes.length - 1];
+                                            var textarea = document.getElementById("myTextarea");
+
+                                            if (lastCheckbox.checked) {
+                                                textarea.style.display = "block";
+                                            } else {
+                                                textarea.style.display = "none";
+                                            }
+                                        }
+
+                                        function showDiv() {
+                                            var div = document.getElementById("myDiv");
+                                            var conf = document.getElementById("confirmButtonSuccess");
+                                            div.style.display = "block";
+                                            conf.style.display = "none";
+                                        }
+
+
+                                        function hideDiv() {
+                                            var div = document.getElementById("myDiv");
+                                            var conf = document.getElementById("confirmButtonSuccess");
+                                            div.style.display = "none";
+                                            conf.style.display = "inline-block";
+                                        }
+                                    </script>
 
                                     <br><br>
                                 <?php
@@ -329,61 +457,16 @@ if ($row1[0] == NULL) {
                                 </div>
                                 <span class="check_icon"><i class="fa fa-check"></i> ส่งวันที่ : <?= $row1['rs_conf_date'] ?></span>
                                 <!-- <button class="btn btn-success" style="margin-left : 10px"> คุณได้ทำการยืนยันการส่งซ่อมแล้ว "โปรดรอการตอบกลับ" </button> -->
-                            <?php }  ?>
+                            <?php } else if ($row1['rs_conf'] == 0 && $row1['rs_conf'] != NULL) {
+                            ?>
+                                <div class="alert alert-success" role="alert" style="margin-left : 10px">
+                                    คุณได้ทำการยืนยันการยกเลิกแล้ว "โปรดรอการตอบกลับ"
+                                </div>
+                                <span class="check_icon"><i class="fa fa-check"></i> ส่งวันที่ : <?= $row1['rs_conf_date'] ?></span>
+                            <?php
+                                }  ?>
 
                         <?php } ?>
-
-                        <!-- <li>
-                            <h6><i class="uil uil-clock"></i>&nbsp;21 March, 2014</h6>
-                            <h5>การซ่อมเสร็จสิ้น/รอการชำระเงิน</h5>
-                            <p class="mt-2">แจ้งการนัดรับสินค้าหรือแจ้งการจัดส่งสินค้าหลังชำระเงิน</p>
-                            <button class="btn btn_custom_wearn" type="button">ชำระเงิน</button>
-                        </li>
-                        <li>
-                            <h6><i class="uil uil-clock"></i>&nbsp;21 March, 2014</h6>
-                            <h5>กำลังดำเนินการซ่อม</h5>
-                        </li> -->
-                        <!-- <li>
-                            <h6><i class="uil uil-clock"></i>&nbsp;21 March, 2014</h6>
-                            <h5>เกิดปัญหาขึ้นระหว่างซ่อม (ซ่อมต่อ)</h5>
-                            <p class="mt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque scelerisque diam
-                                non nisi semper, et elementum lorem ornare. Maecenas placerat facilisis mollis. Duis sagittis
-                                ligula in sodales vehicula....</p>
-                            <div class="row">
-                                <div class="col-4">
-                                    <img src="img/1.jpg" alt="" class="img-fluid">
-                                </div>
-                                <div class="col-4">
-                                    <p>หย่องล่างกีต้าร์ไฟฟ้าแบบเดียว PS-001 ZX</p>
-                                    <p>ราคา 55.00 บาท </p>
-                                    <p>จำนวน 2 ชิ้น</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4">
-                                    <img src="img/2.png" alt="" class="img-fluid">
-                                </div>
-                                <div class="col-4">
-                                    <p>หย่องล่างกีต้าร์ไฟฟ้าแบบคู่ PS-001 ZX</p>
-                                    <p>ราคา 100.00 บาท </p>
-                                    <h5>จำนวน 2 ชิ้น</h5>
-                                    <p style="color: red;">รอของ 3 วัน</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <h6><i class="uil uil-clock"></i>&nbsp;21 March, 2014</h6>
-                            <h5>อยู่ระหว่างการซ่อม</h5>
-                        </li>
-                        <li>
-                            <h6><i class="uil uil-clock"></i>&nbsp;21 March, 2014</h6>
-                            <h5>ได้รับเครื่องของคุณแล้ว</h5>
-                        </li>
-                        <li>
-                            <h6><i class="uil uil-clock"></i>&nbsp;21 March, 2014</h6>
-                            <h5>ยืนยันการซ่อมแล้ว</h5>
-                            <button class="btn btn_custom_wearn" type="button">ใบแจ้งซ่อม</button>
-                        </li> -->
                     </ul>
                 </div>
             </div>
@@ -412,6 +495,19 @@ if ($row1[0] == NULL) {
                     title: 'การยืนยันการส่งซ่อมไม่เสร็จสิ้น',
                     text: 'กด Accept เพื่อออก',
                     icon: 'error',
+                    confirmButtonText: 'Accept'
+                });
+            </script>
+
+        <?php
+            unset($_SESSION['add_data_alert']);
+        } else if ($_SESSION['add_data_alert'] == 2) {
+        ?>
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'ดำเนินการส่งคำร้องเสร็จสิ้น',
+                    html: 'ระบบได้ทำการส่งคำร้องไปที่พนักงานแล้ว<br>กด Accept เพื่อออก',
                     confirmButtonText: 'Accept'
                 });
             </script>

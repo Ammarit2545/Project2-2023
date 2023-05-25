@@ -245,45 +245,4 @@ include('database/condb.php');
   <button onclick="showInput()">Add Picture Input</button>
 </body>
 </html> -->
-<style>
-  .scroll-container {
-    overflow-x: hidden; /* Hide the horizontal scrollbar by default */
-  }
-
-  .scroll-content {
-    white-space: nowrap;
-    display: inline-block; /* Ensure the content stays in a single line */
-  }
-
-  .scroll-container.hovered {
-    overflow-x: auto; /* Enable scrolling when hovered */
-  }
-</style>
-
-<div class="scroll-container" onmouseover="enableScroll()" onmouseout="disableScroll()">
-  <div class="scroll-content">
-    <!-- Content goes here -->
-    <?php
-    $i = 0;
-    while($i != 100){
-      $i += 1;
-      ?>
-      <button class="btn btn-primary">+</button>
-      <?php
-    }
-    ?>
-  </div>
-</div>
-
-<script>
-  function enableScroll() {
-    var scrollContainer = document.querySelector('.scroll-container');
-    scrollContainer.classList.add('hovered');
-  }
-
-  function disableScroll() {
-    var scrollContainer = document.querySelector('.scroll-container');
-    scrollContainer.classList.remove('hovered');
-  }
-</script>
-
+<?= $_SESSION['add_data_alert'] ?>
