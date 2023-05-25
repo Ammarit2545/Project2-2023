@@ -814,6 +814,9 @@ if (!isset($_SESSION['role_id'])) {
                             <?php if ($row['status_id'] == "4" || $row['status_id'] == '17' && $row['rs_conf'] == 0) {
                                 include('status_option/cancel_conf.php');
                             } ?>
+                            <?php if ($row['status_id'] == "4" || $row['status_id'] == '17' && $row['rs_conf'] == 1) {
+                                include('status_option/conf_status.php');
+                            } ?>
 
 
                             <?php

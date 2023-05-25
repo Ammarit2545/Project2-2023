@@ -46,10 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $m_id = $roww_e['m_id'];
 
-    // Usage:
-    // $folderName = "../uploads/$m_id/$get_r_id/2"; // the name of the folder to be deleted
-    // deleteDirectory($folderName);
-
     // Retrieve the uploaded images
     $uploadedImages = array();
     if (isset($_FILES['upload'])) {
@@ -65,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Perform necessary operations with the retrieved data
-    // ...
 
     $e_id = $_SESSION["id"];
 
@@ -81,7 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $row_re_c = mysqli_fetch_array($result4);
 
     if ($row_re_c['rs_id'] > 0) {
-        // header("Location: ../detail_repair.php?id=$get_r_id");
+        $_SESSION["add_data_alert"] = 1;
+        header("Location: ../detail_repair.php?id=$get_r_id");
     } else {
         // Insert data into repair_status table
         $sql3 = "INSERT INTO repair_status (get_r_id, rs_date_time, rs_detail, status_id ,e_id)
@@ -91,8 +87,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $sql3 = "UPDATE get_repair SET get_wages = '$get_wages' WHERE get_r_id = '$get_r_id' AND del_flg = '0'";
         $result3 = mysqli_query($conn, $sql3);
-
-
 
         $folderName = "../../uploads/$m_id/$get_r_id/$rs_id"; // the name of the new folder
         if (!file_exists($folderName)) { // check if the folder already exists
@@ -186,12 +180,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
             // Redirect the user to a success page
+            $_SESSION["add_data_alert"] = 0;
             header("Location: ../detail_repair.php?id=$get_r_id");
             exit();
         } else {
             // Handle the case when the insert query into repair_status table fails
-            // ...
-            // header("Location: ../detail_repair.php?id=$get_r_id");
+            $_SESSION["add_data_alert"] = 1;
+            header("Location: ../detail_repair.php?id=$get_r_id");
         }
     }
 }

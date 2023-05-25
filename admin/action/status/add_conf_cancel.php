@@ -26,7 +26,7 @@ if ($row[0] > 0) {
 } else {
     // if it does not already have data
     $sql_e = "INSERT INTO repair_status (get_r_id, rs_detail, rs_date_time, status_id, e_id)
-              VALUES ('$get_r_id', '$rs_detail', NOW(), '12', '$e_id')";
+              VALUES ('$get_r_id', '$rs_detail', NOW(), '11', '$e_id')";
     $result_e = mysqli_query($conn, $sql_e);
 
     $rs_id = mysqli_insert_id($conn);

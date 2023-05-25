@@ -1,6 +1,6 @@
- <center>
+<center>
      <button class="btn btn-danger" onclick="showCancelValue()">ปฏิเสธคำสั่งซ่อม</button>
-     <button class="btn btn-warning" onclick="showofferValue()">ยื่นข้อเสนอ</button>
+     <button class="btn btn-warning" onclick="show_doing_status()">เปลี่ยนเป็นสถานะ "ดำเนินการซ่อม"</button>
  </center>
 
  <div id="cancel_value_code" style="display: none;">
@@ -137,20 +137,20 @@
 
  <!-- ------------------------------------------------------------------ -->
 
- <div id="detail_value_code" style="display: none;">
+ <div id="status_doing" style="display: none;">
      <hr>
      <br>
      <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
      <br>
-     <form id="offers_status_id" action="action/status/add_conf_offer.php" method="POST" enctype="multipart/form-data">
-         <label for="DetailFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : orange"> ยื่นข้อเสนอ</p> :</label>
+     <form id="doing_status_id" action="action/add_respond.php" method="POST" enctype="multipart/form-data">
+         <label for="DetailFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : #B9B300"> ดำเนินการ </p> :</label>
          <textarea class="form-control" name="rs_detail" id="DetailFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม"></textarea>
          <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
-         <input type="hidden" name="cardCount" id="cardCountInput" value="0">
+         <input type="hidden" name="cardCount" id="cardCountInput" value="0" readonly>
          <br>
          <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่</label>
          <div class="input-group mb-3">
-         <input type="text" name="status_id" value="<?= $row['rs_id'] ?>">
+         <input type="text" name="status_id" value="6" hidden readonly>
              <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
              <input name="get_wages" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="<?= $row['get_wages'] ?>" required>
          </div>
@@ -191,7 +191,7 @@
 
                      var fileInput = document.createElement('input');
                      fileInput.type = 'file';
-                     fileInput.name = 'file' + clickCount;
+                     fileInput.name = 'picture_' + clickCount;
                      fileInput.classList.add('form-control');
                      fileInput.addEventListener('change', function(event) {
                          showPreviewDetail(event.target);
@@ -275,7 +275,7 @@
                  }).then((result) => {
                      if (result.isConfirmed) {
                          // User confirmed, submit the form
-                         document.getElementById('offers_status_id').submit();
+                         document.getElementById('doing_status_id').submit();
                      }
                  });
              }
@@ -290,11 +290,11 @@
  <script>
      function showCancelValue() {
          document.getElementById('cancel_value_code').style.display = 'block';
-         document.getElementById('detail_value_code').style.display = 'none';
+         document.getElementById('status_doing').style.display = 'none';
      }
 
-     function showofferValue() {
+     function show_doing_status() {
          document.getElementById('cancel_value_code').style.display = 'none';
-         document.getElementById('detail_value_code').style.display = 'block';
+         document.getElementById('status_doing').style.display = 'block';
      }
  </script>
