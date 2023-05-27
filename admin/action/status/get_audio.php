@@ -9,10 +9,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 $get_r_id  = $_GET['id'];
+$status_id = 19;
 
 echo $get_r_id;
 
-$sql = "SELECT * FROM repair_status WHERE status_id = 5 AND get_r_id = '$get_r_id'";
+$sql = "SELECT * FROM repair_status WHERE status_id = '$status_id' AND get_r_id = '$get_r_id'";
 $result = mysqli_query($conn, $sql);
 $row_c = mysqli_fetch_array($result);
 
@@ -44,7 +45,7 @@ if ($row_c[0] > 0) {
 
 
     $sql3 = "INSERT INTO repair_status (get_r_id, rs_date_time, rs_detail, status_id)
-         VALUES ('$get_r_id', NOW(), 'กรุณาทำการส่งเครื่องเสียงและอุปกรณ์ต่อพ่วงที่ต้องการซ่อมมาให้ทางร้านทำการซ่อม','5')";
+         VALUES ('$get_r_id', NOW(), 'พนักงานได้รับอุปกรณ์ของคุณแล้วโปรดรอการตรวจเช็คจากพนักงาน','$status_id')";
     $result3 = mysqli_query($conn, $sql3);
 
     if ($result3) {

@@ -404,14 +404,14 @@ if (!isset($_SESSION['role_id'])) {
                             </div>
 
                             <?php
-                            if($row_s['rs_cancel_detail'] != NULL ){
+                            if ($row_s['rs_cancel_detail'] != NULL) {
                             ?>
-                            <hr>
-                            <div class="mb-3">
-                                <label for="exampleFormControlTextarea1" class="col-form-label btn btn-danger">เหตุผลไม่ยืนยันการซ่อม</label>
-                                <br><br>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?= $row_s['rs_cancel_detail']  ?></textarea>
-                            </div>
+                                <hr>
+                                <div class="mb-3">
+                                    <label for="exampleFormControlTextarea1" class="col-form-label btn btn-danger">เหตุผลไม่ยืนยันการซ่อม</label>
+                                    <br><br>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?= $row_s['rs_cancel_detail']  ?></textarea>
+                                </div>
                             <?php
                             }
                             ?>
@@ -811,16 +811,30 @@ if (!isset($_SESSION['role_id'])) {
                             <?php
                             } ?>
 
-                            <?php if ($row['status_id'] == "4" || $row['status_id'] == '17' && $row['rs_conf'] == 0) {
-                                include('status_option/cancel_conf.php');
-                            } ?>
-                            <?php if ($row['status_id'] == "4" || $row['status_id'] == '17' && $row['rs_conf'] == 1) {
-                                include('status_option/conf_status.php');
-                            } ?>
+                            <?php $statusIds = array("4", "17", "5", "19", "6");
+                            if (in_array($row['status_id'], $statusIds)) {
+                                if ($row['rs_conf'] == NULL && $row['status_id'] != '5' && $row['status_id'] != '19' && $row['status_id'] != '6') {
+                                    include('status_option/wait_respond.php');
+                                }
+                                if ($row['rs_conf'] == '0' && $row['status_id'] != '5') {
+                                    include('status_option/cancel_conf.php');
+                                } else if ($row['rs_conf'] == '1' && $row['status_id'] != '5') {
+                                    include('status_option/conf_status.php');
+                                } elseif ($row['status_id'] == '5') {
+                                    include('status_option/next_conf.php');
+                                } elseif ($row['status_id'] == '19') {
+                                    include('status_option/doing_status.php');
+                                } else if ($row['status_id'] == '6') {
+                                    include('status_option/after_doing.php');
+                                }
+                            }
+
+
+                            ?>
 
 
                             <?php
-                            if ($row['value_code'] == "succ" || $row['value_code'] == "cancel" || $row['value_code'] == "submit" || $row['value_code'] == "received" || $row['status_id'] == "11" || $row['status_id'] == "4" || $row['status_id'] == "3" || $row['status_id'] == '17' ) {
+                            if ($row['value_code'] == "succ" || $row['value_code'] == "cancel" || $row['value_code'] == "submit" || $row['value_code'] == "received" || $row['status_id'] == "11" || $row['status_id'] == "4" || $row1['status_id'] != "3" || $row1['status_id'] != '17' || $row1['status_id'] != '5') {
                             ?>
                                 <form action="action/add_respond.php" method="POST" enctype="multipart/form-data" style="display:none">
                                 <?php

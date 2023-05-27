@@ -7,7 +7,7 @@
     <button class="btn btn-danger" style="background-color:<?= $row_q['status_color'] ?>; border : <?= $row_q['status_color'] ?>" onclick="showCancelValue()"><?= $row_q['status_name'] ?></button>
 
     <?php
-    $sql = "SELECT * FROM status_type WHERE status_id = '5'";
+    $sql = "SELECT * FROM status_type WHERE status_id = '19'";
     $result = mysqli_query($conn, $sql);
     $row_conf = mysqli_fetch_array($result);
     ?>
@@ -29,7 +29,7 @@
             cancelButtonText: 'No'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = 'action/status/add_conf_status.php?id=' + <?= $row['get_r_id'] ?>;
+                window.location.href = 'action/status/get_audio.php?id=' + <?= $row['get_r_id'] ?>;
             }
         });
     }

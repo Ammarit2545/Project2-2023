@@ -5,7 +5,7 @@ $id = $_SESSION['id'];
 $status_id = 0;
 
 
-$sql1 = "SELECT * FROM member WHERE m_id = '$id '";
+$sql1 = "SELECT * FROM member WHERE m_id = '$id'";
 $result1 = mysqli_query($conn, $sql1);
 $row1 = mysqli_fetch_array($result1);
 if ($id == NULL) {
@@ -106,6 +106,7 @@ if ($row1[0] == NULL) {
 <body>
     <!-- navbar-->
     <?php
+    $part_check = 0;
     if ($row1 > 0) {
         include('bar/topbar_invisible.php');
     }
@@ -123,10 +124,11 @@ if ($row1[0] == NULL) {
     $result2 = mysqli_query($conn, $sql2);
     $row_2 = mysqli_fetch_array($result2);
 
-    $sql_c = "SELECT * FROM get_repair LEFT JOIN repair ON repair.r_id = get_repair.r_id WHERE get_r_id = '$id_get_r' AND del_flg = '0'";
+    $sql_c = "SELECT * FROM get_repair LEFT JOIN repair ON repair.r_id = get_repair.r_id WHERE get_r_id = '$id_get_r' AND repair.del_flg = '0'";
     $result_c = mysqli_query($conn, $sql_c);
     $row_c = mysqli_fetch_array($result_c);
     ?>
+
     <!-- end navbar-->
 
     <!-- <div class="background"></div> -->
@@ -179,6 +181,11 @@ if ($row1[0] == NULL) {
                             $formattedDate = $date->format('d F Y');
 
                             $status_id = $row1['status_id'];
+
+
+                            $sql_c = "SELECT * FROM repair_status WHERE get_r_id = '$id_get_r' AND del_flg = 0 ORDER BY rs_id DESC";
+                            $result_c = mysqli_query($conn, $sql_c);
+                            $row_p = mysqli_fetch_array($result_c);
                         ?>
                             <hr style="border: 5px solid black;">
                             <li>
@@ -188,14 +195,29 @@ if ($row1[0] == NULL) {
                                 <p style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row1['rs_date_time'])); ?></p>
                                 <?php
                                 $rs_id = $row1['rs_id'];
-                                $sql_c = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id'";
-                                $result_c = mysqli_query($conn, $sql_c);
-                                $row = mysqli_fetch_array($result_c);
-                                if ($row[0] > 0) {
-                                    if ($row1['rs_conf'] != 1) { ?>
-                                        <a class="btn btn-outline-danger" style="margin-left:20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้ </a>
+                                $sql_check_p = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id' AND del_flg = '0'";
+                                $result_check_p = mysqli_query($conn, $sql_check_p);
+                                $row = mysqli_fetch_array($result_check_p);
+
+                                $sql_check_p = "SELECT rd_id
+                                FROM repair_detail
+                                LEFT JOIN get_repair ON get_repair.get_r_id = repair_detail.get_r_id
+                                LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
+                                WHERE repair_status.get_r_id = '$id_get_r' AND repair_detail.del_flg = '0';";
+                                $result_check_p = mysqli_query($conn, $sql_check_p);
+                                $row_check_part = mysqli_fetch_array($result_check_p);
+
+                                // if ($row['rs_id'] > 0) {
+                                //     $part_check = $part_check + $row['rs_id'];
+                                // } 
+
+                                if ($row_p['rs_id'] == $row1['rs_id'] && $row_check_part['rd_id'] != NULL ) {
+                                // if ($row_p['rs_id'] == $row1['rs_id'] && $row_check_part['rd_id'] != NULL && $row1['status_id'] != '11') {
+
+                                ?>
+                                    <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a>
                                 <?php }
-                                }
+
                                 ?>
                                 <hr>
                                 <h5 class="btn btn-outline-primary">รายละเอียด</h5>
@@ -219,9 +241,9 @@ if ($row1[0] == NULL) {
 
                                     if ($row_pic_check[0] > 0) {
                                     ?>
-                                    <hr>
-                                    <h6 class="btn btn-outline-secondary">รูปภาพประกอบ</h6>
-                                    <br><br>
+                                        <hr>
+                                        <h6 class="btn btn-outline-secondary">รูปภาพประกอบ</h6>
+                                        <br><br>
                                     <?php
                                     }
                                     ?>
@@ -342,7 +364,6 @@ if ($row1[0] == NULL) {
                                     <!-- Update the anchor tag to include PHP code for the dynamic link -->
                                     <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a>
                                     <br>
-
 
                                     <div id="myDiv" style="display: none; margin: 20px 30px;">
                                         <form id="canf_cancel" action="action/conf_cancel.php" method="POST">

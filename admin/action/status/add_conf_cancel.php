@@ -18,12 +18,41 @@ $sql = "SELECT * FROM repair_status
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
+
+
+
 if ($row[0] > 0) {
     // if it already has data
     echo $row[0];
     $_SESSION["add_data_alert"] = 1;
     header("Location: ../../detail_repair.php?id=$get_r_id");
 } else {
+
+    // เอาคืน Stock ทั้งหมดจากคำสั่งซื้อ
+
+    $sql_check_p = "SELECT *
+                    FROM repair_detail
+                    LEFT JOIN get_repair ON get_repair.get_r_id = repair_detail.get_r_id
+                    LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
+                    WHERE repair_status.get_r_id = '$get_r_id' AND repair_detail.del_flg = '0';";
+    $result_check_p = mysqli_query($conn, $sql_check_p);
+
+    while ($row_check_part = mysqli_fetch_array($result_check_p)) {
+        // echo $row_check_part['p_id']."  ".$row_check_part['rd_value_parts'];
+        $rd_id = $row_check_part['rd_id'];
+        $p_id = $row_check_part['p_id'];
+        $value_parts = $row_check_part['rd_value_parts'];
+
+        // $sql_update_part = "UPDATE parts SET p_stock = p_stock + $value_parts WHERE p_id = '$p_id'";
+        // $result_update_part = mysqli_query($conn, $sql_update_part);
+
+
+        $sql_update_detail = "UPDATE repair_detail SET del_flg = '1' WHERE rd_id = '$rd_id'";
+        $result_update_detail = mysqli_query($conn, $sql_update_detail);
+    }
+
+    // เอาคืน Stock
+
     // if it does not already have data
     $sql_e = "INSERT INTO repair_status (get_r_id, rs_detail, rs_date_time, status_id, e_id)
               VALUES ('$get_r_id', '$rs_detail', NOW(), '11', '$e_id')";
@@ -95,4 +124,3 @@ if ($row[0] > 0) {
         header("Location: ../../detail_repair.php?id=$get_r_id");
     }
 }
-?>

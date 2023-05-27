@@ -1,13 +1,20 @@
 <center>
     <?php
-    $sql = "SELECT * FROM status_type WHERE status_id = '11'";
+    $sql = "SELECT * FROM status_type WHERE status_id = '12'";
     $result = mysqli_query($conn, $sql);
     $row_q = mysqli_fetch_array($result);
     ?>
     <button class="btn btn-danger" style="background-color:<?= $row_q['status_color'] ?>; border : <?= $row_q['status_color'] ?>" onclick="showCancelValue()"><?= $row_q['status_name'] ?></button>
-
     <?php
-    $sql = "SELECT * FROM status_type WHERE status_id = '5'";
+    $sql = "SELECT * FROM status_type WHERE status_id = '13'";
+    $result = mysqli_query($conn, $sql);
+    $row_confg = mysqli_fetch_array($result);
+    ?>
+    <button class="btn btn-success" style="background-color:<?= $row_confg['status_color'] ?>; border : <?= $row_confg['status_color'] ?>" onclick="show_conf_status('<?php echo $row_conf['id']; ?>')">
+        เปลี่ยนเป็นสถานะ "<?= $row_confg['status_name'] ?>"
+    </button>
+    <?php
+    $sql = "SELECT * FROM status_type WHERE status_id = '7'";
     $result = mysqli_query($conn, $sql);
     $row_conf = mysqli_fetch_array($result);
     ?>
@@ -20,7 +27,7 @@
     function show_conf_status(id) {
         Swal.fire({
             title: 'Confirmation',
-            text: 'Are you sure you want to change the status?',
+            text: 'คุณต้องการเปลี่ยนเป็นสถานะดำเนินการใช่หรือไม่?',
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -29,7 +36,7 @@
             cancelButtonText: 'No'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = 'action/status/add_conf_status.php?id=' + <?= $row['get_r_id'] ?>;
+                window.location.href = 'action/status/doing_status.php?id=' + <?= $row['get_r_id'] ?>;
             }
         });
     }

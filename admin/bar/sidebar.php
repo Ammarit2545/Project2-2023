@@ -130,7 +130,7 @@
         บันทึกการซ่อมด้วยตัวเอง
     </div>
     <li class="nav-item">
-        <a class="nav-link" href="index.php">
+        <a class="nav-link" href="add_self_record.php">
             <i class="fas fa-fw fa-arrow-down"></i>
             <span>บันทึกการซ่อมด้วยตัวเอง</span></a>
     </li>

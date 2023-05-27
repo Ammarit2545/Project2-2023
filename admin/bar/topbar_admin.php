@@ -53,7 +53,7 @@
                 <?php
                 $sql_nofi = "SELECT * FROM get_repair 
                 LEFT JOIN repair ON get_repair.r_id = repair.r_id 
-                WHERE del_flg = '0'
+                WHERE get_repair.del_flg = '0' AND repair.del_flg = 0
                 ORDER BY get_r_id DESC LIMIT 3;";
                 $result_nofi = mysqli_query($conn, $sql_nofi);
 

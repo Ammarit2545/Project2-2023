@@ -117,6 +117,7 @@ $row = mysqli_fetch_array($result);
                                 <div class="row">
                                     <div class="col-3">
                                         <input type="file" name="image1" onchange="previewImage('image-preview1')" id="fileToUpload">
+                                        <div id="image-preview1"></div>
                                     </div>
                                     <div class="col-3">
                                         <input type="file" name="image2" onchange="previewImage('image-preview2')" id="fileToUpload">
@@ -136,6 +137,14 @@ $row = mysqli_fetch_array($result);
                                             var input = event.target;
                                             var previewContainer = document.getElementById(previewId);
                                             var previewImage = document.createElement('img');
+
+                                            // Set the maximum width and maximum height of the image
+                                            previewImage.style.maxWidth = '200px';
+                                            previewImage.style.maxHeight = '200px';
+
+                                            // Set the border radius and border style of the image
+                                            previewImage.style.borderRadius = '10%';
+                                            previewImage.style.border = '2px solid gray';
 
                                             if (input.files && input.files[0]) {
                                                 var reader = new FileReader();

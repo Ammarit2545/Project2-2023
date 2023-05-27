@@ -245,4 +245,5 @@ include('database/condb.php');
   <button onclick="showInput()">Add Picture Input</button>
 </body>
 </html> -->
-<?= $_SESSION['add_data_alert'] ?>
+<!-- -->
+
