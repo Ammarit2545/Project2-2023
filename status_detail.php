@@ -43,6 +43,119 @@ if ($row1[0] == NULL) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        .file-upload {
+            width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .file-upload-btn {
+            width: 100%;
+            margin: 0;
+            color: #fff;
+            background: #0090C6;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            border-bottom: 4px solid #0090C6;
+            transition: all .2s ease;
+            outline: none;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .file-upload-btn:hover {
+            background: #0090C6;
+            transition: all .2s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-btn:active {
+            border: 0;
+            transition: all .2s ease;
+        }
+
+        .file-upload-content {
+            display: none;
+            text-align: center;
+        }
+
+        .file-upload-input {
+            position: absolute;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            outline: none;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .image-upload-wrap {
+            margin-top: 20px;
+            border: 4px dashed #0090C6;
+            position: relative;
+        }
+
+        .image-dropping,
+        .image-upload-wrap:hover {
+            background-color: #0090C6;
+        }
+
+        .image-title-wrap {
+            padding: 0 15px 15px 15px;
+            color: #222;
+        }
+
+        .drag-text {
+            text-align: center;
+        }
+
+        .drag-text h3 {
+            font-weight: 100;
+            text-transform: uppercase;
+            color: gray;
+            padding: 60px 0;
+        }
+
+        .file-upload-image {
+            max-height: 200px;
+            max-width: 200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .remove-image {
+            width: 200px;
+            margin: 0;
+            color: #fff;
+            background: #cd4535;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            border-bottom: 4px solid #b02818;
+            transition: all .2s ease;
+            outline: none;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .remove-image:hover {
+            background: #c13b2a;
+            color: #ffffff;
+            transition: all .2s ease;
+            cursor: pointer;
+        }
+
+        .remove-image:active {
+            border: 0;
+            transition: all .2s ease;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -100,6 +213,12 @@ if ($row1[0] == NULL) {
         .check_icon {
             margin-left: 10px;
         }
+
+        #drop-shadow {
+            border-radius: 5%;
+            box-shadow: 0 2px 4px rgba(0, 0.2, 0.2, 0.2);
+            /* Adjust the shadow properties as needed */
+        }
     </style>
 </head>
 
@@ -136,7 +255,6 @@ if ($row1[0] == NULL) {
     <div class="px-5 pt-5 repair">
         <div class="container">
             <div class="row">
-
                 <div class="col-6 text-left" style="background-color: #F1F1F1;">
                     <h3 class="pt-5"><button class="btn btn-primary">ยี่ห้อ : <?= $row_c['r_brand'] ?> , รุ่น : <?= $row_c['r_model'] ?></button></h3>
                     <h3 class="pt-2">เลข Serial Number : <?= $row_c['r_serial_number'] ?></h3>
@@ -150,6 +268,10 @@ if ($row1[0] == NULL) {
                 <br>
             </div>
         </div>
+        <div class="container">
+            <!-- <iframe src="pay_qr.php?id=<?= $id_get_r ?>" frameborder="0" width="100%" style="height: 1000px;"></iframe> -->
+        </div>
+
 
         <div class="container my-5 p-4" style="background-color: #F1F1F1; border-radius : 1%;">
             <?php if ($row_2['status_id'] == 3) { ?>
@@ -160,8 +282,9 @@ if ($row1[0] == NULL) {
 
             <div class="row">
                 <div class="col">
-                    <h4 style="margin-left: 1.2rem;">Status (สถานะ)</h4>
-
+                    <br>
+                    <h2 style="margin-left: 1.2rem;">ติดตามสถานะ (Status)</h2>
+                    <br>
                     <ul class="timeline-3">
                         <?php
                         while ($row1 = mysqli_fetch_array($result)) {
@@ -211,17 +334,25 @@ if ($row1[0] == NULL) {
                                 //     $part_check = $part_check + $row['rs_id'];
                                 // } 
 
-                                if ($row_p['rs_id'] == $row1['rs_id'] && $row_check_part['rd_id'] != NULL ) {
-                                // if ($row_p['rs_id'] == $row1['rs_id'] && $row_check_part['rd_id'] != NULL && $row1['status_id'] != '11') {
-
+                                if ($row_p['rs_id'] == $row1['rs_id'] && $row_check_part['rd_id'] != NULL) {
+                                    // if ($row_p['rs_id'] == $row1['rs_id'] && $row_check_part['rd_id'] != NULL && $row1['status_id'] != '11') {
+                                    if ($row1['status_id'] != 8) {
                                 ?>
-                                    <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a>
-                                <?php }
+                                        <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a>
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <a class="btn btn-primary" style="margin-left: 20px" href="#" onclick="openModalPay('pay')">ชำระค่าบริการ</a>
+                                <?php
+                                    }
+                                }
 
                                 ?>
                                 <hr>
                                 <h5 class="btn btn-outline-primary">รายละเอียด</h5>
-                                <p class="mt-2"><?= $row1['rs_detail'] ?></p>
+                                <p class="mt-2" style="margin-left: 30px;"><?= $row1['rs_detail'] ?></p>
+
+
                                 <?php if ($row1['rs_cancel_detail'] != NULL) {
                                 ?>
                                     <hr>
@@ -230,6 +361,7 @@ if ($row1[0] == NULL) {
                                 <?php
 
                                 }
+
                                 ?>
 
                                 <!-- <button class="btn btn_custom" type="button">ยืนยัน</button> -->
@@ -263,7 +395,7 @@ if ($row1[0] == NULL) {
                                     while ($row_pic = mysqli_fetch_array($result_pic)) {
                                     ?>
                                         <!-- <img src="<?= $row_pic['rp_pic'] ?>" width="100px"> -->
-                                        <a href="#"><img src="<?= $row_pic['rp_pic'] ?>" width="100px" class="picture_modal" alt="" onclick="openModal(this)"></a>
+                                        <a href="#"><img src="<?= $row_pic['rp_pic'] ?>" width="100px" id="drop-shadow" class="picture_modal" alt="" onclick="openModal(this)"></a>
                                     <?php
                                     } ?>
                                 </div>
@@ -279,8 +411,178 @@ if ($row1[0] == NULL) {
                                         <iframe src="mini_part_detail.php?id=<?= $id_get_r ?>" style="width: 100%; height: 1000px;" class="no-scrollbar"></iframe>
                                     </div>
                                 </div>
+                                <?php if ($row1['status_id'] == 8 && $row1['rs_conf'] == NULL) {
+                                ?>
+
+                                    <br>
+                                    <hr>
+                                    <br>
+                                    <h1 class="alert alert-primary" role="alert">กรุณากรอกข้อมูลการชำระเงินและการจัดส่ง</h1>
+                                    <br>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <!-- First Name Here  -->
+                                                <label for="basic-url" class="form-label">ชื่อจริง</label>
+                                                <div class="input-group mb-3">
+                                                    <!-- <span class="input-group-text" id="basic-addon3">ชื่อจริง</span> -->
+                                                    <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="<?= $_SESSION['fname'] ?>" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <!-- Last Name Here  -->
+                                                <label for="basic-url" class="form-label">นามสกุล</label>
+                                                <div class="input-group mb-3">
+                                                    <!-- <span class="input-group-text" id="basic-addon3">นามสกุล</span> -->
+                                                    <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="<?= $_SESSION['lname'] ?>" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <!-- Last Name Here  -->
+                                                <label for="basic-url" class="form-label">เบอร์โทรศัพท์</label>
+                                                <div class="input-group mb-3">
+                                                    <!-- <span class="input-group-text" id="basic-addon3">นามสกุล</span> -->
+                                                    <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="<?= $_SESSION['tel'] ?>" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <center>
+                                                    <h5>เลือกวิธีการจัดส่งที่ท่านต้องการ</h5>
+                                                </center>
+                                                <br>
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-end">
+                                                <button class="btn btn-primary" id="non_add_button" onclick="showPay()">มารับที่ร้าน</button>
+                                                <button class="btn btn-danger" id="cancel_add_button" style="display:none" onclick="showAddressClose()">ยกเลิก</button>
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-start">
+                                                <button class="btn btn-success" onclick="showAddress()" id="add_button_pay">จัดส่งผ่านไปรษณีย์</button>
+                                                <button class="btn btn-danger" id="cancel_pay_button" style="display:none" onclick="showPayClose()">ยกเลิก</button>
+                                            </div>
+                                        </div>
+
+                                        <br>
+                                        <hr>
+                                        <div class="row">
+                                            <!-- Address Here -->
+                                            <div class="mb-3" style="display: none" id="show_address">
+                                                <br>
+                                                <label for="exampleFormControlTextarea1" class="form-label">กรุณากรอกที่อยู่</label>
+                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" required><?= $_SESSION['address'] ?></textarea>
+                                                <br>
+                                                <center>
+                                                    <a class="btn btn-primary" style="margin-left: 20px" href="#" onclick="openModalPay('pay')">ชำระค่าบริการ</a>
+                                                </center>
+                                                <br>
+                                                <hr>
+                                            </div>
+
+                                            <div class="mb-3" style="display: none" id="show_pay">
+                                                <br>
+                                                <label for="exampleFormControlTextarea1" class="form-label"><h6>กรุณาดูรายละเอียดการชำระเงินของท่าน : </h6></label>
+                                                <a class="btn btn-primary" style="margin-left: 20px" href="#" onclick="openModalPay('pay')">ชำระค่าบริการ</a>
+                                                <br>
+                                                <center>
+                                                    <!-- <a class="btn btn-primary" style="margin-left: 20px" href="#" onclick="openModalPay('pay')">ชำระค่าบริการ</a> -->
+                                                </center>
+                                                <br>
+                                                <hr>
+                                            </div>
+                                        </div>
+                                        <script>
+                                            function showPay() {
+                                                document.getElementById('show_pay').style.display = 'block';
+                                                document.getElementById('add_button_pay').style.display = 'none';
+                                                document.getElementById('cancel_pay_button').style.display = 'block';
+                                            }
+
+                                            function showPayClose() {
+                                                document.getElementById('show_pay').style.display = 'none';
+                                                document.getElementById('add_button_pay').style.display = 'block';
+                                                document.getElementById('cancel_pay_button').style.display = 'none';
+                                            }
+
+                                            function showAddress() {
+                                                document.getElementById('show_address').style.display = 'block';
+                                                document.getElementById('non_add_button').style.display = 'none';
+                                                document.getElementById('cancel_add_button').style.display = 'block';
+                                                // document.getElementById('detail_value_code').style.display = 'none';
+                                            }
+
+                                            function showAddressClose() {
+                                                document.getElementById('show_address').style.display = 'none';
+                                                document.getElementById('non_add_button').style.display = 'block';
+                                                document.getElementById('cancel_add_button').style.display = 'none';
+                                            }
+                                        </script>
+                                        <div class="row">
+                                            <!-- Image Here -->
+                                            <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+                                            <div class="file-upload">
+                                                <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">แนบหลักฐานการชำระเงิน</button>
+
+                                                <div class="image-upload-wrap">
+                                                    <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
+                                                    <div class="drag-text">
+                                                        <h3>Drag and drop a file or select add Image</h3>
+                                                    </div>
+                                                </div>
+                                                <div class="file-upload-content">
+                                                    <img class="file-upload-image" src="#" alt="your image" />
+                                                    <div class="image-title-wrap">
+                                                        <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+                                                    </div>
+                                                </div>
+                                                <br><br>
+                                                <center>
+
+                                                    <button class="btn btn-success">ชำระเงินแล้ว</button>
+
+                                                </center>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                <?php
+                                } ?>
 
                                 <script>
+                                    function readURL(input) {
+                                        if (input.files && input.files[0]) {
+
+                                            var reader = new FileReader();
+
+                                            reader.onload = function(e) {
+                                                $('.image-upload-wrap').hide();
+
+                                                $('.file-upload-image').attr('src', e.target.result);
+                                                $('.file-upload-content').show();
+
+                                                $('.image-title').html(input.files[0].name);
+                                            };
+
+                                            reader.readAsDataURL(input.files[0]);
+
+                                        } else {
+                                            removeUpload();
+                                        }
+                                    }
+
+                                    function removeUpload() {
+                                        $('.file-upload-input').replaceWith($('.file-upload-input').clone());
+                                        $('.file-upload-content').hide();
+                                        $('.image-upload-wrap').show();
+                                    }
+                                    $('.image-upload-wrap').bind('dragover', function() {
+                                        $('.image-upload-wrap').addClass('image-dropping');
+                                    });
+                                    $('.image-upload-wrap').bind('dragleave', function() {
+                                        $('.image-upload-wrap').removeClass('image-dropping');
+                                    });
+
                                     function openModalPart(modalName) {
                                         var modal = document.getElementById(modalName + "Modal");
                                         modal.style.display = "block";
@@ -288,6 +590,18 @@ if ($row1[0] == NULL) {
                                     }
 
                                     function closeModalPart(modalName) {
+                                        var modal = document.getElementById(modalName + "Modal");
+                                        modal.style.display = "none";
+                                        modal.classList.remove("show");
+                                    }
+                                    // ////////////////////////////////////////////////////////////
+                                    function openModalPay(modalName) {
+                                        var modal = document.getElementById(modalName + "Modal");
+                                        modal.style.display = "block";
+                                        modal.classList.add("show");
+                                    }
+
+                                    function closeModalPay(modalName) {
                                         var modal = document.getElementById(modalName + "Modal");
                                         modal.style.display = "none";
                                         modal.classList.remove("show");
@@ -301,6 +615,12 @@ if ($row1[0] == NULL) {
                                     }
 
                                     function closeModalStatus(modalName) {
+                                        var modal = document.getElementById(modalName + "Modal");
+                                        modal.style.display = "none";
+                                        modal.classList.remove("show");
+                                    }
+
+                                    function closeModalPay(modalName) {
                                         var modal = document.getElementById(modalName + "Modal");
                                         modal.style.display = "none";
                                         modal.classList.remove("show");
@@ -473,9 +793,24 @@ if ($row1[0] == NULL) {
                                 <?php
                                     }
                                 }
-                                if ($row1['rs_conf'] == 1) {
-
+                                if ($status_id == 8) {
                                 ?>
+
+                                <!--  Part modal -->
+                                <div id="payModal" class="modal">
+                                    <div class="modal-content">
+                                        <h2>จำนวนอะไหล่ทั้งหมด</h2>
+                                        <button class="close-button btn btn-primary" onclick="closeModalPay('pay')" width="200px">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                        <!--  content for Part modal -->
+                                        <iframe src="pay_qr.php?id=<?= $id_get_r ?>" style="width: 100%; height: 1000px;" class="no-scrollbar"></iframe>
+                                    </div>
+                                </div>
+                            <?php
+                                }
+                                if ($row1['rs_conf'] == 1) {  ?>
+
                                 <div class="alert alert-success" role="alert" style="margin-left : 10px">
                                     คุณได้ทำการยืนยันการส่งซ่อมแล้ว "โปรดรอการตอบกลับ"
                                 </div>

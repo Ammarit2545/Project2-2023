@@ -10,11 +10,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $get_r_id = $_POST['get_r_id'];
 $rs_detail = $_POST['rs_detail'];
+$status_id = $_POST['status_id'];
 $e_id = $_SESSION["id"];
 
 $sql = "SELECT * FROM repair_status 
         LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
-        WHERE repair_status.get_r_id = '$get_r_id' AND repair_status.rs_detail = '$rs_detail' AND repair_status.status_id = '11' OR status_type.value_code ='refuse' ";
+        WHERE repair_status.get_r_id = '$get_r_id' AND repair_status.rs_detail = '$rs_detail' AND repair_status.status_id = '$status_id' OR status_type.value_code ='refuse' ";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
@@ -26,7 +27,7 @@ if ($row[0] > 0) {
 } else {
     // if it does not already have data
     $sql_e = "INSERT INTO repair_status (get_r_id, rs_detail, rs_date_time, status_id, e_id)
-              VALUES ('$get_r_id', '$rs_detail', NOW(), '11', '$e_id')";
+              VALUES ('$get_r_id', '$rs_detail', NOW(), '$status_id', '$e_id')";
     $result_e = mysqli_query($conn, $sql_e);
 
     $rs_id = mysqli_insert_id($conn);

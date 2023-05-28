@@ -247,3 +247,11 @@ include('database/condb.php');
 </html> -->
 <!-- -->
 
+<?php
+require_once("lib/PromptPayQR.php");
+
+$PromptPayQR = new PromptPayQR(); // new object
+$PromptPayQR->size = 8; // Set QR code size to 8
+$PromptPayQR->id = '0957655647'; // PromptPay ID
+$PromptPayQR->amount = 250.23; // Set amount (not necessary)
+echo '<img src="' . $PromptPayQR->generate() . '" />';

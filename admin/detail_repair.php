@@ -811,9 +811,9 @@ if (!isset($_SESSION['role_id'])) {
                             <?php
                             } ?>
 
-                            <?php $statusIds = array("4", "17", "5", "19", "6");
+                            <?php $statusIds = array("4", "17", "5", "19", "6","7" ,"8");
                             if (in_array($row['status_id'], $statusIds)) {
-                                if ($row['rs_conf'] == NULL && $row['status_id'] != '5' && $row['status_id'] != '19' && $row['status_id'] != '6') {
+                                if ($row['rs_conf'] == NULL && $row['status_id'] != '5' && $row['status_id'] != '19' && $row['status_id'] != '6' && $row['status_id'] != '7' && $row['status_id'] != '8' ) {
                                     include('status_option/wait_respond.php');
                                 }
                                 if ($row['rs_conf'] == '0' && $row['status_id'] != '5') {
@@ -826,6 +826,10 @@ if (!isset($_SESSION['role_id'])) {
                                     include('status_option/doing_status.php');
                                 } else if ($row['status_id'] == '6') {
                                     include('status_option/after_doing.php');
+                                }else if ($row['status_id'] == '7') {
+                                    include('status_option/check_status.php');
+                                }else if ($row['status_id'] == '8') {
+                                    include('status_option/pay_status.php');
                                 }
                             }
 

@@ -96,7 +96,7 @@ if (!isset($_SESSION['role_id'])) {
     $result2 = mysqli_query($conn, $sql2);
     $row_2 = mysqli_fetch_array($result2);
 
-    $sql_c = "SELECT * FROM get_repair LEFT JOIN repair ON repair.r_id = get_repair.r_id WHERE get_r_id = '$id_get_r' AND del_flg = '0'";
+    $sql_c = "SELECT * FROM get_repair LEFT JOIN repair ON repair.r_id = get_repair.r_id WHERE get_r_id = '$id_get_r' AND get_repair.del_flg = '0'";
     $result_c = mysqli_query($conn, $sql_c);
     $row_c = mysqli_fetch_array($result_c);
     ?>
