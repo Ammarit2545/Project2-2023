@@ -12,14 +12,14 @@ $get_r_id  = $_GET['id'];
 
 echo $get_r_id;
 
-$sql = "SELECT * FROM repair_status WHERE status_id = 5 AND get_r_id = '$get_r_id'";
-$result = mysqli_query($conn, $sql);
-$row_c = mysqli_fetch_array($result);
+// $sql = "SELECT * FROM repair_status WHERE status_id = 5 AND get_r_id = '$get_r_id'";
+// $result = mysqli_query($conn, $sql);
+// $row_c = mysqli_fetch_array($result);
 
-if ($row_c[0] > 0) {
-    $_SESSION["add_data_alert"] = 1;
-    header("Location: ../../detail_repair.php?id=$get_r_id");
-} else {
+// if ($row_c[0] > 0) {
+//     $_SESSION["add_data_alert"] = 1;
+//     header("Location: ../../detail_repair.php?id=$get_r_id");
+// } else {
 
 
     //    ตัดของออกจาก Stock หลังจากยืนยัน
@@ -51,4 +51,4 @@ if ($row_c[0] > 0) {
         $_SESSION["add_data_alert"] = 0;
         header("Location: ../../detail_repair.php?id=$get_r_id");
     }
-}
+// }

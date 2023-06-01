@@ -174,7 +174,7 @@
     <br>
     <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
     <br>
-    <form id="cancel_status_id_conf_get" action="action/status/add_conf_cancel.php" method="POST" enctype="multipart/form-data">
+    <form id="cancel_status_id_conf_get" action="action/status/status_non_del_part.php" method="POST" enctype="multipart/form-data">
         <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_conf['status_color'] ?>"> <?= $row_conf['status_name'] ?></p> :</label>
         <textarea class="form-control" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">พนักงานได้รับอุปกรณ์ของคุณแล้วโปรดรอการตรวจเช็คจากพนักงาน</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>

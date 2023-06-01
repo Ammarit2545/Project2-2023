@@ -102,7 +102,7 @@ if ($row[0] > 0) {
 
             // if it does not already have data
             $sql_e = "INSERT INTO repair_status (get_r_id, rs_detail, rs_date_time, status_id, e_id)
-                    VALUES ('$get_r_id', '$rs_detail', NOW(), '17', '$e_id')";
+                    VALUES ('$get_r_id', '$rs_detail', NOW(), '$status_id', '$e_id')";
             $result_e = mysqli_query($conn, $sql_e);
 
             $rs_id = mysqli_insert_id($conn);
@@ -110,7 +110,7 @@ if ($row[0] > 0) {
             if ($rs_id > 0) {
                 $sql_m = "SELECT repair.m_id FROM repair 
                         LEFT JOIN get_repair ON get_repair.r_id = repair.r_id
-                        WHERE get_repair.get_r_id = '$get_r_id' AND del_flg = '0'";
+                        WHERE get_repair.get_r_id = '$get_r_id' AND get_repair.del_flg = '0'";
                 $result_m = mysqli_query($conn, $sql_m);
                 $row_m = mysqli_fetch_array($result_m);
                 $m_id = $row_m['m_id'];

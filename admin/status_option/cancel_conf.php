@@ -1,6 +1,17 @@
  <center>
-     <button class="btn btn-danger" onclick="showCancelValue()">ปฏิเสธคำสั่งซ่อม</button>
-     <button class="btn btn-warning" onclick="showofferValue()">ยื่นข้อเสนอ</button>
+     <?php
+        $sql = "SELECT * FROM status_type WHERE status_id = '11'";
+        $result = mysqli_query($conn, $sql);
+        $row_q = mysqli_fetch_array($result);
+        ?>
+     <button class="btn btn-danger" onclick="showCancelValue()" style="background-color: <?= $row_q['status_color'] ?>;"><?= $row_q['status_name'] ?></button>
+
+     <?php
+        $sql = "SELECT * FROM status_type WHERE status_id = '17'";
+        $result = mysqli_query($conn, $sql);
+        $row_offer = mysqli_fetch_array($result);
+        ?>
+     <button class="btn btn-warning" onclick="showofferValue()" style="background-color: <?= $row_offer['status_color'] ?>;"><?= $row_offer['status_name'] ?></button>
  </center>
 
  <div id="cancel_value_code" style="display: none;">
@@ -10,7 +21,7 @@
      <br>
      <form id="cancel_status_id_conf" action="action/status/add_conf_cancel.php" method="POST" enctype="multipart/form-data">
          <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : red"> ปฏิเสธการซ่อม</p> :</label>
-         <textarea class="form-control" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม"></textarea>
+         <textarea class="form-control" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">ทำการปฏิเสธการซ่อมเนื่องจาก...</textarea>
          <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
          <br>
          <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
@@ -143,18 +154,18 @@
      <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
      <br>
      <form id="offers_status_id" action="action/status/add_conf_offer.php" method="POST" enctype="multipart/form-data">
-         <label for="DetailFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : orange"> ยื่นข้อเสนอ</p> :</label>
-         <textarea class="form-control" name="rs_detail" id="DetailFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม"></textarea>
+         <label for="DetailFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_offer['status_color'] ?>"> <?= $row_offer['status_name'] ?></p> :</label>
+         <textarea class="form-control" name="rs_detail" id="DetailFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">ทางเราได้ดำเนินการตรวจเช็คแล้ว มีอะไหล่ดังนี้</textarea>
          <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
+         <input type="text" name="status_id" value="<?= $row_offer['status_id'] ?>" hidden>
          <input type="hidden" name="cardCount" id="cardCountInput" value="0">
          <br>
          <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่</label>
          <div class="input-group mb-3">
-         <input type="text" name="status_id" value="<?= $row['rs_id'] ?>" hidden>
              <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
              <input name="get_wages" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="<?= $row['get_wages'] ?>" required>
          </div>
-         
+
          <br>
          <div class="mb-3">
              <h6>อะไหล่</h6>

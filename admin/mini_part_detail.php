@@ -2,8 +2,8 @@
 session_start();
 include('../database/condb.php');
 
-if (!isset($_SESSION['role_id'])) {
-    header('Location:../home.php');
+if (!isset($_SESSION['id'])) {
+    header('Location:home.php');
 }
 
 ?>
@@ -12,25 +12,31 @@ if (!isset($_SESSION['role_id'])) {
 <html lang="en">
 
 <head>
-
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+    <link rel="stylesheet" href="../css/index.css">
 
     <title>View Part - Edit Employee Information</title>
     <link rel="icon" type="image/x-icon" href="../img brand/anelogo.jpg">
 
     <!-- Custom fonts for this template -->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
-
     <!-- Custom styles for this page -->
-    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+
+    <link rel="icon" type="image/x-icon" href="img brand/anelogo.jpg">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.10/dist/sweetalert2.min.css">
 
 </head>
 
@@ -99,19 +105,19 @@ if (!isset($_SESSION['role_id'])) {
                                         JOIN parts ON parts.p_id = repair_detail.p_id
                                         LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
                                       WHERE
-                                        get_repair.del_flg = 0 AND repair_detail.del_flg = '0'
+                                        get_repair.del_flg = 0 AND repair_detail.del_flg = 0
                                         AND get_repair.get_r_id = '$get_id'
                                       GROUP BY
                                         p_id;
                                         ";
                                         $result = mysqli_query($conn, $sql);
-
                                         while ($row = mysqli_fetch_array($result)) {
-                                            $p_id = $row['p_id'] ;
-                                            $rs_id = $row['rs_id'] ;
+                                            $p_id = $row['p_id'];
+                                            $rs_id = $row['rs_id'];
                                             $sql_count = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id' AND p_id = '$p_id'";
-                                            $result_count = mysqli_query($conn ,$sql_count);
+                                            $result_count = mysqli_query($conn, $sql_count);
                                             $row_count = mysqli_fetch_array($result_count);
+                                           
                                         ?>
                                             <tr>
                                                 <td><?php
@@ -136,12 +142,12 @@ if (!isset($_SESSION['role_id'])) {
 
 
                                                 <!-- <td><?php
-                                                    if ($row['p_name'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['p_name'];
-                                                    }
-                                                    ?>
+                                                            if ($row['p_name'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo $row['p_name'];
+                                                            }
+                                                            ?>
                                                 </td> -->
                                                 <td><?php
                                                     if ($row['p_brand'] == NULL) {
@@ -168,13 +174,13 @@ if (!isset($_SESSION['role_id'])) {
                                                     ?>
                                                 </td>
                                                 <!-- <td><?php
-                                                    if ($row['p_detail'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                    ?>
+                                                            if ($row['p_detail'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                            ?>
                                                         <p><?= substr($row['p_detail'], 0, 50) . '...' ?></p>
                                                     <?php
-                                                    }
+                                                            }
                                                     ?>
                                                 </td> -->
 
@@ -195,81 +201,42 @@ if (!isset($_SESSION['role_id'])) {
                                                     ?>
                                                 </td>
                                                 <td>
-                                                <?php
+                                                    <?php
                                                     if ($row_count['rd_value_parts'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo number_format($row_count['rd_value_parts']*$row['p_price']);
-                                                        $total += $row_count['rd_value_parts']*$row['p_price'];
+                                                        echo number_format($row_count['rd_value_parts'] * $row['p_price']);
+                                                        $total += $row_count['rd_value_parts'] * $row['p_price'];
                                                     }
                                                     ?>
                                                 </td>
-                                                <!-- <td>
-                                                    <button onclick="confirmDelete(<?= $row['p_id'] ?>)" class="btn btn-danger">ลบ</button>
-                                                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> -->
-
-                                                    <!-- JavaScript function for confirmation -->
-                                                    <!-- <script>
-                                                        function confirmDelete(id) {
-                                                            Swal.fire({
-                                                                title: 'คุณแน่ใจหรือไม่?',
-                                                                text: 'คุณต้องการลบข้อมูลนี้หรือไม่',
-                                                                icon: 'warning',
-                                                                showCancelButton: true,
-                                                                confirmButtonColor: '#dc3545',
-                                                                cancelButtonColor: '#6c757d',
-                                                                confirmButtonText: 'Yes, delete it!'
-                                                            }).then((result) => {
-                                                                if (result.isConfirmed) {
-                                                                    // If confirmed, continue with the deletion process
-                                                                    window.location.href = "action/delete_part.php?id=" + id;
-                                                                }
-                                                            });
-                                                        }
-                                                    </script>
-
-                                                    <a class="btn btn-warning" href="edit_parts.php?id=<?= $row['p_id'] ?>">แก้ไข</a>
-                                                </td> -->
                                             </tr>
                                         <?php
                                         }
                                         ?>
-
-
-                                        <!-- <tr>
-                                            <td>Tiger Nixon</td>
-                                            <td>Yamaha</td>
-                                            <td>cc61</td>
-                                            <td>หูฟังไร้สาย เชื่อมต่อผ่าน bluetooth</td>
-                                            <td>$320,800</td>
-                                            <th>2</th>
-                                            <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td>
-                                        </tr> -->
                                         <tr>
                                             <td colspan="5">ยอดอะไหล่ทั้งหมด</td>
                                             <td colspan="2">ราคารวม</td>
                                             <td><?= number_format($total) ?></td>
                                             <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
                                         </tr>
-
-                                        <!-- <tr>
-                                            <td>Senior Marketing Designer</td>
-                                            <td>4545</td>
-                                            <td>43</td>
-                                            <td>กีต้าร์ไร้สาย หาสายเอาเอง</td>
-                                            <td>$313,500</td>
-                                            <th>2</th>
-                                            <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td>
+                                        <tr>
+                                            <?php
+                                            $sql_w = "SELECT get_wages FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
+                                            $result_w = mysqli_query($conn ,$sql_w);
+                                            $row_w = mysqli_fetch_array($result_w);
+                                            ?>
+                                            <td colspan="5">ค่าแรงช่าง</td>
+                                            <td colspan="2">ค่าแรง</td>
+                                            <td><?= number_format($row_w['get_wages']) ?></td>
+                                            <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
                                         </tr>
                                         <tr>
-                                            <td>Tatyana Fitzpatrick</td>
-                                            <td>Regional Director</td>
-                                            <td>19</td>
-                                            <td>กลองชุด</td>
-                                            <td>$385,750</td>
-                                            <th>2</th>
-                                            <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td>
-                                        </tr>  -->
+                                            <td colspan="5"></td>
+                                            <td colspan="2">ราคารวมทั้งหมด</td>
+                                            <td><h5><?= number_format($total + $row_w['get_wages']) ?> </h5></td>
+                                            <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -278,19 +245,40 @@ if (!isset($_SESSION['role_id'])) {
 
                 </div>
                 <!-- /.container-fluid -->
+                <center>
+                    <!-- <a class="btn btn-danger">ไม่ทำการยืนยัน</a> -->
+                    <!-- Add your button -->
+                    <!-- <a class="btn btn-success" id="confirmButton">ยืนยัน</a> -->
+
+                    <!-- <a class="btn btn-danger">ไม่ทำการยืนยัน</a>
+                    <a class="btn btn-success" id="confirmButton">ยืนยัน</a>  -->
+                </center>
+                <!-- Place this in the <head> section of your HTML document -->
+                <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+                <!-- Place this before the closing </body> tag -->
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        document.getElementById('confirmButton').addEventListener('click', function() {
+                            Swal.fire({
+                                icon: 'question',
+                                title: 'ยืนยันการดำเนินการ',
+                                text: 'การ "ยืนยัน" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
+                                showCancelButton: true,
+                                confirmButtonText: 'ยืนยัน',
+                                cancelButtonText: 'ยกเลิก'
+                            }).then((willConfirm) => {
+                                if (willConfirm.isConfirmed) {
+                                    window.location.href = "action/conf_part.php?id=<?= $get_id ?>"; // Redirect to home.php
+                                }
+                            });
+                        });
+                    });
+                </script>
+
 
             </div>
             <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <!-- <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2020</span>
-                    </div>
-                </div>
-            </footer> -->
-            <!-- End of Footer -->
 
         </div>
         <!-- End of Content Wrapper -->

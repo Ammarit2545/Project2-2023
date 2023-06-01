@@ -49,7 +49,7 @@
     <br>
     <form id="cancel_status_id_conf" action="action/status/add_conf_cancel.php" method="POST" enctype="multipart/form-data">
         <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : red"> <?= $row_q['status_name'] ?></p> :</label>
-        <textarea class="form-control" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม"></textarea>
+        <textarea class="form-control" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">ทำการยกเลิกรายการ</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
         <input type="text" name="status_id" value="<?= $row_q['status_id'] ?>" hidden>
         <br>
@@ -182,7 +182,7 @@
     <br>
     <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
     <br>
-    <form id="doing_status_id" action="action/status/add_conf_cancel.php" method="POST" enctype="multipart/form-data">
+    <form id="confirm_check" action="action/status/add_conf_cancel.php" method="POST" enctype="multipart/form-data">
         <label for="DetailFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_conf['status_color'] ?>"> <?= $row_conf['status_name'] ?> </p> :</label>
         <textarea class="form-control" name="rs_detail" id="DetailFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">พนักงานกำลังดำเนินการตรวจเช็คความเรียบร้อยในขณะนี้</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
@@ -283,7 +283,7 @@
                 }
             }
 
-            function confirm_offers(event) {
+            function confirm_check_func(event) {
                 event.preventDefault(); // Prevent the form from being submitted
 
                 Swal.fire({
@@ -298,14 +298,14 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // User confirmed, submit the form
-                        document.getElementById('doing_status_id').submit();
+                        document.getElementById('confirm_check').submit();
                     }
                 });
             }
         </script>
         <center>
             <br>
-            <button class="btn btn-success" onclick="confirm_offers(event)">ยืนยัน</button>
+            <button class="btn btn-success" onclick="confirm_check_func(event)">ยืนยัน</button>
         </center>
     </form>
 </div>
@@ -318,15 +318,16 @@
     <br>
     <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
     <br>
-    <form id="doing_status_id" action="action/status/add_conf_status.php" method="POST" enctype="multipart/form-data">
+    <form id="confirm_config" action="action/status/add_conf_offer.php" method="POST" enctype="multipart/form-data">
         <label for="DetailFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_confg['status_color'] ?>"> <?= $row_confg['status_name'] ?> </p> :</label>
-        <textarea class="form-control" name="rs_detail" id="DetailFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม"></textarea>
+        <textarea class="form-control" name="rs_detail" id="DetailFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">พนักงานกำลังดำเนินต้องมีอะไหล่ที่ใช้เพิ่มดังนี้</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
+        <input type="text" name="status_id" value="13" hidden>
         <input type="hidden" name="cardCount" id="cardCountInput" value="0" readonly>
         <br>
         <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่</label>
         <div class="input-group mb-3">
-            <input type="text" name="status_id" value="6" hidden readonly>
+            <!-- <input type="text" name="status_id" value="6" hidden readonly> -->
             <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
             <input name="get_wages" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="<?= $row['get_wages'] ?>" required>
         </div>
@@ -436,7 +437,7 @@
                 }
             }
 
-            function confirm_offers(event) {
+            function confirm_offers_func(event) {
                 event.preventDefault(); // Prevent the form from being submitted
 
                 Swal.fire({
@@ -451,14 +452,14 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // User confirmed, submit the form
-                        document.getElementById('doing_status_id').submit();
+                        document.getElementById('confirm_config').submit();
                     }
                 });
             }
         </script>
         <center>
             <br>
-            <button class="btn btn-success" onclick="confirm_offers(event)">ยืนยัน</button>
+            <button class="btn btn-success" onclick="confirm_offers_func(event)">ยืนยัน</button>
         </center>
     </form>
 </div>

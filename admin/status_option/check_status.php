@@ -1,6 +1,6 @@
 <center>
     <?php
-    $sql = "SELECT * FROM status_type WHERE status_id = '11'";
+    $sql = "SELECT * FROM status_type WHERE status_id = '12'";
     $result = mysqli_query($conn, $sql);
     $row_q = mysqli_fetch_array($result);
     ?>
@@ -21,7 +21,7 @@
     <br>
     <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
     <br>
-    <form id="cancel_status_id_conf" action="action/status/add_conf_cancel.php" method="POST" enctype="multipart/form-data">
+    <form id="cancel_status_id_conf" action="action/status/status_refuse_return.php" method="POST" enctype="multipart/form-data">
         <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_q['status_color'] ?>"> <?= $row_q['status_name'] ?></p> :</label>
         <textarea class="form-control" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">เนื่องจากไม่สามารถจัดสรรหาอะไหล่ที่ท่านต้องการได้ ทางเราต้องขออภัยเป็นอย่างยิ่ง</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
@@ -153,15 +153,20 @@
 <div id="status_doing" style="display: none;">
     <hr>
     <br>
-    <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
+    <h1 class="m-0 font-weight-bold text-success"> <?= $row_conf['status_name'] ?> </h1>
     <br>
-    <form id="cancel_status_id_conf_get" action="action/status/add_conf_cancel.php" method="POST" enctype="multipart/form-data">
+    <form id="cancel_status_id_conf_get" action="action/status/status_non_del_part.php" method="POST" enctype="multipart/form-data">
         <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_conf['status_color'] ?>"> <?= $row_conf['status_name'] ?></p> :</label>
         <textarea class="form-control" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">การตรวจเช็คอุปกรณ์เสร็จสิ้น รอการชำระเงิน</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
         <input type="text" name="status_id" value="<?= $row_conf['status_id'] ?>" hidden>
         <br>
         <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
+        <!-- <br>
+        <label for="basic-url" class="form-label">ราคาค่าส่ง</label>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+        </div> -->
         <hr>
         <label for="cancelFormControlTextarea_get" class="form-label">เพิ่มรูปภาพหรือวิดีโอ *ไม่จำเป็น (สูงสุด 4 ไฟล์):</label>
         <a class="btn btn-primary" onclick="showInput_conf_get()">เพิ่มรูปภาพหรือวิดีโอ</a>

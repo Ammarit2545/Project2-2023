@@ -6,6 +6,12 @@ if (!isset($_SESSION['id'])) {
     header('Location:home.php');
 }
 $get_id = $_GET['id'];
+
+if (isset($_GET['get_add'])) {
+    if ($_GET['get_add'] > 0) {
+        $total = $_GET['get_add'];
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -18,6 +24,7 @@ $get_id = $_GET['id'];
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/all_page.css">
 
     <title>View Part - Edit Employee Information</title>
     <link rel="icon" type="image/x-icon" href="../img brand/anelogo.jpg">
@@ -37,6 +44,7 @@ $get_id = $_GET['id'];
     <link rel="icon" type="image/x-icon" href="img brand/anelogo.jpg">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.10/dist/sweetalert2.min.css">
+
 
 </head>
 
@@ -191,6 +199,13 @@ $get_id = $_GET['id'];
                                                         }
                                                         ?>
                                                     </td>
+                                                    <!-- <?php
+                                                            if (isset($_GET['get_add'])) {
+                                                                if ($_GET['get_add'] > 0) {
+                                                                    $total = $_GET['get_add'];
+                                                                }
+                                                            }
+                                                            ?> -->
                                                     <td>
                                                         <?php
                                                         if ($row_count['rd_value_parts'] == NULL) {
@@ -222,6 +237,17 @@ $get_id = $_GET['id'];
                                                 <td><?= number_format($row_w['get_wages']) ?></td>
                                                 <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
                                             </tr>
+                                            <?php if (isset($_GET['get_add'])) {
+                                            ?>
+                                                <tr>
+                                                    <td colspan="5">ค่าจัดส่งอุปกรณ์ <span style="color : blue">(ไปรษณีย์ไทยแบบลงทะเบียน)</span></td>
+                                                    <td colspan="2">ค่าจัดส่งอุปกรณ์</td>
+                                                    <td><?= number_format($_GET['get_add']) ?></td>
+                                                    <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
+                                                </tr>
+                                            <?php
+                                            } ?>
+
                                             <tr>
                                                 <td colspan="5"></td>
                                                 <td colspan="2">ราคารวมทั้งหมด</td>
@@ -240,13 +266,14 @@ $get_id = $_GET['id'];
                         <center>
                             <hr>
                             <br>
-                        <img src="img/kbank-icon.png" alt="kbank" width="50px" style="border-radius:10%"><h4 style="display:inline; margin-left:15px">บัญชีธนาคารกสิกร : <span style="color:green">0254859696</span></h4>
+                            <img src="img/kbank-icon.png" alt="kbank" width="50px" style="border-radius:10%">
+                            <h4 style="display:inline; margin-left:15px">บัญชีธนาคารกสิกร : <span style="color:green">0254859696</span></h4>
                             <br>
                             <br>
                             <hr>
                             <br>
                             <h5>*** หากชำระเงินแล้วให้ท่านกลับไปหน้า <span style="color: blue;">สถานะ</span> และแนบสลิปเพื่อเป็น<span style="color: red;"> หลักฐานในการโอนเงิน</span> ***</h5>
-                        <br>
+                            <br>
                             <!-- <a class="btn btn-danger">ไม่ทำการยืนยัน</a>
                             
                             <a class="btn btn-success" id="confirmButton">ยืนยัน</a> -->
@@ -254,7 +281,7 @@ $get_id = $_GET['id'];
                             <!-- <a class="btn btn-danger">ไม่ทำการยืนยัน</a>
                     <a class="btn btn-success" id="confirmButton">ยืนยัน</a>  -->
                         </center>
-                        
+
                         <!-- <h4>บัญชีธนาคารกสิกร : 0254589658 </h4>
                         <h4>บัญชีธนาคารกสิกร : 0254589658 </h4>
                         <h4>บัญชีธนาคารกสิกร : 0254589658 </h4> -->
@@ -267,7 +294,7 @@ $get_id = $_GET['id'];
                     <div class="card-body">
 
                         <center>
-                            
+
                             <img src="img/promtpay.png" alt="PromptPay" width="200px">
                             <h5>หมายเลข Promtpay : 0957655647</h5>
                         </center>
@@ -285,6 +312,8 @@ $get_id = $_GET['id'];
                         <br>
                         <br>
                         <center>
+                            <h3>ชื่อ : อมฤต โชติทินวัฒน์</h3>
+                            <br>
                             <h2>ราคารวม : <?= number_format($total + $row_w['get_wages']) ?> บาท</h2>
                         </center>
                         <br>

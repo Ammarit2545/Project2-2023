@@ -246,6 +246,7 @@ if ($row1[0] == NULL) {
     $sql_c = "SELECT * FROM get_repair LEFT JOIN repair ON repair.r_id = get_repair.r_id WHERE get_r_id = '$id_get_r' AND repair.del_flg = '0'";
     $result_c = mysqli_query($conn, $sql_c);
     $row_c = mysqli_fetch_array($result_c);
+    $get_add_price = $row_c['get_add_price'];
     ?>
 
     <!-- end navbar-->
@@ -337,17 +338,73 @@ if ($row1[0] == NULL) {
                                 if ($row_p['rs_id'] == $row1['rs_id'] && $row_check_part['rd_id'] != NULL) {
                                     // if ($row_p['rs_id'] == $row1['rs_id'] && $row_check_part['rd_id'] != NULL && $row1['status_id'] != '11') {
                                     if ($row1['status_id'] != 8) {
+                                        if ($row1['status_id'] == 9 || $row1['status_id'] == 10) {
                                 ?>
-                                        <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a>
-                                    <?php
+                                            <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">จำนวนอะไหล่</a>
+                                        <?php
+                                        } else {
+                                        ?>
+                                            <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a>
+                                        <?php }
                                     } else {
-                                    ?>
-                                        <a class="btn btn-primary" style="margin-left: 20px" href="#" onclick="openModalPay('pay')">ชำระค่าบริการ</a>
+                                        ?>
+                                        <!-- <a class="btn btn-primary" style="margin-left: 20px" href="#" onclick="openModalPay('pay')">ชำระค่าบริการ</a> -->
                                 <?php
                                     }
                                 }
 
                                 ?>
+                                <?php if ($row1['status_id'] == 8 && $row1['rs_conf'] == NULL) {
+
+                                ?>
+                                    <a href="test_form.php?id=<?= $id_get_r ?>" class="btn btn-primary">ทำการชำระเงิน</a>
+                                <?php
+                                } ?>
+                                <?php if ($row1['get_track'] != NULL && $row1['status_id'] == 24) {
+                                ?>
+                                    <hr>
+                                    <h5 class="btn btn-outline-primary">หมายเลข Tracking ของท่าน</h5>
+                                    <!-- HTML -->
+                                    <div id="copyText" style="cursor: pointer;">
+                                        <p style="margin-left: 30px; display : inline;">Click to copy: </p>
+                                        <p class="mt-2" style="display : inline;color : green;"><?= $row1['get_track'] ?></p>
+                                        <br>
+                                        <span id="copyMessage" class="btn btn-success" style="display: none; color:white; margin-left: 30px;"></span>
+                                    </div>
+
+                                    <script>
+                                        document.getElementById("copyText").addEventListener("click", function() {
+                                            var textToCopy = "<?= $row1['get_track'] ?>";
+
+                                            // Create a temporary input element
+                                            var tempInput = document.createElement("input");
+                                            tempInput.type = "text";
+                                            tempInput.value = textToCopy;
+                                            document.body.appendChild(tempInput);
+
+                                            // Copy the text from the input element
+                                            tempInput.select();
+                                            document.execCommand("copy");
+
+                                            // Remove the temporary input element
+                                            document.body.removeChild(tempInput);
+
+                                            // Display the copy message
+                                            var copyMessage = document.getElementById("copyMessage");
+                                            copyMessage.textContent = "Text copied: " + textToCopy;
+                                            copyMessage.style.display = "inline";
+
+                                            // Hide the copy message after 1 second
+                                            setTimeout(function() {
+                                                copyMessage.style.display = "none";
+                                            }, 2000);
+                                        });
+                                    </script>
+
+                                <?php
+                                } ?>
+
+
                                 <hr>
                                 <h5 class="btn btn-outline-primary">รายละเอียด</h5>
                                 <p class="mt-2" style="margin-left: 30px;"><?= $row1['rs_detail'] ?></p>
@@ -395,7 +452,64 @@ if ($row1[0] == NULL) {
                                     while ($row_pic = mysqli_fetch_array($result_pic)) {
                                     ?>
                                         <!-- <img src="<?= $row_pic['rp_pic'] ?>" width="100px"> -->
-                                        <a href="#"><img src="<?= $row_pic['rp_pic'] ?>" width="100px" id="drop-shadow" class="picture_modal" alt="" onclick="openModal(this)"></a>
+                                        <?php
+                                        $rp_pic = $row_pic['rp_pic'];
+                                        $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                        ?>
+
+                                        <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                            <a href="#">
+                                                <img src="<?= $rp_pic ?>" width="100px" id="drop-shadow" class="picture_modal" alt="" onclick="openModalIMG(this)">
+                                            </a>
+                                        <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
+                                            <a href="#">
+                                                <video width="100px" id="drop-shadow" autoplay muted onclick="openModalVideo(this)" src="<?= $rp_pic ?>">
+                                                    <source src="<?= $rp_pic ?>" type="video/mp4">
+                                                    <source src="<?= $rp_pic ?>" type="video/ogg">
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            </a>
+                                        <?php endif; ?>
+
+
+                                        <!-- Modal -->
+                                        <div id="modal" class="modal">
+                                            <span class="close" onclick="closeModal()">&times;</span>
+                                            <video id="modal-video" controls class="modal-video"></video>
+                                        </div>
+
+                                        <script>
+                                            function openModalVideo(element) {
+                                                var modal = document.getElementById('modal');
+                                                var modalVideo = document.getElementById('modal-video');
+
+                                                modal.style.display = 'block';
+                                                modal.classList.add('show');
+
+                                                modalVideo.src = element.src;
+                                                modalVideo.style.height = '90%';
+                                                modalVideo.style.borderRadius = '2%';
+                                                modalVideo.style.display = 'block';
+                                                modalVideo.style.margin = '0 auto';
+                                            }
+
+
+                                            function closeModal() {
+                                                var modal = document.getElementById('modal');
+                                                var modalVideo = document.getElementById('modal-video');
+                                                modalVideo.pause();
+                                                modalVideo.currentTime = 0;
+                                                modalVideo.src = ""; // Reset the video source
+                                                modal.style.display = 'none';
+                                            }
+
+                                            window.addEventListener('click', function(event) {
+                                                var modal = document.getElementById('modal');
+                                                if (event.target === modal) {
+                                                    closeModal();
+                                                }
+                                            });
+                                        </script>
                                     <?php
                                     } ?>
                                 </div>
@@ -411,143 +525,7 @@ if ($row1[0] == NULL) {
                                         <iframe src="mini_part_detail.php?id=<?= $id_get_r ?>" style="width: 100%; height: 1000px;" class="no-scrollbar"></iframe>
                                     </div>
                                 </div>
-                                <?php if ($row1['status_id'] == 8 && $row1['rs_conf'] == NULL) {
-                                ?>
 
-                                    <br>
-                                    <hr>
-                                    <br>
-                                    <h1 class="alert alert-primary" role="alert">กรุณากรอกข้อมูลการชำระเงินและการจัดส่ง</h1>
-                                    <br>
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <!-- First Name Here  -->
-                                                <label for="basic-url" class="form-label">ชื่อจริง</label>
-                                                <div class="input-group mb-3">
-                                                    <!-- <span class="input-group-text" id="basic-addon3">ชื่อจริง</span> -->
-                                                    <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="<?= $_SESSION['fname'] ?>" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <!-- Last Name Here  -->
-                                                <label for="basic-url" class="form-label">นามสกุล</label>
-                                                <div class="input-group mb-3">
-                                                    <!-- <span class="input-group-text" id="basic-addon3">นามสกุล</span> -->
-                                                    <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="<?= $_SESSION['lname'] ?>" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <!-- Last Name Here  -->
-                                                <label for="basic-url" class="form-label">เบอร์โทรศัพท์</label>
-                                                <div class="input-group mb-3">
-                                                    <!-- <span class="input-group-text" id="basic-addon3">นามสกุล</span> -->
-                                                    <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="<?= $_SESSION['tel'] ?>" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <center>
-                                                    <h5>เลือกวิธีการจัดส่งที่ท่านต้องการ</h5>
-                                                </center>
-                                                <br>
-                                            </div>
-                                            <div class="col-6 d-flex justify-content-end">
-                                                <button class="btn btn-primary" id="non_add_button" onclick="showPay()">มารับที่ร้าน</button>
-                                                <button class="btn btn-danger" id="cancel_add_button" style="display:none" onclick="showAddressClose()">ยกเลิก</button>
-                                            </div>
-                                            <div class="col-6 d-flex justify-content-start">
-                                                <button class="btn btn-success" onclick="showAddress()" id="add_button_pay">จัดส่งผ่านไปรษณีย์</button>
-                                                <button class="btn btn-danger" id="cancel_pay_button" style="display:none" onclick="showPayClose()">ยกเลิก</button>
-                                            </div>
-                                        </div>
-
-                                        <br>
-                                        <hr>
-                                        <div class="row">
-                                            <!-- Address Here -->
-                                            <div class="mb-3" style="display: none" id="show_address">
-                                                <br>
-                                                <label for="exampleFormControlTextarea1" class="form-label">กรุณากรอกที่อยู่</label>
-                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" required><?= $_SESSION['address'] ?></textarea>
-                                                <br>
-                                                <center>
-                                                    <a class="btn btn-primary" style="margin-left: 20px" href="#" onclick="openModalPay('pay')">ชำระค่าบริการ</a>
-                                                </center>
-                                                <br>
-                                                <hr>
-                                            </div>
-
-                                            <div class="mb-3" style="display: none" id="show_pay">
-                                                <br>
-                                                <label for="exampleFormControlTextarea1" class="form-label"><h6>กรุณาดูรายละเอียดการชำระเงินของท่าน : </h6></label>
-                                                <a class="btn btn-primary" style="margin-left: 20px" href="#" onclick="openModalPay('pay')">ชำระค่าบริการ</a>
-                                                <br>
-                                                <center>
-                                                    <!-- <a class="btn btn-primary" style="margin-left: 20px" href="#" onclick="openModalPay('pay')">ชำระค่าบริการ</a> -->
-                                                </center>
-                                                <br>
-                                                <hr>
-                                            </div>
-                                        </div>
-                                        <script>
-                                            function showPay() {
-                                                document.getElementById('show_pay').style.display = 'block';
-                                                document.getElementById('add_button_pay').style.display = 'none';
-                                                document.getElementById('cancel_pay_button').style.display = 'block';
-                                            }
-
-                                            function showPayClose() {
-                                                document.getElementById('show_pay').style.display = 'none';
-                                                document.getElementById('add_button_pay').style.display = 'block';
-                                                document.getElementById('cancel_pay_button').style.display = 'none';
-                                            }
-
-                                            function showAddress() {
-                                                document.getElementById('show_address').style.display = 'block';
-                                                document.getElementById('non_add_button').style.display = 'none';
-                                                document.getElementById('cancel_add_button').style.display = 'block';
-                                                // document.getElementById('detail_value_code').style.display = 'none';
-                                            }
-
-                                            function showAddressClose() {
-                                                document.getElementById('show_address').style.display = 'none';
-                                                document.getElementById('non_add_button').style.display = 'block';
-                                                document.getElementById('cancel_add_button').style.display = 'none';
-                                            }
-                                        </script>
-                                        <div class="row">
-                                            <!-- Image Here -->
-                                            <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-                                            <div class="file-upload">
-                                                <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">แนบหลักฐานการชำระเงิน</button>
-
-                                                <div class="image-upload-wrap">
-                                                    <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
-                                                    <div class="drag-text">
-                                                        <h3>Drag and drop a file or select add Image</h3>
-                                                    </div>
-                                                </div>
-                                                <div class="file-upload-content">
-                                                    <img class="file-upload-image" src="#" alt="your image" />
-                                                    <div class="image-title-wrap">
-                                                        <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
-                                                    </div>
-                                                </div>
-                                                <br><br>
-                                                <center>
-
-                                                    <button class="btn btn-success">ชำระเงินแล้ว</button>
-
-                                                </center>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <br>
-                                <?php
-                                } ?>
 
                                 <script>
                                     function readURL(input) {
@@ -627,15 +605,14 @@ if ($row1[0] == NULL) {
                                     }
                                 </script>
 
-                                <div id="modal" class="modal">
-                                    <span class="close" onclick="closeModal()">&times;</span>
+                                <div id="modalimg" class="modal">
+                                    <span class="close" onclick="closeModalIMG()">&times;</span>
                                     <img id="modal-image" src="" alt="Modal Photo">
                                 </div>
-
                                 <script src="script.js"></script>
                                 <script>
-                                    function openModal(img) {
-                                        var modal = document.getElementById("modal");
+                                    function openModalIMG(img) {
+                                        var modal = document.getElementById("modalimg");
                                         var modalImg = document.getElementById("modal-image");
                                         modal.style.display = "block";
                                         modalImg.src = img.src;
@@ -644,15 +621,26 @@ if ($row1[0] == NULL) {
                                         modal.classList.add("show");
                                     }
 
-                                    function closeModal() {
-                                        var modal = document.getElementById("modal");
+                                    function closeModalIMG() {
+                                        var modal = document.getElementById("modalimg");
                                         modal.style.display = "none";
                                     }
                                 </script>
                             </li>
-                            <br><?php
-                                if ($row[0] > 0) {
-                                    if ($row1['rs_conf'] == NULL) { ?>
+                            <br>
+                            <?php if ($row1['status_id'] == 24 && $row1['rs_conf'] == NULL) { ?>
+                                <hr>
+                                <p style="margin-left: 2%; color:red">*** ตรวจเช็คความปกติของอุปกรณ์ของท่านว่าใช้ได้หรือไม่ก่อนทำการยืนยันเสร็จสิ้นการซ่อม ***</p>
+                                <a class="btn btn-danger" style="margin-left: 2%" href="send_config.php?id=<?= $id_get_r ?>">แจ้งเจ้าหน้าที่กรณีมีปัญหา</a>
+                                <a class="btn btn-success" style="margin-left: 2%">ยืนยัน</a>
+                                <br>
+                            <?php
+                            }
+                            ?>
+
+                            <?php
+                            if ($row[0] > 0) {
+                                if ($row1['rs_conf'] == NULL) { ?>
                                     <hr>
                                     <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
                                     <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน</a>
@@ -791,9 +779,9 @@ if ($row1[0] == NULL) {
 
                                     <br><br>
                                 <?php
-                                    }
                                 }
-                                if ($status_id == 8) {
+                            }
+                            if ($status_id == 8) {
                                 ?>
 
                                 <!--  Part modal -->
@@ -803,13 +791,38 @@ if ($row1[0] == NULL) {
                                         <button class="close-button btn btn-primary" onclick="closeModalPay('pay')" width="200px">
                                             <i class="fa fa-times"></i>
                                         </button>
+                                        <!-- content for Part modal -->
+                                        <iframe src="pay_qr.php?id=<?php echo $id_get_r; ?>" style="width: 100%; height: 1000px;"></iframe>
+                                    </div>
+                                </div>
+
+                                <div id="payaddModal" class="modal">
+                                    <div class="modal-content">
+                                        <h2>จำนวนอะไหล่ทั้งหมด</h2>
+                                        <button class="close-button btn btn-primary" onclick="closeModalPay('payadd')" width="200px">
+                                            <i class="fa fa-times"></i>
+                                        </button>
                                         <!--  content for Part modal -->
-                                        <iframe src="pay_qr.php?id=<?= $id_get_r ?>" style="width: 100%; height: 1000px;" class="no-scrollbar"></iframe>
+                                        <iframe src="pay_qr.php?id=<?php echo $id_get_r; ?>&get_add=<?= $get_add_price ?>" style="width: 100%; height: 1000px;" class="no-scrollbar"></iframe>
+
                                     </div>
                                 </div>
                             <?php
-                                }
-                                if ($row1['rs_conf'] == 1) {  ?>
+                            }
+                            if ($row1['rs_conf'] == 1 && $row1['status_id'] == 8) {  ?>
+
+                                <div class="alert alert-success" role="alert" style="margin-left : 10px">
+                                    คุณได้ทำการยืนยันการชำระเงินแล้ว "โปรดรอการตอบกลับ"
+                                </div>
+                                <span class="check_icon"><i class="fa fa-check"></i> ส่งวันที่ : <?= $row1['rs_conf_date'] ?></span>
+                                <!-- <button class="btn btn-success" style="margin-left : 10px"> คุณได้ทำการยืนยันการส่งซ่อมแล้ว "โปรดรอการตอบกลับ" </button> -->
+                            <?php } else if ($row1['rs_conf'] == 1 && $row1['status_id'] == 24) {  ?>
+                                <div class="alert alert-success" role="alert" style="margin-left : 10px">
+                                    คุณได้ทำการส่งคำร้องแล้ว "โปรดรอการตอบกลับ"
+                                </div>
+                                <span class="check_icon"><i class="fa fa-check"></i> ส่งวันที่ : <?= $row1['rs_conf_date'] ?></span>
+                                <!-- <button class="btn btn-success" style="margin-left : 10px"> คุณได้ทำการยืนยันการส่งซ่อมแล้ว "โปรดรอการตอบกลับ" </button> -->
+                            <?php } else if ($row1['rs_conf'] == 1) {  ?>
 
                                 <div class="alert alert-success" role="alert" style="margin-left : 10px">
                                     คุณได้ทำการยืนยันการส่งซ่อมแล้ว "โปรดรอการตอบกลับ"
@@ -823,7 +836,7 @@ if ($row1[0] == NULL) {
                                 </div>
                                 <span class="check_icon"><i class="fa fa-check"></i> ส่งวันที่ : <?= $row1['rs_conf_date'] ?></span>
                             <?php
-                                }  ?>
+                            }  ?>
 
                         <?php } ?>
                     </ul>

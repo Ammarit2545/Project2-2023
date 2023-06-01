@@ -17,6 +17,7 @@ if(!isset($_SESSION["id"])){
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
   <link rel="stylesheet" href="css/edit.css">
+  <link rel="stylesheet" href="css/all_page.css">
   <link rel="icon" type="image/x-icon" href="img brand/anelogo.jpg">
   <title>ANE - Edit User</title>
 
@@ -24,6 +25,7 @@ if(!isset($_SESSION["id"])){
 
   </script>
   <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+  
 </head>
 
 <body>

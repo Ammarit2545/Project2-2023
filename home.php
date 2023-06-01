@@ -42,6 +42,7 @@ if ($_SESSION["log_login"] == 0) {
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
   <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/all_page.css">
   <style>
     .fade-in {
       animation: fadein 0.5s ease-in-out;

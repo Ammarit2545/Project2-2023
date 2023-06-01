@@ -1,13 +1,13 @@
 <center>
     <?php
-    $sql = "SELECT * FROM status_type WHERE status_id = '11'";
+    $sql = "SELECT * FROM status_type WHERE status_id = '12'";
     $result = mysqli_query($conn, $sql);
     $row_q = mysqli_fetch_array($result);
     ?>
     <button class="btn btn-danger" style="background-color:<?= $row_q['status_color'] ?>; border : <?= $row_q['status_color'] ?>" onclick="showCancelValue()"><?= $row_q['status_name'] ?></button>
 
     <?php
-    $sql = "SELECT * FROM status_type WHERE status_id = '19'";
+    $sql = "SELECT * FROM status_type WHERE status_id = '9'";
     $result = mysqli_query($conn, $sql);
     $row_conf = mysqli_fetch_array($result);
     ?>
@@ -174,9 +174,9 @@
     <br>
     <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
     <br>
-    <form id="cancel_status_id_conf_get" action="action/status/add_conf_cancel.php" method="POST" enctype="multipart/form-data">
+    <form id="cancel_status_id_conf_get" action="action/status/add_pay.php" method="POST" enctype="multipart/form-data">
         <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_conf['status_color'] ?>"> <?= $row_conf['status_name'] ?></p> :</label>
-        <textarea class="form-control" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">พนักงานได้รับอุปกรณ์ของคุณแล้วโปรดรอการตรวจเช็คจากพนักงาน</textarea>
+        <textarea class="form-control" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">หลักฐานการโอนเงินถูกต้อง กรุณามารับอุปกรณ์ที่ร้านพร้อมกับแสดงหน้าแจ้งซ่อมให้ทางร้านตรวจสอบ</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
         <input type="text" name="status_id" value="<?= $row_conf['status_id'] ?>" hidden>
         <br>

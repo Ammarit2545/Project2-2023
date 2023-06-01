@@ -294,7 +294,7 @@ if (!isset($_SESSION['role_id'])) {
                         </script>
                         <div class="card-body">
                             <?php
-                            if ($row['rs_conf'] == 1) {
+                            if ($row['rs_conf'] == 1 && $row['status_id'] != 8 && $row['status_id'] != 24) {
                             ?>
                                 <div class="alert alert-success" role="alert">
                                     <center>
@@ -305,8 +305,76 @@ if (!isset($_SESSION['role_id'])) {
                                     <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะ "ดำเนินการ" ไปที่สมาชิก ***</p>
                                 </center>
                                 <br>
+                            <?php } else if ($row['rs_conf'] != NULL && $row['rs_conf'] == 0 && $row['status_id'] == 4) {
+                            ?>
+                                <div class="alert alert-danger" role="alert">
+                                    <center>
+                                        <h4>ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
+                                    </center>
+                                </div>
+                                <center>
+                                    <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะไปที่สมาชิก ***</p>
+                                </center>
+                                <br>
                             <?php
-                            } else if ($row['rs_conf'] == 0 && $row['rs_conf'] != NULL) {
+                            } else if ($row['rs_conf'] == 1 && $row['status_id'] == 24) {
+                            ?>
+                                <div class="alert alert-danger" role="alert">
+                                    <center>
+                                        <h4>ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
+                                    </center>
+                                </div>
+                                <center>
+                                    <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะไปที่สมาชิก ***</p>
+                                </center>
+                                <br>
+                            <?php
+                            } else if ($row['rs_conf'] == 1 && $row['status_id'] == 8) {
+                            ?>
+                                <div class="alert alert-success" role="alert">
+                                    <center>
+                                        <h4>ได้รับยืนยันการชำระเงินจากสมาชิกแล้ว</h4>
+                                    </center>
+                                </div>
+                                <center>
+                                    <p style="color : red">*** โปรดตรวจสอบข้อมูลการยืนยันการชำระเงินและที่อยู่ให้ครบถ้วน ***</p>
+                                </center>
+                                <br>
+                            <?php
+                            } else if ($row['rs_conf'] == NULL && $row['status_id'] == 13) {
+                            ?>
+                                <div class="alert alert-warning" role="alert">
+                                    <center>
+                                        <h4>รอการตอบกลับจากสมาชิก</h4>
+                                    </center>
+                                </div>
+                                <center>
+                                    <p style="color : red">*** โปรดรอการตอบกลับการยืนยันจากสมาชิก ***</p>
+                                </center>
+                                <br>
+                            <?php
+                            } else if ($row['rs_conf'] == NULL && $row['status_id'] == 8) {
+                            ?>
+                                <div class="alert alert-warning" role="alert">
+                                    <center>
+                                        <h4>รอการตอบกลับจากสมาชิก</h4>
+                                    </center>
+                                </div>
+                                <br>
+                            <?php
+                            } else if ($row['rs_conf'] == 0 && $row['status_id'] == 13) {
+                            ?>
+                                <div class="alert alert-danger" role="alert">
+                                    <center>
+                                        <h4>ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
+                                    </center>
+                                </div>
+                                <center>
+                                    <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะไปที่สมาชิก ***</p>
+                                </center>
+                                <br>
+                            <?php
+                            } else if ($row['rs_conf'] == 0 && $row['rs_conf'] == 9) {
                             ?>
                                 <div class="alert alert-danger" role="alert">
                                     <center>
@@ -389,12 +457,6 @@ if (!isset($_SESSION['role_id'])) {
                             WHERE del_flg = '0' AND get_r_id = '$get_r_id'
                             ORDER BY rs_date_time DESC LIMIT 1";
                             $result_s = mysqli_query($conn, $sql_s);
-                            // $row_s = mysqli_fetch_array($result_s);
-
-                            // $sql_s = "SELECT * FROM repair_status 
-                            //             WHERE status_id = '$status_id' AND del_flg = '0' AND get_r_id = $get_r_id 
-                            //             ORDER BY rs_date_time DESC LIMIT 1";
-                            // $result_s = mysqli_query($conn, $sql_s);
                             $row_s = mysqli_fetch_array($result_s);
                             $rs_id = $row_s['rs_id'];
                             ?>
@@ -444,21 +506,42 @@ if (!isset($_SESSION['role_id'])) {
                                     // $result_pic = mysqli_query($conn, $sql_pic);
                                     while ($row_pic = mysqli_fetch_array($result_pic)) {
                                         if ($row_pic[0] != NULL) { ?>
-                                            <a href="#" style="margin-left: 20px;"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModal(this)"></a>
+                                            <?php
+                                            $rp_pic = $row_pic['rp_pic'];
+                                            $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                            ?> <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                                <a href="#" style="margin-left: 20px;"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                            <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
+                                                <a href="#" style="margin-left: 20px;">
+                                                    <video width="100px" autoplay muted onclick="openModalVideo(this)" src="../<?= $row_pic['rp_pic'] ?>">
+                                                        <source src="../<?= $row_pic['rp_pic'] ?>" type="video/mp4">
+                                                        <source src="../<?= $row_pic['rp_pic'] ?>" type="video/ogg">
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                </a>
+                                            <?php endif; ?>
+                                            <!-- Modal -->
+                                            <div id="modal" class="modal">
+                                                <span class="close" onclick="closeModal()">&times;</span>
+                                                <video id="modal-video" controls class="modal-video"></video>
+                                            </div>
+
+
+
                                             <!-- <h2><?= $row_pic['rp_pic'] ?></h2> -->
                                         <?php
                                         } else { ?> <h2>ไม่มีข้อมูล</h2> <?php
                                                                         }
                                                                     } ?>
-                                    <div id="modal" class="modal">
-                                        <span class="close" onclick="closeModal()">&times;</span>
+                                    <div id="modalimg" class="modal">
+                                        <span class="close" onclick="closeModalIMG()">&times;</span>
                                         <img id="modal-image" src="" alt="Modal Photo">
                                     </div>
 
                                     <script src="script.js"></script>
                                     <script>
-                                        function openModal(img) {
-                                            var modal = document.getElementById("modal");
+                                        function openModalIMG(img) {
+                                            var modal = document.getElementById("modalimg");
                                             var modalImg = document.getElementById("modal-image");
                                             modal.style.display = "block";
                                             modalImg.src = img.src;
@@ -467,10 +550,37 @@ if (!isset($_SESSION['role_id'])) {
                                             modal.classList.add("show");
                                         }
 
-                                        function closeModal() {
-                                            var modal = document.getElementById("modal");
+                                        function closeModalIMG() {
+                                            var modal = document.getElementById("modalimg");
                                             modal.style.display = "none";
                                         }
+                                    </script>
+                                    <script>
+                                        function openModalVideo(element) {
+                                            var modal = document.getElementById('modal');
+                                            var modalVideo = document.getElementById('modal-video');
+                                            modal.style.display = 'block';
+                                            modalVideo.src = element.src;
+                                            modalVideo.style.height = '90%';
+                                            modalVideo.style.borderRadius = '2%';
+                                            modal.classList.add('show');
+                                        }
+
+                                        function closeModal() {
+                                            var modal = document.getElementById('modal');
+                                            var modalVideo = document.getElementById('modal-video');
+                                            modalVideo.pause();
+                                            modalVideo.currentTime = 0;
+                                            modalVideo.src = ""; // Reset the video source
+                                            modal.style.display = 'none';
+                                        }
+
+                                        window.addEventListener('click', function(event) {
+                                            var modal = document.getElementById('modal');
+                                            if (event.target === modal) {
+                                                closeModal();
+                                            }
+                                        });
                                     </script>
                                 </div>
                             </div>
@@ -811,13 +921,25 @@ if (!isset($_SESSION['role_id'])) {
                             <?php
                             } ?>
 
-                            <?php $statusIds = array("4", "17", "5", "19", "6","7" ,"8");
+                            <?php $statusIds = array("4", "17", "5", "19", "6", "7", "8", "9", "13", "10", "24", "20");
                             if (in_array($row['status_id'], $statusIds)) {
-                                if ($row['rs_conf'] == NULL && $row['status_id'] != '5' && $row['status_id'] != '19' && $row['status_id'] != '6' && $row['status_id'] != '7' && $row['status_id'] != '8' ) {
+                                if ($row['rs_conf'] == NULL && $row['status_id'] != '5' && $row['status_id'] != '19' && $row['status_id'] != '6' && $row['status_id'] != '7' && $row['status_id'] != '8' && $row['status_id'] != '9' && $row['status_id'] != '13' && $row['status_id'] != '24' && $row['status_id'] != '10' && $row['status_id'] != '20') {
                                     include('status_option/wait_respond.php');
-                                }
-                                if ($row['rs_conf'] == '0' && $row['status_id'] != '5') {
+                                } elseif ($row['status_id'] == '20') {
+                                    // ถูกปฏิเสธจากลูกค้า
+                                    include('status_option/refuse_member.php');
+                                } elseif ($row['status_id'] == '13') {
+                                    include('status_option/config_cancel_option.php');
+                                } elseif ($row['status_id'] == '10') {
+                                    // ส่งเครื่องเสียงเสร็จสิ้น ***รอให้ลูกค้าตรวจสอบการซ่อม
+                                    include('status_option/after_send.php');
+                                } else if ($row['rs_conf'] == '0' && $row['status_id'] != '5') {
                                     include('status_option/cancel_conf.php');
+                                } else if ($row['status_id'] == '8') {
+                                    include('status_option/pay_status.php');
+                                } else if ($row['status_id'] == '9') {
+                                    // สถานะชำระเงินเสร็จสิ้น ไป สถานะส่งเครื่องเสียง
+                                    include('status_option/send_equipment.php');
                                 } else if ($row['rs_conf'] == '1' && $row['status_id'] != '5') {
                                     include('status_option/conf_status.php');
                                 } elseif ($row['status_id'] == '5') {
@@ -826,16 +948,11 @@ if (!isset($_SESSION['role_id'])) {
                                     include('status_option/doing_status.php');
                                 } else if ($row['status_id'] == '6') {
                                     include('status_option/after_doing.php');
-                                }else if ($row['status_id'] == '7') {
+                                } else if ($row['status_id'] == '7') {
                                     include('status_option/check_status.php');
-                                }else if ($row['status_id'] == '8') {
-                                    include('status_option/pay_status.php');
                                 }
                             }
-
-
                             ?>
-
 
                             <?php
                             if ($row['value_code'] == "succ" || $row['value_code'] == "cancel" || $row['value_code'] == "submit" || $row['value_code'] == "received" || $row['status_id'] == "11" || $row['status_id'] == "4" || $row1['status_id'] != "3" || $row1['status_id'] != '17' || $row1['status_id'] != '5') {
