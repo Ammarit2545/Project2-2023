@@ -87,7 +87,7 @@ foreach ($parts as $part) {
     }
 }
 
-All parts added successfully
+// All parts added successfully
 $_SESSION["add_data_alert"] = 0;
 header("Location: ../mini_part_detail.php?id=$get_r_id");
 exit();
