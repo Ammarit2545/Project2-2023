@@ -38,7 +38,7 @@
 <div id="cancel_value_code" style="display: none;">
     <hr>
     <br>
-    <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
+    <h1 class="m-0 font-weight-bold text-danger"><?= $row_q['status_name'] ?> </h1>
     <br>
     <form id="cancel_status_id_conf" action="action/status/add_conf_cancel.php" method="POST" enctype="multipart/form-data">
         <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_q['status_color'] ?>"> <?= $row_q['status_name'] ?></p> :</label>
@@ -172,7 +172,7 @@
 <div id="status_doing" style="display: none;">
     <hr>
     <br>
-    <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
+    <h1 class="m-0 font-weight-bold text-primary"><?= $row_conf['status_name'] ?> </h1>
     <br>
     <form id="cancel_status_id_conf_get" action="action/status/add_pay.php" method="POST" enctype="multipart/form-data">
         <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_conf['status_color'] ?>"> <?= $row_conf['status_name'] ?></p> :</label>

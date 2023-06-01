@@ -1,10 +1,10 @@
 <center>
-    <!-- <?php
+    <?php
     $sql = "SELECT * FROM status_type WHERE status_id = '12'";
     $result = mysqli_query($conn, $sql);
     $row_q = mysqli_fetch_array($result);
     ?>
-    <button class="btn btn-danger" style="background-color:<?= $row_q['status_color'] ?>; border : <?= $row_q['status_color'] ?>" onclick="showCancelValue()"><?= $row_q['status_name'] ?></button> -->
+    <button class="btn btn-danger" style="background-color:<?= $row_q['status_color'] ?>; border : <?= $row_q['status_color'] ?>" onclick="showCancelValue()"><?= $row_q['status_name'] ?></button>
 
     <?php
     $sql = "SELECT * FROM status_type WHERE status_id = '10'";

@@ -6,6 +6,8 @@ if (!isset($_SESSION['id'])) {
     header('Location:home.php');
 }
 
+$get_id = $_GET['id'];
+
 ?>
 
 <!DOCTYPE html>
@@ -37,6 +39,9 @@ if (!isset($_SESSION['id'])) {
     <link rel="icon" type="image/x-icon" href="img brand/anelogo.jpg">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.10/dist/sweetalert2.min.css">
+
+    <!-- Place this in the <head> section of your HTML document -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 </head>
 
@@ -70,26 +75,27 @@ if (!isset($_SESSION['id'])) {
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>ลำดับ</th>
-                                            <th>ชื่อ</th>
-                                            <th>Brand</th>
-                                            <th>Model</th>
-                                            <!-- <th>Name</th> -->
-                                            <th>ประเภท</th>
-                                            <!-- <th>รายละเอียด</th> -->
-                                            <th>ราคา</th>
-                                            <th>จำนวน</th>
-                                            <th>ราคารวม</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
+                                <form id="submitForm" action="action/edit_value_parts.php?id=<?= $get_id ?>" method="POST">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>ลำดับ</th>
+                                                <th>ชื่อ</th>
+                                                <th>Brand</th>
+                                                <th>Model</th>
+                                                <!-- <th>Name</th> -->
+                                                <th>ประเภท</th>
+                                                <!-- <th>รายละเอียด</th> -->
+                                                <th>ราคา</th>
+                                                <th>จำนวน</th>
+                                                <th>ราคารวม</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $i = 0;
 
-                                        $get_id = $_GET['id'];
-                                        $sql = "SELECT
+                                            $sql = "SELECT
                                         repair_detail.p_id,
                                         COUNT(repair_detail.p_id) AS count,
                                         parts.p_brand,
@@ -110,135 +116,151 @@ if (!isset($_SESSION['id'])) {
                                       GROUP BY
                                         p_id;
                                         ";
-                                        $result = mysqli_query($conn, $sql);
-                                        while ($row = mysqli_fetch_array($result)) {
-                                            $p_id = $row['p_id'];
-                                            $rs_id = $row['rs_id'];
-                                            $sql_count = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id' AND p_id = '$p_id'";
-                                            $result_count = mysqli_query($conn, $sql_count);
-                                            $row_count = mysqli_fetch_array($result_count);
-                                           
-                                        ?>
-                                            <tr>
-                                                <td><?php
-                                                    if ($row['p_id'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['p_id'];
-                                                    }
-                                                    ?>
-                                                </td>
+                                            $result = mysqli_query($conn, $sql);
+                                            while ($row = mysqli_fetch_array($result)) {
+                                                $i += 1;
+                                                $p_id = $row['p_id'];
+                                                $rs_id = $row['rs_id'];
+                                                $sql_count = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id' AND p_id = '$p_id'";
+                                                $result_count = mysqli_query($conn, $sql_count);
+                                                $row_count = mysqli_fetch_array($result_count);
 
-                                                <td><?php
-                                                    if ($row['p_pic'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                    ?>
-                                                        <img src="../<?= $row['p_pic'] ?>" width="50px" alt="Not Found">
-                                                    <?php
-                                                    }
-                                                    ?>
-                                                </td>
+                                            ?>
+                                                <tr>
+                                                    <td><?php
+                                                        if ($row['p_id'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo $row['p_id'];
+                                                        ?>
+                                                            <input type="text" class="form-control" name="p_id<?= $i ?>" value="<?= $row['p_id'] ?>" hidden>
+                                                        <?php
+                                                        }
+                                                        ?>
+                                                    </td>
+
+                                                    <td><?php
+                                                        if ($row['p_pic'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                        ?>
+                                                            <img src="../<?= $row['p_pic'] ?>" width="50px" alt="Not Found">
+                                                        <?php
+                                                        }
+                                                        ?>
+                                                    </td>
 
 
-                                                <!-- <td><?php
-                                                            if ($row['p_name'] == NULL) {
-                                                                echo "-";
-                                                            } else {
-                                                                echo $row['p_name'];
-                                                            }
-                                                            ?>
+                                                    <!-- <td><?php
+                                                                if ($row['p_name'] == NULL) {
+                                                                    echo "-";
+                                                                } else {
+                                                                    echo $row['p_name'];
+                                                                }
+                                                                ?>
                                                 </td> -->
-                                                <td><?php
-                                                    if ($row['p_brand'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['p_brand'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td><?php
-                                                    if ($row['p_model'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['p_model'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td><?php
-                                                    if ($row['p_type_name'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['p_type_name'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <!-- <td><?php
-                                                            if ($row['p_detail'] == NULL) {
-                                                                echo "-";
-                                                            } else {
-                                                            ?>
+                                                    <td><?php
+                                                        if ($row['p_brand'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo $row['p_brand'];
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td><?php
+                                                        if ($row['p_model'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo $row['p_model'];
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td><?php
+                                                        if ($row['p_type_name'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo $row['p_type_name'];
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <!-- <td><?php
+                                                                if ($row['p_detail'] == NULL) {
+                                                                    echo "-";
+                                                                } else {
+                                                                ?>
                                                         <p><?= substr($row['p_detail'], 0, 50) . '...' ?></p>
                                                     <?php
-                                                            }
+                                                                }
                                                     ?>
                                                 </td> -->
 
-                                                <td><?php
-                                                    if ($row['p_price'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['p_price'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td><?php
-                                                    if ($row_count['rd_value_parts'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row_count['rd_value_parts'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    if ($row_count['rd_value_parts'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo number_format($row_count['rd_value_parts'] * $row['p_price']);
-                                                        $total += $row_count['rd_value_parts'] * $row['p_price'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                            </tr>
-                                        <?php
-                                        }
-                                        ?>
-                                        <tr>
-                                            <td colspan="5">ยอดอะไหล่ทั้งหมด</td>
-                                            <td colspan="2">ราคารวม</td>
-                                            <td><?= number_format($total) ?></td>
-                                            <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
-                                        </tr>
-                                        <tr>
+                                                    <td><?php
+                                                        if ($row['p_price'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo $row['p_price'];
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td width="20%"><?php
+                                                                    if ($row_count['rd_value_parts'] == NULL) {
+                                                                        echo "-";
+                                                                    } else {
+                                                                    ?>
+                                                            <input type="text" class="form-control" name="value_p<?= $i ?>" value="<?= $row_count['rd_value_parts'] ?>">
+                                                        <?php
+                                                                    }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php
+                                                        if ($row_count['rd_value_parts'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo number_format($row_count['rd_value_parts'] * $row['p_price']);
+                                                            $total += $row_count['rd_value_parts'] * $row['p_price'];
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                </tr>
+                                                <input type="text" name="repair_status" value="<?= $rs_id ?>" hidden>
+                                                <input type="text" name="cardCount" value="<?= $i ?>" hidden>
                                             <?php
-                                            $sql_w = "SELECT get_wages FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
-                                            $result_w = mysqli_query($conn ,$sql_w);
-                                            $row_w = mysqli_fetch_array($result_w);
+                                            }
                                             ?>
-                                            <td colspan="5">ค่าแรงช่าง</td>
-                                            <td colspan="2">ค่าแรง</td>
-                                            <td><?= number_format($row_w['get_wages']) ?></td>
-                                            <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
-                                        </tr>
-                                        <tr>
-                                            <td colspan="5"></td>
-                                            <td colspan="2">ราคารวมทั้งหมด</td>
-                                            <td><h5><?= number_format($total + $row_w['get_wages']) ?> </h5></td>
-                                            <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                            <tr>
+                                                <td colspan="5">ยอดอะไหล่ทั้งหมด</td>
+                                                <td colspan="2">ราคารวม</td>
+                                                <td><?= number_format($total) ?></td>
+                                                <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
+                                            </tr>
+                                            <tr>
+                                                <?php
+                                                $sql_w = "SELECT get_wages FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
+                                                $result_w = mysqli_query($conn, $sql_w);
+                                                $row_w = mysqli_fetch_array($result_w);
+                                                ?>
+                                                <td colspan="5">ค่าแรงช่าง</td>
+                                                <td colspan="2">ค่าแรง</td>
+                                                <td><?= number_format($row_w['get_wages']) ?></td>
+                                                <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5"></td>
+                                                <td colspan="2">ราคารวมทั้งหมด</td>
+                                                <td>
+                                                    <h5><?= number_format($total + $row_w['get_wages']) ?> </h5>
+                                                </td>
+                                                <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <br>
+                                    <center>
+                                        <!-- Add the 'id' attribute to your button and change 'a' tag to 'button' -->
+                                        <a class="btn btn-success" id="confirmButton" type="button">ยืนยัน</a>
+                                    </center>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -310,6 +332,25 @@ if (!isset($_SESSION['id'])) {
         </div>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('confirmButton').addEventListener('click', function() {
+                Swal.fire({
+                    icon: 'question',
+                    title: 'ยืนยันการดำเนินการ',
+                    text: 'การ "ยืนยัน" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
+                    showCancelButton: true,
+                    confirmButtonText: 'ยืนยัน',
+                    cancelButtonText: 'ยกเลิก'
+                }).then((willConfirm) => {
+                    if (willConfirm.isConfirmed) {
+                        // Submit the form
+                        document.getElementById('submitForm').submit();
+                    }
+                });
+            });
+        });
+    </script>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
@@ -327,6 +368,52 @@ if (!isset($_SESSION['id'])) {
 
     <!-- Page level custom scripts -->
     <script src="js/demo/datatables-demo.js"></script>
+
+    <!-- Sweet Alert Show Start -->
+    <?php
+    if (isset($_SESSION['add_data_alert'])) {
+        if ($_SESSION['add_data_alert'] == 0) {
+    ?>
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'ทำการยืนยันการส่งซ่อมเสร็จสิ้น',
+                    html: 'ระบบได้ทำการส่งข้อมูลการยืนยันไปที่พนักงานแล้ว<br>กด Accept เพื่อออก',
+                    confirmButtonText: 'Accept'
+                });
+            </script>
+        <?php
+            unset($_SESSION['add_data_alert']);
+        } else if ($_SESSION['add_data_alert'] == 1) {
+        ?>
+            <script>
+                Swal.fire({
+                    title: 'การยืนยันการส่งซ่อมไม่เสร็จสิ้น',
+                    text: 'กด Accept เพื่อออก',
+                    icon: 'error',
+                    confirmButtonText: 'Accept'
+                });
+            </script>
+
+        <?php
+            unset($_SESSION['add_data_alert']);
+        } else if ($_SESSION['add_data_alert'] == 2) {
+        ?>
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'ดำเนินการส่งคำร้องเสร็จสิ้น',
+                    html: 'ระบบได้ทำการส่งคำร้องไปที่พนักงานแล้ว<br>กด Accept เพื่อออก',
+                    confirmButtonText: 'Accept'
+                });
+            </script>
+
+    <?php
+            unset($_SESSION['add_data_alert']);
+        }
+    }
+    ?>
+    <!-- Sweet Alert Show End -->
 
 </body>
 
