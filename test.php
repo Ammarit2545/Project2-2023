@@ -246,9 +246,9 @@ include('database/condb.php');
 </body>
 </html> -->
 <!-- -->
-<?php
-include('database/condb.php');
-?>
+<!-- <?php
+        include('database/condb.php');
+        ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -310,4 +310,38 @@ include('database/condb.php');
     </div>
 </body>
 
-</html>
+</html> -->
+
+<body>
+
+    <select id="select-state" class="form-select" data-live-search="true">
+        <option value="">Select a state...</option>
+        <option value="AL">Alabama</option>
+        <option value="AK">Alaska</option>
+        <option value="AZ">Arizona</option>
+        <option value="AR">Arkansas</option>
+        <option value="CA">California</option>
+        <option value="CO">Colorado</option>
+        <option value="CT">Connecticut</option>
+        <option value="DE">Delaware</option>
+        <option value="DC">District of Columbia</option>
+        <option value="FL">Florida</option>
+        <option value="GA">Georgia</option>
+        <option value="HI">Hawaii</option>
+        <option value="ID">Idaho</option>
+        <option value="IL">Illinois</option>
+        <option value="IN">Indiana</option>
+    </select>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#select-state').select2({
+                placeholder: "Pick a state...",
+                allowClear: true
+            });
+        });
+    </script>
+</body>

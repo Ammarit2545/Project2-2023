@@ -1,3 +1,9 @@
+<!-- 
+    
+    แก้ไขข้อมูล จำนวนอะไหล่ 
+
+-->
+
 <?php
 session_start();
 include('../../database/condb.php');
@@ -53,7 +59,7 @@ foreach ($parts as $part) {
                 $sql_update_stock = "UPDATE parts SET p_stock = p_stock - $p_stock WHERE p_id = '$partId'";
                 mysqli_query($conn, $sql_update_stock);
 
-                echo $partId . " - " . $quantity;
+                // echo $partId . " - " . $quantity;
 
                 // Insert data into repair_detail table
                 $sql_insert = "UPDATE repair_detail 
@@ -68,7 +74,7 @@ foreach ($parts as $part) {
                 $sql_update_stock = "UPDATE parts SET p_stock = p_stock + $p_stock WHERE p_id = '$partId'";
                 mysqli_query($conn, $sql_update_stock);
 
-                echo $partId . " - " . $quantity;
+                // echo $partId . " - " . $quantity;
 
                 // Insert data into repair_detail table
                 $sql_insert = "UPDATE repair_detail 
@@ -77,7 +83,6 @@ foreach ($parts as $part) {
                 mysqli_query($conn, $sql_insert);
             }
         } else {
-       
         }
     } else {
         // Part does not exist or has been deleted

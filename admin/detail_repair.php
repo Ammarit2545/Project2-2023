@@ -1071,7 +1071,7 @@ if (!isset($_SESSION['role_id'])) {
                                                                 <td>
                                                                     <div class="input-group">
                                                                         <div class="col-6 px-0">
-                                                                            <input type="number" name="value_p${i}" id="${cardId}" value="${cardValues[cardId]}" class="form-control" onchange="calculateTotalPrice(${i})">
+                                                                            <input type="number" name="value_p${i}" id="${cardId}" value="1" class="form-control" onchange="calculateTotalPrice(${i})">
                                                                         </div>
                                                                         <div class="col-6 px-0">
                                                                             <div class="input-group-prepend">
