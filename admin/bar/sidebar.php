@@ -127,14 +127,22 @@
     </li>
     <br>
     <div class="sidebar-heading">
-        บันทึกการซ่อมด้วยตัวเอง
+        บันทึกด้วยตัวเอง
     </div>
     <li class="nav-item">
         <a class="nav-link" href="add_self_record.php">
-            <i class="fas fa-fw fa-arrow-down"></i>
+            <!-- <i class="fas fa-fw fa-arrow-down fa-fade"></i> -->
+            <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
             <span>บันทึกการซ่อมด้วยตัวเอง</span></a>
     </li>
+
+    <!-- <li class="nav-item">
+        <a class="nav-link" href="edit_stock.php">
+            <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
+            <span>จัดการสต๊อก</span></a>
+    </li> -->
     <br>
+
     <div class="sidebar-heading">
         รายงาน
     </div>

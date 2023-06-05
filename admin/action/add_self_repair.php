@@ -42,8 +42,8 @@ if ($m_id != NULL) {
 
     $tel = $$row_member['m_tel'];
     // check serial number before insert
-$sql_serial = "SELECT * FROM repair WHERE r_serial_number = '$serial_number' AND m_id = '$m_id' AND del_flg = 0";
-}else{
+    $sql_serial = "SELECT * FROM repair WHERE r_serial_number = '$serial_number' AND m_id = '$m_id' AND del_flg = 0";
+} else {
     $sql_serial = "SELECT * FROM repair WHERE r_serial_number = '$serial_number'";
 }
 
