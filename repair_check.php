@@ -10,7 +10,7 @@ $row = mysqli_fetch_array($result);
 
 ?>
 <?php
-if(!isset($_SESSION['id'])){
+if (!isset($_SESSION['id'])) {
     header("location:home.php");
 }
 ?>
@@ -79,7 +79,8 @@ if(!isset($_SESSION['id'])){
             <p>ข้อมูลถูกต้องหรือไม่</p>
         </center>
         <br>
-        <form action="action/add_repair_db.php" method="POST" enctype="multipart/form-data">
+        <!-- <form action="action/add_repair_db.php" method="POST" enctype="multipart/form-data"> -->
+        <form action="action/add_new_repair.php" method="POST" enctype="multipart/form-data">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
@@ -237,12 +238,17 @@ if(!isset($_SESSION['id'])){
                                 <div id="image-preview4"></div>
                             </div> -->
                             <?php
-                            foreach (new DirectoryIterator("uploads/$id/Holder/") as $file) {
+                            $i = 1;
+                            while (isset($_SESSION['r_id_' . $i])) {
+                                $i++;
+                            }
+
+                            foreach (new DirectoryIterator("uploads/$id/Holder/$i/") as $file) {
                                 if ($file->isFile()) {
                                     // print $file->getFilename() . "\n";
                             ?>
                                     <div class="col-3">
-                                        <img src="uploads/<?= $id ?>/Holder/<?= $file ?>" style="max-width: 100%; height: auto;" alt="picture error">
+                                        <img src="uploads/<?= $id ?>/Holder/<?= $i ?>/<?= $file ?>" style="max-width: 100%; height: auto;" alt="picture error">
                                     </div>
                             <?php
                                 }
