@@ -373,8 +373,44 @@ if ($_SESSION["log_login"] == 0) {
   </div>
 
   <!-- End Modal Register-->
+  <br><br>
+  <center>
+    <div>
+      <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" style="width: 100%;">
+        <div class="carousel-inner" style="height: 50%">
+          <?php
+          $folderPath = 'img/promote/'; // Specify the folder path
+          $files = glob($folderPath . '*'); // Get all files in the folder
 
-  <div class="p-5">
+          $active = true; // Flag for active carousel item
+
+          foreach ($files as $file) {
+          ?>
+            <div class="carousel-item <?php echo $active ? 'active' : ''; ?>">
+              <img src="<?php echo $file; ?>" class="d-block w-100 img-fluid" alt="...">
+            </div>
+          <?php
+            $active = false; // Set the flag to false after the first carousel item
+          }
+          ?>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+
+  </center>
+  <br>
+  <br>
+
+
+  <!-- <div class="p-5">
     <div class="container pt-5">
       <div class="card card_header">
         <div class="card-body mx-5 my-5">
@@ -391,7 +427,7 @@ if ($_SESSION["log_login"] == 0) {
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <div class="container d-flex mb-5" style="height: 500px;">
     <div class="row">

@@ -29,6 +29,10 @@ if (!isset($_SESSION['role_id'])) {
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
 </head>
 <style>
     /* Your existing CSS classes */
@@ -203,6 +207,11 @@ if (!isset($_SESSION['role_id'])) {
                     <?php
                     $get_r_id = $_GET['id'];
 
+                    $sql_get_count = "SELECT COUNT(get_r_id) FROM get_detail 
+                    WHERE get_r_id = '$get_r_id'";
+                    $result_get_count = mysqli_query($conn, $sql_get_count);
+                    $row_get_count = mysqli_fetch_array($result_get_count);
+
                     $sql = "SELECT * FROM get_repair
                     LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id 
                                         LEFT JOIN repair ON repair.r_id = get_detail.r_id 
@@ -219,8 +228,19 @@ if (!isset($_SESSION['role_id'])) {
                     ?>
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
+
                             <h1 class="m-0 font-weight-bold text-primary">หมายเลขแจ้งซ่อม : <?= $row['get_r_id'] ?></h1>
-                            <h1 class="m-0 font-weight-bold text-success">Serial Number : <?= $row['r_serial_number'] ?></h1>
+                            <?php
+                            if ($row_get_count[0] == 1) {
+                            ?>
+                                <h1 class="m-0 font-weight-bold text-success">Serial Number : <?= $row['r_serial_number'] ?></h1>
+                            <?php
+                            } else {
+                            ?>
+                                <h1 class="m-0 font-weight-bold text-success">คำส่งซ่อมนี้มี <?= $row_get_count[0] ?> รายการ</h1>
+                            <?php
+                            }
+                            ?>
                             <h2>สถานะล่าสุด : <button style="background-color: <?= $row['status_color'] ?>; color : white;" class="btn btn"> <?= $row['status_name'] ?></h2></button>
 
                             <h6><?= $formattedDate ?></h6>
@@ -246,6 +266,90 @@ if (!isset($_SESSION['role_id'])) {
                                 </div>
                             </div>
                         </div>
+
+                        <hr>
+
+                        <div class="accordion-item" style="border: 1px solid #ffff; padding:15px;   ">
+                            <h2 class="accordion-header" id="headingOne">
+                                <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="true" aria-controls="collapseOne">
+                                    <h5> ดูรายการส่งซ่อมทั้งหมด </h5>
+                                </a>
+                            </h2>
+                            <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+
+                                <hr style="border:2px solid gray">
+                                <?php
+                                $count_get_no = 0;
+
+                                $sql_get = "SELECT * FROM get_detail 
+                                                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                        WHERE get_detail.get_r_id = '$get_r_id'";
+                                $result_count = mysqli_query($conn, $sql_get);
+                                $result_get = mysqli_query($conn, $sql_get);
+                                while ($row_get = mysqli_fetch_array($result_get)) {
+                                    $count_get_no++;
+                                ?>
+
+                                    <h4 style="text-align:start" id="body_text"> <span class="btn btn-primary">รายการที่ <?= $count_get_no ?></span> : <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?> | Model : <?= $row_get['r_number_model'] ?> | Serial Number : <?= $row_get['r_serial_number'] ?> </h4>
+                                    <hr>
+                                    <div style="margin-left: 40px; ">
+                                        <button class="btn btn-outline-primary">รายละเอียด</button>
+                                        <br>
+                                        <?= $row_get['get_d_detail'] ?>
+                                        <br>
+                                        <hr>
+                                        <button class="btn btn-outline-primary">รูปภาพ</button>
+
+                                        <br>
+                                        <?php
+
+                                        $get_d_id = $row_get['get_d_id'];
+
+                                        // $sql_pic = "SELECT * FROM `repair_pic` WHERE get_r_id = '$get_r_id'";
+                                        // $result_pic = mysqli_query($conn, $sql_pic);
+                                        $sql_pic = "SELECT * FROM repair_pic 
+                                                                LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
+                                                                WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
+                                        $result_pic = mysqli_query($conn, $sql_pic);
+                                        while ($row_pic = mysqli_fetch_array($result_pic)) {
+                                            if ($row_pic[0] != NULL) { ?>
+                                                <?php
+
+                                                $rp_pic = $row_pic['rp_pic'];
+                                                $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                                ?> <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                                    <a href="#" style="margin-left: 20px;" id="bounce-item"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
+                                                    <a href="#" style="margin-left: 20px;">
+                                                        <video width="100px" autoplay muted onclick="openModalVideo(this)" src="../<?= $row_pic['rp_pic'] ?>">
+                                                            <source src="../<?= $row_pic['rp_pic'] ?>" type="video/mp4">
+                                                            <source src="../<?= $row_pic['rp_pic'] ?>" type="video/ogg">
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    </a>
+                                                <?php endif; ?>
+                                                <!-- Modal -->
+                                                <div id="modal" class="modal">
+                                                    <span class="close" onclick="closeModal()">&times;</span>
+                                                    <video id="modal-video" controls class="modal-video"></video>
+                                                </div>
+
+
+
+                                                <!-- <h2><?= $row_pic['rp_pic'] ?></h2> -->
+                                        <?php
+                                            }
+                                        } ?>
+
+
+
+
+                                    </div>
+                                    <hr style="border:2px solid gray">
+                                <?php } ?>
+                            </div>
+                        </div>
+
 
                         <!--  Part modal -->
                         <div id="quantitypartModal" class="modal">
@@ -429,6 +533,7 @@ if (!isset($_SESSION['role_id'])) {
                                     </center>
                                 </div>
                                 <br>
+
                             <?php
                             }
 
@@ -451,7 +556,18 @@ if (!isset($_SESSION['role_id'])) {
                             $result_p = mysqli_query($conn, $sql_p);
                             $row_p = mysqli_fetch_array($result_p);
                             ?>
+                            <button type="button" class="btn btn-outline-primary mb-4" style="display: inline-block;">ข้อมูลการติดต่อ</button>
+                            <p style="display: inline;">
+                                <?php if ($row['get_deli'] == 0) { ?>
+                                    <span class="btn btn-info  mb-4 ml-4">#รับที่ร้าน</span>
+                                <?php } else { ?>
+                                    <span class="btn btn-info mb-4 ml-4">#จัดส่งโดยบริษัทขนส่ง</span>
+                                <?php } ?>
+                            </p>
+
+
                             <div class="mb-3 row">
+
                                 <h6 for="staticEmail" class="col-sm-1 col-form-label">ชื่อ</h6>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control" id="staticEmail" value="<?= $row['m_fname']  ?>" placeholder="ไม่มีข้อมูล" disabled>
@@ -461,16 +577,27 @@ if (!isset($_SESSION['role_id'])) {
                                     <input type="text" class="form-control" id="inputPassword" value="<?= $row['m_lname']  ?>" placeholder="ไม่มีข้อมูล" disabled="disabled">
                                 </div>
                             </div>
-                            <div class="mb-3 row">
-                                <label for="inputPassword" class="col-sm-1 col-form-label">Brand :</label>
-                                <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="inputPassword" value="<?= $row['r_brand']  ?>" placeholder="ไม่มีข้อมูล" disabled="disabled">
+                            <?php
+                            if ($row_get_count[0] == 1) {
+                            ?>
+                                <div class="mb-3 row">
+                                    <label for="inputPassword" class="col-sm-1 col-form-label">Brand :</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="inputPassword" value="<?= $row['r_brand']  ?>" placeholder="ไม่มีข้อมูล" disabled="disabled">
+                                    </div>
+                                    <label for="inputPassword" class="col-sm-1 col-form-label">Model :</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="inputPassword" value="<?= $row['r_model']  ?>" placeholder="ไม่มีข้อมูล" disabled="disabled">
+                                    </div>
                                 </div>
-                                <label for="inputPassword" class="col-sm-1 col-form-label">Model :</label>
-                                <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="inputPassword" value="<?= $row['r_model']  ?>" placeholder="ไม่มีข้อมูล" disabled="disabled">
-                                </div>
-                            </div>
+                            <?php
+                            } else {
+                            ?>
+
+                            <?php
+                            }
+                            ?>
+
                             <div class="mb-3 row">
                                 <label for="inputPassword" class="col-sm-1 col-form-label">เบอร์โทรศัพท์</label>
                                 <div class="col-sm-4">
@@ -591,6 +718,7 @@ if (!isset($_SESSION['role_id'])) {
                                     // $sql_pic = "SELECT * FROM `repair_pic` WHERE get_r_id = '$get_r_id'";
                                     // $result_pic = mysqli_query($conn, $sql_pic);
                                     while ($row_pic = mysqli_fetch_array($result_pic)) {
+
                                         if ($row_pic[0] != NULL) { ?>
                                             <?php
                                             $rp_pic = $row_pic['rp_pic'];
@@ -847,19 +975,38 @@ if (!isset($_SESSION['role_id'])) {
                                 <div id="detail_value_code" style="display: none;">
                                     <hr>
                                     <br>
-                                    <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
+                                    <h1 class="m-0 font-weight-bold text-secondary">รายละเอียด </h1>
                                     <br>
-                                    <form id="detail_status_id" action="action/status/add_detail_status.php" method="POST" enctype="multipart/form-data">
-                                        <label for="DetailFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการส่ง <p style="display:inline; color : green"> รายละเอียด</p> :</label>
-                                        <textarea class="form-control" name="rs_detail" id="DetailFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม"></textarea>
+                                    <form id="detail_status_id" action="action/status/insert_new_part.php" method="POST" enctype="multipart/form-data">
+                                        <label for="DetailFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการส่ง <p style="display:inline; color : gray"> รายละเอียด</p> :</label>
+                                        <textarea class="form-control" name="rs_detail" id="DetailFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">อะไหล่ที่ต้องใช้มีดังนี้</textarea>
                                         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
+                                        <input type="text" name="status_id" value="4" hidden>
                                         <input type="hidden" name="cardCount" id="cardCountInput" value="0">
                                         <br>
-                                        <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่</label>
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
-                                            <input name="get_wages" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" required>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่</label>
+                                                <div class="input-group mb-3">
+                                                    <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
+                                                    <input name="get_wages" type="text" value="<?= $row['get_wages'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกค่าแรงช่าง" required>
+                                                </div>
+                                            </div>
+                                            <?php
+                                            if ($row['get_deli'] == 1) { ?>
+                                                <div class="col-md-6">
+                                                    <label for="basic-url" class="form-label">ค่าจัดส่ง *แยกกับราคาอะไหล่</label>
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text" id="basic-addon3">ค่าจัดส่ง</span>
+                                                        <input name="get_add_price" type="text" value="<?= $row['get_add_price'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกค่าส่งอุปกรณ์" required>
+                                                    </div>
+                                                </div>
+                                            <?php
+                                            }
+                                            ?>
                                         </div>
+
+
                                         <br>
                                         <div class="mb-3">
                                             <h6>อะไหล่</h6>
@@ -1022,10 +1169,10 @@ if (!isset($_SESSION['role_id'])) {
                                 } else if ($row['rs_conf'] == '0' && $row['status_id'] != '5') {
                                     include('status_option/cancel_conf.php');
                                 } else if ($row['status_id'] == '8') {
-                                    if($row['rs_conf'] == 4){
+                                    if ($row['rs_conf'] == 4) {
                                         // กรณีมีที่อยู่เพิ่มเติม
                                         include('status_option/pay_address.php');
-                                    }else{
+                                    } else {
                                         // กรณีจ่ายไปแล้วรับหน้าร้าน
                                         include('status_option/pay_status.php');
                                     }
@@ -1436,7 +1583,6 @@ if (!isset($_SESSION['role_id'])) {
         <!-- Bootstrap core JavaScript-->
         <script src="vendor/jquery/jquery.min.js"></script>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
         <!-- Core plugin JavaScript-->
         <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 

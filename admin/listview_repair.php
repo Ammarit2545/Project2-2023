@@ -76,12 +76,13 @@ if (!isset($_SESSION['role_id'])) {
                                         <tr>
                                             <th width="20px">ลำดับ</th>
                                             <th width="20px">เลขที่ซ่อม</th>
+                                            <th width="20px">ประเภท</th>
                                             <th>ยี่ห้อ</th>
                                             <th>รุ่น</th>
                                             <th>ครั้งที่</th>
                                             <th>เลข serail</th>
                                             <!-- <th>ชื่อ</th> -->
-                                            <th>รายละเอียด</th>
+                                            <th>จำนวน</th>
                                             <th>Date</th>
                                             <th>สถานะ</th>
                                             <th>ปุ่ม</th>
@@ -90,22 +91,23 @@ if (!isset($_SESSION['role_id'])) {
                                     <tbody>
                                         <?php
                                         $i = 0;
-                                        if($i > 0){
+                                        if ($i > 0) {
                                             $sql_nofi = "SELECT *
-                                        FROM get_repair
-                                        LEFT JOIN repair ON get_repair.r_id = repair.r_id
-                                        LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
-                                        LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
-                                        WHERE get_repair.del_flg = '0' AND  repair_status.status_id = '$i'
-                                        GROUP BY get_repair.get_r_id
-                                        ORDER BY get_repair.get_r_id DESC
+                                                        FROM get_repair
+                                                        LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
+                                                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                                                        LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
+                                                        LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
+                                                        WHERE get_repair.del_flg = '0' AND  repair_status.status_id = '$i'
+                                                        GROUP BY get_repair.get_r_id
+                                                        ORDER BY get_repair.get_r_id DESC
                                         ;
                                          ";
-                                        }
-                                      else{
-                                        $sql_nofi = "SELECT *
+                                        } else {
+                                            $sql_nofi = "SELECT *
                                         FROM get_repair
-                                        LEFT JOIN repair ON get_repair.r_id = repair.r_id
+                                        LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
+                                        LEFT JOIN repair ON get_detail.r_id = repair.r_id   
                                         LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
                                         LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
                                         WHERE get_repair.del_flg = '0'
@@ -113,8 +115,7 @@ if (!isset($_SESSION['role_id'])) {
                                         ORDER BY get_repair.get_r_id DESC
                                         ;
                                          ";
-
-                                      }
+                                        }
 
 
                                         $result_nofi = mysqli_query($conn, $sql_nofi);
@@ -132,6 +133,12 @@ if (!isset($_SESSION['role_id'])) {
                                                     ORDER BY repair_status.rs_date_time DESC LIMIT 1";
                                             $result_c = mysqli_query($conn, $sql_c);
                                             $row_c = mysqli_fetch_array($result_c);
+
+
+                                            $sql_get_count = "SELECT COUNT(get_r_id) FROM get_detail 
+                                                    WHERE get_r_id = '$get_r_id'";
+                                            $result_get_count = mysqli_query($conn, $sql_get_count);
+                                            $row_get_count = mysqli_fetch_array($result_get_count);
                                         ?>
                                             <tr>
                                                 <td><?= $i ?></td>
@@ -139,52 +146,90 @@ if (!isset($_SESSION['role_id'])) {
                                                     if ($row['get_r_id'] != NULL) {
                                                         echo $row['get_r_id'];
                                                     } else {
-                                                        echo "ไม่มีข้อมูล";
+                                                        echo "-";
                                                     } ?>
                                                 </td>
                                                 <td><?php
-                                                    if ($row['r_brand'] != NULL) {
+                                                    if ($row['get_deli'] != NULL) {
+                                                        if($row['get_deli'] == 0){
+                                                            // echo "รับที่ร้าน";
+                                                            ?>
+                                                            <p style="color:black">รับที่ร้าน</p>
+                                                            <?php
+                                                        }else{
+                                                            // echo "จัดส่งไปรษณีย์";
+                                                            ?>
+                                                            <p style="color:green">จัดส่งไปรษณีย์</p>
+                                                            <?php
+                                                        }
+                                                        // echo $row['get_deli'];
+                                                    } else {
+                                                        echo "-";
+                                                    } ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['r_brand'] != NULL && $row_get_count[0] == 1) {
                                                         echo $row['r_brand'];
+                                                    } elseif ($row_get_count[0] > 1) {
+                                                    ?>
+                                                        <p style="color:blue">มากกว่า 1 ชิ้น</p>
+                                                    <?php
                                                     } else {
-                                                        echo "ไม่มีข้อมูล";
+                                                        echo "-";
                                                     } ?>
                                                 </td>
                                                 <td><?php
-                                                    if ($row['r_model'] != NULL) {
+                                                    if ($row['r_model'] != NULL && $row_get_count[0] == 1) {
                                                         echo $row['r_model'];
+                                                    } elseif ($row_get_count[0] > 1) {
+                                                    ?>
+                                                        <p style="color:blue">มากกว่า 1 ชิ้น</p>
+                                                    <?php
                                                     } else {
-                                                        echo "ไม่มีข้อมูล";
+                                                        echo "-";
                                                     } ?>
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if ($row['get_r_record'] != NULL) {
-                                                        echo $row['get_r_record'];
+                                                    if ($row['get_d_record'] != NULL && $row_get_count[0] == 1) {
+                                                        echo $row['get_d_record'];
+                                                    } elseif ($row_get_count[0] > 1) {
+                                                    ?>
+                                                        <p style="color:blue">มากกว่า 1 ชิ้น</p>
+                                                    <?php
                                                     } else {
-                                                        echo "ไม่มีข้อมูล";
+                                                        echo "-";
                                                     } ?>
                                                 </td>
                                                 <td><?php
-                                                    if ($row['r_serial_number'] != NULL) {
+                                                    if ($row['r_serial_number'] != NULL && $row_get_count[0] == 1) {
                                                         echo $row['r_serial_number'];
+                                                    } elseif ($row_get_count[0] > 1) {
+                                                    ?>
+                                                        <p style="color:blue">มากกว่า 1 ชิ้น</p>
+                                                    <?php
                                                     } else {
-                                                        echo "ไม่มีข้อมูล";
+                                                        echo "-";
                                                     } ?>
                                                 </td>
 
                                                 <!-- <td>System Architect</td> -->
                                                 <td><?php
-                                                    if ($row['get_r_detail'] != NULL) {
-                                                        echo $row['get_r_detail'];
+                                                    if ($row_get_count[0] > 1) {
+                                                        ?>
+                                                        <p style="color:blue"><?php  echo $row_get_count[0]; ?></p>
+                                                        <?php
+                                                    } elseif ($row_get_count[0] == 1) {
+                                                        echo $row_get_count[0];
                                                     } else {
-                                                        echo "ไม่มีข้อมูล";
+                                                        echo "-";
                                                     } ?></td>
                                                 <td>
                                                     <?php
                                                     if ($formattedDate != NULL) {
                                                         echo $formattedDate;
                                                     } else {
-                                                        echo "ไม่มีข้อมูล";
+                                                        echo "-";
                                                     } ?>
                                                 </td>
                                                 <td style="color: <?= $row_c['status_color'] ?>;"><?= $row_c['status_name'] ?></td>

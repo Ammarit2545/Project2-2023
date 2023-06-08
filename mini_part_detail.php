@@ -117,7 +117,7 @@ if (!isset($_SESSION['id'])) {
                                             $sql_count = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id' AND p_id = '$p_id'";
                                             $result_count = mysqli_query($conn, $sql_count);
                                             $row_count = mysqli_fetch_array($result_count);
-                                           
+
                                         ?>
                                             <tr>
                                                 <td><?php
@@ -223,7 +223,7 @@ if (!isset($_SESSION['id'])) {
                                         <tr>
                                             <?php
                                             $sql_w = "SELECT get_wages FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
-                                            $result_w = mysqli_query($conn ,$sql_w);
+                                            $result_w = mysqli_query($conn, $sql_w);
                                             $row_w = mysqli_fetch_array($result_w);
                                             ?>
                                             <td colspan="5">ค่าแรงช่าง</td>
@@ -231,10 +231,30 @@ if (!isset($_SESSION['id'])) {
                                             <td><?= number_format($row_w['get_wages']) ?></td>
                                             <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
                                         </tr>
+                                        <?php
+                                        $sql_p = "SELECT get_deli , get_add_price FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
+                                        $result_p = mysqli_query($conn, $sql_p);
+                                        $row_p = mysqli_fetch_array($result_p);
+                                        
+                                        if ($row_p['get_deli'] == 1) {
+                                            $total += $row_p['get_add_price'];
+                                        ?>
+                                            <tr>
+                                                <td colspan="5">ค่าจัดส่ง</td>
+                                                <td colspan="2">ราคาจัดส่ง</td>
+                                                <td><?= number_format($row_p['get_add_price']) ?></td>
+                                                <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
+                                            </tr>
+                                        <?php
+                                        } ?>
+
+
                                         <tr>
                                             <td colspan="5"></td>
                                             <td colspan="2">ราคารวมทั้งหมด</td>
-                                            <td><h5><?= number_format($total + $row_w['get_wages']) ?> </h5></td>
+                                            <td>
+                                                <h5><?= number_format($total + $row_w['get_wages']) ?> </h5>
+                                            </td>
                                             <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
                                         </tr>
                                     </tbody>

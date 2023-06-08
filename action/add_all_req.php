@@ -32,10 +32,11 @@ if (isset($_POST['Ref_prov_id']) && isset($_POST['Ref_dist_id']) && isset($_POST
 } else {
     $address_json = $row['m_add'];
 }
+$radiocheck = $_POST['flexRadioDefault'];
 
 if (isset($_SESSION['r_id_1'])) {
-    $sql2 = "INSERT INTO get_repair (get_r_date_in, get_tel,get_add) 
-    VALUES (NOW(), '$tel','$address_json')";
+    $sql2 = "INSERT INTO get_repair (get_r_date_in, get_tel,get_add,get_deli) 
+    VALUES (NOW(), '$tel','$address_json','$radiocheck')";
     $result2 = mysqli_query($conn, $sql2);
 } else {
     header("location:../listview_repair.php");
@@ -256,7 +257,7 @@ if ($result2) {
             $sMessage .= "\nมีการแจ้งซ่อมใหม่เข้ามา : " . "\n";
             $sMessage .= "เลขที่ใบส่งซ่อม : " . $id_r_g;
             $sMessage .= "\nชื่อ : " . $row_m['m_fname'] . " " . $row_m['m_lname'] . "\n";
-            $sMessage .= "เบอร์โทรติดต่อ : " . $_SESSION["tel"] . "\n";
+            $sMessage .= "เบอร์โทรติดต่อ : " . $tel . "\n";
 
             $chOne = curl_init();
             curl_setopt($chOne, CURLOPT_URL, "https://notify-api.line.me/api/notify");

@@ -181,6 +181,20 @@ $row = mysqli_fetch_array($result);
 
             <label for="exampleFormControlTextarea1" class="col-form-label">เบอร์โทรศัพท์ :</label>
             <input type="text" name="get_tel" class="form-control" value="<?= $row['m_tel'] ?>" required>
+            <br>
+            <label for="exampleFormControlTextarea1" class="col-form-label">โปรดเลือกวิธีการรับอุปกรณ์ :</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="0" checked>
+                <label class="form-check-label" for="flexRadioDefault1">
+                    รับที่ร้าน
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="1">
+                <label class="form-check-label" for="flexRadioDefault2">
+                    จัดส่งโดยขนส่ง <span style="color:red"> (ที่อยู่ตามที่ท่านได้กรอกลงไป)</span>
+                </label>
+            </div>
         </div>
     </form>
 
