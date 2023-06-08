@@ -421,7 +421,7 @@ $get_add_price = $row1['get_add_price'];
 
                 ?>
                 <form id="addressForm" action="action/add_address.php" method="POST">
-                    <div class="form-group" style="display:block">
+                    <div class="form-group" style="display:none">
                         <label for="sel1">จังหวัด:</label>
                         <select class="form-control" name="Ref_prov_id" id="provinces">
                             <option value="" selected disabled>-กรุณาเลือกจังหวัด-</option>
@@ -453,19 +453,19 @@ $get_add_price = $row1['get_add_price'];
                     <?php include('script.php'); ?>
                     <br>
                     <center>
-                        <h5 style="color:red">*** เมื่อใส่รายละเอียดที่อยู่แล้ว ทางร้านจะทำการประเมินราคาค่าจัดส่งมาให้อักครั้งภายใน 1-2 วัน ***</h5>
+                        <!-- <h5 style="color:red">*** เมื่อใส่รายละเอียดที่อยู่แล้ว ทางร้านจะทำการประเมินราคาค่าจัดส่งมาให้อักครั้งภายใน 1-2 วัน ***</h5> -->
                         <br>
-                        <!-- <a class="btn btn-primary" style="margin-left: 20px" type="submi" onclick="openModalPay('payadd')" >ดูบิลใบเสร็จเพื่อชำระค่าบริการ</a> -->
-                        <a onclick="confirmPayment_Add()" class="btn btn-success" type="submit" style="margin-left: 20px;">ยืนยัน</a>
+                        <a class="btn btn-primary" style="margin-left: 20px" type="submi" onclick="openModalPay('payadd')">ดูบิลใบเสร็จเพื่อชำระค่าบริการ</a>
+                        <!-- <a onclick="confirmPayment_Add()" class="btn btn-success" type="submit" style="margin-left: 20px;">ยืนยัน</a> -->
                     </center>
 
                 </form>
                 <div class="row">
-                    <div class="mb-3" id="show_pay" style="display:none">
+                    <div class="mb-3" id="show_pay" style="display:block">
                         <br>
                         <hr>
                         <br>
-                        <h3 class="alert alert-secondary"><a class="btn btn-danger" >ขั้นตอนที่ 3</a> : แนบสลิปหรือหลักฐานการโอนเงิน</h3>
+                        <h3 class="alert alert-secondary"><a class="btn btn-danger">ขั้นตอนที่ 3</a> : แนบสลิปหรือหลักฐานการโอนเงิน</h3>
                         <br>
                         <div class="row">
                             <div class="col-2"> </div>
@@ -476,32 +476,33 @@ $get_add_price = $row1['get_add_price'];
                             </div>
                             <div class="col-2"> </div>
                         </div>
-                        <div class="row" >
+                        <div class="row">
                             <!-- Image Here -->
                             <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-                            <div class="file-upload">
-                                <!-- <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">แนบหลักฐานการชำระเงิน</button> -->
-
-                                <div class="image-upload-wrap">
-                                    <input class="file-upload-input" type='file' name="conf_img" onchange="readURL(this);" accept="image/*" />
-                                    <div class="drag-text">
-                                        <h3>Drag and drop a file or select add Image</h3>
+                            <form id="deli_add" action="action/add_payment.php" method="POST" enctype="multipart/form-data">
+                                <div class="file-upload">
+                                    <!-- <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">แนบหลักฐานการชำระเงิน</button> -->
+                                    <div class="image-upload-wrap">
+                                        <input class="file-upload-input" type='file' name="conf_img" onchange="readURL(this);" accept="image/*" />
+                                        <div class="drag-text">
+                                            <h3>Drag and drop a file or select add Image</h3>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="file-upload-content">
-                                    <img class="file-upload-image" src="#" alt="your image" onclick="openModal(this)" />
-                                    <div class="image-title-wrap">
-                                        <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+                                    <div class="file-upload-content">
+                                        <img class="file-upload-image" src="#" alt="your image" onclick="openModal(this)" />
+                                        <div class="image-title-wrap">
+                                            <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+                                        </div>
                                     </div>
+                                    <br><br>
+                                    <center>
+                                        <input type="text" name="action" value="0" id="action-to-form" required hidden>
+                                        <input type="text" name="get_r_id" value="<?= $id_g ?>" required hidden>
+                                        <!-- <a class="btn btn-success" onclick="confirmPayment_Add()">ชำระเงินแล้ว</a> -->
+                                        <a class="btn btn-success" onclick="confirmPayment_deli_add()">ชำระเงินแล้ว</a>
+                                    </center>
                                 </div>
-                                <br><br>
-                                <center>
-                                    <input type="text" name="action" value="0" id="action-to-form" required hidden>
-                                    <input type="text" name="get_r_id" value="<?= $id_g ?>" required hidden>
-                                    <!-- <a class="btn btn-success" onclick="confirmPayment_Add()">ชำระเงินแล้ว</a> -->
-                                    <a class="btn btn-success" onclick="confirmPayment()">ชำระเงินแล้ว</a>
-                                </center>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -562,6 +563,24 @@ $get_add_price = $row1['get_add_price'];
                 if (result.isConfirmed) {
                     // User confirmed, submit the form
                     document.getElementById('payment_data').submit();
+                }
+            });
+        }
+
+        function confirmPayment_deli_add() {
+            Swal.fire({
+                title: 'ยืนยันการชำระเงิน',
+                // text: 'คุณแน่ใจหรือไม่ที่ต้องการที่จะทำการชำระเงินแล้ว?',
+                text: 'โปรดตรวจสอบข้อมูลทั้งหมดของคุณว่าถูกต้องแล้ว1?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'ใช่, ชำระเงินแล้ว',
+                cancelButtonText: 'ไม่, ยกเลิก',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // User confirmed, submit the form
+                    document.getElementById('deli_add').submit();
                 }
             });
         }

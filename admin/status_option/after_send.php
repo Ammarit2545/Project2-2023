@@ -48,10 +48,56 @@
         <br>
         <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
 
-        <label for="basic-url" class="form-label">กรุณาใส่หมายเลข Tracking ของไปรษณีย์</label>
+        <!-- <label for="basic-url" class="form-label">กรุณาใส่หมายเลข Tracking ของไปรษณีย์</label>
         <div class="input-group mb-3">
             <input type="text" class="form-control" name="tracking_number" id="basic-url" aria-describedby="basic-addon3" required>
-        </div>
+        </div> -->
+        <?php
+        $count_get_no = 0;
+
+        $sql_get = "SELECT * FROM get_detail 
+                                                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                        WHERE get_detail.get_r_id = '$get_r_id'";
+        $result_count = mysqli_query($conn, $sql_get);
+        $result_get = mysqli_query($conn, $sql_get);
+        while ($row_get = mysqli_fetch_array($result_get)) {
+            $count_get_no++;
+        ?>
+
+            <label for="basic-url" class="form-label">หมายเลข</label>
+            <?= $row_get['get_d_id'] . ' : ' . $row_get['r_brand'] . ' ' . $row_get['r_model'] . ' - Model : ' . $row_get['r_number_model'] . ' - Serial Number : ' . $row_get['r_serial_number'] ?>
+            <?php $get_d_id = 'get_d_id_' .$count_get_no; ?>
+            <input type="text" name="<?= $get_d_id ?>" value=" <?= $row_get['get_d_id'] ?>" hidden>
+
+
+            <div class="row">
+                <div class="col-2">
+                    <?php
+                    $com_t = 'com_y_' .$count_get_no;
+                    $tracking_number = 'tracking_number' .$count_get_no;
+                    ?>
+                    <select name="<?= $com_t ?>" class="form-select" aria-label="Default select example">
+                        <option selected>กรุณาเลือกบรฺษัทขนส่ง</option>
+                        <?php
+                        $sql_com = "SELECT * FROM company_transport WHERE del_flg = 0";
+                        $result_com = mysqli_query($conn, $sql_com);
+                        while ($row_com = mysqli_fetch_array($result_com)) {
+                        ?>
+                            <option value="<?= $row_com['com_t_id'] ?>"><?= $row_com['com_t_name'] ?></option>
+                        <?php
+                        }
+                        ?>
+
+                    </select>
+                </div>
+                <div class="col">
+                    <!-- <label for="basic-url" class="form-label">กรุณาใส่หมายเลข Tracking ของไปรษณีย์</label> -->
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="<?= $tracking_number ?>" id="basic-url" aria-describedby="basic-addon3" required>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
 
         <hr>
         <label for="cancelFormControlTextareaConf" class="form-label">เพิ่มรูปภาพหรือวิดีโอ *ไม่จำเป็น (สูงสุด 4 ไฟล์):</label>

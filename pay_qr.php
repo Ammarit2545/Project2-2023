@@ -7,11 +7,11 @@ if (!isset($_SESSION['id'])) {
 }
 $get_id = $_GET['id'];
 
-if (isset($_GET['get_add'])) {
-    if ($_GET['get_add'] > 0) {
-        $total = $_GET['get_add'];
-    }
-}
+// if (isset($_GET['get_add'])) {
+//     if ($_GET['get_add'] > 0) {
+//         $total = $_GET['get_add'];
+//     }
+// }
 ?>
 
 <!DOCTYPE html>
@@ -199,13 +199,6 @@ if (isset($_GET['get_add'])) {
                                                         }
                                                         ?>
                                                     </td>
-                                                    <!-- <?php
-                                                            if (isset($_GET['get_add'])) {
-                                                                if ($_GET['get_add'] > 0) {
-                                                                    $total = $_GET['get_add'];
-                                                                }
-                                                            }
-                                                            ?> -->
                                                     <td>
                                                         <?php
                                                         if ($row_count['rd_value_parts'] == NULL) {

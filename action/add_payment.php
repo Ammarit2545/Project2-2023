@@ -7,24 +7,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo $key . ': ' . $value . '<br>';
     }
 }
+
 $get_r_id = $_POST['get_r_id'];
 $id = $_SESSION["id"];
-// echo $id;
 
-// $sql = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' AND status_id = '8' AND rs_conf = '1'";
-// $result = mysqli_query($conn, $sql);
-// $row = mysqli_fetch_array($result);
-
-// if ($row[0] > 0) {
-//     $_SESSION['add_data_alert'] = 1;
-//     header("location:../detail_status.php?id=$get_r_id");
-// } else {
 if (isset($_POST['Ref_prov_id']) && isset($_POST['Ref_dist_id']) && isset($_POST['Ref_subdist_id']) && isset($_POST['zip_code']) && isset($_POST['description'])) {
 
     $address = array("province" => $_POST['Ref_prov_id'], "district" => $_POST['Ref_dist_id'], "sub_district" => $_POST['Ref_subdist_id'], "zip_code" => $_POST['zip_code'], "description" => $_POST['description']);
     $address_json = json_encode($address);
 
-    $sql = "SELECT * FROM get_repair WHERE get_r_id = '$get_r_id' AND get_add = '$address_json' AND del_flg =0";
+    $sql = "SELECT * FROM get_repair WHERE get_r_id = '$get_r_id' AND get_add = '$address_json' AND del_flg = 0";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($result);
 
@@ -40,7 +32,7 @@ if (isset($_POST['Ref_prov_id']) && isset($_POST['Ref_dist_id']) && isset($_POST
 
         $insert_id = mysqli_insert_id($conn);
 
-        if ($result1) {
+        if ($result) {
             if ($insert_id > 0) {
                 $rs_id = $insert_id;
 
@@ -85,8 +77,7 @@ if (isset($_POST['Ref_prov_id']) && isset($_POST['Ref_dist_id']) && isset($_POST
                         if (move_uploaded_file($_FILES[$image_name]["tmp_name"], $target_file)) {
                             echo "The file " . htmlspecialchars(basename($_FILES[$image_name]["name"])) . " has been uploaded.";
 
-                            $sql = "INSERT INTO repair_pic (rs_id, rp_date, rp_pic) 
-                    VALUES ('$rs_id', NOW(), '$target_file_db')";
+                            $sql = "INSERT INTO repair_pic (rs_id, rp_date, rp_pic) VALUES ('$rs_id', NOW(), '$target_file_db')";
                             $result1 = mysqli_query($conn, $sql);
 
                             if ($result1) {
@@ -111,19 +102,7 @@ if (isset($_POST['Ref_prov_id']) && isset($_POST['Ref_dist_id']) && isset($_POST
         $_SESSION['add_data_alert'] = 1;
         header("location:../detail_status.php?id=$get_r_id");
     }
-
-
-    if ($result) {
-        $_SESSION['add_data_alert'] = 1;
-        header("location:../detail_status.php?id=$get_r_id");
-    }
-
-    echo $address_json;
 } else {
-    // $sql = "UPDATE get_repair SET get_add_price = NULL, get_add = NULL WHERE get_r_id = '$get_r_id'";
-    // $result = mysqli_query($conn, $sql);
-    // echo "update complete";
-
     $sql = "INSERT INTO repair_status (`get_r_id`, `rs_date_time`, `rs_detail`, `status_id`) VALUES (?, NOW(), 'คุณได้ส่งหลักฐานการชำระเงินแล้วโปรดรอการตรวจสอบจากเจ้าหน้าที่', '25')";
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_bind_param($stmt, "s", $get_r_id);
@@ -131,10 +110,7 @@ if (isset($_POST['Ref_prov_id']) && isset($_POST['Ref_dist_id']) && isset($_POST
 
     $insert_id = mysqli_insert_id($conn);
 
-    
-
-
-    if ($result1) {
+    if ($insert_id > 0) {
         $sql = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' AND status_id ='8'";
         $result = mysqli_query($conn, $sql);
         $row = mysqli_fetch_array($result);
@@ -182,8 +158,7 @@ if (isset($_POST['Ref_prov_id']) && isset($_POST['Ref_dist_id']) && isset($_POST
                     if (move_uploaded_file($_FILES[$image_name]["tmp_name"], $target_file)) {
                         echo "The file " . htmlspecialchars(basename($_FILES[$image_name]["name"])) . " has been uploaded.";
 
-                        $sql = "INSERT INTO repair_pic (rs_id, rp_date, rp_pic) 
-                                        VALUES ('$rs_id', NOW(), '$target_file_db')";
+                        $sql = "INSERT INTO repair_pic (rs_id, rp_date, rp_pic) VALUES ('$rs_id', NOW(), '$target_file_db')";
                         $result1 = mysqli_query($conn, $sql);
 
                         if ($result1) {
@@ -206,6 +181,4 @@ if (isset($_POST['Ref_prov_id']) && isset($_POST['Ref_dist_id']) && isset($_POST
     }
     $_SESSION['add_data_alert'] = 0;
     header("location:../detail_status.php?id=$get_r_id");
-    echo $address_json;
 }
-// }

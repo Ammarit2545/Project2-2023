@@ -319,7 +319,7 @@ if ($id == NULL) {
                 </div>
                 <div class="col-5" id="bounce-item">
                     <center>
-                        <h4><a style="text-decoration: none; " onclick="openModalPart('quantitypart')" >ดูยอดอะไหล่ของท่าน</a></h4>
+                        <h4><a style="text-decoration: none; " onclick="openModalPart('quantitypart')">ดูยอดอะไหล่ของท่าน</a></h4>
                     </center>
                 </div>
                 <br>
@@ -681,10 +681,33 @@ if ($id == NULL) {
                             </li>
                             <br>
                             <?php if ($row1['status_id'] == 24 && $row1['rs_conf'] == NULL) { ?>
+
                                 <hr>
                                 <p style="margin-left: 2%; color:red">*** ตรวจเช็คความปกติของอุปกรณ์ของท่านว่าใช้ได้หรือไม่ก่อนทำการยืนยันเสร็จสิ้นการซ่อม ***</p>
                                 <a class="btn btn-danger" style="margin-left: 2%" href="send_config.php?id=<?= $id_get_r ?>">แจ้งเจ้าหน้าที่กรณีมีปัญหา</a>
-                                <a class="btn btn-success" style="margin-left: 2%">ยืนยัน</a>
+                                <a class="btn btn-success" style="margin-left: 2%" onclick="showConfirmation()">ยืนยัน</a>
+
+
+                                <script>
+                                    function showConfirmation() {
+                                        Swal.fire({
+                                            title: 'เสร็จสิ้น',
+                                            text: 'หากท่านตรวจเช็คเสร็จสิ้นแล้ว ให้ทำการยืนยัน?',
+                                            icon: 'question',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+                                            confirmButtonText: 'ยืนยัน',
+                                            cancelButtonText: 'ยกเลิก'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                // User confirmed, navigate to the desired page
+                                                window.location.href = 'action/add_only_status.php?id=<?= $id_get_r ?>';
+                                            }
+                                        });
+                                    }
+                                </script>
+
                                 <br>
                             <?php
                             }
@@ -876,7 +899,7 @@ if ($id == NULL) {
                                 <!-- <button class="btn btn-success" style="margin-left : 10px"> คุณได้ทำการยืนยันการส่งซ่อมแล้ว "โปรดรอการตอบกลับ" </button> -->
                             <?php } else if ($row1['rs_conf'] == 1 && $row1['status_id'] == 24) {  ?>
                                 <div class="alert alert-success" role="alert" style="margin-left : 10px">
-                                    คุณได้ทำการส่งคำร้องแล้ว "โปรดรอการตอบกลับ"
+                                    คุณได้ทำการตรวจสอบและยอมรับแล้ว
                                 </div>
                                 <span class="check_icon"><i class="fa fa-check"></i> ส่งวันที่ : <?= $row1['rs_conf_date'] ?></span>
                                 <!-- <button class="btn btn-success" style="margin-left : 10px"> คุณได้ทำการยืนยันการส่งซ่อมแล้ว "โปรดรอการตอบกลับ" </button> -->

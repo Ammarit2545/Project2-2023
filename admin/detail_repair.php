@@ -304,7 +304,6 @@ if (!isset($_SESSION['role_id'])) {
                                         <?php
 
                                         $get_d_id = $row_get['get_d_id'];
-
                                         // $sql_pic = "SELECT * FROM `repair_pic` WHERE get_r_id = '$get_r_id'";
                                         // $result_pic = mysqli_query($conn, $sql_pic);
                                         $sql_pic = "SELECT * FROM repair_pic 
@@ -432,7 +431,43 @@ if (!isset($_SESSION['role_id'])) {
                                     <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะ "ดำเนินการ" ไปที่สมาชิก ***</p>
                                 </center>
                                 <br>
-                            <?php } else if ($row['rs_conf'] != NULL && $row['rs_conf'] == 4 && $row['status_id'] == 8) {
+                            <?php } else if ($row['status_id'] == 3) {
+                            ?>
+                                <div class="alert alert-success" role="alert">
+                                    <center>
+                                        <h4>เสร็จสิ้นคำสั่งซ่อมนี้แล้ว</h4>
+                                    </center>
+                                </div>
+                                <center>
+                                    <p style="color : red">*** การซ่อมดำเนินการเสร็จสิ้นแล้ว ***</p>
+                                </center>
+                                <br>
+                            <?php
+                            } else if ($row['status_id'] == 24) {
+                                ?>
+                                    <div class="alert alert-primary" role="alert">
+                                        <center>
+                                            <h4>รอสมาชิกตอบกลับการซ่อม</h4>
+                                        </center>
+                                    </div>
+                                    <center>
+                                        <p style="color : red">*** โปรดตรวจรอสมาชิกตรวจสอบและตอบกลับมายังพนักงาน ***</p>
+                                    </center>
+                                    <br>
+                                <?php
+                                } else if ($row['status_id'] == 25) {
+                                ?>
+                                    <div class="alert alert-primary" role="alert">
+                                        <center>
+                                            <h4>สมาชิกต้องทำการชำระเงินเรียบร้อยแล้ว</h4>
+                                        </center>
+                                    </div>
+                                    <center>
+                                        <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะไปที่สมาชิก ***</p>
+                                    </center>
+                                    <br>
+                                <?php
+                                } else if ($row['rs_conf'] != NULL && $row['rs_conf'] == 4 && $row['status_id'] == 8) {
                             ?>
                                 <div class="alert alert-primary" role="alert">
                                     <center>
@@ -1154,44 +1189,44 @@ if (!isset($_SESSION['role_id'])) {
                             <?php
                             } ?>
 
-                            <?php $statusIds = array("4", "17", "5", "19", "6", "7", "8", "9", "13", "10", "24", "20");
+                            <?php
+                            $statusIds = array("4", "17", "5", "19", "6", "7", "8", "9", "13", "10", "24", "20", "25");
+
                             if (in_array($row['status_id'], $statusIds)) {
-                                if ($row['rs_conf'] == NULL && $row['status_id'] != '5' && $row['status_id'] != '19' && $row['status_id'] != '6' && $row['status_id'] != '7' && $row['status_id'] != '8' && $row['status_id'] != '9' && $row['status_id'] != '13' && $row['status_id'] != '24' && $row['status_id'] != '10' && $row['status_id'] != '20') {
+                                if ($row['rs_conf'] == NULL && !in_array($row['status_id'], ['5', '19', '6', '7', '8', '9', '13', '24', '10', '20', '25'])) {
                                     include('status_option/wait_respond.php');
+                                } elseif ($row['status_id'] == '25') {
+                                    include('status_option/pay_check.php');
                                 } elseif ($row['status_id'] == '20') {
-                                    // ถูกปฏิเสธจากลูกค้า
                                     include('status_option/refuse_member.php');
                                 } elseif ($row['status_id'] == '13') {
                                     include('status_option/config_cancel_option.php');
                                 } elseif ($row['status_id'] == '10') {
-                                    // ส่งเครื่องเสียงเสร็จสิ้น ***รอให้ลูกค้าตรวจสอบการซ่อม
                                     include('status_option/after_send.php');
-                                } else if ($row['rs_conf'] == '0' && $row['status_id'] != '5') {
+                                } elseif ($row['rs_conf'] == '0' && $row['status_id'] != '5') {
                                     include('status_option/cancel_conf.php');
-                                } else if ($row['status_id'] == '8') {
+                                } elseif ($row['status_id'] == '8') {
                                     if ($row['rs_conf'] == 4) {
-                                        // กรณีมีที่อยู่เพิ่มเติม
                                         include('status_option/pay_address.php');
                                     } else {
-                                        // กรณีจ่ายไปแล้วรับหน้าร้าน
                                         include('status_option/pay_status.php');
                                     }
-                                } else if ($row['status_id'] == '9') {
-                                    // สถานะชำระเงินเสร็จสิ้น ไป สถานะส่งเครื่องเสียง
+                                } elseif ($row['status_id'] == '9') {
                                     include('status_option/send_equipment.php');
-                                } else if ($row['rs_conf'] == '1' && $row['status_id'] != '5') {
+                                } elseif ($row['rs_conf'] == '1' && $row['status_id'] != '5') {
                                     include('status_option/conf_status.php');
                                 } elseif ($row['status_id'] == '5') {
                                     include('status_option/next_conf.php');
                                 } elseif ($row['status_id'] == '19') {
                                     include('status_option/doing_status.php');
-                                } else if ($row['status_id'] == '6') {
+                                } elseif ($row['status_id'] == '6') {
                                     include('status_option/after_doing.php');
-                                } else if ($row['status_id'] == '7') {
+                                } elseif ($row['status_id'] == '7') {
                                     include('status_option/check_status.php');
                                 }
                             }
                             ?>
+
 
                             <?php
                             if ($row['value_code'] == "succ" || $row['value_code'] == "cancel" || $row['value_code'] == "submit" || $row['value_code'] == "received" || $row['status_id'] == "11" || $row['status_id'] == "4" || $row1['status_id'] != "3" || $row1['status_id'] != '17' || $row1['status_id'] != '5') {

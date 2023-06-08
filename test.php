@@ -311,37 +311,41 @@ include('database/condb.php');
 </body>
 
 </html> -->
-
-<body>
-
-    <select id="select-state" class="form-select" data-live-search="true">
-        <option value="">Select a state...</option>
-        <option value="AL">Alabama</option>
-        <option value="AK">Alaska</option>
-        <option value="AZ">Arizona</option>
-        <option value="AR">Arkansas</option>
-        <option value="CA">California</option>
-        <option value="CO">Colorado</option>
-        <option value="CT">Connecticut</option>
-        <option value="DE">Delaware</option>
-        <option value="DC">District of Columbia</option>
-        <option value="FL">Florida</option>
-        <option value="GA">Georgia</option>
-        <option value="HI">Hawaii</option>
-        <option value="ID">Idaho</option>
-        <option value="IL">Illinois</option>
-        <option value="IN">Indiana</option>
-    </select>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            $('#select-state').select2({
-                placeholder: "Pick a state...",
-                allowClear: true
-            });
-        });
-    </script>
-</body>
+<?php $statusIds = array("4", "17", "5", "19", "6", "7", "8", "9", "13", "10", "24", "20");
+if (in_array($row['status_id'], $statusIds)) {
+    if ($row['rs_conf'] == NULL && $row['status_id'] != '5' && $row['status_id'] != '19' && $row['status_id'] != '6' && $row['status_id'] != '7' && $row['status_id'] != '8' && $row['status_id'] != '9' && $row['status_id'] != '13' && $row['status_id'] != '24' && $row['status_id'] != '10' && $row['status_id'] != '20') {
+        include('status_option/wait_respond.php');
+    } elseif ($row['status_id'] == '20') {
+        // ถูกปฏิเสธจากลูกค้า
+        include('status_option/refuse_member.php');
+    } elseif ($row['status_id'] == '13') {
+        include('status_option/config_cancel_option.php');
+    } elseif ($row['status_id'] == '10') {
+        // ส่งเครื่องเสียงเสร็จสิ้น ***รอให้ลูกค้าตรวจสอบการซ่อม
+        include('status_option/after_send.php');
+    } else if ($row['rs_conf'] == '0' && $row['status_id'] != '5') {
+        include('status_option/cancel_conf.php');
+    } else if ($row['status_id'] == '8') {
+        if ($row['rs_conf'] == 4) {
+            // กรณีมีที่อยู่เพิ่มเติม
+            include('status_option/pay_address.php');
+        } else {
+            // กรณีจ่ายไปแล้วรับหน้าร้าน
+            include('status_option/pay_status.php');
+        }
+    } else if ($row['status_id'] == '9') {
+        // สถานะชำระเงินเสร็จสิ้น ไป สถานะส่งเครื่องเสียง
+        include('status_option/send_equipment.php');
+    } else if ($row['rs_conf'] == '1' && $row['status_id'] != '5') {
+        include('status_option/conf_status.php');
+    } elseif ($row['status_id'] == '5') {
+        include('status_option/next_conf.php');
+    } elseif ($row['status_id'] == '19') {
+        include('status_option/doing_status.php');
+    } else if ($row['status_id'] == '6') {
+        include('status_option/after_doing.php');
+    } else if ($row['status_id'] == '7') {
+        include('status_option/check_status.php');
+    }
+}
+?>
