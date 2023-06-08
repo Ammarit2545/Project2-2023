@@ -41,11 +41,28 @@ if ($row[0] > 0) {
         $p_id = $row_check_part['p_id'];
         $value_parts = $row_check_part['rd_value_parts'];
 
-        // $sql_update_part = "UPDATE parts SET p_stock = p_stock + $value_parts WHERE p_id = '$p_id'";
-        // $result_update_part = mysqli_query($conn, $sql_update_part);
+        $sql_check_c = "SELECT status_id FROM `repair_status` WHERE get_r_id = '$get_r_id' ORDER BY rs_date_time DESC;";
+        $result_check_c = mysqli_query($conn, $sql_check_c);
+        $row = mysqli_fetch_array($result_check_c);
+
+        if (!in_array($row['status_id'], [1, 2, 4])) {
+            if ($row['status_id'] == 17) {
+                $sql_check_c = "SELECT status_id FROM `repair_status` WHERE get_r_id = '$get_r_id' AND status_id = '5' ORDER BY rs_date_time DESC";
+                $result_check_c = mysqli_query($conn, $sql_check_c);
+                $row_check_c = mysqli_fetch_array($result_check_c);
+                if ($row_check_c && $row_check_c[0] > 0) {
+                    $sql_update_part = "UPDATE parts SET p_stock = p_stock + $value_parts WHERE p_id = '$p_id'";
+                    $result_update_part = mysqli_query($conn, $sql_update_part);
+                }
+            }else{
+                $sql_update_part = "UPDATE parts SET p_stock = p_stock + $value_parts WHERE p_id = '$p_id'";
+                    $result_update_part = mysqli_query($conn, $sql_update_part);
+            }
+        }
 
 
-        $sql_update_detail = "UPDATE repair_detail SET del_flg = '1' WHERE rd_id = '$rd_id'";
+
+        $sql_update_detail = "UPDATE repair_detail SET del_flg = '1' , rd_update = NOW() WHERE rd_id = '$rd_id'";
         $result_update_detail = mysqli_query($conn, $sql_update_detail);
     }
 

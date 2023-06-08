@@ -27,7 +27,8 @@ for ($i = 1; $i <= $cardCount; $i++) {
 
 $sql = "SELECT * FROM repair_status 
         LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
-        WHERE repair_status.get_r_id = '$get_r_id' AND repair_status.rs_detail = '$rs_detail' AND repair_status.status_id = '4'  ";
+        WHERE repair_status.get_r_id = '$get_r_id' AND repair_status.rs_detail = '$rs_detail' AND repair_status.status_id = '4'";
+
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 

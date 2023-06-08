@@ -10,8 +10,9 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav ps-5">
         <a class="nav-link" style="color: black; text-decoration:none; " href="home.php">หน้าหลัก</a>
-        <a class="nav-link" style="color: black; text-decoration:none; " href="home_repair.php">ส่งซ่อม</a>
-        <a class="nav-link" style="color: black; text-decoration:none; " href="status.php">สถานะ</a>
+        <!-- <a class="nav-link" style="color: black; text-decoration:none; " href="home_repair.php">ส่งซ่อม</a> -->
+        <a class="nav-link" style="color: black; text-decoration:none; " href="listview_repair.php">ส่งซ่อม</a>
+        <a class="nav-link" style="color: black; text-decoration:none; " href="listview_status.php">ติดตาม</a>
         <a class="nav-link" style="color: black; text-decoration:none; " href="history_main.php">ประวัติ</a>
       </div>
     </div>
@@ -25,3 +26,37 @@
     </div>
   </div>
 </nav>
+<style>
+  body {
+    font-family: sans-serif;
+  }
+
+  /* CSS for the scroll-to-top button */
+  #scrollToTop {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    font-size: 20px;
+    line-height: 50px;
+    cursor: pointer;
+    z-index: 9999;
+    /* Adjust the z-index value as needed */
+  }
+
+  #scrollToTop.visible {
+    opacity: 1;
+  }
+</style>
+<!-- Your web content here -->
+
+<!-- Scroll-to-top button -->
+<div id="scrollToTop" onclick="scrollToTop()">
+  &uarr;
+</div>

@@ -148,6 +148,28 @@ if (!isset($_SESSION['role_id'])) {
     .no-scrollbar {
         overflow: hidden;
     }
+
+    .grid {
+        margin-bottom: 2rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-gap: 2rem;
+    }
+
+    #bounce-item {
+        /* box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3); */
+        /* Add a gray shadow */
+        transition: transform 0.3s, box-shadow 0.3s;
+        /* Add transition for transform and box-shadow */
+    }
+
+    #bounce-item:hover {
+        transform: scale(1.1);
+        /* Increase size on hover */
+        /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); */
+        /* Increase shadow size and intensity on hover */
+
+    }
 </style>
 
 <body id="page-top">
@@ -182,11 +204,12 @@ if (!isset($_SESSION['role_id'])) {
                     $get_r_id = $_GET['id'];
 
                     $sql = "SELECT * FROM get_repair
-                    LEFT JOIN repair ON repair.r_id = get_repair.r_id 
-                    LEFT JOIN member ON member.m_id = repair.m_id
-                    LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id
-                    LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
-                    WHERE get_repair.del_flg = '0' AND repair_status.del_flg = '0' AND get_repair.get_r_id = '$get_r_id' ORDER BY rs_date_time DESC";
+                    LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id 
+                                        LEFT JOIN repair ON repair.r_id = get_detail.r_id 
+                                        LEFT JOIN member ON member.m_id = repair.m_id
+                                        LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id
+                                        LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
+                                        WHERE get_repair.del_flg = '0' AND repair_status.del_flg = '0' AND get_repair.get_r_id = '$get_r_id' ORDER BY rs_date_time DESC;";
                     $result = mysqli_query($conn, $sql);
                     $row = mysqli_fetch_array($result);
 
@@ -205,7 +228,7 @@ if (!isset($_SESSION['role_id'])) {
                         <br>
                         <div class="container">
                             <div class="row">
-                                <div class="col">
+                                <div class="col" id="bounce-item">
                                     <center>
                                         <!-- <h4><a href="#" onclick="openModalPart('status')">ติดตามสถานะ <i class="fa fa-chevron-right" style="color: gray; font-size: 17px;"></i></a></h4> -->
                                         <h4><a href="#" onclick="openModalStatus('quantitystatus')">ติดตามสถานะ <i class="fa fa-chevron-right" style="color: gray; font-size: 17px;"></i></a></h4>
@@ -216,7 +239,7 @@ if (!isset($_SESSION['role_id'])) {
                                         <h3>|</h3>
                                     </center>
                                 </div>
-                                <div class="col">
+                                <div class="col" id="bounce-item">
                                     <center>
                                         <h4><a href="#" onclick="openModalPart('quantitypart')">จำนวนอะไหล่ <i class="fa fa-chevron-right" style="color: gray; font-size: 17px;"></i></a></h4>
                                     </center>
@@ -305,7 +328,19 @@ if (!isset($_SESSION['role_id'])) {
                                     <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะ "ดำเนินการ" ไปที่สมาชิก ***</p>
                                 </center>
                                 <br>
-                            <?php } else if ($row['rs_conf'] != NULL && $row['rs_conf'] == 0 && $row['status_id'] == 4) {
+                            <?php } else if ($row['rs_conf'] != NULL && $row['rs_conf'] == 4 && $row['status_id'] == 8) {
+                            ?>
+                                <div class="alert alert-primary" role="alert">
+                                    <center>
+                                        <h4>สมาชิกต้องการจัดส่งแบบไปรษณีย์ โปรดระบุค่าจัดส่ง</h4>
+                                    </center>
+                                </div>
+                                <center>
+                                    <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะไปที่สมาชิก ***</p>
+                                </center>
+                                <br>
+                            <?php
+                            } else if ($row['rs_conf'] != NULL && $row['rs_conf'] == 0 && $row['status_id'] == 4) {
                             ?>
                                 <div class="alert alert-danger" role="alert">
                                     <center>
@@ -314,7 +349,7 @@ if (!isset($_SESSION['role_id'])) {
                                 </div>
                                 <center>
                                     <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะไปที่สมาชิก ***</p>
-                                </center>
+                                </center>ะเงินแล้ว
                                 <br>
                             <?php
                             } else if ($row['rs_conf'] == 1 && $row['status_id'] == 24) {
@@ -396,35 +431,54 @@ if (!isset($_SESSION['role_id'])) {
                                 <br>
                             <?php
                             }
+
+                            $jsonobj = $row['get_add'];
+
+                            $obj = json_decode($jsonobj);
+
+                            // echo 'จังหวัด' . $row_p[0];
+                            // echo ' อำเภอ' . $row_p[1];
+                            // echo ' ตำบล' . $row_p[2];
+                            // echo  $obj->zip_code;
+                            // echo ' รายละเอียด ' . $obj->description;
+
+                            // $sql_p = "SELECT provinces.name_th, amphures.name_th, districts.name_th
+                            $sql_p = "SELECT provinces.name_en, amphures.name_en, districts.name_en
+                                    FROM provinces
+                                    LEFT JOIN amphures ON provinces.id = amphures.province_id
+                                    LEFT JOIN districts ON amphures.id = districts.amphure_id
+                                    WHERE provinces.id = '$obj->province' AND amphures.id = '$obj->district' AND districts.id = '$obj->sub_district';";
+                            $result_p = mysqli_query($conn, $sql_p);
+                            $row_p = mysqli_fetch_array($result_p);
                             ?>
                             <div class="mb-3 row">
                                 <h6 for="staticEmail" class="col-sm-1 col-form-label">ชื่อ</h6>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="staticEmail" value="<?= $row['m_fname']  ?>" placeholder="สวย" disabled>
+                                    <input type="text" class="form-control" id="staticEmail" value="<?= $row['m_fname']  ?>" placeholder="ไม่มีข้อมูล" disabled>
                                 </div>
                                 <label for="inputPassword" class="col-sm-1 col-form-label">นามสกุล</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="inputPassword" value="<?= $row['m_lname']  ?>" disabled="disabled">
+                                    <input type="text" class="form-control" id="inputPassword" value="<?= $row['m_lname']  ?>" placeholder="ไม่มีข้อมูล" disabled="disabled">
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="inputPassword" class="col-sm-1 col-form-label">Brand :</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="inputPassword" value="<?= $row['r_brand']  ?>" placeholder="Yamaha" disabled="disabled">
+                                    <input type="text" class="form-control" id="inputPassword" value="<?= $row['r_brand']  ?>" placeholder="ไม่มีข้อมูล" disabled="disabled">
                                 </div>
                                 <label for="inputPassword" class="col-sm-1 col-form-label">Model :</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="inputPassword" value="<?= $row['r_model']  ?>" placeholder="NPX8859" disabled="disabled">
+                                    <input type="text" class="form-control" id="inputPassword" value="<?= $row['r_model']  ?>" placeholder="ไม่มีข้อมูล" disabled="disabled">
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="inputPassword" class="col-sm-1 col-form-label">เบอร์โทรศัพท์</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="inputPassword" placeholder="000000000" value="<?= $row['get_tel']  ?>" disabled="disabled">
+                                    <input type="text" class="form-control" id="inputPassword" placeholder="ไม่มีข้อมูล" value="<?= $row['get_tel']  ?>" disabled="disabled">
                                 </div>
                                 <label for="inputPassword" class="col-sm-1 col-form-label">บริษัท</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="inputPassword" placeholder="ไทยคมนาคม" value="<?php
+                                    <input type="text" class="form-control" id="inputPassword" placeholder="ไม่มีข้อมูล" value="<?php
                                                                                                                                 if ($row['com_id'] == NULL) {
                                                                                                                                     echo "ไม่มีข้อมูล";
                                                                                                                                 } else {
@@ -438,16 +492,48 @@ if (!isset($_SESSION['role_id'])) {
                                                                                                                                 ?>" disabled="disabled">
                                 </div>
                             </div>
+                            <hr>
+
                             <div class="mb-3">
-                                <label for="exampleFormControlTextarea1" class="col-form-label">ที่อยู่ :</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?php
-                                                                                                                                if ($row['get_add'] == NULL) {
-                                                                                                                                    echo "ไม่มีข้อมูล";
-                                                                                                                                } else {
-                                                                                                                                    echo ($row['get_add']);
-                                                                                                                                }
-                                                                                                                                ?></textarea>
+                                <label for="exampleFormControlTextarea1" class="btn btn-outline-primary">รายละเอียดที่อยู่</label>
+                                <?php if ($row['get_add'] != NULL) {
+                                ?>
+                                    <div class="row">
+                                        <div class="col-4" id="bounce-item">
+                                            <label for="exampleFormControlTextarea1" class="col-form-label">จังหวัด :</label>
+                                            <input type="text" class="form-control" value="<?= $row_p[0] ?>" readonly>
+                                        </div>
+                                        <div class="col-4" id="bounce-item">
+                                            <label for="exampleFormControlTextarea1" class="col-form-label">อำเภอ :</label>
+                                            <input type="text" class="form-control" value="<?= $row_p[1] ?>" readonly>
+                                        </div>
+                                        <div class="col-4" id="bounce-item">
+                                            <label for="exampleFormControlTextarea1" class="col-form-label">ตำบล :</label>
+                                            <input type="text" class="form-control" value="<?= $row_p[2] ?>" readonly>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?php
+                                                                                                                                    if ($row['get_add'] == NULL) {
+                                                                                                                                        echo "ไม่มีข้อมูล";
+                                                                                                                                    } else {
+
+                                                                                                                                        echo $obj->description;
+                                                                                                                                    }
+                                                                                                                                    ?>
+                                </textarea>
+                                <?php
+                                } else {
+                                ?>
+                                    <center>
+                                        <h5>ไม่มีข้อมูลที่อยู่</h5>
+                                    </center>
+                                <?php
+                                }
+                                ?>
                             </div>
+                            <hr>
+
                             <?php
                             // $get_r_id = $row['get_r_id'];
                             $status_id = $row['status_id'];
@@ -461,7 +547,7 @@ if (!isset($_SESSION['role_id'])) {
                             $rs_id = $row_s['rs_id'];
                             ?>
                             <div class="mb-3">
-                                <label for="exampleFormControlTextarea1" class="col-form-label">รายละเอียด :</label>
+                                <label for="exampleFormControlTextarea1" class="btn btn-outline-primary">รายละเอียด</label>
                                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?= $row_s['rs_detail']  ?></textarea>
                             </div>
 
@@ -477,7 +563,7 @@ if (!isset($_SESSION['role_id'])) {
                             <?php
                             }
                             ?>
-
+                            <hr>
                             <div class="mb-3">
                                 <?php
                                 $sql_pic3 = "SELECT * FROM repair_pic WHERE rs_id = '$rs_id' AND del_flg = 0 ";
@@ -485,11 +571,11 @@ if (!isset($_SESSION['role_id'])) {
                                 $roe_c =  mysqli_fetch_array($result_pic3);
                                 if ($roe_c[0] == NULL) {
                                 ?>
-                                    <label for="exampleFormControlTextarea1" class="col-form-label" style="display:none">รูปภาพประกอบ <?= $get_r_id ?>:</label>
+                                    <label for="exampleFormControlTextarea1" class="btn btn-outline-primary" style="display:none">รูปภาพประกอบ:</label>
                                 <?php
                                 } else {
                                 ?>
-                                    <label for="exampleFormControlTextarea1" class="col-form-label">รูปภาพประกอบ <?= $get_r_id ?>:</label>
+                                    <label for="exampleFormControlTextarea1" class="btn btn-outline-primary">รูปภาพประกอบ </label>
                                 <?php
                                 }
                                 ?>
@@ -510,7 +596,7 @@ if (!isset($_SESSION['role_id'])) {
                                             $rp_pic = $row_pic['rp_pic'];
                                             $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
                                             ?> <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
-                                                <a href="#" style="margin-left: 20px;"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                <a href="#" style="margin-left: 20px;" id="bounce-item"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
                                             <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
                                                 <a href="#" style="margin-left: 20px;">
                                                     <video width="100px" autoplay muted onclick="openModalVideo(this)" src="../<?= $row_pic['rp_pic'] ?>">
@@ -936,7 +1022,13 @@ if (!isset($_SESSION['role_id'])) {
                                 } else if ($row['rs_conf'] == '0' && $row['status_id'] != '5') {
                                     include('status_option/cancel_conf.php');
                                 } else if ($row['status_id'] == '8') {
-                                    include('status_option/pay_status.php');
+                                    if($row['rs_conf'] == 4){
+                                        // กรณีมีที่อยู่เพิ่มเติม
+                                        include('status_option/pay_address.php');
+                                    }else{
+                                        // กรณีจ่ายไปแล้วรับหน้าร้าน
+                                        include('status_option/pay_status.php');
+                                    }
                                 } else if ($row['status_id'] == '9') {
                                     // สถานะชำระเงินเสร็จสิ้น ไป สถานะส่งเครื่องเสียง
                                     include('status_option/send_equipment.php');

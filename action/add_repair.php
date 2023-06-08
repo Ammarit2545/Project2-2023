@@ -51,8 +51,16 @@ while (isset($_SESSION['r_id_' . $i])) {
 }
 
 // Delete Folder Holder:
-// $folderName = "../uploads/$id/Holder/$i/"; // the name of the folder to be deleted
-// deleteDirectory($folderName);
+$folderName = "../uploads/$id/Holder/$i/"; // the name of the folder to be deleted
+deleteDirectory($folderName);
+
+$folderName = "../uploads/$id/Holder/"; // the name of the new folder
+if (!file_exists($folderName)) { // check if the folder already exists
+    mkdir($folderName); // create the new folder
+    echo "Folder created successfully";
+} else {
+    echo "Folder already exists";
+}
 
 $folderName = "../uploads/$id/Holder/$i/"; // the name of the new folder
 if (!file_exists($folderName)) { // check if the folder already exists

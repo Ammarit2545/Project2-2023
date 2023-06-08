@@ -252,7 +252,7 @@ if (isset($_GET['get_add'])) {
                                                 <td colspan="5"></td>
                                                 <td colspan="2">ราคารวมทั้งหมด</td>
                                                 <td>
-                                                    <h5><?= number_format($total + $row_w['get_wages']) ?> </h5>
+                                                    <h5><?= number_format($total + $row_w['get_wages'] + $_GET['get_add']) ?> </h5>
                                                 </td>
                                                 <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
                                             </tr>
@@ -306,7 +306,7 @@ if (isset($_GET['get_add'])) {
                         $PromptPayQR = new PromptPayQR(); // new object
                         $PromptPayQR->size = 8; // Set QR code size to 8
                         $PromptPayQR->id = '0957655647'; // PromptPay ID
-                        $PromptPayQR->amount = $total + $row_w['get_wages']; // Set amount (not necessary)
+                        $PromptPayQR->amount = $total + $row_w['get_wages'] + $_GET['get_add'] ; // Set amount (not necessary)
                         echo '<center><img src="' . $PromptPayQR->generate() . '" /></center>';
                         ?>
                         <br>
@@ -314,7 +314,7 @@ if (isset($_GET['get_add'])) {
                         <center>
                             <h3>ชื่อ : อมฤต โชติทินวัฒน์</h3>
                             <br>
-                            <h2>ราคารวม : <?= number_format($total + $row_w['get_wages']) ?> บาท</h2>
+                            <h2>ราคารวม : <?= number_format($total + $row_w['get_wages'] + $_GET['get_add'])  ?> บาท</h2>
                         </center>
                         <br>
                         <center>

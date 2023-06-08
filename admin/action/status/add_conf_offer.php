@@ -66,12 +66,12 @@ if ($row[0] > 0) {
 
 
     // อัพเดตอะไหล่ใน repair_detail จาก 0 เป็น 1
-    $sql = "UPDATE repair_detail
-    LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
-    LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
-    SET repair_detail.del_flg = 1 ,repair_detail.rd_update = NOW()
-    WHERE get_repair.get_r_id = '$get_r_id';";
-    $result = mysqli_query($conn, $sql);
+    // $sql = "UPDATE repair_detail
+    // LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
+    // LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
+    // SET repair_detail.del_flg = 1 ,repair_detail.rd_update = NOW()
+    // WHERE get_repair.get_r_id = '$get_r_id';";
+    // $result = mysqli_query($conn, $sql);
 
     if ($result) {
 

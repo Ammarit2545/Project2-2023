@@ -252,9 +252,9 @@ if ($_SESSION["log_login"] == 0) {
                     <label for="password">Password</label>
 
                     <span id="password-error" style="color: red; font-size: 12px; display: none;">
-                      <button class="btn btn-danger" style="font-size: 12px; padding: -2px">
+                      <span style="font-size: 12px; padding: -2px">
                         รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร
-                      </button>
+                      </span>
                     </span>
 
                     <script>
@@ -291,15 +291,15 @@ if ($_SESSION["log_login"] == 0) {
                     <label for="password">Confirm Password</label>
 
                     <span id="password-again-error" style="color: red; font-size: 12px; display: none;">
-                      <button class="btn btn-danger" style="font-size: 12px; padding: -2px">
+                      <span style="font-size: 12px; padding: -2px">
                         รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร
-                      </button>
+                      </span>
                     </span>
 
                     <span id="password-match-error" style="color: red; font-size: 12px; display: none;">
-                      <button class="btn btn-danger" style="font-size: 12px; padding: -2px">
+                      <span style="font-size: 12px; padding: -2px">
                         รหัสผ่านไม่ตรงกัน
-                      </button>
+                      </span>
                     </span>
 
                     <script>
@@ -459,7 +459,33 @@ if ($_SESSION["log_login"] == 0) {
 
     <?php
       unset($_SESSION['add_data_alert']);
-    } 
+    } else if ($_SESSION['add_data_alert'] == 3) {
+    ?>
+      <script>
+        Swal.fire({
+          title: 'ข้อมูล Email หรือ เบอร์โทรศัพท์นี้ถูกใช้งานแล้ว ',
+          text: 'กด Accept เพื่อออก',
+          icon: 'error',
+          confirmButtonText: 'Accept'
+        });
+      </script>
+
+    <?php
+      unset($_SESSION['add_data_alert']);
+    } else if ($_SESSION['add_data_alert'] == 4) {
+    ?>
+      <script>
+        Swal.fire({
+          title: 'สมัครบัญชีผู้ใช้ของคุฯเสวร็จสิ้น',
+          text: 'กด Accept เพื่อออกและทำการ Login',
+          icon: 'success',
+          confirmButtonText: 'Accept'
+        });
+      </script>
+
+  <?php
+      unset($_SESSION['add_data_alert']);
+    }
   }
   ?>
   <!-- Sweet Alert Show End -->

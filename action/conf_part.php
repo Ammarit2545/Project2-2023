@@ -17,17 +17,17 @@ if ($row['rs_id'] > 0) {
 
     if ($row_c['rs_id'] > 0) {
         $_SESSION['add_data_alert'] = 1;
-        header("location:../status_detail.php?id=$get_r_id");
+        header("location:../detail_status.php?id=$get_r_id");
     } else {
         $rs_id = $row['rs_id'];
         $sql = "UPDATE repair_status SET rs_conf = '1' , rs_conf_date = NOW() WHERE rs_id = '$rs_id '";
         $result = mysqli_query($conn, $sql);
         if ($result) {
             $_SESSION['add_data_alert'] = 0;
-            header("location:../status_detail.php?id=$get_r_id");
+            header("location:../detail_status.php?id=$get_r_id");
         }
     }
 } else {
     $_SESSION['add_data_alert'] = 1;
-    header("location:../status_detail.php?id=$get_r_id");
+    header("location:../detail_status.php?id=$get_r_id");
 }

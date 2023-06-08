@@ -52,7 +52,7 @@
     <h1 class="m-0 font-weight-bold text-warning" style="display:inline; color:<?= $row_q['status_color'] ?>"><?= $row_q['status_name'] ?></h1>
     <br>
     <br>
-    <form id="cancel_status_id_conf" action="action/status/add_conf_cancel.php" method="POST" enctype="multipart/form-data">
+    <form id="cancel_status_id_conf" action="action/status/doing_status.php" method="POST" enctype="multipart/form-data">
         <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color:<?= $row_q['status_color'] ?>"><?= $row_q['status_name'] ?></p> :</label>
         <textarea class="form-control" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการดำเนินการส่งซ่อม">ทางเราได้รับการยืนยันจากคุณ และดำเนินการซ่อมต่อ</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
@@ -321,7 +321,7 @@
     <br>
     <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
     <br>
-    <form id="confirm_cen_config" action="action/status/add_conf_cancel.php" method="POST" enctype="multipart/form-data">
+    <form id="confirm_cen_config" action="action/status/doing_status.php" method="POST" enctype="multipart/form-data">
         <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_q['status_color'] ?>"> <?= $row_q['status_name'] ?></p> :</label>
         <textarea class="form-control" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">ทางเรากำลังดำเนินการส่งเครื่องเสียงให้ท่านผ่านผู้ให้บริการจัดส่งพัสดุ</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
@@ -455,7 +455,7 @@
     <br>
     <h1 class="m-0 font-weight-bold text-danger" ><?= $row_conf['status_name'] ?> </h1>
     <br>
-    <form id="cancel_status_id_conf_get" action="action/status/add_offer_doing.php" method="POST" enctype="multipart/form-data">
+    <form id="cancel_status_id_conf_get" action="action/status/add_conf_cancel.php" method="POST" enctype="multipart/form-data">
         <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_conf['status_color'] ?>"> <?= $row_conf['status_name'] ?></p> :</label>
         <textarea class="form-control" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">ทางเราจำเป็นต้องใช้อะไหล่ดังนี้   </textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>

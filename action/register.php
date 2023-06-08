@@ -18,8 +18,10 @@
     // echo($row);
 
     if($row > 0){
-        echo "<script> alert(' Email นี้มีผู้ใช้งานอยู่แล้ว หรือ เบอร์โทรศัพท์ได้มีการถูกใช้งานแล้ว'); </script>";
-        echo "<script> window.location='../home.php'; </script>";
+        $_SESSION['add_data_alert'] = 3;
+            header("location:../home.php");
+
+        // echo "<script> window.location='../home.php'; </script>";
 //////////////////////////////////////////////////////
 
     //     $sql = "INSERT INTO member(m_email, m_password, m_fname, m_lname, m_tel) 
@@ -48,11 +50,11 @@
         $result = mysqli_query($conn,$sql);
     
         if($result){
-            echo "<script> alert(' บันทึกข้อมูลเรียบร้อยแล้ว '); </script>";
-            echo "<script> window.location='../home.php'; </script>";
+            $_SESSION['add_data_alert'] = 4;
+            header("location:../home.php");
         }else{
-            echo "Error ". $sql . "<br>" . mysqli_error($conn);
-            echo "<script> alert(' บันทึกข้อมูลไม่สำเร็จ '); </script>";
+            $_SESSION['add_data_alert'] = 3;
+            header("location:../home.php");
         }
     
     mysqli_close($conn);

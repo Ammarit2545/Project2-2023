@@ -16,25 +16,6 @@
     </button>
 </center>
 
-<!-- <script>
-    function show_conf_status(id) {
-        Swal.fire({
-            title: 'Confirmation',
-            text: 'Are you sure you want to change the status?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = 'action/status/get_audio.php?id=' + <?= $row['get_r_id'] ?>;
-            }
-        });
-    }
-</script> -->
-
 <div id="cancel_value_code" style="display: none;">
     <hr>
     <br>

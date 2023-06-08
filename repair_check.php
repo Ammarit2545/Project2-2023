@@ -242,7 +242,7 @@ if (!isset($_SESSION['id'])) {
                             while (isset($_SESSION['r_id_' . $i])) {
                                 $i++;
                             }
-
+                            // $i -= 1;
                             foreach (new DirectoryIterator("uploads/$id/Holder/$i/") as $file) {
                                 if ($file->isFile()) {
                                     // print $file->getFilename() . "\n";
@@ -284,7 +284,9 @@ if (!isset($_SESSION['id'])) {
 
                             <div class="text-center pt-4">
                                 <a href="repair_edit.php" class="btn btn-danger">แก้ไขข้อมูล</a>
-                                <button type="submit" class="btn btn-success">ยืนยัน</button>
+                                <button type="submit" class="btn btn-success" >ยืนยัน</button>
+
+
                             </div>
 
                         </div>
