@@ -283,7 +283,7 @@ if (!isset($_SESSION['role_id'])) {
 
                                 $sql_get = "SELECT * FROM get_detail 
                                                         LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                        WHERE get_detail.get_r_id = '$get_r_id'";
+                                                        WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
                                 $result_count = mysqli_query($conn, $sql_get);
                                 $result_get = mysqli_query($conn, $sql_get);
                                 while ($row_get = mysqli_fetch_array($result_get)) {
@@ -444,30 +444,30 @@ if (!isset($_SESSION['role_id'])) {
                                 <br>
                             <?php
                             } else if ($row['status_id'] == 24) {
-                                ?>
-                                    <div class="alert alert-primary" role="alert">
-                                        <center>
-                                            <h4>รอสมาชิกตอบกลับการซ่อม</h4>
-                                        </center>
-                                    </div>
+                            ?>
+                                <div class="alert alert-primary" role="alert">
                                     <center>
-                                        <p style="color : red">*** โปรดตรวจรอสมาชิกตรวจสอบและตอบกลับมายังพนักงาน ***</p>
+                                        <h4>รอสมาชิกตอบกลับการซ่อม</h4>
                                     </center>
-                                    <br>
-                                <?php
-                                } else if ($row['status_id'] == 25) {
-                                ?>
-                                    <div class="alert alert-primary" role="alert">
-                                        <center>
-                                            <h4>สมาชิกต้องทำการชำระเงินเรียบร้อยแล้ว</h4>
-                                        </center>
-                                    </div>
+                                </div>
+                                <center>
+                                    <p style="color : red">*** โปรดตรวจรอสมาชิกตรวจสอบและตอบกลับมายังพนักงาน ***</p>
+                                </center>
+                                <br>
+                            <?php
+                            } else if ($row['status_id'] == 25) {
+                            ?>
+                                <div class="alert alert-primary" role="alert">
                                     <center>
-                                        <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะไปที่สมาชิก ***</p>
+                                        <h4>สมาชิกต้องทำการชำระเงินเรียบร้อยแล้ว</h4>
                                     </center>
-                                    <br>
-                                <?php
-                                } else if ($row['rs_conf'] != NULL && $row['rs_conf'] == 4 && $row['status_id'] == 8) {
+                                </div>
+                                <center>
+                                    <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะไปที่สมาชิก ***</p>
+                                </center>
+                                <br>
+                            <?php
+                            } else if ($row['rs_conf'] != NULL && $row['rs_conf'] == 4 && $row['status_id'] == 8) {
                             ?>
                                 <div class="alert alert-primary" role="alert">
                                     <center>
@@ -1013,33 +1013,74 @@ if (!isset($_SESSION['role_id'])) {
                                     <h1 class="m-0 font-weight-bold text-secondary">รายละเอียด </h1>
                                     <br>
                                     <form id="detail_status_id" action="action/status/insert_new_part.php" method="POST" enctype="multipart/form-data">
-                                        <label for="DetailFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการส่ง <p style="display:inline; color : gray"> รายละเอียด</p> :</label>
-                                        <textarea class="form-control" name="rs_detail" id="DetailFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">อะไหล่ที่ต้องใช้มีดังนี้</textarea>
+                                        <div>
+                                            <br>
+                                            <label for="basic-url" class="form-label">กรุณาเลือกอุปกรณ์ที่ต้องการทำการซ่อม</label>
+                                            <?php
+                                            $count_conf = 0;
+                                            $sql_get_c = "SELECT * FROM get_detail 
+                                                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                        WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
+                                            $result_get_c = mysqli_query($conn, $sql_get_c);
+                                            while ($row_get_c = mysqli_fetch_array($result_get_c)) {
+                                                $count_conf++;
+                                            ?>
+
+                                                <div class="alert alert-primary" role="alert">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" name="check_<?= $row_get_c['get_d_id'] ?>" type="checkbox" id="inlineCheckbox1" value="option1" checked>
+                                                        <label class="form-check-label" for="inlineCheckbox1"><?= $count_conf ?></label>
+                                                    </div>
+                                                    <?= $row_get_c['r_brand'] . " " . $row_get_c['r_model'] . " - Model : " . $row_get_c['r_number_model'] . " - Serial Number : " . $row_get_c['r_serial_number']  ?>
+                                                </div>
+                                            <?php
+                                            }
+
+                                            ?>
+
+                                        </div>
+
                                         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
                                         <input type="text" name="status_id" value="4" hidden>
                                         <input type="hidden" name="cardCount" id="cardCountInput" value="0">
                                         <br>
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md">
                                                 <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่</label>
                                                 <div class="input-group mb-3">
+
                                                     <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
                                                     <input name="get_wages" type="text" value="<?= $row['get_wages'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกค่าแรงช่าง" required>
+                                                    <span class="input-group-text">฿</span>
                                                 </div>
                                             </div>
+
                                             <?php
                                             if ($row['get_deli'] == 1) { ?>
-                                                <div class="col-md-6">
+                                                <div class="col-md">
                                                     <label for="basic-url" class="form-label">ค่าจัดส่ง *แยกกับราคาอะไหล่</label>
                                                     <div class="input-group mb-3">
                                                         <span class="input-group-text" id="basic-addon3">ค่าจัดส่ง</span>
                                                         <input name="get_add_price" type="text" value="<?= $row['get_add_price'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกค่าส่งอุปกรณ์" required>
+                                                        <span class="input-group-text">฿</span>
                                                     </div>
                                                 </div>
                                             <?php
                                             }
                                             ?>
+                                            <div class="col-md">
+                                                <label for="basic-url" class="form-label">ระยะเวลาซ่อม</label>
+                                                <div class="input-group mb-3">
+
+                                                    <input name="get_date_conf" type="text" value="<?= $row['get_date_conf'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกระยะเวลาซ่อม" required>
+                                                    <span class="input-group-text">วัน</span>
+                                                </div>
+                                            </div>
                                         </div>
+                                        <br>
+                                        <label for="DetailFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการส่ง <p style="display:inline; color : gray"> รายละเอียด</p> :</label>
+                                        <textarea class="form-control" name="rs_detail" id="DetailFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">อะไหล่ที่ต้องใช้มีดังนี้</textarea>
+
 
 
                                         <br>
@@ -1167,6 +1208,7 @@ if (!isset($_SESSION['role_id'])) {
                                                 });
                                             }
                                         </script>
+
                                         <center>
                                             <br>
                                             <button class="btn btn-success" onclick="confirm_cen(event)">ยืนยัน</button>

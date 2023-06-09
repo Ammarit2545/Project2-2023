@@ -98,7 +98,7 @@ if (!isset($_SESSION['role_id'])) {
                                                         LEFT JOIN repair ON get_detail.r_id = repair.r_id
                                                         LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
                                                         LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
-                                                        WHERE get_repair.del_flg = '0' AND  repair_status.status_id = '$i'
+                                                        WHERE get_repair.del_flg = '0' AND  repair_status.status_id = '$i'AND AND get_detail.del_flg = '0'
                                                         GROUP BY get_repair.get_r_id
                                                         ORDER BY get_repair.get_r_id DESC
                                         ;
@@ -110,7 +110,7 @@ if (!isset($_SESSION['role_id'])) {
                                         LEFT JOIN repair ON get_detail.r_id = repair.r_id   
                                         LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
                                         LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
-                                        WHERE get_repair.del_flg = '0'
+                                        WHERE get_repair.del_flg = '0'AND get_detail.del_flg = '0'
                                         GROUP BY get_repair.get_r_id
                                         ORDER BY get_repair.get_r_id DESC
                                         ;
@@ -136,7 +136,7 @@ if (!isset($_SESSION['role_id'])) {
 
 
                                             $sql_get_count = "SELECT COUNT(get_r_id) FROM get_detail 
-                                                    WHERE get_r_id = '$get_r_id'";
+                                                    WHERE get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
                                             $result_get_count = mysqli_query($conn, $sql_get_count);
                                             $row_get_count = mysqli_fetch_array($result_get_count);
                                         ?>

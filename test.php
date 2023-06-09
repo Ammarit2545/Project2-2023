@@ -311,7 +311,7 @@ include('database/condb.php');
 </body>
 
 </html> -->
-<?php $statusIds = array("4", "17", "5", "19", "6", "7", "8", "9", "13", "10", "24", "20");
+<!-- <?php $statusIds = array("4", "17", "5", "19", "6", "7", "8", "9", "13", "10", "24", "20");
 if (in_array($row['status_id'], $statusIds)) {
     if ($row['rs_conf'] == NULL && $row['status_id'] != '5' && $row['status_id'] != '19' && $row['status_id'] != '6' && $row['status_id'] != '7' && $row['status_id'] != '8' && $row['status_id'] != '9' && $row['status_id'] != '13' && $row['status_id'] != '24' && $row['status_id'] != '10' && $row['status_id'] != '20') {
         include('status_option/wait_respond.php');
@@ -348,4 +348,132 @@ if (in_array($row['status_id'], $statusIds)) {
         include('status_option/check_status.php');
     }
 }
-?>
+?> -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stock Update</title>
+  <style>
+    .form-group {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Stock Update</h1>
+  
+  <div class="form-group">
+    <label for="type">Type:</label>
+    <select id="type">
+      <option value="">All</option>
+      <option value="type1">Type 1</option>
+      <option value="type2">Type 2</option>
+      <option value="type3">Type 3</option>
+      <!-- Add more options as needed -->
+    </select>
+  </div>
+  
+  <div class="form-group">
+    <label for="model">Model:</label>
+    <input type="text" id="model" />
+    <button onclick="searchParts()">Search</button>
+  </div>
+  
+  <div id="partsList">
+    <!-- The search results will be displayed here -->
+  </div>
+  
+  <div id="selectedPart">
+    <!-- The selected part's data will be displayed here -->
+  </div>
+  
+  <script>
+    // Mock data for demonstration
+    const partsData = [
+      { id: 1, type: 'type1', model: 'ABC123', name: 'Part 1', stock: 10 },
+      { id: 2, type: 'type2', model: 'DEF456', name: 'Part 2', stock: 5 },
+      { id: 3, type: 'type1', model: 'GHI789', name: 'Part 3', stock: 2 }
+      // Add more parts as needed
+    ];
+    
+    const typesData = [
+      { id: 'type1', name: 'Type 1' },
+      { id: 'type2', name: 'Type 2' },
+      { id: 'type3', name: 'Type 3' }
+      // Add more types as needed
+    ];
+    
+    function populateTypes() {
+      const typeSelect = document.getElementById('type');
+      
+      typesData.forEach(type => {
+        const option = document.createElement('option');
+        option.value = type.id;
+        option.textContent = type.name;
+        typeSelect.appendChild(option);
+      });
+    }
+    
+    function searchParts() {
+      const modelInput = document.getElementById('model');
+      const searchQuery = modelInput.value.toUpperCase();
+      
+      const typeSelect = document.getElementById('type');
+      const selectedType = typeSelect.value;
+      
+      const partsList = document.getElementById('partsList');
+      partsList.innerHTML = ''; // Clear previous results
+      
+      let matchingParts = partsData;
+      
+      if (selectedType) {
+        matchingParts = matchingParts.filter(part => part.type === selectedType);
+      }
+      
+      matchingParts = matchingParts.filter(part => part.model.toUpperCase().includes(searchQuery));
+      
+      if (matchingParts.length === 0) {
+        partsList.innerHTML = '<p>No parts found for the given type and model.</p>';
+      } else {
+        matchingParts.forEach(part => {
+          const partElement = document.createElement('div');
+          partElement.innerHTML = `<button onclick="selectPart(${part.id})">${part.name}</button>`;
+          partsList.appendChild(partElement);
+        });
+      }
+    }
+    
+    function selectPart(partId) {
+      const selectedPart = partsData.find(part => part.id === partId);
+      
+      const selectedPartElement = document.getElementById('selectedPart');
+      selectedPartElement.innerHTML = `
+        <h3>Selected Part</h3>
+        <p>Name: ${selectedPart.name}</p>
+        <p>Stock: ${selectedPart.stock}</p>
+        <label for="newStock">New Stock:</label>
+        <input type="number" id="newStock" />
+        <button onclick="updateStock(${partId})">Update Stock</button>
+      `;
+    }
+    
+    function updateStock(partId) {
+      const newStockInput = document.getElementById('newStock');
+      const newStockValue = newStockInput.value;
+      
+      const selectedPart = partsData.find(part => part.id === partId);
+      selectedPart.stock = parseInt(newStockValue);
+      
+      // Perform the necessary update (e.g., API call to update the stock in a database)
+      console.log(`Stock updated for Part ${partId}: New Stock = ${selectedPart.stock}`);
+      
+      // Clear the selected part section
+      const selectedPartElement = document.getElementById('selectedPart');
+      selectedPartElement.innerHTML = '';
+    }
+    
+    // Populate the types dropdown
+    populateTypes();
+  </script>
+</body>
+</html>

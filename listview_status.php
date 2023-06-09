@@ -171,6 +171,37 @@ if (isset($_GET["status_id"])) {
             transform: translateX(-50%) translateY(-10px);
             animation: tooltipFadeIn 0.3s, tooltipBounce 0.6s;
         }
+
+        .search-form {
+            position: relative;
+        }
+
+        .search-form {
+            position: relative;
+        }
+
+        #search-results {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40%;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-top: none;
+            display: none;
+        }
+
+        .search-result {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .search-result:hover {
+            background-color: #f1f1f1;
+        }
     </style>
 </head>
 
@@ -290,23 +321,62 @@ if (isset($_GET["status_id"])) {
             </div>
         </div>
         <br>
-        <?php if ($status_id < 0 || !isset($status_id)) { ?>
-            <form class="search-form" action="listview_status.php" method="GET">
-                <input type="text" name="search" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น ,หมายเลขแจ้งซ่อม . . ." value="<?= $search ?>">
-                <input type="text" name="status_id" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น ,หมายเลขแจ้งซ่อม . . ." value="<?= $status_id ?>" style="display : none ">
-                <button type="submit">Search</button>
-            </form>
-        <?php } else {
-        ?>
-            <form class="search-form" action="listview_status.php" method="GET">
-                <input type="text" name="search" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น ,หมายเลขแจ้งซ่อม . . ." value="<?= $search ?>">
-                <input type="text" name="status_id" placeholder="หาด้วยเลข Serial Number ,ชื่อแบรนด์ ,ชื่อรุ่น ,หมายเลขแจ้งซ่อม . . ." value="<?= $status_id ?>" style="display : none ">
-                <button type="submit">Search</button>
-            </form>
-        <?php
-        } ?>
+
+        <form class="search-form" action="listview_status.php" method="GET">
+            <input type="text" name="search" id="search" placeholder="หาด้วยเลข Serial Number, ชื่อแบรนด์, ชื่อรุ่น, หมายเลขแจ้งซ่อม..." onkeyup="showResults(this.value)">
+            <!-- <div id="search-results"></div> -->
+            <input type="text" name="status_id" placeholder="หาด้วยเลข Serial Number, ชื่อแบรนด์, ชื่อรุ่น, หมายเลขแจ้งซ่อม. . ." value="<?= isset($status_id) ? $status_id : '' ?>" style="display: none">
+            <button type="submit">Search</button>
+        </form>
+
+        <script>
+            function showResults(searchValue) {
+                if (searchValue.length === 0) {
+                    document.getElementById("search-results").innerHTML = "";
+                    return;
+                }
+
+                // Make an AJAX request to retrieve search results from the server
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState === 4 && this.status === 200) {
+                        document.getElementById("search-results").innerHTML = this.responseText;
+                        document.getElementById("search-results").style.display = "block";
+                    }
+                };
+                xhttp.open("GET", "action/get_results.php?search=" + searchValue, true);
+                xhttp.send();
+            }
+
+            // Perform automatic search when clicking on a dropdown result
+            document.addEventListener('click', function(event) {
+                var clickedElement = event.target;
+                if (clickedElement.matches('.search-result')) {
+                    var searchValue = clickedElement.getAttribute('data-value');
+                    document.getElementById("search").value = searchValue;
+                    document.getElementById("search-results").innerHTML = "";
+                    document.getElementById("search-results").style.display = "none";
+                }
+            });
+
+            // Hide dropdown results when clicking outside the search input and the dropdown
+            document.addEventListener('click', function(event) {
+                var clickedElement = event.target;
+                var searchInput = document.getElementById('search');
+                var searchResults = document.getElementById('search-results');
+
+                if (clickedElement !== searchInput && clickedElement !== searchResults) {
+                    searchResults.style.display = "none";
+                }
+            });
+        </script>
+
+
+
+
+
         <br>
-        ิ<br>
+        <br>
         <form action="action/add_repair_non_gua.php" method="POST">
             <div class="container">
                 <div class="grid">
@@ -416,7 +486,7 @@ if (isset($_GET["status_id"])) {
                                         <span class="tooltip">#หมายเลขส่งซ่อมที่ <?= $id_r ?></span>
                                     <?php } else {
                                         $sql_get_count = "SELECT COUNT(get_r_id) FROM get_detail 
-                                         WHERE get_r_id = '$id_r'";
+                                         WHERE get_r_id = '$id_r' AND get_detail.del_flg = 0";
                                         $result_get_count = mysqli_query($conn, $sql_get_count);
                                         $row_get_count = mysqli_fetch_array($result_get_count);
                                     ?>
@@ -427,7 +497,7 @@ if (isset($_GET["status_id"])) {
                                                 <br>
                                                 <!-- <p style="text-align:start" id="body_text"> Serial Number : <?= $row1['r_serial_number'] ?></p>
                                                 <p style="text-align:start" id="body_text">Model : <?= $row1['r_number_model'] ?></p> -->
-                                                <div class="accordion-item" style="border: 1px solid black; padding:15px;   ">
+                                                <div class="accordion-item" style="border: 1px solid gray; padding:15px;  ">
                                                     <h2 class="accordion-header" id="flush-headingThree">
                                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
                                                             <h5> ดูรายการส่งซ่อมทั้งหมด </h5>
@@ -440,7 +510,7 @@ if (isset($_GET["status_id"])) {
                                                         $count_get_no = 0;
                                                         $sql_get = "SELECT * FROM get_detail 
                                                LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                               WHERE get_detail.get_r_id = '$id_r'";
+                                               WHERE get_detail.get_r_id = '$id_r' AND get_detail.del_flg = 0";
                                                         $result_count = mysqli_query($conn, $sql_get);
                                                         $result_get = mysqli_query($conn, $sql_get);
                                                         while ($row_get = mysqli_fetch_array($result_get)) {

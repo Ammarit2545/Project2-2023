@@ -25,6 +25,55 @@ for ($i = 1; $i <= $cardCount; $i++) {
     );
 }
 
+if ($status_id == 17) {
+    //    ตัดของออกจาก Stock หลังจากยืนยัน
+    $sql_check_p = "SELECT *
+                    FROM repair_detail
+                    LEFT JOIN get_repair ON get_repair.get_r_id = repair_detail.get_r_id
+                    LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
+                    WHERE repair_status.get_r_id = '$get_r_id' AND repair_detail.del_flg = '0';";
+    $result_check_p = mysqli_query($conn, $sql_check_p);
+
+    while ($row_check_part = mysqli_fetch_array($result_check_p)) {
+
+        $rd_id = $row_check_part['rd_id'];
+        $p_id = $row_check_part['p_id'];
+        $value_parts = $row_check_part['rd_value_parts'];
+
+        $sql_update_detail = "UPDATE repair_detail SET del_flg = '1' , rd_update = NOW() WHERE rd_id = '$rd_id'";
+        $result_update_detail = mysqli_query($conn, $sql_update_detail);
+        if ($result_update_detail) {
+            echo $row_check_part['rd_id'];
+        }
+    }
+    //    ตัดของออกจาก Stock 
+}
+
+
+$sql_1 = "SELECT * FROM get_detail  WHERE get_r_id = '$get_r_id' AND del_flg = 0";
+
+$result_1 = mysqli_query($conn, $sql_1);
+
+while ($row = mysqli_fetch_array($result_1)) {
+    $get_d_id = $row['get_d_id'];
+    if (isset($_POST['check_' . $get_d_id])) {
+        $sql = "UPDATE `get_detail` SET `get_d_conf`='0' WHERE get_d_id = '$get_d_id'";
+        $result = mysqli_query($conn, $sql);
+        echo "the : " . $get_d_id . "update 000 success";
+    } else {
+        $sql = "UPDATE `get_detail` SET `get_d_conf`='1' WHERE get_d_id = '$get_d_id'";
+        $result = mysqli_query($conn, $sql);
+        echo "the : " . $get_d_id . "update 111 success";
+    }
+}
+if (isset($_POST['get_date_conf'])) {
+    $get_date_conf = $_POST['get_date_conf'];
+    $sql = "UPDATE `get_repair` SET `get_date_conf`=' $get_date_conf' WHERE get_r_id = '$get_r_id'";
+    $result = mysqli_query($conn, $sql);
+    echo "the : " . $get_r_id . "update -" . $get_date_conf . "- date";
+}
+
+
 if (isset($_POST['get_add_price']) && isset($_POST['get_wages'])) {
     $get_add_price = $_POST['get_add_price'];
     $get_wages = $_POST['get_wages'];
@@ -46,9 +95,11 @@ if ($row[0] > 0) {
     header("Location: ../../detail_repair.php?id=$get_r_id");
 } else {
 
+
+
     // if it does not already have data
     $sql_e = "INSERT INTO repair_status (get_r_id, rs_detail, rs_date_time, status_id, e_id)
-              VALUES ('$get_r_id', '$rs_detail', NOW(), '4', '$e_id')";
+              VALUES ('$get_r_id', '$rs_detail', NOW(), '$status_id', '$e_id')";
     $result_e = mysqli_query($conn, $sql_e);
 
     $rs_id = mysqli_insert_id($conn);

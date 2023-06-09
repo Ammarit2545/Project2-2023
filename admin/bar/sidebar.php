@@ -136,11 +136,11 @@
             <span>บันทึกการซ่อมด้วยตัวเอง</span></a>
     </li>
 
-    <!-- <li class="nav-item">
+    <li class="nav-item">
         <a class="nav-link" href="edit_stock.php">
             <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
             <span>จัดการสต๊อก</span></a>
-    </li> -->
+    </li>
     <br>
 
     <div class="sidebar-heading">

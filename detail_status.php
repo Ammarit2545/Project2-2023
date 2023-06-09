@@ -455,229 +455,308 @@ if ($id == NULL) {
 
                                 <?php
                                 } ?>
+                                <hr>
+                                <?php if ($row1['status_id'] == 4 || $row1['status_id'] == 17 && $row1['rs_conf'] == NULL || $row1['rs_conf'] == 1) {
 
+                                ?>
+                                    <div>
+                                        <p class="btn btn-outline-primary">รายการที่สามารถซ่อมได้</p>
+                                        <?php
+                                        $count_conf = 0;
+                                        $sql_get_c = "SELECT * FROM get_detail 
+                                                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                        WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.del_flg = 0";
+                                        $result_get_c = mysqli_query($conn, $sql_get_c);
+                                        while ($row_get_c = mysqli_fetch_array($result_get_c)) {
+                                            $count_conf++;
+                                        ?>
+                                        <div class="alert alert-<?php if ($row_get_c['get_d_conf'] == 0) { ?>primary<?php } elseif ($row_get_c['get_d_conf'] == 1) { ?>danger<?php } ?>" role="alert">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" <?php if ($row_get_c['get_d_conf'] == 0) { ?>checked disabled<?php } elseif ($row_get_c['get_d_conf'] == 1) { ?>disabled<?php } ?>>
+                                                <label class="form-check-label" for="inlineCheckbox1"><?= $count_conf ?></label>
+                                            </div>
+                                            <?= $row_get_c['r_brand'] . " " . $row_get_c['r_model'] . " - Model : " . $row_get_c['r_number_model'] . " - Serial Number : " . $row_get_c['r_serial_number']  ?>
+                                        </div>
+                                    <?php
+                                        }
+
+                                    ?>
+                                    </div>
+                                <?php
+                                } ?>
 
                                 <hr>
                                 <h5 class="btn btn-outline-primary">รายละเอียด</h5>
                                 <p class="mt-2" style="margin-left: 30px;"><?= $row1['rs_detail'] ?></p>
 
-
-                                <?php if ($row1['rs_cancel_detail'] != NULL) {
+                                <?php if ($row1['status_id'] == 4 || $row1['status_id'] == 17 && $row1['rs_conf'] == NULL || $row1['rs_conf'] == 1) {
+                                    $total =  $row1['get_wages'] + $row1['get_add_price'];
                                 ?>
                                     <hr>
-                                    <h5 class="btn btn-outline-danger">เหตุผลการไม่ยืนยัน</h5>
-                                    <p class="mt-2"><?= $row1['rs_cancel_detail'] ?></p>
-                                <?php
+                                    <?php if ($row1['get_date_conf'] != NULL) {  ?>
+                                        <p class="mt-2" style="margin-left: 30px;"> - ระยะเวลาซ่อม <?= number_format($row1['get_date_conf']) ?> วัน <span style="color:red">( นับจากวันที่รับอุปกรณ์ )</span></p>
+                                    <?php }  ?>
+                                    <?php if ($row1['get_wages'] != NULL) {  ?>
+                                        <p class="mt-2" style="margin-left: 30px;"> - ค่าแรงช่าง <?= number_format($row1['get_wages']) ?> บาท</span></p>
+                                    <?php }  ?>
+                                    <?php if ($row1['get_add_price'] != NULL) {  ?>
+                                        <p class="mt-2" style="margin-left: 30px;"> - ค่าจัดส่ง <?= number_format($row1['get_add_price']) ?> บาท</span></p>
+                                    <?php }  ?>
 
-                                }
 
-                                ?>
-
-                                <!-- <button class="btn btn_custom" type="button">ยืนยัน</button> -->
-                                <div class="col text-left" style="background-color: #F1F1F1;">
                                     <?php
-                                    $sql_pic = "SELECT * FROM repair_pic WHERE rs_id = $rs_id AND del_flg = 0 ";
-                                    $result_pic = mysqli_query($conn, $sql_pic);
-                                    $row_pic_check = mysqli_fetch_array($result_pic);
+                                    $total_part = 0;
+                                    $sql_c = "SELECT
+                                     repair_detail.p_id,
+                                     COUNT(repair_detail.p_id) AS count,
+                                     parts.p_brand,
+                                     parts.p_model,
+                                     parts.p_price,
+                                     parts_type.p_type_name,
+                                     repair_status.rs_id,
+                                     parts.p_pic
+                                   FROM
+                                     `repair_detail`
+                                        LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
+                                        LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
+                                        JOIN parts ON parts.p_id = repair_detail.p_id
+                                        LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
+                                   WHERE
+                                     get_repair.del_flg = 0 AND repair_detail.del_flg = 0
+                                     AND get_repair.get_r_id = '$id_get_r'
+                                   GROUP BY
+                                     p_id;
+                                     ";
+                                    $result_c = mysqli_query($conn, $sql_c);
+                                    while ($row_c = mysqli_fetch_array($result_c)) {
+                                        $total_part += $row_c['p_price'];
+                                    }
 
-                                    if ($row_pic_check[0] > 0) {
+                                    ?>
+                                    <?php if ($total_part > 0) {  ?>
+                                        <p class="mt-2" style="margin-left: 30px;display:inline"> - ค่าอะไหล่ <?= $total_part ?> บาท</span></p> <a onclick="openModalPart('quantitypart')" style="display:inline; color:red">ดูอะไหล่ที่ต้องใช้</a>
+                                    <?php }  ?>
+                                    <h5 class="alert alert-primary" style="margin-left: 30px;">รวมราคา <?= number_format($total + $total_part) ?> บาท</span></h3>
+                                    <?php
+                                } ?>
+
+
+                                    <?php if ($row1['rs_cancel_detail'] != NULL) {
                                     ?>
                                         <hr>
-                                        <h6 class="btn btn-outline-secondary">รูปภาพประกอบ</h6>
-                                        <br><br>
+                                        <h5 class="btn btn-outline-danger">เหตุผลการไม่ยืนยัน</h5>
+                                        <p class="mt-2"><?= $row1['rs_cancel_detail'] ?></p>
                                     <?php
+
                                     }
+
                                     ?>
-                                    <!-- <h3 class="pt-5"><button class="btn btn-primary">รูปภาพ : </button></h3>
-                                     -->
-                                    <?php
-                                    $status_id = $row1['status_id'];
 
-                                    $sql_s = "SELECT * FROM repair_status WHERE status_id = '$status_id' AND del_flg = '0' AND get_r_id = $id_get_r ORDER BY rs_date_time DESC LIMIT 1";
-                                    $result_s = mysqli_query($conn, $sql_s);
-                                    $row_s = mysqli_fetch_array($result_s);
-                                    $rs_id = $row_s['rs_id'];
-
-                                    $sql_pic = "SELECT * FROM repair_pic WHERE rs_id = $rs_id AND del_flg = 0 ";
-                                    $result_pic = mysqli_query($conn, $sql_pic);
-
-                                    while ($row_pic = mysqli_fetch_array($result_pic)) {
-                                    ?>
-                                        <!-- <img src="<?= $row_pic['rp_pic'] ?>" width="100px"> -->
+                                    <!-- <button class="btn btn_custom" type="button">ยืนยัน</button> -->
+                                    <div class="col text-left" style="background-color: #F1F1F1;">
                                         <?php
-                                        $rp_pic = $row_pic['rp_pic'];
-                                        $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                        $sql_pic = "SELECT * FROM repair_pic WHERE rs_id = $rs_id AND del_flg = 0 ";
+                                        $result_pic = mysqli_query($conn, $sql_pic);
+                                        $row_pic_check = mysqli_fetch_array($result_pic);
+
+                                        if ($row_pic_check[0] > 0) {
                                         ?>
-
-                                        <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
-                                            <a href="#">
-                                                <img src="<?= $rp_pic ?>" width="100px" id="drop-shadow" class="picture_modal" alt="" onclick="openModalIMG(this)">
-                                            </a>
-                                        <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
-                                            <a href="#">
-                                                <video width="100px" id="drop-shadow" autoplay muted onclick="openModalVideo(this)" src="<?= $rp_pic ?>">
-                                                    <source src="<?= $rp_pic ?>" type="video/mp4">
-                                                    <source src="<?= $rp_pic ?>" type="video/ogg">
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            </a>
-                                        <?php endif; ?>
-
-
-                                        <!-- Modal -->
-                                        <div id="modal" class="modal">
-                                            <span class="close" onclick="closeModal()">&times;</span>
-                                            <video id="modal-video" controls class="modal-video"></video>
-                                        </div>
-
-                                        <script>
-                                            function openModalVideo(element) {
-                                                var modal = document.getElementById('modal');
-                                                var modalVideo = document.getElementById('modal-video');
-
-                                                modal.style.display = 'block';
-                                                modal.classList.add('show');
-
-                                                modalVideo.src = element.src;
-                                                modalVideo.style.height = '90%';
-                                                modalVideo.style.borderRadius = '2%';
-                                                modalVideo.style.display = 'block';
-                                                modalVideo.style.margin = '0 auto';
-                                            }
-
-
-                                            function closeModal() {
-                                                var modal = document.getElementById('modal');
-                                                var modalVideo = document.getElementById('modal-video');
-                                                modalVideo.pause();
-                                                modalVideo.currentTime = 0;
-                                                modalVideo.src = ""; // Reset the video source
-                                                modal.style.display = 'none';
-                                            }
-
-                                            window.addEventListener('click', function(event) {
-                                                var modal = document.getElementById('modal');
-                                                if (event.target === modal) {
-                                                    closeModal();
-                                                }
-                                            });
-                                        </script>
-                                    <?php
-                                    } ?>
-                                </div>
-
-                                <!--  Part modal -->
-                                <div id="quantitypartModal" class="modal">
-                                    <div class="modal-content">
-                                        <h2>จำนวนอะไหล่ทั้งหมด</h2>
-                                        <button class="close-button btn btn-primary" onclick="closeModalStatus('quantitypart')" width="200px">
-                                            <i class="fa fa-times"></i>
-                                        </button>
-                                        <!--  content for Part modal -->
-                                        <iframe src="mini_part_detail.php?id=<?= $id_get_r ?>" style="width: 100%; height: 1000px;" class="no-scrollbar"></iframe>
-                                    </div>
-                                </div>
-
-
-                                <script>
-                                    function readURL(input) {
-                                        if (input.files && input.files[0]) {
-
-                                            var reader = new FileReader();
-
-                                            reader.onload = function(e) {
-                                                $('.image-upload-wrap').hide();
-
-                                                $('.file-upload-image').attr('src', e.target.result);
-                                                $('.file-upload-content').show();
-
-                                                $('.image-title').html(input.files[0].name);
-                                            };
-
-                                            reader.readAsDataURL(input.files[0]);
-
-                                        } else {
-                                            removeUpload();
+                                            <hr>
+                                            <h6 class="btn btn-outline-secondary">รูปภาพประกอบ</h6>
+                                            <br><br>
+                                        <?php
                                         }
-                                    }
+                                        ?>
+                                        <!-- <h3 class="pt-5"><button class="btn btn-primary">รูปภาพ : </button></h3>
+                                     -->
+                                        <?php
+                                        $status_id = $row1['status_id'];
 
-                                    function removeUpload() {
-                                        $('.file-upload-input').replaceWith($('.file-upload-input').clone());
-                                        $('.file-upload-content').hide();
-                                        $('.image-upload-wrap').show();
-                                    }
-                                    $('.image-upload-wrap').bind('dragover', function() {
-                                        $('.image-upload-wrap').addClass('image-dropping');
-                                    });
-                                    $('.image-upload-wrap').bind('dragleave', function() {
-                                        $('.image-upload-wrap').removeClass('image-dropping');
-                                    });
+                                        $sql_s = "SELECT * FROM repair_status WHERE status_id = '$status_id' AND del_flg = '0' AND get_r_id = $id_get_r ORDER BY rs_date_time DESC LIMIT 1";
+                                        $result_s = mysqli_query($conn, $sql_s);
+                                        $row_s = mysqli_fetch_array($result_s);
+                                        $rs_id = $row_s['rs_id'];
 
-                                    function openModalPart(modalName) {
-                                        var modal = document.getElementById(modalName + "Modal");
-                                        modal.style.display = "block";
-                                        modal.classList.add("show");
-                                    }
+                                        $sql_pic = "SELECT * FROM repair_pic WHERE rs_id = $rs_id AND del_flg = 0 ";
+                                        $result_pic = mysqli_query($conn, $sql_pic);
 
-                                    function closeModalPart(modalName) {
-                                        var modal = document.getElementById(modalName + "Modal");
-                                        modal.style.display = "none";
-                                        modal.classList.remove("show");
-                                    }
-                                    // ////////////////////////////////////////////////////////////
-                                    function openModalPay(modalName) {
-                                        var modal = document.getElementById(modalName + "Modal");
-                                        modal.style.display = "block";
-                                        modal.classList.add("show");
-                                    }
+                                        while ($row_pic = mysqli_fetch_array($result_pic)) {
+                                        ?>
+                                            <!-- <img src="<?= $row_pic['rp_pic'] ?>" width="100px"> -->
+                                            <?php
+                                            $rp_pic = $row_pic['rp_pic'];
+                                            $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                            ?>
 
-                                    function closeModalPay(modalName) {
-                                        var modal = document.getElementById(modalName + "Modal");
-                                        modal.style.display = "none";
-                                        modal.classList.remove("show");
-                                    }
-                                    // ////////////////////////////////////////////////////////////
+                                            <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                                <a href="#">
+                                                    <img src="<?= $rp_pic ?>" width="100px" id="drop-shadow" class="picture_modal" alt="" onclick="openModalIMG(this)">
+                                                </a>
+                                            <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
+                                                <a href="#">
+                                                    <video width="100px" id="drop-shadow" autoplay muted onclick="openModalVideo(this)" src="<?= $rp_pic ?>">
+                                                        <source src="<?= $rp_pic ?>" type="video/mp4">
+                                                        <source src="<?= $rp_pic ?>" type="video/ogg">
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                </a>
+                                            <?php endif; ?>
 
-                                    function openModalStatus(modalName) {
-                                        var modal = document.getElementById(modalName + "Modal");
-                                        modal.style.display = "block";
-                                        modal.classList.add("show");
-                                    }
 
-                                    function closeModalStatus(modalName) {
-                                        var modal = document.getElementById(modalName + "Modal");
-                                        modal.style.display = "none";
-                                        modal.classList.remove("show");
-                                    }
+                                            <!-- Modal -->
+                                            <div id="modal" class="modal">
+                                                <span class="close" onclick="closeModal()">&times;</span>
+                                                <video id="modal-video" controls class="modal-video"></video>
+                                            </div>
 
-                                    function closeModalPay(modalName) {
-                                        var modal = document.getElementById(modalName + "Modal");
-                                        modal.style.display = "none";
-                                        modal.classList.remove("show");
-                                    }
-                                </script>
+                                            <script>
+                                                function openModalVideo(element) {
+                                                    var modal = document.getElementById('modal');
+                                                    var modalVideo = document.getElementById('modal-video');
 
-                                <div id="modalimg" class="modal">
-                                    <span class="close" onclick="closeModalIMG()">&times;</span>
-                                    <img id="modal-image" src="" alt="Modal Photo">
-                                </div>
-                                <script src="script.js"></script>
-                                <script>
-                                    function openModalIMG(img) {
-                                        var modal = document.getElementById("modalimg");
-                                        var modalImg = document.getElementById("modal-image");
-                                        modal.style.display = "block";
-                                        modalImg.src = img.src;
-                                        modalImg.style.width = "60%"; // Set the width to 1000 pixels
-                                        modalImg.style.borderRadius = "2%"; // Set the border radius to 20%
-                                        modal.classList.add("show");
-                                    }
+                                                    modal.style.display = 'block';
+                                                    modal.classList.add('show');
 
-                                    function closeModalIMG() {
-                                        var modal = document.getElementById("modalimg");
-                                        modal.style.display = "none";
-                                    }
-                                </script>
+                                                    modalVideo.src = element.src;
+                                                    modalVideo.style.height = '90%';
+                                                    modalVideo.style.borderRadius = '2%';
+                                                    modalVideo.style.display = 'block';
+                                                    modalVideo.style.margin = '0 auto';
+                                                }
+
+
+                                                function closeModal() {
+                                                    var modal = document.getElementById('modal');
+                                                    var modalVideo = document.getElementById('modal-video');
+                                                    modalVideo.pause();
+                                                    modalVideo.currentTime = 0;
+                                                    modalVideo.src = ""; // Reset the video source
+                                                    modal.style.display = 'none';
+                                                }
+
+                                                window.addEventListener('click', function(event) {
+                                                    var modal = document.getElementById('modal');
+                                                    if (event.target === modal) {
+                                                        closeModal();
+                                                    }
+                                                });
+                                            </script>
+                                        <?php
+                                        } ?>
+                                    </div>
+
+                                    <!--  Part modal -->
+                                    <div id="quantitypartModal" class="modal">
+                                        <div class="modal-content">
+                                            <h2>จำนวนอะไหล่ทั้งหมด</h2>
+                                            <button class="close-button btn btn-primary" onclick="closeModalStatus('quantitypart')" width="200px">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                            <!--  content for Part modal -->
+                                            <iframe src="mini_part_detail.php?id=<?= $id_get_r ?>" style="width: 100%; height: 1000px;" class="no-scrollbar"></iframe>
+                                        </div>
+                                    </div>
+
+
+                                    <script>
+                                        function readURL(input) {
+                                            if (input.files && input.files[0]) {
+
+                                                var reader = new FileReader();
+
+                                                reader.onload = function(e) {
+                                                    $('.image-upload-wrap').hide();
+
+                                                    $('.file-upload-image').attr('src', e.target.result);
+                                                    $('.file-upload-content').show();
+
+                                                    $('.image-title').html(input.files[0].name);
+                                                };
+
+                                                reader.readAsDataURL(input.files[0]);
+
+                                            } else {
+                                                removeUpload();
+                                            }
+                                        }
+
+                                        function removeUpload() {
+                                            $('.file-upload-input').replaceWith($('.file-upload-input').clone());
+                                            $('.file-upload-content').hide();
+                                            $('.image-upload-wrap').show();
+                                        }
+                                        $('.image-upload-wrap').bind('dragover', function() {
+                                            $('.image-upload-wrap').addClass('image-dropping');
+                                        });
+                                        $('.image-upload-wrap').bind('dragleave', function() {
+                                            $('.image-upload-wrap').removeClass('image-dropping');
+                                        });
+
+                                        function openModalPart(modalName) {
+                                            var modal = document.getElementById(modalName + "Modal");
+                                            modal.style.display = "block";
+                                            modal.classList.add("show");
+                                        }
+
+                                        function closeModalPart(modalName) {
+                                            var modal = document.getElementById(modalName + "Modal");
+                                            modal.style.display = "none";
+                                            modal.classList.remove("show");
+                                        }
+                                        // ////////////////////////////////////////////////////////////
+                                        function openModalPay(modalName) {
+                                            var modal = document.getElementById(modalName + "Modal");
+                                            modal.style.display = "block";
+                                            modal.classList.add("show");
+                                        }
+
+                                        function closeModalPay(modalName) {
+                                            var modal = document.getElementById(modalName + "Modal");
+                                            modal.style.display = "none";
+                                            modal.classList.remove("show");
+                                        }
+                                        // ////////////////////////////////////////////////////////////
+
+                                        function openModalStatus(modalName) {
+                                            var modal = document.getElementById(modalName + "Modal");
+                                            modal.style.display = "block";
+                                            modal.classList.add("show");
+                                        }
+
+                                        function closeModalStatus(modalName) {
+                                            var modal = document.getElementById(modalName + "Modal");
+                                            modal.style.display = "none";
+                                            modal.classList.remove("show");
+                                        }
+
+                                        function closeModalPay(modalName) {
+                                            var modal = document.getElementById(modalName + "Modal");
+                                            modal.style.display = "none";
+                                            modal.classList.remove("show");
+                                        }
+                                    </script>
+
+                                    <div id="modalimg" class="modal">
+                                        <span class="close" onclick="closeModalIMG()">&times;</span>
+                                        <img id="modal-image" src="" alt="Modal Photo">
+                                    </div>
+                                    <script src="script.js"></script>
+                                    <script>
+                                        function openModalIMG(img) {
+                                            var modal = document.getElementById("modalimg");
+                                            var modalImg = document.getElementById("modal-image");
+                                            modal.style.display = "block";
+                                            modalImg.src = img.src;
+                                            modalImg.style.width = "60%"; // Set the width to 1000 pixels
+                                            modalImg.style.borderRadius = "2%"; // Set the border radius to 20%
+                                            modal.classList.add("show");
+                                        }
+
+                                        function closeModalIMG() {
+                                            var modal = document.getElementById("modalimg");
+                                            modal.style.display = "none";
+                                        }
+                                    </script>
                             </li>
                             <br>
                             <?php if ($row1['status_id'] == 24 && $row1['rs_conf'] == NULL) { ?>

@@ -7,8 +7,6 @@ if (!isset($_SESSION['role_id'])) {
 }
 ?>
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 
