@@ -47,6 +47,11 @@ echo $get_r_id;
          VALUES ('$get_r_id', NOW(), 'กรุณาทำการส่งเครื่องเสียงและอุปกรณ์ต่อพ่วงที่ต้องการซ่อมมาให้ทางร้านทำการซ่อม','5')";
     $result3 = mysqli_query($conn, $sql3);
 
+    if($result3){
+        $sql_update_detail = "UPDATE get_detail SET del_flg = 1 WHERE get_r_id = '$get_r_id' AND get_d_conf = 1";
+        $result_update_detail = mysqli_query($conn, $sql_update_detail);
+    }
+
     if ($result3) {
         $_SESSION["add_data_alert"] = 0;
         header("Location: ../../detail_repair.php?id=$get_r_id");

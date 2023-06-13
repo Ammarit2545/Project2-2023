@@ -67,7 +67,7 @@ while (isset($_POST['com_y_' . $i])) {
 
         if ($result) {
             $id_insert = mysqli_insert_id($conn);
-            $sql_update_detail = "UPDATE repair_detail SET t_id = '$id_insert' WHERE get_d_id = '$get_d_id'";
+            $sql_update_detail = "UPDATE get_detail SET t_id = '$id_insert' WHERE get_d_id = '$get_d_id'";
             $result_update_detail = mysqli_query($conn, $sql_update_detail);
 
             if ($result_update_detail) {

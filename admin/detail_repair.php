@@ -241,7 +241,23 @@ if (!isset($_SESSION['role_id'])) {
                             <?php
                             }
                             ?>
-                            <h2>สถานะล่าสุด : <button style="background-color: <?= $row['status_color'] ?>; color : white;" class="btn btn"> <?= $row['status_name'] ?></h2></button>
+                            <h2>สถานะล่าสุด : <button id="bounce-item" onclick="openModalStatus('quantitystatus')" style="background-color: <?= $row['status_color'] ?>; color : white;" class="btn btn"> <?= $row['status_name'] ?>
+                                    <?php
+                                    if ($row['status_id'] == 6) {
+                                        $carry_out_id = $row['status_id'];
+                                        $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = 155 AND status_id = 6 ORDER BY rs_date_time DESC;";
+                                        $result_carry_out = mysqli_query($conn, $sql_cary_out);
+                                        $row_carry_out = mysqli_fetch_array($result_carry_out);
+
+                                        if ($row_carry_out[0] > 1) {
+                                    ?>
+                                            #ครั้งที่ <?= $row_carry_out[0] ?>
+
+                                    <?php
+                                        }
+                                    }
+                                    ?></h2></button>
+
 
                             <h6><?= $formattedDate ?></h6>
                         </div>
@@ -271,7 +287,7 @@ if (!isset($_SESSION['role_id'])) {
 
                         <div class="accordion-item" style="border: 1px solid #ffff; padding:15px;   ">
                             <h2 class="accordion-header" id="headingOne">
-                                <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="true" aria-controls="collapseOne">
+                                <a id="bounce-item" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="true" aria-controls="collapseOne">
                                     <h5> ดูรายการส่งซ่อมทั้งหมด </h5>
                                 </a>
                             </h2>
@@ -661,15 +677,15 @@ if (!isset($_SESSION['role_id'])) {
                                 <?php if ($row['get_add'] != NULL) {
                                 ?>
                                     <div class="row">
-                                        <div class="col-4" id="bounce-item">
+                                        <div class="col-4">
                                             <label for="exampleFormControlTextarea1" class="col-form-label">จังหวัด :</label>
                                             <input type="text" class="form-control" value="<?= $row_p[0] ?>" readonly>
                                         </div>
-                                        <div class="col-4" id="bounce-item">
+                                        <div class="col-4">
                                             <label for="exampleFormControlTextarea1" class="col-form-label">อำเภอ :</label>
                                             <input type="text" class="form-control" value="<?= $row_p[1] ?>" readonly>
                                         </div>
-                                        <div class="col-4" id="bounce-item">
+                                        <div class="col-4">
                                             <label for="exampleFormControlTextarea1" class="col-form-label">ตำบล :</label>
                                             <input type="text" class="form-control" value="<?= $row_p[2] ?>" readonly>
                                         </div>

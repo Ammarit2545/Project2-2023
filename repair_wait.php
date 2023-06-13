@@ -66,7 +66,7 @@ $row = mysqli_fetch_array($result);
                 <div class="row">
                     <div class="col">
                         <a href="home.php" type="button" class="btn btn-success">กลับไปที่หน้าหลัก</a>
-                        <a href="status.php" type="button" class="btn btn-warning" style="color:white">ดูสถานะ</a>
+                        <a href="listview_status.php" type="button" class="btn btn-warning" style="color:white">ดูสถานะ</a>
                     </div>
                 </div>
             </div>

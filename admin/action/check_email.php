@@ -1,6 +1,8 @@
 <?php
 include('../../database/condb.php');
+
 $email = $_GET['email'];
+
 $sql_m = "SELECT * FROM member WHERE m_email = '$email'";
 $result_m = mysqli_query($conn, $sql_m);
 
