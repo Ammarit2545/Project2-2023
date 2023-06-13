@@ -1,35 +1,37 @@
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php
 session_start();
 include('database/condb.php');
 
 if ($_SESSION["log_login"] == 0) {
-    $_SESSION["log_login"] = 1;
+  $_SESSION["log_login"] = 1;
 ?>
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'SweetAlert!',
-            text: 'Your session login value is 0.',
-            showConfirmButton: false,
-            timer: 3000
-        });
-    </script>
+  <script>
+    Swal.fire({
+      icon: 'success',
+      title: 'SweetAlert!',
+      text: 'Your session login value is 0.',
+      showConfirmButton: false,
+      timer: 3000
+    });
+  </script>
 <?php
 } elseif ($_SESSION["log_login"] == 2) {
-    $_SESSION["log_login"] = 1;
+  $_SESSION["log_login"] = 1;
 ?>
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Something went wrong!',
-            footer: '<a href="home.php">Why do I have this issue?</a>'
-        });
-    </script>
+  <script>
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Something went wrong!',
+      footer: '<a href="home.php">Why do I have this issue?</a>'
+    });
+  </script>
 <?php
 }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -40,6 +42,7 @@ if ($_SESSION["log_login"] == 0) {
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
   <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/all_page.css">
   <style>
     .fade-in {
       animation: fadein 0.5s ease-in-out;
@@ -64,6 +67,7 @@ if ($_SESSION["log_login"] == 0) {
   <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 
   <link rel="icon" type="image/x-icon" href="img brand/anelogo.jpg">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 
 <body>
@@ -248,9 +252,9 @@ if ($_SESSION["log_login"] == 0) {
                     <label for="password">Password</label>
 
                     <span id="password-error" style="color: red; font-size: 12px; display: none;">
-                      <button class="btn btn-danger" style="font-size: 12px; padding: -2px">
+                      <span style="font-size: 12px; padding: -2px">
                         รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร
-                      </button>
+                      </span>
                     </span>
 
                     <script>
@@ -287,15 +291,15 @@ if ($_SESSION["log_login"] == 0) {
                     <label for="password">Confirm Password</label>
 
                     <span id="password-again-error" style="color: red; font-size: 12px; display: none;">
-                      <button class="btn btn-danger" style="font-size: 12px; padding: -2px">
+                      <span style="font-size: 12px; padding: -2px">
                         รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร
-                      </button>
+                      </span>
                     </span>
 
                     <span id="password-match-error" style="color: red; font-size: 12px; display: none;">
-                      <button class="btn btn-danger" style="font-size: 12px; padding: -2px">
+                      <span style="font-size: 12px; padding: -2px">
                         รหัสผ่านไม่ตรงกัน
-                      </button>
+                      </span>
                     </span>
 
                     <script>
@@ -369,8 +373,44 @@ if ($_SESSION["log_login"] == 0) {
   </div>
 
   <!-- End Modal Register-->
+  <br><br>
+  <center>
+    <div>
+      <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" style="width: 100%;">
+        <div class="carousel-inner" style="height: 50%">
+          <?php
+          $folderPath = 'img/promote/'; // Specify the folder path
+          $files = glob($folderPath . '*'); // Get all files in the folder
 
-  <div class="p-5">
+          $active = true; // Flag for active carousel item
+
+          foreach ($files as $file) {
+          ?>
+            <div class="carousel-item <?php echo $active ? 'active' : ''; ?>">
+              <img src="<?php echo $file; ?>" class="d-block w-100 img-fluid" alt="...">
+            </div>
+          <?php
+            $active = false; // Set the flag to false after the first carousel item
+          }
+          ?>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+
+  </center>
+  <br>
+  <br>
+
+
+  <!-- <div class="p-5">
     <div class="container pt-5">
       <div class="card card_header">
         <div class="card-body mx-5 my-5">
@@ -387,7 +427,7 @@ if ($_SESSION["log_login"] == 0) {
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <div class="container d-flex mb-5" style="height: 500px;">
     <div class="row">
@@ -426,7 +466,67 @@ if ($_SESSION["log_login"] == 0) {
   ?>
   <!-- end footer-->
 
-  <script>
+  <!-- Sweet Alert Show Start -->
+  <?php
+  if (isset($_SESSION['add_data_alert'])) {
+    if ($_SESSION['add_data_alert'] == 0) {
+      $id = 123; // Replace 123 with the actual ID you want to pass to the deletion action
+  ?>
+      <script>
+        Swal.fire({
+          title: 'เข้าสู่ระบบเสร็จสิ้น',
+          text: 'กด Accept เพื่อออก',
+          icon: 'success',
+          confirmButtonText: 'Accept'
+        });
+      </script>
+    <?php
+      unset($_SESSION['add_data_alert']);
+    } else if ($_SESSION['add_data_alert'] == 1) {
+    ?>
+      <script>
+        Swal.fire({
+          title: 'ข้อมูล Email กับ Password \nไม่ถูกต้อง ',
+          text: 'กด Accept เพื่อออก',
+          icon: 'error',
+          confirmButtonText: 'Accept'
+        });
+      </script>
+
+    <?php
+      unset($_SESSION['add_data_alert']);
+    } else if ($_SESSION['add_data_alert'] == 3) {
+    ?>
+      <script>
+        Swal.fire({
+          title: 'ข้อมูล Email หรือ เบอร์โทรศัพท์นี้ถูกใช้งานแล้ว ',
+          text: 'กด Accept เพื่อออก',
+          icon: 'error',
+          confirmButtonText: 'Accept'
+        });
+      </script>
+
+    <?php
+      unset($_SESSION['add_data_alert']);
+    } else if ($_SESSION['add_data_alert'] == 4) {
+    ?>
+      <script>
+        Swal.fire({
+          title: 'สมัครบัญชีผู้ใช้ของคุฯเสวร็จสิ้น',
+          text: 'กด Accept เพื่อออกและทำการ Login',
+          icon: 'success',
+          confirmButtonText: 'Accept'
+        });
+      </script>
+
+  <?php
+      unset($_SESSION['add_data_alert']);
+    }
+  }
+  ?>
+  <!-- Sweet Alert Show End -->
+
+  <!-- <script>
     // Show full page LoadingOverlay
     $.LoadingOverlay("show");
 
@@ -434,9 +534,7 @@ if ($_SESSION["log_login"] == 0) {
     setTimeout(function() {
       $.LoadingOverlay("hide");
     }, 10);
-  </script>
-  <script src="sweetalert2.all.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </script> -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
