@@ -137,6 +137,12 @@
     </li>
 
     <li class="nav-item">
+        <a class="nav-link" href="add_new_equipment.php">
+            <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
+            <span>บันทึกคำสั่งซื้อ</span></a>
+    </li>
+
+    <li class="nav-item">
         <a class="nav-link" href="edit_stock.php">
             <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
             <span>จัดการสต๊อก</span></a>
