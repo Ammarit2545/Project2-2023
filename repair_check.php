@@ -144,6 +144,15 @@ if (!isset($_SESSION['id'])) {
                         <label for="borderinput1" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ</label>
                         <div class="row">
                             <!-- <?php
+                                $folderName = "uploads/$id/Holder"; // the name of the new folder
+                                if (!file_exists($folderName)) { // check if the folder already exists
+                                    mkdir($folderName); // create the new folder
+                                    // echo "Folder created successfully";
+                                } else {
+                                    // echo "Folder already exists";
+                                }
+
+
                                     if (isset($_POST['submit'])) {
                                         // handle image upload
                                         $fileNames = array();
@@ -241,6 +250,13 @@ if (!isset($_SESSION['id'])) {
                             $i = 1;
                             while (isset($_SESSION['r_id_' . $i])) {
                                 $i++;
+                                $folderName = "uploads/$id/Holder/$i/"; // the name of the new folder
+                                if (!file_exists($folderName)) { // check if the folder already exists
+                                    mkdir($folderName); // create the new folder
+                                    // echo "Folder created successfully";
+                                } else {
+                                    // echo "Folder already exists";
+                                }
                             }
                             // $i -= 1;
                             foreach (new DirectoryIterator("uploads/$id/Holder/$i/") as $file) {
@@ -282,7 +298,7 @@ if (!isset($_SESSION['id'])) {
                                 <textarea class="form-control" id="inputtext" rows="3" name="description" readonly require><?= $description ?></textarea>
                             </div>
 
-                            <div class="text-center pt-4">
+                            <div class="text-center py-4">
                                 <a href="repair_edit.php" class="btn btn-danger">แก้ไขข้อมูล</a>
                                 <button type="submit" class="btn btn-success" >ยืนยัน</button>
 
