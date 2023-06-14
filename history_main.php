@@ -344,11 +344,11 @@ if (isset($_GET["status_id"])) {
                                                 <p style="text-align:start" id="body_text">Model : <?= $row1['r_number_model'] ?></p> -->
                                                 <div class="accordion-item" style="border: 1px solid black; padding:15px;   ">
                                                     <h2 class="accordion-header" id="flush-headingThree">
-                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree<?= $id_r ?>" aria-expanded="false" aria-controls="flush-collapseThree<?= $id_r ?>">
                                                             <h5> ดูรายการส่งซ่อมทั้งหมด </h5>
                                                         </button>
                                                     </h2>
-                                                    <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+                                                    <div id="flush-collapseThree<?= $id_r ?>" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
 
                                                         <hr>
                                                         <?php
