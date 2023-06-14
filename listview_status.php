@@ -242,9 +242,10 @@ if (isset($_GET["status_id"])) {
                                     <li><a class="dropdown-item" href="listview_status.php">ทั้งหมด</a></li>
                                     <?php
                                     $sql_s = "SELECT status_type.status_id, status_type.status_name, COUNT(*) ,status_type.status_color  as count
-                                            FROM get_repair 
-                                            LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id
-                                            LEFT JOIN repair ON repair.r_id = get_repair.r_id
+                                            FROM get_detail 
+                                            LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                                            LEFT JOIN repair_status ON get_detail.get_r_id = repair_status.get_r_id
+                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
                                             LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
                                             WHERE repair.m_id = '$id' AND repair_status.del_flg = '0'
                                             GROUP BY status_type.status_id 
@@ -268,47 +269,50 @@ if (isset($_GET["status_id"])) {
                                 <a class="nav-link active" aria-current="page" href="listview_status.php">ทั้งหมด</a>
                             </li>
                             <?php
-                            $sql_s = "SELECT status_type.status_id, status_type.status_name, COUNT(*) ,status_type.status_color  as count
-                        FROM repair_status 
-                        LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
-                        LEFT JOIN repair ON repair.r_id = get_repair.r_id
-                        LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
-                        WHERE repair.m_id = '$id'
-                        GROUP BY status_type.status_id 
-                        ORDER BY status_type.status_id ASC;";
+                            $sql_s = "SELECT status_type.status_id, status_type.status_name, COUNT(*) as count, status_type.status_color
+                            FROM repair_status
+                            LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
+                            LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
+                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                            LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
+                            WHERE repair.m_id = '$id'
+                            GROUP BY status_type.status_id, status_type.status_name, status_type.status_color
+                            ORDER BY status_type.status_id ASC ";
                             $result_s = mysqli_query($conn, $sql_s);
                             $numItems = mysqli_num_rows($result_s);
                             $counter = 0;
                             while ($row_s = mysqli_fetch_array($result_s)) {
-                                $counter++;
-                                if ($counter <= 5) { ?>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="listview_status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>"><?= $row_s['status_name'] ?>
-                                            <p style="display: inline-block; color:<?= $row_s[3] ?>; ">(<?= $row_s[2] ?>)</p>
-                                        </a>
-                                    </li>
-                                    <?php
-                                } else {
-                                    if ($counter === 6) {
-                                    ?>
-                                        <li class="nav-item dropdown">
-                                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">อื่นๆ</a>
-                                            <ul class="dropdown-menu">
-                                            <?php
-                                        }
-                                            ?>
-                                            <li>
-                                                <a class="dropdown-item" href="listview_status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>">
-                                                    <?= $row_s['status_name'] ?>
-                                                    <p style="display: inline-block; color:<?= $row_s[3] ?>; ">(<?= $row_s[2] ?>)</p>
-                                                </a>
-                                            </li>
-                                            <?php
-                                            if ($counter === $numItems) {
-                                            ?>
-                                            </ul>
+                                if ($row_s[0] != NULL) {
+                                    $counter++;
+                                    if ($counter <= 4) { ?>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="listview_status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>"><?= $row_s['status_name'] ?>
+                                                <p style="display: inline-block; color:<?= $row_s[3] ?>; ">(<?= $row_s[2] ?>)</p>
+                                            </a>
                                         </li>
+                                        <?php
+                                    } else {
+                                        if ($counter === 5) {
+                                        ?>
+                                            <li class="nav-item dropdown">
+                                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">อื่นๆ</a>
+                                                <ul class="dropdown-menu">
+                                                <?php
+                                            }
+                                                ?>
+                                                <li>
+                                                    <a class="dropdown-item" href="listview_status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>">
+                                                        <?= $row_s['status_name'] ?>
+                                                        <p style="display: inline-block; color:<?= $row_s[3] ?>; ">(<?= $row_s[2] ?>)</p>
+                                                    </a>
+                                                </li>
+                                                <?php
+                                                if ($counter === $numItems) {
+                                                ?>
+                                                </ul>
+                                            </li>
                             <?php
+                                                }
                                             }
                                         }
                                     }
@@ -370,11 +374,6 @@ if (isset($_GET["status_id"])) {
                 }
             });
         </script>
-
-
-
-
-
         <br>
         <br>
         <form action="action/add_repair_non_gua.php" method="POST">
@@ -389,16 +388,17 @@ if (isset($_GET["status_id"])) {
                                 GROUP BY get_repair.get_r_id ORDER BY get_repair.get_r_date_in DESC;";
                     } elseif ($status_id > 0) {
                         $sql = "SELECT get_repair.*, repair.*, rs.status_id
-                                FROM get_repair
-                                LEFT JOIN repair ON get_repair.r_id = repair.r_id
-                                LEFT JOIN (
-                                    SELECT get_r_id, MAX(rs_date_time) AS max_date
-                                    FROM repair_status
-                                    GROUP BY get_r_id
-                                ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
-                                LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
-                                WHERE repair.m_id = '$id' AND rs.status_id = '$status_id' AND rs.rs_date_time = subquery.max_date
-                                ORDER BY get_repair.get_r_date_in DESC;
+                        FROM get_repair
+                        LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
+                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                        LEFT JOIN (
+                            SELECT get_r_id, MAX(rs_date_time) AS max_date
+                            FROM repair_status
+                            GROUP BY get_r_id
+                        ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
+                        LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
+                        WHERE repair.m_id = '$id' AND rs.status_id = '$status_id' AND rs.rs_date_time = subquery.max_date
+                        ORDER BY get_repair.get_r_date_in DESC;
                                 ";
                     } else {
                         $sql = "SELECT * FROM get_repair 
@@ -469,6 +469,10 @@ if (isset($_GET["status_id"])) {
                                             <?php if ($row_c['get_r_detail'] != NULL) {
                                                 $text = $row_c['get_r_detail'];
                                                 $summary = strlen($text) > 100 ? substr($text, 0, 200) . "..." : $text;
+
+                                                $dateString = date('d-m-Y', strtotime($row1['get_r_date_in']));
+                                                $date = DateTime::createFromFormat('d-m-Y', $dateString);
+                                                $formattedDate = $date->format('d F Y');
                                             ?>
                                                 <li class="list-group-item">
                                                     <h5 style="color: blue" id="head_text">รายละเอียดการส่งซ่อม :</h5>
@@ -499,21 +503,24 @@ if (isset($_GET["status_id"])) {
                                                 <p style="text-align:start" id="body_text">Model : <?= $row1['r_number_model'] ?></p> -->
                                                 <div class="accordion-item" style="border: 1px solid gray; padding:15px;  ">
                                                     <h2 class="accordion-header" id="flush-headingThree">
-                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree<?= $id_r ?>" aria-expanded="false" aria-controls="flush-collapseThree<?= $id_r ?>">
                                                             <h5> ดูรายการส่งซ่อมทั้งหมด </h5>
                                                         </button>
                                                     </h2>
-                                                    <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+                                                    <div id="flush-collapseThree<?= $id_r ?>" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
 
                                                         <hr>
                                                         <?php
                                                         $count_get_no = 0;
                                                         $sql_get = "SELECT * FROM get_detail 
-                                               LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                               WHERE get_detail.get_r_id = '$id_r' AND get_detail.del_flg = 0";
+                                                                    LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                                    WHERE get_detail.get_r_id = '$id_r' AND get_detail.del_flg = 0";
                                                         $result_count = mysqli_query($conn, $sql_get);
                                                         $result_get = mysqli_query($conn, $sql_get);
                                                         while ($row_get = mysqli_fetch_array($result_get)) {
+                                                            $dateString = date('d-m-Y', strtotime($row1['get_r_date_in']));
+                                                            $date = DateTime::createFromFormat('d-m-Y', $dateString);
+                                                            $formattedDate = $date->format('d F Y');
                                                             $count_get_no++;
                                                         ?>
 
@@ -522,7 +529,6 @@ if (isset($_GET["status_id"])) {
                                                         <?php
                                                         }
 
-
                                                         ?>
                                                     </div>
                                                 </div>
@@ -530,7 +536,7 @@ if (isset($_GET["status_id"])) {
                                             <li class="list-group-item">
                                                 <br>
                                                 <h5 style="color : gray" id="date_time">
-                                                    ส่งเรื่องล่าสุดวันที่ : <?= $formattedDate ?>, เวลา : <?= date('H:i:s', strtotime($row1['get_r_date_in'])); ?>
+                                                    ส่งเรื่องล่าสุดวันที่ :<?= $formattedDate ?>, เวลา : <?= date('H:i:s', strtotime($row1['get_r_date_in'])); ?>
                                                 </h5>
                                             </li>
                                         </ul>
