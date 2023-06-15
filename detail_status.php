@@ -275,7 +275,9 @@ $check_order = 0;
     $result2 = mysqli_query($conn, $sql2);
     $row_2 = mysqli_fetch_array($result2);
 
-    $sql_c = "SELECT * FROM get_repair LEFT JOIN repair ON repair.r_id = get_repair.r_id WHERE get_repair.get_r_id = '$id_get_r' AND repair.del_flg = '0'";
+    $sql_c = "SELECT * FROM get_detail
+    LEFT JOIN get_repair ON get_detail.get_r_id = get_repair.get_r_id 
+    LEFT JOIN repair ON repair.r_id = get_detail.r_id WHERE get_repair.get_r_id = '$id_get_r' AND repair.del_flg = '0'";
     $result_c = mysqli_query($conn, $sql_c);
     $row_c = mysqli_fetch_array($result_c);
 
@@ -346,7 +348,7 @@ $check_order = 0;
                         while ($row1 = mysqli_fetch_array($result)) {
                             $i = $i + 1;
                             $id_r = $row1[0];
-                            $sql_c = "SELECT * FROM get_repair WHERE r_id = '$id_r' AND del_flg = '0' ORDER BY get_r_id DESC LIMIT 1";
+                            $sql_c = "SELECT * FROM get_detail WHERE r_id = '$id_r' AND del_flg = '0' ORDER BY get_r_id DESC LIMIT 1";
                             $result_c = mysqli_query($conn, $sql_c);
                             $row_c = mysqli_fetch_array($result_c);
 
