@@ -160,7 +160,7 @@ if (!isset($_SESSION['role_id'])) {
                                         <!-- exits -->
                                         <span id="serial-error-ok" style="color:blue;display:none;">อุปกรณ์นี้ยังอยู่ในระยะประกัน</span>
                                         <!-- else -->
-                                        <span id="serial-error-none" style="color:green;display:none;"> </span>
+                                        <span id="serial-error-none" style="color:green;display:none;">หมายเลข Serial Number นี้สามารถใช้งานได้</span>
                                         <!-- exits ok-->
                                         <span id="serial-error-have" style="color:red;display:none;">อุปกรณ์นี้อยู่ระหว่างการซ่อมของคุณ</span>
                                         <!-- exits have-->

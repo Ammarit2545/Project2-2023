@@ -102,7 +102,6 @@ $row = mysqli_fetch_array($result);
                         <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)">
                     </div>
 
-
                     <div class="grid-item">
                         <label for="borderinput1" class="form-label">ชื่อรุ่น</label>
                         <input type="text" class="form-control input" id="borderinput" name="name_model" placeholder="กรุณากรอกชื่อรุ่น" required>
@@ -115,9 +114,22 @@ $row = mysqli_fetch_array($result);
                         <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
                         <input type="text" class="form-control" id="borderinput" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $row['m_tel'] ?>" required>
                     </div>
+                    <div class="grid-item">
+                        <label for="borderinput1" class="form-label">บริษัท</label>
+                        <select class="form-select" name="company" aria-label="Default select example" required>
+                            <option value="" selected>กรุณาเลือกบริษัทที่ต้องการเคลม</option>
+                            <?php
+                            $sql_company = "SELECT * FROM company WHERE del_flg = '0'";
+                            $result_company = mysqli_query($conn, $sql_company);
+                            while ($row_company = mysqli_fetch_array($result_company)) {
+                            ?>
+                                <option value="<?= $row_company['com_id'] ?>"><?= $row_company['com_name'] ?></option>
+                            <?php
+                            }
+                            ?>
+                        </select>
+                    </div>
                 </div>
-
-
                 <div class="mb-3">
                     <label for="inputtext" class="form-label">กรุณากรอกรายละเอียด</label>
                     <textarea class="form-control" id="inputtext" rows="3" name="description" required placeholder="กรุณากรอกรายละเอียด"></textarea>
@@ -207,7 +219,7 @@ $row = mysqli_fetch_array($result);
             <center>
                 <br>
                 <a href="repair_have.php" class="btn btn-primary" style="color:white">เคยซ่อมแล้วหรือไม่?</a>
-                <button type="submit" class="btn btn-success" value="Upload Image" name="submit">ยืนยัน</button>
+                <button type="submit" class="btn btn-success" name="submit">ยืนยัน</button>
             </center>
         </form>
 

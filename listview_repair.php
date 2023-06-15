@@ -108,7 +108,18 @@ $row = mysqli_fetch_array($result);
                             <div class="card" id="card-detail">
                                 <div class="card-body">
                                     <h5 class="card-title">
+
                                         <h5 style="display:inline; margin-right:10px" class="btn btn-secondary"><?= $_SESSION[$r_id] ?></h5><?= $_SESSION[$name_brand] ?> <?= $_SESSION[$name_model] ?>
+                                        <?php
+                                        $company_name = $_SESSION[$company];
+                                        if ($company_name != NULL) {
+                                            $sql_c = "SELECT * FROM company WHERE com_id = '$company_name' AND del_flg = '0'";
+                                            $result_c = mysqli_query($conn, $sql_c);
+                                            $row_c = mysqli_fetch_array($result_c);
+
+                                            $company_name = $row_c['com_name'];
+                                        ?><h5 style="display:inline; margin-right:10px" class="btn btn-secondary"><?= $company_name ?></h5>
+                                        <?php } ?>
                                     </h5>
                                     <br><br>
                                     <h6 class="card-subtitle mb-2 text-muted">Serial Number : <?= $_SESSION[$serial_number] ?></h6>
@@ -199,12 +210,12 @@ $row = mysqli_fetch_array($result);
     </div>
 
     <center>
-        <?php if(isset($_SESSION['r_id_1'])){
-            ?>
-             <button class="btn btn-success" onclick="confirmReq()">ยืนยัน</button>
-            <?php
+        <?php if (isset($_SESSION['r_id_1'])) {
+        ?>
+            <button class="btn btn-success" onclick="confirmReq()">ยืนยัน</button>
+        <?php
         } ?>
-       
+
     </center>
     <br><br><br><br>
     <?php include('script.php'); ?>

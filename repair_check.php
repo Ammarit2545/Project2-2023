@@ -51,6 +51,7 @@ if (!isset($_SESSION['id'])) {
     $number_model = $_SESSION["number_model"];
     $tel = $_SESSION["tel"];
     $description = $_SESSION["description"];
+    $company = $_SESSION["company"];
 
     $id = $_SESSION["id"];
 

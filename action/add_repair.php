@@ -127,7 +127,7 @@ $_SESSION["name_model"] = $_POST['name_model'];
 $_SESSION["number_model"] = $_POST['number_model'];
 $_SESSION["tel"] = $_POST['tel'];
 $_SESSION["description"] = $_POST['description'];
-$_SESSION["company"] = NULL;
+$_SESSION["company"] = $_POST['company'];
 
 $_SESSION["image1"] = $_POST['image1'];
 $_SESSION["image2"] = $_POST['image2'];
