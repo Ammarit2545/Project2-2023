@@ -357,12 +357,12 @@ $check_order = 0;
                                 $found_data = true;
                                 // Display data
                             }
+
                             $dateString = date('d-m-Y', strtotime($row1['rs_date_time']));
                             $date = DateTime::createFromFormat('d-m-Y', $dateString);
                             $formattedDate = $date->format('d F Y');
 
                             $status_id = $row1['status_id'];
-
 
                             $sql_c = "SELECT * FROM repair_status WHERE get_r_id = '$id_get_r' AND del_flg = 0 ORDER BY rs_id DESC";
                             $result_c = mysqli_query($conn, $sql_c);
@@ -370,23 +370,23 @@ $check_order = 0;
                         ?>
                             <hr style="border: 5px solid black;">
                             <li>
+                                <h5 style="display:inline"><button class="btn btn-outline-secondary" style="color : white; background-color : <?= $row1['status_color'] ?>; border : 2px solid <?= $row1['status_color'] ?>;"><?= $row1['status_name'] ?>
+                                        <?php
+                                        if ($row1['status_id'] == 6) {
 
-                                <h5 style="display:inline"><button class="btn btn-outline-secondary" style="color : white; background-color : <?= $row1['status_color'] ?>; border : 2px solid <?= $row1['status_color'] ?>;"><?= $row1['status_name'] ?> <?php
-                                                                                                                                                                                                                                                            if ($row1['status_id'] == 6) {
+                                            $carry_out_id = $row['status_id'];
+                                            $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = 155 AND status_id = 6 ORDER BY rs_date_time DESC;";
+                                            $result_carry_out = mysqli_query($conn, $sql_cary_out);
+                                            $row_carry_out = mysqli_fetch_array($result_carry_out);
 
-                                                                                                                                                                                                                                                                $carry_out_id = $row['status_id'];
-                                                                                                                                                                                                                                                                $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = 155 AND status_id = 6 ORDER BY rs_date_time DESC;";
-                                                                                                                                                                                                                                                                $result_carry_out = mysqli_query($conn, $sql_cary_out);
-                                                                                                                                                                                                                                                                $row_carry_out = mysqli_fetch_array($result_carry_out);
-
-                                                                                                                                                                                                                                                                if ($row_carry_out[0] > 1) {
-                                                                                                                                                                                                                                                            ?>
+                                            if ($row_carry_out[0] > 1) {
+                                        ?>
                                                 #ครั้งที่<?= $row_carry_out[0] - $count_carry_out ?>
 
                                         <?php
-                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                $count_carry_out += 1;
-                                                                                                                                                                                                                                                            } ?></button></h5>
+                                            }
+                                            $count_carry_out += 1;
+                                        } ?></button></h5>
                                 <h6 style="display:inline;"><i class="uil uil-book"></i>&nbsp;<?= $formattedDate ?></h6>
                                 <p style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row1['rs_date_time'])); ?></p>
                                 <?php
