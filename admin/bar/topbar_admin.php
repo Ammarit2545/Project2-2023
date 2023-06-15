@@ -52,9 +52,10 @@
                 <!-- Counter - Alerts -->
                 <?php
                 $sql_nofi = "SELECT * FROM get_repair 
-                LEFT JOIN repair ON get_repair.r_id = repair.r_id 
+                LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id 
+                LEFT JOIN repair ON get_detail.r_id = repair.r_id 
                 WHERE get_repair.del_flg = '0' AND repair.del_flg = 0
-                ORDER BY get_r_id DESC LIMIT 3;";
+                ORDER BY get_repair.get_r_id DESC LIMIT 3;";
                 $result_nofi = mysqli_query($conn, $sql_nofi);
 
                 $sql_nofi_count = "SELECT COUNT(get_repair.get_r_id) FROM repair_status
