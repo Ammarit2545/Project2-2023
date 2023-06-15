@@ -158,9 +158,9 @@ if (!isset($_SESSION['role_id'])) {
                                         <input type="text" name="serial_number" value="NPE123456" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)" class="form-control" id="inputPassword" onblur="CheckSerial()" required>
                                         <span id="serial-error" style="color:red;display:none;">อุปกรณ์หมดระยะประกันแล้ว</span>
                                         <!-- exits -->
-                                        <span id="serial-error-ok" style="color:green;display:none;">อุปกรณ์นี้ยังอยู่ในระยะประกัน</span>
+                                        <span id="serial-error-ok" style="color:blue;display:none;">อุปกรณ์นี้ยังอยู่ในระยะประกัน</span>
                                         <!-- else -->
-                                        <span id="serial-error-none" style="color:blue;display:none;">อุปกรณ์นี้ยังไม่มีประกัน</span>
+                                        <span id="serial-error-none" style="color:green;display:none;"> </span>
                                         <!-- exits ok-->
                                         <span id="serial-error-have" style="color:red;display:none;">อุปกรณ์นี้อยู่ระหว่างการซ่อมของคุณ</span>
                                         <!-- exits have-->

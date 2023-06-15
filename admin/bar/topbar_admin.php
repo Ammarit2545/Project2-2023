@@ -55,12 +55,13 @@
                 LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id 
                 LEFT JOIN repair ON get_detail.r_id = repair.r_id 
                 WHERE get_repair.del_flg = '0' AND repair.del_flg = 0
+                GROUP BY get_repair.get_r_id
                 ORDER BY get_repair.get_r_id DESC LIMIT 3;";
                 $result_nofi = mysqli_query($conn, $sql_nofi);
 
                 $sql_nofi_count = "SELECT COUNT(get_repair.get_r_id) FROM repair_status
                 LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id 
-                WHERE get_repair.del_flg = '0' AND repair_status.status_id <> '3';";
+                WHERE get_repair.del_flg = '0' AND repair_status.status_id = 1;";
                 $result_nofi_count = mysqli_query($conn, $sql_nofi_count);
                 $num_rows = mysqli_fetch_array($result_nofi_count);
                 ?>
