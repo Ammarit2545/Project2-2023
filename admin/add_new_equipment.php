@@ -249,7 +249,7 @@ if (!isset($_SESSION['role_id'])) {
                                         <label for="tel">ชื่อบริษัท <p style="color : red; display : inline">*กรณีมีประกันกับทางร้าน</p></label>
                                         <br>
                                         <select class="form-select" aria-label="Default select example" name="company">
-                                            <option selected>กรุณาเลือกบริษัท</option>
+                                            <option value="0">กรุณาเลือกบริษัท</option>
                                             <?php
                                             $sql_c = "SELECT * FROM company WHERE del_flg = '0'";
                                             $result_c = mysqli_query($conn, $sql_c);
