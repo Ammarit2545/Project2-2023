@@ -388,8 +388,8 @@ if (isset($_GET["status_id"])) {
                                 GROUP BY get_repair.get_r_id ORDER BY get_repair.get_r_date_in DESC;";
                     } elseif ($status_id > 0) {
                         $sql = "SELECT get_repair.*, repair.*, rs.status_id
-                        FROM get_repair
-                        LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
+                        FROM get_detail
+                        LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
                         LEFT JOIN repair ON get_detail.r_id = repair.r_id
                         LEFT JOIN (
                             SELECT get_r_id, MAX(rs_date_time) AS max_date

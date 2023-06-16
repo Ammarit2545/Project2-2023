@@ -1049,6 +1049,96 @@ if (!isset($_SESSION['role_id'])) {
                                                     </div>
                                                     <?= $row_get_c['r_brand'] . " " . $row_get_c['r_model'] . " - Model : " . $row_get_c['r_number_model'] . " - Serial Number : " . $row_get_c['r_serial_number']  ?>
                                                 </div>
+                                                <div class="col-4">
+                                                    <label for="basic-url" class="form-label">รหัสสมาชิก</label>
+                                                    <input type="text" name="m_id" class="form-control" id="myInput" onclick="openModal()" placeholder="ค้นหาข้อมูลสมาชิก">
+                                                    <div id="myModal" class="modal">
+                                                        <div class="modal-overlay" id="myModal">
+                                                            <div class="modal-content">
+                                                                <button class="close-button" onclick="closeModal()">&times;</button>
+                                                                <label for="tel">รายชื่อสมาชิก <p style="color: red; display: inline;">*ส่งค่าเป็นรหัส ID สมาชิก</p></label>
+                                                                <input type="text" id="searchInput" oninput="searchFunction()" placeholder="Search...">
+                                                                <ul id="myList"></ul>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                    <?php
+                                                    $sql1 = "SELECT * FROM member WHERE del_flg = 0";
+                                                    $result1 = mysqli_query($conn, $sql1);
+                                                    $data = mysqli_fetch_all($result1, MYSQLI_ASSOC);
+                                                    ?>
+
+                                                    <script>
+                                                        var input = document.getElementById("myInput");
+                                                        var modal = document.getElementById("myModal");
+                                                        var searchInput = document.getElementById("searchInput");
+                                                        var myList = document.getElementById("myList");
+                                                        var data = <?php echo json_encode($data); ?>;
+
+                                                        function openModal() {
+                                                            modal.style.display = "block";
+                                                            searchInput.value = "";
+                                                            populateList(data);
+                                                            searchInput.focus();
+                                                        }
+
+                                                        function closeModal() {
+                                                            modal.style.display = "none";
+                                                        }
+
+                                                        function selectItem(event) {
+                                                            var selectedValue = event.target.textContent;
+                                                            var option = document.createElement("option");
+                                                            option.value = selectedValue.split(" - ")[0]; // Extract m_id from the selected value
+                                                            option.textContent = selectedValue;
+                                                            option.selected = true;
+                                                            input.appendChild(option);
+                                                            closeModal();
+                                                        }
+
+
+                                                        function populateList(items) {
+                                                            myList.innerHTML = "";
+
+                                                            // Create the default option element
+                                                            var defaultOption = document.createElement("option");
+                                                            defaultOption.value = "0";
+                                                            defaultOption.textContent = " 0 - ไม่มี";
+                                                            defaultOption.selected = true;
+                                                            myList.appendChild(defaultOption);
+
+                                                            for (var i = 0; i < items.length; i++) {
+                                                                var li = document.createElement("li");
+                                                                li.textContent = items[i].m_id + " - " + items[i].m_fname + " " + items[i].m_lname; // Display m_id, first name, and last name
+                                                                li.addEventListener("click", selectItem);
+                                                                myList.appendChild(li);
+                                                            }
+                                                        }
+
+
+                                                        function searchFunction() {
+                                                            var searchTerm = searchInput.value.toLowerCase();
+                                                            var filteredData = data.filter(function(item) {
+                                                                var fullName = item.m_fname.toLowerCase() + " " + item.m_lname.toLowerCase(); // Concatenate first name and last name
+                                                                return (
+                                                                    item.m_id.toString().includes(searchTerm) || // Check if m_id includes the search term
+                                                                    fullName.includes(searchTerm) // Check if the full name includes the search term
+                                                                );
+                                                            });
+                                                            populateList(filteredData);
+                                                        }
+
+                                                        function selectItem(event) {
+                                                            var selectedValue = event.target.textContent;
+                                                            var m_id = selectedValue.split(" - ")[0]; // Extract m_id from the selected value
+                                                            input.value = m_id;
+                                                            closeModal();
+                                                        }
+                                                    </script>
+
+                                                </div>
                                             <?php
                                             }
 

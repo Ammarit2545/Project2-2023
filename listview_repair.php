@@ -108,7 +108,6 @@ $row = mysqli_fetch_array($result);
                             <div class="card" id="card-detail">
                                 <div class="card-body">
                                     <h5 class="card-title">
-
                                         <h5 style="display:inline; margin-right:10px" class="btn btn-secondary"><?= $_SESSION[$r_id] ?></h5><?= $_SESSION[$name_brand] ?> <?= $_SESSION[$name_model] ?>
                                         <?php
                                         $company_name = $_SESSION[$company];

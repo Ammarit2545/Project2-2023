@@ -27,6 +27,7 @@ if (!isset($_SESSION['role_id'])) {
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
@@ -155,7 +156,7 @@ if (!isset($_SESSION['role_id'])) {
                                     <div class="col-6">
                                         <label for="tel">เลข Serial Number</label>
                                         <!-- <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)"> -->
-                                        <input type="text" name="serial_number" value="NPE123456" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)" class="form-control" id="inputPassword" onblur="CheckSerial()" required>
+                                        <input type="text" name="serial_number" value="" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)" class="form-control" id="inputPassword" onblur="CheckSerial()" required>
                                         <span id="serial-error" style="color:red;display:none;">อุปกรณ์หมดระยะประกันแล้ว</span>
                                         <!-- exits -->
                                         <span id="serial-error-ok" style="color:blue;display:none;">อุปกรณ์นี้ยังอยู่ในระยะประกัน</span>
@@ -314,11 +315,11 @@ if (!isset($_SESSION['role_id'])) {
                                                 myList.innerHTML = "";
 
                                                 // Create the default option element
-                                                var defaultOption = document.createElement("option");
-                                                defaultOption.value = "0";
-                                                defaultOption.textContent = " 0 - ไม่มี";
-                                                defaultOption.selected = true;
-                                                myList.appendChild(defaultOption);
+                                                // var defaultOption = document.createElement("option");
+                                                // defaultOption.value = "0";
+                                                // defaultOption.textContent = " 0 - ไม่มี";
+                                                // defaultOption.selected = true;
+                                                // myList.appendChild(defaultOption);
 
                                                 for (var i = 0; i < items.length; i++) {
                                                     var li = document.createElement("li");
