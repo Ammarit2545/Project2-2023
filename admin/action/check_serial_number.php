@@ -21,17 +21,33 @@ $currentDate = date('Y-m-d');
 
 // echo $newDateString ." - AND -" .$currentDate;
 
-if ($newDateString > $currentDate) {
+// if ($newDateString > $currentDate) {
     
+// } elseif ($row['r_id'] > 0) {
+//     if ($row['r_guarantee'] == NULL || $row['r_date_buy'] == NULL) {
+//         echo 'exists-have';
+//     } else{
+//         echo 'exists';
+//     }
+// }else if($row['r_id'] == NULL){
+//         echo 'exists-ok';
+// }
+//  else {
+//     echo 'exists';
+// }
+
+//New code By Beam ไปหาสร้างหน้าใหม่เอา
+if ($newDateString > $currentDate) {
+    echo 'exists-have-guarantee';
 } elseif ($row['r_id'] > 0) {
     if ($row['r_guarantee'] == NULL || $row['r_date_buy'] == NULL) {
         echo 'exists-have';
-    } else{
+    } else {
         echo 'exists';
     }
-}else if($row['r_id'] == NULL){
-        echo 'exists-ok';
+} elseif ($row['r_id'] == NULL) {
+    echo 'exists-ok';
+} else {
+    echo 'none';
 }
- else {
-    echo 'exists';
-}
+
