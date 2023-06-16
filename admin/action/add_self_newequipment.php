@@ -38,8 +38,11 @@ if ($row_serial[0] > 0) {
 } else {
     $sql = "INSERT INTO repair (m_id, r_brand, r_model, r_number_model, r_serial_number, com_id, r_guarantee, r_date_buy)
     VALUES ('$m_id', '$name_brand', '$name_model', '$number_model', '$serial_number', '$company', '$guarantee', NOW())";
-     $result = mysqli_query($conn, $sql);
+    $result = mysqli_query($conn, $sql);
 
+    $sql_company = "SELECT * FROM company WHERE com_id = '$company' AND del_flg = 0";
+    $result_company = mysqli_query($conn, $sql_company);
+    $row_company = mysqli_fetch_array($result_company);
 
     $sql = "SELECT * FROM repair WHERE r_serial_number = '$serial_number' AND m_id = '0'";
     $result = mysqli_query($conn, $sql);
@@ -60,7 +63,7 @@ if ($row_serial[0] > 0) {
     $sMessage .= "\nModel : " . $name_model;
     $sMessage .= "\nSerial Number : " . $serial_number;
     if($company > 0){
-        $sMessage .= "\nCompany : " . $company;
+        $sMessage .= "\nCompany : " . $row_company['com_name'];
     }
     $sMessage .= "\nระยะประกัน : " . $guarantee . " ปี";
     $sMessage .= "\n\nเพิ่มโดย :";
