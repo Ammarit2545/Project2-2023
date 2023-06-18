@@ -104,17 +104,15 @@ if (!isset($_SESSION['role_id'])) {
                                         ;
                                          ";
                                         } else {
-                                            $sql_nofi = "SELECT *
-                                        FROM get_repair
-                                        LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
-                                        LEFT JOIN repair ON get_detail.r_id = repair.r_id   
-                                        LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
-                                        LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
-                                        WHERE get_repair.del_flg = '0'AND get_detail.del_flg = '0'
-                                        GROUP BY get_repair.get_r_id
-                                        ORDER BY get_repair.get_r_id DESC
-                                        ;
-                                         ";
+                                            $sql_nofi = "SELECT get_repair.get_r_id, get_detail.get_d_id, repair.r_id, status_type.status_id
+                                                    FROM get_repair
+                                                    LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
+                                                    LEFT JOIN repair ON get_detail.r_id = repair.r_id   
+                                                    LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
+                                                    LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
+                                                    WHERE get_repair.del_flg = '0' AND get_detail.del_flg = '0'
+                                                    GROUP BY get_repair.get_r_id, get_detail.get_d_id, repair.r_id, status_type.status_id
+                                                    ORDER BY get_repair.get_r_id DESC;";
                                         }
 
 
@@ -122,7 +120,10 @@ if (!isset($_SESSION['role_id'])) {
                                         $num_rows = mysqli_fetch_array($result_nofi_count);
                                         $i = 0;
                                         while ($row = mysqli_fetch_array($result_nofi)) {
-                                            $dateString = date('d-m-Y', strtotime($row['get_r_date_in']));
+                                            if ($row['get_r_date_in'] !== null) {
+                                                $dateString = date('d-m-Y', strtotime($row['get_r_date_in']));
+                                                // Rest of the code that uses $dateString
+                                            }
                                             $date = DateTime::createFromFormat('d-m-Y', $dateString);
                                             $formattedDate = $date->format('F / d / Y');
                                             $i = $i + 1;
