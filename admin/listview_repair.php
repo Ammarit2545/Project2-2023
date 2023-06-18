@@ -120,7 +120,10 @@ if (!isset($_SESSION['role_id'])) {
                                         $num_rows = mysqli_fetch_array($result_nofi_count);
                                         $i = 0;
                                         while ($row = mysqli_fetch_array($result_nofi)) {
-                                            $dateString = date('d-m-Y', strtotime($row['get_r_date_in']));
+                                            if ($row['get_r_date_in'] !== null) {
+                                                $dateString = date('d-m-Y', strtotime($row['get_r_date_in']));
+                                                // Rest of the code that uses $dateString
+                                            }
                                             $date = DateTime::createFromFormat('d-m-Y', $dateString);
                                             $formattedDate = $date->format('F / d / Y');
                                             $i = $i + 1;
