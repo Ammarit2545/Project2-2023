@@ -11909,7 +11909,7 @@ CREATE TABLE `status_type` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `status_type`
+-- Dumping data for table `status_type` Version.3
 --
 
 INSERT INTO `status_type` (`status_id`, `status_name`, `status_color`, `del_flg`, `value_code`) VALUES
