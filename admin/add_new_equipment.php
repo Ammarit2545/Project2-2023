@@ -18,7 +18,7 @@ if (!isset($_SESSION['role_id'])) {
     <meta name="author" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Admin Page - Create Auto Create Serial Number</title>
+    <title>Admin Page - Create Auto Create Serial Number1</title>
     <link rel="icon" type="image/x-icon" href="../img brand/anelogo.jpg">
 
     <!-- Custom fonts for this template-->
