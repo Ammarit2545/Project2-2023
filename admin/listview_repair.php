@@ -104,14 +104,14 @@ if (!isset($_SESSION['role_id'])) {
                                         ;
                                          ";
                                         } else {
-                                            $sql_nofi = "SELECT get_repair.get_r_id, get_detail.get_d_id, repair.r_id, status_type.status_id
+                                            $sql_nofi = "SELECT get_repair.get_r_id, get_detail.get_d_id, repair.r_id, status_type.status_id, get_repair.get_deli
                                                     FROM get_repair
                                                     LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
                                                     LEFT JOIN repair ON get_detail.r_id = repair.r_id   
                                                     LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
                                                     LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
                                                     WHERE get_repair.del_flg = '0' AND get_detail.del_flg = '0'
-                                                    GROUP BY get_repair.get_r_id, get_detail.get_d_id, repair.r_id, status_type.status_id
+                                                    GROUP BY get_repair.get_r_id
                                                     ORDER BY get_repair.get_r_id DESC;";
                                         }
 

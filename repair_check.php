@@ -272,7 +272,6 @@ if (!isset($_SESSION['id'])) {
                             }
                             ?>
 
-
                             <script>
                                 function previewImage(previewId) {
                                     var input = event.target;
@@ -302,7 +301,6 @@ if (!isset($_SESSION['id'])) {
                             <div class="text-center py-4">
                                 <a href="repair_edit.php" class="btn btn-danger">แก้ไขข้อมูล</a>
                                 <button type="submit" class="btn btn-success" >ยืนยัน</button>
-
 
                             </div>
 
