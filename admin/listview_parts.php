@@ -79,10 +79,10 @@ if (!isset($_SESSION['role_id'])) {
                                     <thead>
                                         <tr>
                                             <th>ลำดับ</th>
-                                            <th>ชื่อ</th>
+                                            <th>รูปภาพ</th>
                                             <th>Brand</th>
                                             <th>Model</th>
-                                            <th>Name</th>
+                                            <th>Model Number</th>
                                             <th>ประเภท</th>
                                             <th>รายละเอียด</th>
                                             <th>ราคา</th>

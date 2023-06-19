@@ -19,94 +19,18 @@ if (!isset($_SESSION['role_id'])) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Admin - Edit Employee Information</title>
+    <title>View Part - Edit Employee Information</title>
     <link rel="icon" type="image/x-icon" href="../img brand/anelogo.jpg">
 
-    <!-- Custom fonts for this template-->
+    <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-    <!-- Custom styles for this template-->
+    <!-- Custom styles for this template -->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
-    <style>
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 500px;
-        }
-
-        #myList {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        #myList li {
-            padding: 8px 12px;
-            cursor: pointer;
-        }
-
-        #myList li:hover {
-            background-color: #ddd;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            /* Dim background color */
-            z-index: 9999;
-        }
-
-        .modal-content {
-            position: absolute;
-            top: 20%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            z-index: 10000;
-        }
-
-        .close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 20px;
-            color: #999;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-
-        .close-button:hover {
-            color: #666;
-        }
-    </style>
+    <!-- Custom styles for this page -->
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 </head>
 
@@ -133,318 +57,261 @@ if (!isset($_SESSION['role_id'])) {
                 ?>
                 <!-- End of Topbar -->
 
+
                 <!-- Begin Page Content -->
-                <div class="background"></div>
+                <div class="container-fluid">
 
-                <!-- Content Here Start -->
+                    <!-- Page Heading -->
 
-                <h1 class="pt-5 text-center">จัดการสต๊อก</h1>
-                <center>
-                    <p>บันทึกจำนวนอะไหล่</p>
-                </center>
-                <br>
+                    <?php
+                    $i = 1;
+                    while (isset($_SESSION['part_p_id_' . $i])) {
+                        $i++;
+                    }
+                    ?>
+                    <br>
+                    <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">จัดการจำนวนอะไหล่</h1>
+                    <a href="add_part_stock.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มรายการหรือไม่? <?= $i ?></a>
+                    <br>
+                    <br>
 
-                <form action="action/edit_stock.php" method="POST" enctype="multipart/form-data">
-                    <div class="container">
-                        <div class="row">
-                            <div style="background-color : #EEEEEE; margin-top : 40px" id="parts_select" class="col-12">
-                                <!-- Content of the parts select div -->
-                                <hr>
-                                <div class="mb-3">
-                                    <h3>อะไหล่</h3>
-                                    <div id="cardContainer" style="display: none;">
-                                        <table class="table" id="cardSection"></table>
-                                    </div>
-                                    <!-- <button type="button" class="btn btn-primary" onclick="showNextCard()">Show Card</button> -->
-                                </div>
 
-                                <?php
-                                $sql_p = "SELECT * FROM parts WHERE del_flg = '0'";
-                                $result_p = mysqli_query($conn, $sql_p);
-                                $optionsHTML = "";
-                                while ($row_p = mysqli_fetch_array($result_p)) {
-                                    $optionsHTML .= '<option value="' . $row_p['p_id'] . '" data-pic="../' . $row_p['p_pic'] . '" data-price="' . $row_p['p_price'] . '" data-name="' . $row_p['p_name'] . '">' . $row_p['p_name'] . '</option>';
-                                }
-                                ?>
 
-                                <script>
-                                    vvar partsOptions = '<?php echo $optionsHTML; ?>';
-                                    var partsData = <?php echo json_encode($partsData); ?>;
 
-                                    function showNextCard() {
-                                        cardCount++;
-                                        var cardContainer = document.getElementById("cardContainer");
-                                        var cardSection = document.getElementById("cardSection");
-                                        cardSection.innerHTML = ""; // Clear existing cards
 
-                                        for (var i = 1; i <= cardCount; i++) {
-                                            // ... existing code ...
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">ข้อมูลที่ท่านต้องการเพิ่ม</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
 
-                                            var selectElement = document.createElement("select");
-                                            selectElement.name = "p_id" + i;
-                                            selectElement.className = "custom-select";
-                                            selectElement.id = "inputGroupSelect" + i;
-                                            selectElement.addEventListener("change", function() {
-                                                showSelectedOption(i);
-                                            });
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>ลำดับ</th>
+                                            <th>รูปภาพ</th>
+                                            <th>Brand</th>
+                                            <th>Model</th>
+                                            <th>Model Number</th>
+                                            <th>ประเภท</th>
+                                            <th>ราคา</th>
+                                            <th>จำนวน</th>
+                                            <th>ปุ่มดำเนินการ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
 
-                                            var defaultOption = document.createElement("option");
-                                            defaultOption.selected = true;
-                                            defaultOption.textContent = "Choose...";
-                                            selectElement.appendChild(defaultOption);
+                                        <?php
+                                        $i = 1;
+                                        while (isset($_SESSION['part_p_id_' . $i])) {
 
-                                            // Append each option to the select element
-                                            partsOptions.forEach(function(option) {
-                                                var optionElement = document.createElement("option");
-                                                optionElement.value = option.value;
-                                                optionElement.textContent = option.label;
-                                                selectElement.appendChild(optionElement);
-                                            });
 
-                                            // ... existing code ...
+                                            $sql = "SELECT * FROM parts LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id WHERE parts.del_flg = '0' AND parts.p_id = '$i' LIMIT 1";
+                                            $result = mysqli_query($conn, $sql);
+
+                                            $row = mysqli_fetch_array($result);
+                                        ?>
+                                            <tr>
+                                                <td><?php
+                                                    if ($row['p_id'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['p_id'];
+                                                    }
+                                                    ?>
+                                                </td>
+
+                                                <td><?php
+                                                    if ($row['p_pic'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                    ?>
+                                                        <img src="../<?= $row['p_pic'] ?>" width="50px" alt="Not Found">
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </td>
+
+
+                                                <td><?php
+                                                    if ($row['p_name'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['p_name'];
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['p_brand'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['p_brand'];
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['p_model'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['p_model'];
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['p_type_name'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['p_type_name'];
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['p_price'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo number_format($row['p_price']);
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['p_stock'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $_SESSION['part_p_stock_' . $i];
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <!-- <button onclick="confirmDelete(<?= $row['p_id'] ?>)" class="btn btn-danger">ลบ</button> -->
+                                                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+                                                    <!-- JavaScript function for confirmation -->
+                                                    <script>
+                                                        function confirmDelete(id) {
+                                                            Swal.fire({
+                                                                title: 'คุณแน่ใจหรือไม่?',
+                                                                text: 'คุณต้องการลบข้อมูลนี้หรือไม่',
+                                                                icon: 'warning',
+                                                                showCancelButton: true,
+                                                                confirmButtonColor: '#dc3545',
+                                                                cancelButtonColor: '#6c757d',
+                                                                confirmButtonText: 'Yes, delete it!'
+                                                            }).then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    // If confirmed, continue with the deletion process
+                                                                    window.location.href = "action/delete_part.php?id=" + id;
+                                                                }
+                                                            });
+                                                        }
+                                                    </script>
+
+                                                    <center>
+                                                        <a class="btn btn-warning" href="edit_parts.php?id=<?= $row['p_id'] ?>">แก้ไข</a>
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                        <?php
+                                            $i++;
                                         }
+                                        ?>
 
-                                        cardContainer.style.display = "block"; // Show the card section
 
-                                        // Update the hidden input field value with the cardCount
-                                        document.getElementById("cardCountInput").value = cardCount;
-                                    }
 
-                                    function showSelectedOption(cardIndex) {
-                                        var selectElement = document.getElementById(`inputGroupSelect${cardIndex}`);
-                                        var selectedOption = selectElement.options[selectElement.selectedIndex];
-                                        var cardImg = document.getElementById(`cardImg${cardIndex}`);
-                                        var cardTitle = document.getElementById(`cardTitle${cardIndex}`);
-                                        var cardPrice = document.getElementById(`cardPrice${cardIndex}`);
 
-                                        // Retrieve the data attributes from the selected option
-                                        var pic = selectedOption.getAttribute("data-pic");
-                                        var name = selectedOption.getAttribute("data-name");
-                                        var p_price = selectedOption.getAttribute("data-price");
-                                        var partId = selectedOption.value;
+                                        <!-- <tr>
+                                            <td>Tiger Nixon</td>
+                                            <td>Yamaha</td>
+                                            <td>cc61</td>
+                                            <td>หูฟังไร้สาย เชื่อมต่อผ่าน bluetooth</td>
+                                            <td>$320,800</td>
+                                            <th>2</th>
+                                            <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Garrett Winters</td>
+                                            <td>KKM</td>
+                                            <td>aas63</td>
+                                            <td>ลำโพงใหญ่ โคตรดัง</td>
+                                            <td>$170,750</td>
+                                            <th>2</th>
+                                            <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td>
+                                        </tr>
 
-                                        // Update the card image and title with the selected option's data
-                                        cardImg.src = pic;
-                                        cardTitle.textContent = name;
-
-                                        // Assign the price value directly as a string
-                                        cardPrice.value = p_price;
-
-                                        // Find the selected part in the partsData array
-                                        var selectedPart = partsData.find(function(part) {
-                                            return part.p_id === partId;
-                                        });
-
-                                        if (selectedPart) {
-                                            // Update the input field value with the price from the database
-                                            var price = parseFloat(selectedPart.p_price);
-                                            cardPrice.value = parseInt(price).toString();
-                                        }
-
-                                        // Hide the selected option in the next select dropdown
-                                        selectedOption.style.display = "none";
-
-                                        // Disable the selected option to prevent selection
-                                        selectedOption.disabled = true;
-                                    }
-
-                                    var cardCount = 0;
-                                    var cardValues = {}; // Object to store card values
-
-                                    function increment(inputId) {
-                                        var input = document.getElementById(inputId);
-                                        var value = parseInt(input.value);
-                                        input.value = value + 1;
-                                        cardValues[inputId] = value + 1; // Update card value in the object
-                                        calculateTotalPrice(inputId.slice(4)); // Calculate total price when incremented
-                                    }
-
-                                    function decrement(inputId) {
-                                        var input = document.getElementById(inputId);
-                                        var value = parseInt(input.value);
-                                        if (value > 0) {
-                                            input.value = value - 1;
-                                            cardValues[inputId] = value - 1; // Update card value in the object
-                                            calculateTotalPrice(inputId.slice(4)); // Calculate total price when decremented
-                                        }
-                                    }
-
-                                    function deleteCard(cardId) {
-                                        var cardContainer = document.getElementById("cardContainer");
-                                        var cardSection = document.getElementById("cardSection");
-
-                                        if (cardId in cardValues) {
-                                            delete cardValues[cardId]; // Remove card value from the object
-                                        }
-
-                                        var cardElement = document.getElementById(cardId);
-                                        if (cardElement) {
-                                            cardElement.closest("tr").remove(); // Remove the card row from the DOM
-                                        }
-
-                                        cardCount--; // Decrease the card count
-
-                                        if (cardCount === 0) {
-                                            cardContainer.style.display = "none"; // Hide the card section if there are no cards
-                                        }
-                                    }
-                                </script>
-                                <br>
-                                <div class="mb-3">
-                                    <div id="cardContainer" style="display: none;">
-                                        <table class="table" id="cardSection"></table>
-                                    </div>
-                                    <button type="button" class="btn btn-primary" onclick="showNextCard()">เพิ่มอะไหล่</button>
-                                    <input type="hidden" name="cardCount" id="cardCountInput" value="0">
-                                </div>
-
-                                <?php
-                                $sql_p = "SELECT * FROM parts WHERE del_flg = '0'";
-                                $result_p = mysqli_query($conn, $sql_p);
-                                $optionsHTML = "";
-                                while ($row_p = mysqli_fetch_array($result_p)) {
-                                    $optionsHTML .= '<option value="' . $row_p['p_id'] . '" data-pic="../' . $row_p['p_pic'] . '" data-price="' . $row_p['p_price'] . '" data-name="' . $row_p['p_name'] . '">' . $row_p['p_name'] . '</option>';
-                                }
-                                ?>
-
-                                <script>
-                                    var partsOptions = '<?php echo $optionsHTML; ?>';
-                                    var partsData = <?php echo json_encode($partsData); ?>;
-
-                                    function showNextCard() {
-                                        cardCount++;
-                                        var cardContainer = document.getElementById("cardContainer");
-                                        var cardSection = document.getElementById("cardSection");
-                                        cardSection.innerHTML = ""; // Clear existing cards
-
-                                        for (var i = 1; i <= cardCount; i++) {
-                                            var cardId = "card" + i; // Unique ID for each card
-                                            cardValues[cardId] = cardValues[cardId] || 0; // Initialize card value to 0 if not set
-
-                                            var tableRow = document.createElement("tr");
-                                            tableRow.innerHTML = `
-                                                                <td><img id="cardImg${i}" alt="Card image cap" style="max-width: 150px;"></td>
-                                                                <td id="cardTitle${i}"></td>
-                                                                <td>
-                                                                    <select name="p_id${i}" class="custom-select" id="inputGroupSelect${i}" onchange="showSelectedOption(${i})">
-                                                                        <option selected>Choose...</option>
-                                                                        ${partsOptions}
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="input-group">
-                                                                        <div class="col-6 px-0">
-                                                                            <input type="number" name="value_p${i}" id="${cardId}" value="1" class="form-control" onchange="calculateTotalPrice(${i})">
-                                                                        </div>
-                                                                        <div class="col-6 px-0">
-                                                                            <div class="input-group-prepend">
-                                                                                <button type="button" class="btn btn-primary" onclick="increment('${cardId}')">+</button>
-                                                                                <button type="button" class="btn btn-danger" onclick="decrement('${cardId}')">-</button>
-                                                                                <button type="button" class="btn btn-secondary" onclick="deleteCard('${cardId}')">Delete</button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            `;
-
-                                            cardSection.appendChild(tableRow); // Add new card row
-                                        }
-
-                                        cardContainer.style.display = "block"; // Show the card section
-
-                                        // Update the hidden input field value with the cardCount
-                                        document.getElementById("cardCountInput").value = cardCount;
-                                    }
-
-                                    function showSelectedOption(cardIndex) {
-                                        var selectElement = document.getElementById(`inputGroupSelect${cardIndex}`);
-                                        var selectedOption = selectElement.options[selectElement.selectedIndex];
-                                        var cardImg = document.getElementById(`cardImg${cardIndex}`);
-                                        var cardTitle = document.getElementById(`cardTitle${cardIndex}`);
-
-                                        // Retrieve the data attributes from the selected option
-                                        var pic = selectedOption.getAttribute("data-pic");
-                                        var name = selectedOption.getAttribute("data-name");
-                                        var p_price = selectedOption.getAttribute("data-price");
-                                        var partId = selectedOption.value;
-
-                                        // Update the card image and title with the selected option's data
-                                        cardImg.src = pic;
-                                        cardTitle.textContent = name;
-                                        // Hide the selected option in the next select dropdown
-                                        selectedOption.style.display = "none";
-
-                                        // Disable the selected option to prevent selection
-                                        selectedOption.disabled = true;
-                                    }
-                                    var cardCount = 0;
-                                    var cardValues = {}; // Object to store card values
-
-                                    function increment(inputId) {
-                                        var input = document.getElementById(inputId);
-                                        var value = parseInt(input.value);
-                                        input.value = value + 1;
-                                        cardValues[inputId] = value + 1; // Update card value in the object
-                                        calculateTotalPrice(inputId.slice(4)); // Calculate total price when incremented
-                                    }
-
-                                    function decrement(inputId) {
-                                        var input = document.getElementById(inputId);
-                                        var value = parseInt(input.value);
-                                        if (value > 0) {
-                                            input.value = value - 1;
-                                            cardValues[inputId] = value - 1; // Update card value in the object
-                                            calculateTotalPrice(inputId.slice(4)); // Calculate total price when decremented
-                                        }
-                                    }
-
-                                    function deleteCard(cardId) {
-                                        var cardContainer = document.getElementById("cardContainer");
-                                        var cardSection = document.getElementById("cardSection");
-
-                                        if (cardId in cardValues) {
-                                            delete cardValues[cardId]; // Remove card value from the object
-                                        }
-
-                                        var cardElement = document.getElementById(cardId);
-                                        if (cardElement) {
-                                            cardElement.closest("tr").remove(); // Remove the card row from the DOM
-                                        }
-
-                                        cardCount--; // Decrease the card count
-
-                                        if (cardCount === 0) {
-                                            cardContainer.style.display = "none"; // Hide the card section if there are no cards
-                                        }
-                                    }
-                                </script>
-                                <hr>
+                                        <tr>
+                                            <td>Senior Marketing Designer</td>
+                                            <td>4545</td>
+                                            <td>43</td>
+                                            <td>กีต้าร์ไร้สาย หาสายเอาเอง</td>
+                                            <td>$313,500</td>
+                                            <th>2</th>
+                                            <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tatyana Fitzpatrick</td>
+                                            <td>Regional Director</td>
+                                            <td>19</td>
+                                            <td>กลองชุด</td>
+                                            <td>$385,750</td>
+                                            <th>2</th>
+                                            <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td>
+                                        </tr> -->
+                                    </tbody>
+                                </table>
                             </div>
-
                         </div>
                     </div>
-                </form>
+                    <center>
+                        <button href="action/delete_parts.php" class="btn btn-danger" onclick="return showConfirmation('ล้างทั้งหมด', 'คุณต้องการล้างทั้งหมดหรือไม่')">ทำการล้างทั้งหมด</button>
 
-                <!-- Content End -->
+                        <button href="action/add_stock_part_db.php" class="btn btn-success" onclick="return showConfirmation('เพิ่มจำนวนอะไหล่ไปสู่คลัง', 'คุณต้องการเพิ่มจำนวนอะไหล่ไปสู่คลังหรือไม่')">เพิ่มจำนวนอะไหล่ไปสู่คลัง</button>
+
+                        <!-- Example CDNs, use appropriate versions and sources -->
+                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+                        <script>
+                            function showConfirmation(action, message) {
+                                return Swal.fire({
+                                    title: "คุณแน่ใจหรือไม่?",
+                                    text: message,
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "ยืนยัน",
+                                    cancelButtonText: "ยกเลิก"
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // User confirmed, proceed with the action
+                                        window.location.href = action;
+                                    } else {
+                                        // User canceled, do nothing
+                                        return false;
+                                    }
+                                });
+                            }
+                        </script>
+
+                    </center>
+                </div>
+                <!-- /.container-fluid -->
 
             </div>
-            <!-- /.container-fluid -->
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
 
         </div>
-        <!-- End of Main Content -->
-
-    </div>
-    <!-- End of Content Wrapper -->
-
-    <!-- Footer -->
-    <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-            <div class="copyright text-center my-auto">
-                <span>Copyright &copy; Your Website 2020</span>
-            </div>
-        </div>
-    </footer>
-    <!-- End of Footer -->
+        <!-- End of Content Wrapper -->
 
     </div>
     <!-- End of Page Wrapper -->
@@ -473,6 +340,7 @@ if (!isset($_SESSION['role_id'])) {
         </div>
     </div>
 
+
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -483,6 +351,12 @@ if (!isset($_SESSION['role_id'])) {
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
 
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
     <!-- Sweet Alert Show Start -->
     <?php
     if (isset($_SESSION['add_data_alert'])) {
@@ -491,7 +365,7 @@ if (!isset($_SESSION['role_id'])) {
     ?>
             <script>
                 Swal.fire({
-                    title: 'เพิ่มข้อมูลสำเร็จ',
+                    title: 'ข้อมูลของคุณได้ถูกบันทึกแล้ว',
                     text: 'กด Accept เพื่อออก',
                     icon: 'success',
                     confirmButtonText: 'Accept'
@@ -503,19 +377,31 @@ if (!isset($_SESSION['role_id'])) {
         ?>
             <script>
                 Swal.fire({
-                    title: 'มี Serial Number นี้อยู่แล้ว ',
+                    title: 'ข้อมูลของคุณไม่ได้ถูกบันทึก',
                     text: 'กด Accept เพื่อออก',
                     icon: 'error',
                     confirmButtonText: 'Accept'
                 });
             </script>
 
-    <?php
+        <?php
             unset($_SESSION['add_data_alert']);
+        } else if ($_SESSION['add_data_alert'] == 2) {
+        ?>
+            <script>
+                Swal.fire({
+                    title: 'ข้อมูลของคุณได้ถูกลบแล้ว',
+                    text: 'กด Accept เพื่อออก',
+                    icon: 'success',
+                    confirmButtonText: 'Accept'
+                });
+            </script>
+    <?php unset($_SESSION['add_data_alert']);
         }
     }
     ?>
     <!-- Sweet Alert Show End -->
+
 
 </body>
 
