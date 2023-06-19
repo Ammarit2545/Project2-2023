@@ -36,8 +36,8 @@ if ($row_serial[0] > 0) {
     header("Location: ../add_new_equipment.php?");
     exit();
 } else {
-    $sql = "INSERT INTO repair (m_id, r_brand, r_model, r_number_model, r_serial_number, com_id, r_guarantee, r_date_buy)
-    VALUES ('$m_id', '$name_brand', '$name_model', '$number_model', '$serial_number', '$company', '$guarantee', NOW())";
+    $sql = "INSERT INTO repair (m_id, r_brand, r_model, r_number_model, r_serial_number, com_id, r_guarantee, r_date_buy, e_id)
+    VALUES ('$m_id', '$name_brand', '$name_model', '$number_model', '$serial_number', '$company', '$guarantee', NOW(), '$id')";
     $result = mysqli_query($conn, $sql);
 
     $sql_company = "SELECT * FROM company WHERE com_id = '$company' AND del_flg = 0";
