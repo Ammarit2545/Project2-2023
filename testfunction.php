@@ -2,10 +2,20 @@
 session_start();
 include('database/condb.php');
 
-if (!isset($_SESSION['role_id'])) {
-    header('Location:home.php');
-}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['part_id']) && isset($_POST['quantity'])) {
+        $partId = $_POST['part_id'];
+        $quantity = $_POST['quantity'];
 
+        // Insert the part and quantity into the database
+        $query = "INSERT INTO stock_parts (part_id, quantity) VALUES ('$partId', '$quantity')";
+        mysqli_query($con, $query);
+        // You can add error handling and validation as per your requirements
+
+        // Close the modal after adding the part
+        echo '<script>document.getElementById("myModal").style.display = "none";</script>';
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -13,27 +23,11 @@ if (!isset($_SESSION['role_id'])) {
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Admin Page - Create Auto Create Serial Number</title>
-    <link rel="icon" type="image/x-icon" href="../img brand/anelogo.jpg">
-
-    <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-    <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <title>Document</title>
     <style>
+        /* Modal styles */
+
         .modal {
             display: none;
             position: fixed;
@@ -52,436 +46,156 @@ if (!isset($_SESSION['role_id'])) {
             padding: 20px;
             border: 1px solid #888;
             width: 80%;
-            max-width: 500px;
         }
 
-        #myList {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
         }
 
-        #myList li {
-            padding: 8px 12px;
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
             cursor: pointer;
-        }
-
-        #myList li:hover {
-            background-color: #ddd;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            /* Dim background color */
-            z-index: 9999;
-        }
-
-        .modal-content {
-            position: absolute;
-            top: 20%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            z-index: 10000;
-        }
-
-        .close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 20px;
-            color: #999;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-
-        .close-button:hover {
-            color: #666;
         }
     </style>
 </head>
 
-<body id="page-top">
+<body>
+    <!-- Button to open the modal -->
+    <button id="openModalBtn">Add Stock Part</button>
 
-    <!-- Page Wrapper -->
-    <div id="wrapper">
-
-        <!-- Sidebar -->
-        <?php
-        include('bar/sidebar.php');
-        ?>
-        <!-- End of Sidebar -->
-
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
-
-            <!-- Main Content -->
-            <div id="content">
-
-                <!-- Topbar -->
-                <?php
-                include('bar/topbar_admin.php');
-                ?>
-                <!-- End of Topbar -->
-
-                <!-- Begin Page Content -->
-                <div class="background"></div>
-
-
-                <h1 class="pt-5 text-center">บันทึกคำสั่งซื้อ</h1>
-                <center>
-                    <p>บันทึกการซ่อมด้วยตัวเอง สินค้าที่เสียหายจะต้องซ่อมเสร็จสิ้นแล้วเท่านั้น</p>
-                </center>
-                <br>
-                <form id="self_newserialnumber" action="action/add_self_newequipment.php" method="POST" enctype="multipart/form-data">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label for="tel">ชื่อยี่ห้อ</label>
-                                        <input type="text" class="form-control input" id="borderinput" name="name_brand" placeholder="กรุณากรอก ชื่อยี่ห้อ" required>
-                                    </div>
-                                    <div class="col-4">
-                                        <label for="tel">เลข Serial Number</label>
-                                        <!-- <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)"> -->
-                                        <input type="text" name="serial_number" value="" placeholder="กรุณากรอก หมายเลข Serial Number (ไม่จำเป็น)" class="form-control" id="inputPassword" onblur="CheckSerial()" required>
-                                        <span id="serial-error" style="color:red;display:none;">อุปกรณ์หมดระยะประกันแล้ว</span>
-                                        <!-- exits -->
-                                        <span id="serial-error-ok" style="color:blue;display:none;">อุปกรณ์นี้ยังอยู่ในระยะประกัน</span>
-                                        <!-- else -->
-                                        <span id="serial-error-none" style="color:green;display:none;">หมายเลข Serial Number นี้สามารถใช้งานได้</span>
-                                        <!-- exits ok-->
-                                        <span id="serial-error-have" style="color:red;display:none;">อุปกรณ์นี้อยู่ระหว่างการซ่อมของคุณ</span>
-                                        <!-- exits have-->
-                                        <span id="serial-error-none-2" style="color:green;display:none;">หมายเลข Serial Number นี้สามารถใช้งานได้</span>
-                                        <!-- none -->
-                                        <script>
-                                            function CheckSerial() {
-                                                var serial = document.getElementById('inputPassword').value;
-                                                var xhttp = new XMLHttpRequest();
-                                                xhttp.onreadystatechange = function() {
-                                                    if (this.readyState == 4 && this.status == 200) {
-                                                        if (this.responseText == 'exists') {
-                                                            document.getElementById('serial-error').style.display = 'block';
-                                                            document.getElementById('serial-error-ok').style.display = 'none';
-                                                            document.getElementById('serial-error-none').style.display = 'none';
-                                                            document.getElementById('serial-error-have').style.display = 'none';
-                                                            document.getElementById('serial-error-none-2').style.display = 'none';
-                                                            document.getElementById('inputPassword').setCustomValidity('');
-                                                        } else if (this.responseText == 'exists-ok') {
-                                                            document.getElementById('serial-error').style.display = 'none';
-                                                            document.getElementById('serial-error-ok').style.display = 'none';
-                                                            document.getElementById('serial-error-none').style.display = 'block';
-                                                            document.getElementById('serial-error-have').style.display = 'none';
-                                                            document.getElementById('serial-error-none-2').style.display = 'none';
-                                                            document.getElementById('inputPassword').setCustomValidity('');
-                                                        } else if (this.responseText == 'exists-have') {
-                                                            document.getElementById('serial-error').style.display = 'none';
-                                                            document.getElementById('serial-error-ok').style.display = 'none';
-                                                            document.getElementById('serial-error-none').style.display = 'none';
-                                                            document.getElementById('serial-error-have').style.display = 'block';
-                                                            document.getElementById('serial-error-none-2').style.display = 'none';
-                                                            document.getElementById('inputPassword').setCustomValidity('');
-                                                        } else if (this.responseText == 'exists-have-guarantee') {
-                                                            document.getElementById('serial-error').style.display = 'none';
-                                                            document.getElementById('serial-error-ok').style.display = 'block';
-                                                            document.getElementById('serial-error-none').style.display = 'none';
-                                                            document.getElementById('serial-error-have').style.display = 'none';
-                                                            document.getElementById('serial-error-none-2').style.display = 'none';
-                                                            document.getElementById('inputPassword').setCustomValidity('');
-                                                        } else {
-                                                            document.getElementById('serial-error').style.display = 'none';
-                                                            document.getElementById('serial-error-ok').style.display = 'none';
-                                                            document.getElementById('serial-error-none').style.display = 'none';
-                                                            document.getElementById('serial-error-have').style.display = 'none';
-                                                            document.getElementById('serial-error-none-2').style.display = 'block';
-                                                            document.getElementById('inputPassword').setCustomValidity('');
-                                                        }
-                                                    }
-                                                };
-                                                xhttp.open('GET', 'action/check_serial_number.php?serial=' + serial, true);
-                                                xhttp.send();
-                                            }
-                                        </script>
-                                    </div>
-                                    <div class="col-2">
-                                        <div style="padding-top: 2rem;">
-                                            <button type="button" class="btn btn-primary" onclick="generateSerialNumber()">สุ่มตัวเลข</button>
-                                        </div>
-                                    </div>
-                                    <script>
-                                        function generateSerialNumber() {
-                                            var randomDigits = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
-                                            var serialNumber = "ANE" + randomDigits;
-                                            document.getElementById('inputPassword').value = serialNumber;
-                                            CheckSerial();
-                                        }
-                                    </script>
-                                </div>
-                                <br>
-
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label for="tel">ชื่อรุ่น</label>
-                                        <input type="text" class="form-control input" id="borderinput" name="name_model" placeholder="กรุณากรอก ชื่อรุ่น" required>
-                                    </div>
-                                    <div class="col-6">
-                                        <label for="tel">หมายเลขรุ่น</label>
-                                        <input type="text" class="form-control input" id="borderinput" name="number_model" placeholder="กรุณากรอก หมายเลขรุ่น  (ไม่จำเป็น)">
-                                    </div>
-                                </div>
-                                <br>
-                                <hr>
-                                <div class="row">
-
-                                    <div class="col-4">
-                                        <label for="tel">ชื่อบริษัท <p style="color : red; display : inline">*กรณีมีประกันกับทางร้าน</p></label>
-                                        <br>
-                                        <select class="form-select" aria-label="Default select example" name="company">
-                                            <option value="0">กรุณาเลือกบริษัท</option>
-                                            <?php
-                                            $sql_c = "SELECT * FROM company WHERE del_flg = '0'";
-                                            $result_c = mysqli_query($conn, $sql_c);
-                                            while ($row_c = mysqli_fetch_array($result_c)) {
-                                            ?><option value="<?= $row_c['com_id'] ?>"><?= $row_c['com_name'] ?></option>
-                                            <?php  }  ?>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-4">
-                                        <label for="tel">ระยะประกัน</label>
-                                        <input type="text" name="guarantee" class="form-control" id="" placeholder="กรุณากรอกระยะประกัน">
-                                    </div>
-
-
-                                    <div class="col-4">
-                                        <label for="basic-url" class="form-label">หมายเลขอะไหล่</label>
-                                        <input type="text" name="p_id" class="form-control" id="myInput" onclick="openModal()" placeholder="ค้นหาข้อมูลอะไหล่">
-                                        <input type="number" name="p_unit" class="form-control" id="myUnit" placeholder="จำนวน">
-                                        <input type="text" name="p_price" class="form-control" id="myPrice" readonly>
-
-                                        <div class="modal-overlay" id="myModal">
-                                            <div class="modal-content">
-                                                <button class="close-button" onclick="closeModal()">&times;</button>
-                                                <label for="tel">รายการอะไหล่ <p style="color: red; display: inline;">*ส่งค่าเป็นรหัส ID หมายเลขอะไหล่</p></label>
-                                                <input type="text" id="searchInput" oninput="searchFunction()" placeholder="Search...">
-                                                <ul id="myList"></ul>
-                                            </div>
-                                        </div>
-
-                                        <?php
-                                        $sql1 = "SELECT * FROM parts WHERE del_flg = 0";
-                                        $result1 = mysqli_query($conn, $sql1);
-                                        $data = mysqli_fetch_all($result1, MYSQLI_ASSOC);
-                                        ?>
-
-                                        <script>
-                                            var input = document.getElementById("myInput");
-                                            var modal = document.getElementById("myModal");
-                                            var searchInput = document.getElementById("searchInput");
-                                            var myList = document.getElementById("myList");
-                                            var data = <?php echo json_encode($data); ?>;
-
-                                            function openModal() {
-                                                modal.style.display = "block";
-                                                searchInput.value = "";
-                                                populateList(data);
-                                                searchInput.focus();
-                                            }
-
-                                            function closeModal() {
-                                                modal.style.display = "none";
-                                            }
-
-                                            function selectItem(event) {
-                                                var selectedValue = event.target.getAttribute("data-id");
-                                                input.value = selectedValue;
-                                                closeModal();
-
-                                                // Generate the price based on the selected part
-                                                var selectedPart = data.find(function(item) {
-                                                    return item.p_id.toString() === selectedValue;
-                                                });
-
-                                                if (selectedPart) {
-                                                    var unit = document.getElementById("myUnit").value;
-                                                    var price = selectedPart.p_price * unit;
-                                                    document.getElementById("myPrice").value = price.toFixed(2); // Display the price with two decimal places
-                                                }
-                                            }
-
-                                            function populateList(items) {
-                                                myList.innerHTML = "";
-
-                                                // Create the default option element
-                                                var defaultOption = document.createElement("option");
-                                                defaultOption.value = "0";
-                                                defaultOption.textContent = " 0 - ไม่มี";
-                                                defaultOption.selected = true;
-                                                myList.appendChild(defaultOption);
-
-                                                for (var i = 0; i < items.length; i++) {
-                                                    var li = document.createElement("li");
-                                                    li.textContent = items[i].p_id + " - " + items[i].p_brand + " " + items[i].p_model; // Display p_id, brand, and model
-                                                    li.setAttribute("data-id", items[i].p_id); // Set the data-id attribute to p_id
-                                                    li.addEventListener("click", selectItem);
-                                                    myList.appendChild(li);
-                                                }
-                                            }
-
-                                            function searchFunction() {
-                                                var searchTerm = searchInput.value.toLowerCase();
-                                                var filteredData = data.filter(function(item) {
-                                                    var fullName = item.p_brand.toLowerCase() + " " + item.p_model.toLowerCase(); // Concatenate brand and model
-                                                    return (
-                                                        item.p_id.toString().includes(searchTerm) || // Check if p_id includes the search term
-                                                        fullName.includes(searchTerm) // Check if the full name includes the search term
-                                                    );
-                                                });
-                                                populateList(filteredData);
-                                            }
-                                        </script>
-
-
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="text-center pt-4 mx-auto">
-                                        <center>
-                                            <a class="btn btn-success" value="Upload Image" name="submit" onclick="showConfirmation()">ยืนยัน</a>
-
-                                            <script>
-                                                function showConfirmation() {
-                                                    Swal.fire({
-                                                        title: "ยืนยันการส่งข้อมูล",
-                                                        text: "คุณต้องการที่จะยืนยันการส่งข้อมูลหรือไม่?",
-                                                        icon: "question",
-                                                        showCancelButton: true,
-                                                        confirmButtonColor: "#3085d6",
-                                                        cancelButtonColor: "#d33",
-                                                        confirmButtonText: "ใช่, ยืนยัน!",
-                                                        cancelButtonText: "ยกเลิก"
-                                                    }).then((result) => {
-                                                        if (result.isConfirmed) {
-                                                            // User confirmed, proceed with form submission
-                                                            document.getElementById("self_newserialnumber").submit();
-                                                        }
-                                                    });
-                                                }
-                                            </script>
-
-                                        </center>
-
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <!-- /.container-fluid -->
-
-        </div>
-        <!-- End of Main Content -->
-
-
-    </div>
-    <!-- End of Content Wrapper -->
-
-    <!-- Footer -->
-    <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-            <div class="copyright text-center my-auto">
-                <span>Copyright &copy; Your Website 2020</span>
-            </div>
-        </div>
-    </footer>
-    <!-- End of Footer -->
-
-    </div>
-    <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
+    <!-- The modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add Stock Part</h2>
+            <input type="text" id="searchInput" placeholder="Search by name or type">
+            <ul id="searchResults"></ul>
+            <div id="partDetails" style="display: none;">
+                <h3>Part Details</h3>
+                <p id="partName"></p>
+                <p id="partType"></p>
+                <input type="number" id="partQuantity" placeholder="Quantity">
+                <button id="addButton">Add Part</button>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Get the modal element
+        var modal = document.getElementById("myModal");
 
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+        // Get the button that opens the modal
+        var btn = document.getElementById("openModalBtn");
 
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
 
-    <!-- Sweet Alert Show Start -->
-    <?php
-    if (isset($_SESSION['add_data_alert'])) {
-        if ($_SESSION['add_data_alert'] == 0) {
-            $id = 123; // Replace 123 with the actual ID you want to pass to the deletion action
-    ?>
-            <script>
-                Swal.fire({
-                    title: 'เพิ่มข้อมูลสำเร็จ',
-                    text: 'กด Accept เพื่อออก',
-                    icon: 'success',
-                    confirmButtonText: 'Accept'
+        // When the user clicks the button, open the modal
+        btn.onclick = function () {
+            modal.style.display = "block";
+        };
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        };
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        };
+
+        // Search functionality
+        var searchInput = document.getElementById("searchInput");
+        var searchResults = document.getElementById("searchResults");
+        var partDetails = document.getElementById("partDetails");
+        var partName = document.getElementById("partName");
+        var partType = document.getElementById("partType");
+        var partQuantity = document.getElementById("partQuantity");
+        var addButton = document.getElementById("addButton");
+
+        // Sample data for demonstration
+        var parts = [{
+                p_id: 1,
+                p_name: "Part 1",
+                p_type: "Type A",
+                p_stock: 10
+            },
+            {
+                p_id: 2,
+                p_name: "Part 2",
+                p_type: "Type B",
+                p_stock: 5
+            },
+            {
+                p_id: 3,
+                p_name: "Part 3",
+                p_type: "Type A",
+                p_stock: 8
+            }
+        ];
+
+        searchInput.addEventListener("input", function (event) {
+            var query = event.target.value.toLowerCase();
+            var filteredParts = parts.filter(function (part) {
+                return (
+                    part.p_name.toLowerCase().includes(query) ||
+                    part.p_type.toLowerCase().includes(query)
+                );
+            });
+
+            renderSearchResults(filteredParts);
+        });
+
+        function renderSearchResults(results) {
+            searchResults.innerHTML = "";
+            results.forEach(function (result) {
+                var li = document.createElement("li");
+                li.textContent = result.p_name + " (" + result.p_type + ")";
+                li.addEventListener("click", function () {
+                    showPartDetails(result);
                 });
-            </script>
-        <?php
-            unset($_SESSION['add_data_alert']);
-        } else if ($_SESSION['add_data_alert'] == 1) {
-        ?>
-            <script>
-                Swal.fire({
-                    title: 'มี Serial Number นี้อยู่แล้ว ',
-                    text: 'กด Accept เพื่อออก',
-                    icon: 'error',
-                    confirmButtonText: 'Accept'
-                });
-            </script>
-
-    <?php
-            unset($_SESSION['add_data_alert']);
+                searchResults.appendChild(li);
+            });
         }
-    }
-    ?>
-    <!-- Sweet Alert Show End -->
 
+        function showPartDetails(part) {
+            partName.textContent = "Name: " + part.p_name;
+            partType.textContent = "Type: " + part.p_type;
+            partDetails.style.display = "block";
+            addButton.onclick = function () {
+                var quantity = parseInt(partQuantity.value, 10);
+                if (!isNaN(quantity) && quantity > 0) {
+                    // Add part to the database
+                    var form = document.createElement("form");
+                    form.setAttribute("method", "POST");
+                    form.setAttribute("action", "");
+
+                    var partIdInput = document.createElement("input");
+                    partIdInput.setAttribute("type", "hidden");
+                    partIdInput.setAttribute("name", "part_id");
+                    partIdInput.setAttribute("value", part.p_id);
+                    form.appendChild(partIdInput);
+
+                    var quantityInput = document.createElement("input");
+                    quantityInput.setAttribute("type", "hidden");
+                    quantityInput.setAttribute("name", "quantity");
+                    quantityInput.setAttribute("value", quantity);
+                    form.appendChild(quantityInput);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            };
+        }
+    </script>
 </body>
 
 </html>

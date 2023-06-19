@@ -71,11 +71,11 @@ if(!isset($_SESSION['id'])){
         $id = $_GET["id"];
         $ever = $_GET["ever"];
         if($company_check != NULL && !isset($_GET["ever"])){
-           ?><form action="action/add_repair_gua.php" method="POST" enctype="multipart/form-data"><?php
+           ?><form action="action/add_repair.php" method="POST" enctype="multipart/form-data"><?php
         }elseif(isset($_GET["ever"])){
             ?><form action="action/add_rapair_ever.php" method="POST" enctype="multipart/form-data"><?php
         }else{
-            ?><form action="action/add_repair_non_gua.php" method="POST" enctype="multipart/form-data">
+            ?><form action="action/add_repair.php" method="POST" enctype="multipart/form-data">
             <?php
         }
         ?>

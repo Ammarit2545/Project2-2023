@@ -138,69 +138,289 @@ if (!isset($_SESSION['role_id'])) {
 
                 <!-- Content Here Start -->
 
-                <h1 class="pt-5 text-center">บันทึกการซ่อมด้วยตัวเอง</h1>
+                <h1 class="pt-5 text-center">จัดการสต๊อก</h1>
                 <center>
-                    <p>บันทึกการซ่อมด้วยตัวเอง สินค้าที่เสียหายจะต้องซ่อมเสร็จสิ้นแล้วเท่านั้น</p>
+                    <p>บันทึกจำนวนอะไหล่</p>
                 </center>
                 <br>
 
                 <form action="action/edit_stock.php" method="POST" enctype="multipart/form-data">
                     <div class="container">
                         <div class="row">
-                            <div class="col-6">
-                                <label for="tel">ชื่อยี่ห้อ</label>
-                                <input type="text" class="form-control input" id="borderinput" name="name_brand" placeholder="กรุณากรอก ชื่อยี่ห้อ" required>
-                            </div>
-                            <div class="col-6">
-                                <label for="tel">เลข Serial Number</label>
-                                <!-- <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)"> -->
-                                <input type="text" name="serial_number" value="NPE123456" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)" class="form-control" id="inputPassword" onblur="CheckSerial()" required>
-                                <span id="serial-error" style="color:red;display:none;">อุปกรณ์หมดระยะประกันแล้ว</span>
-                                <!-- exits -->
-                                <span id="serial-error-ok" style="color:green;display:none;">อุปกรณ์นี้ยังอยู่ในระยะประกัน</span>
-                                <!-- else -->
-                                <span id="serial-error-none" style="color:blue;display:none;">อุปกรณ์นี้ยังไม่มีประกัน</span>
-                                <!-- exits ok-->
-                                <span id="serial-error-have" style="color:red;display:none;">อุปกรณ์นี้อยู่ระหว่างการซ่อมของคุณ</span>
-                                <!-- exits have-->
+                            <div style="background-color : #EEEEEE; margin-top : 40px" id="parts_select" class="col-12">
+                                <!-- Content of the parts select div -->
+                                <hr>
+                                <div class="mb-3">
+                                    <h3>อะไหล่</h3>
+                                    <div id="cardContainer" style="display: none;">
+                                        <table class="table" id="cardSection"></table>
+                                    </div>
+                                    <!-- <button type="button" class="btn btn-primary" onclick="showNextCard()">Show Card</button> -->
+                                </div>
+
+                                <?php
+                                $sql_p = "SELECT * FROM parts WHERE del_flg = '0'";
+                                $result_p = mysqli_query($conn, $sql_p);
+                                $optionsHTML = "";
+                                while ($row_p = mysqli_fetch_array($result_p)) {
+                                    $optionsHTML .= '<option value="' . $row_p['p_id'] . '" data-pic="../' . $row_p['p_pic'] . '" data-price="' . $row_p['p_price'] . '" data-name="' . $row_p['p_name'] . '">' . $row_p['p_name'] . '</option>';
+                                }
+                                ?>
+
                                 <script>
-                                    function CheckSerial() {
-                                        var serial = document.getElementById('inputPassword').value;
-                                        var xhttp = new XMLHttpRequest();
-                                        xhttp.onreadystatechange = function() {
-                                            if (this.readyState == 4 && this.status == 200) {
-                                                if (this.responseText == 'exists') {
-                                                    document.getElementById('serial-error').style.display = 'block';
-                                                    document.getElementById('serial-error-ok').style.display = 'none';
-                                                    document.getElementById('serial-error-none').style.display = 'none';
-                                                    document.getElementById('serial-error-have').style.display = 'none';
-                                                    document.getElementById('inputPassword').setCustomValidity('');
-                                                } else if (this.responseText == 'exists-ok') {
-                                                    document.getElementById('serial-error').style.display = 'none';
-                                                    document.getElementById('serial-error-ok').style.display = 'none';
-                                                    document.getElementById('serial-error-none').style.display = 'block';
-                                                    document.getElementById('serial-error-have').style.display = 'none';
-                                                    document.getElementById('inputPassword').setCustomValidity('');
-                                                } else if (this.responseText == 'exists-have') {
-                                                    document.getElementById('serial-error').style.display = 'none';
-                                                    document.getElementById('serial-error-ok').style.display = 'none';
-                                                    document.getElementById('serial-error-none').style.display = 'none';
-                                                    document.getElementById('serial-error-have').style.display = 'block';
-                                                    document.getElementById('inputPassword').setCustomValidity('ไม่สามารถส่งข้อมูลที่อยู่ในขณะดำเนินการซ่อมได้');
-                                                } else {
-                                                    document.getElementById('serial-error').style.display = 'none';
-                                                    document.getElementById('serial-error-ok').style.display = 'block';
-                                                    document.getElementById('serial-error-none').style.display = 'none';
-                                                    document.getElementById('serial-error-have').style.display = 'none';
-                                                    document.getElementById('inputPassword').setCustomValidity('');
-                                                }
-                                            }
-                                        };
-                                        xhttp.open('GET', 'action/check_serial_number.php?serial=' + serial, true);
-                                        xhttp.send();
+                                    vvar partsOptions = '<?php echo $optionsHTML; ?>';
+                                    var partsData = <?php echo json_encode($partsData); ?>;
+
+                                    function showNextCard() {
+                                        cardCount++;
+                                        var cardContainer = document.getElementById("cardContainer");
+                                        var cardSection = document.getElementById("cardSection");
+                                        cardSection.innerHTML = ""; // Clear existing cards
+
+                                        for (var i = 1; i <= cardCount; i++) {
+                                            // ... existing code ...
+
+                                            var selectElement = document.createElement("select");
+                                            selectElement.name = "p_id" + i;
+                                            selectElement.className = "custom-select";
+                                            selectElement.id = "inputGroupSelect" + i;
+                                            selectElement.addEventListener("change", function() {
+                                                showSelectedOption(i);
+                                            });
+
+                                            var defaultOption = document.createElement("option");
+                                            defaultOption.selected = true;
+                                            defaultOption.textContent = "Choose...";
+                                            selectElement.appendChild(defaultOption);
+
+                                            // Append each option to the select element
+                                            partsOptions.forEach(function(option) {
+                                                var optionElement = document.createElement("option");
+                                                optionElement.value = option.value;
+                                                optionElement.textContent = option.label;
+                                                selectElement.appendChild(optionElement);
+                                            });
+
+                                            // ... existing code ...
+                                        }
+
+                                        cardContainer.style.display = "block"; // Show the card section
+
+                                        // Update the hidden input field value with the cardCount
+                                        document.getElementById("cardCountInput").value = cardCount;
+                                    }
+
+                                    function showSelectedOption(cardIndex) {
+                                        var selectElement = document.getElementById(`inputGroupSelect${cardIndex}`);
+                                        var selectedOption = selectElement.options[selectElement.selectedIndex];
+                                        var cardImg = document.getElementById(`cardImg${cardIndex}`);
+                                        var cardTitle = document.getElementById(`cardTitle${cardIndex}`);
+                                        var cardPrice = document.getElementById(`cardPrice${cardIndex}`);
+
+                                        // Retrieve the data attributes from the selected option
+                                        var pic = selectedOption.getAttribute("data-pic");
+                                        var name = selectedOption.getAttribute("data-name");
+                                        var p_price = selectedOption.getAttribute("data-price");
+                                        var partId = selectedOption.value;
+
+                                        // Update the card image and title with the selected option's data
+                                        cardImg.src = pic;
+                                        cardTitle.textContent = name;
+
+                                        // Assign the price value directly as a string
+                                        cardPrice.value = p_price;
+
+                                        // Find the selected part in the partsData array
+                                        var selectedPart = partsData.find(function(part) {
+                                            return part.p_id === partId;
+                                        });
+
+                                        if (selectedPart) {
+                                            // Update the input field value with the price from the database
+                                            var price = parseFloat(selectedPart.p_price);
+                                            cardPrice.value = parseInt(price).toString();
+                                        }
+
+                                        // Hide the selected option in the next select dropdown
+                                        selectedOption.style.display = "none";
+
+                                        // Disable the selected option to prevent selection
+                                        selectedOption.disabled = true;
+                                    }
+
+                                    var cardCount = 0;
+                                    var cardValues = {}; // Object to store card values
+
+                                    function increment(inputId) {
+                                        var input = document.getElementById(inputId);
+                                        var value = parseInt(input.value);
+                                        input.value = value + 1;
+                                        cardValues[inputId] = value + 1; // Update card value in the object
+                                        calculateTotalPrice(inputId.slice(4)); // Calculate total price when incremented
+                                    }
+
+                                    function decrement(inputId) {
+                                        var input = document.getElementById(inputId);
+                                        var value = parseInt(input.value);
+                                        if (value > 0) {
+                                            input.value = value - 1;
+                                            cardValues[inputId] = value - 1; // Update card value in the object
+                                            calculateTotalPrice(inputId.slice(4)); // Calculate total price when decremented
+                                        }
+                                    }
+
+                                    function deleteCard(cardId) {
+                                        var cardContainer = document.getElementById("cardContainer");
+                                        var cardSection = document.getElementById("cardSection");
+
+                                        if (cardId in cardValues) {
+                                            delete cardValues[cardId]; // Remove card value from the object
+                                        }
+
+                                        var cardElement = document.getElementById(cardId);
+                                        if (cardElement) {
+                                            cardElement.closest("tr").remove(); // Remove the card row from the DOM
+                                        }
+
+                                        cardCount--; // Decrease the card count
+
+                                        if (cardCount === 0) {
+                                            cardContainer.style.display = "none"; // Hide the card section if there are no cards
+                                        }
                                     }
                                 </script>
+                                <br>
+                                <div class="mb-3">
+                                    <div id="cardContainer" style="display: none;">
+                                        <table class="table" id="cardSection"></table>
+                                    </div>
+                                    <button type="button" class="btn btn-primary" onclick="showNextCard()">เพิ่มอะไหล่</button>
+                                    <input type="hidden" name="cardCount" id="cardCountInput" value="0">
+                                </div>
+
+                                <?php
+                                $sql_p = "SELECT * FROM parts WHERE del_flg = '0'";
+                                $result_p = mysqli_query($conn, $sql_p);
+                                $optionsHTML = "";
+                                while ($row_p = mysqli_fetch_array($result_p)) {
+                                    $optionsHTML .= '<option value="' . $row_p['p_id'] . '" data-pic="../' . $row_p['p_pic'] . '" data-price="' . $row_p['p_price'] . '" data-name="' . $row_p['p_name'] . '">' . $row_p['p_name'] . '</option>';
+                                }
+                                ?>
+
+                                <script>
+                                    var partsOptions = '<?php echo $optionsHTML; ?>';
+                                    var partsData = <?php echo json_encode($partsData); ?>;
+
+                                    function showNextCard() {
+                                        cardCount++;
+                                        var cardContainer = document.getElementById("cardContainer");
+                                        var cardSection = document.getElementById("cardSection");
+                                        cardSection.innerHTML = ""; // Clear existing cards
+
+                                        for (var i = 1; i <= cardCount; i++) {
+                                            var cardId = "card" + i; // Unique ID for each card
+                                            cardValues[cardId] = cardValues[cardId] || 0; // Initialize card value to 0 if not set
+
+                                            var tableRow = document.createElement("tr");
+                                            tableRow.innerHTML = `
+                                                                <td><img id="cardImg${i}" alt="Card image cap" style="max-width: 150px;"></td>
+                                                                <td id="cardTitle${i}"></td>
+                                                                <td>
+                                                                    <select name="p_id${i}" class="custom-select" id="inputGroupSelect${i}" onchange="showSelectedOption(${i})">
+                                                                        <option selected>Choose...</option>
+                                                                        ${partsOptions}
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="input-group">
+                                                                        <div class="col-6 px-0">
+                                                                            <input type="number" name="value_p${i}" id="${cardId}" value="1" class="form-control" onchange="calculateTotalPrice(${i})">
+                                                                        </div>
+                                                                        <div class="col-6 px-0">
+                                                                            <div class="input-group-prepend">
+                                                                                <button type="button" class="btn btn-primary" onclick="increment('${cardId}')">+</button>
+                                                                                <button type="button" class="btn btn-danger" onclick="decrement('${cardId}')">-</button>
+                                                                                <button type="button" class="btn btn-secondary" onclick="deleteCard('${cardId}')">Delete</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            `;
+
+                                            cardSection.appendChild(tableRow); // Add new card row
+                                        }
+
+                                        cardContainer.style.display = "block"; // Show the card section
+
+                                        // Update the hidden input field value with the cardCount
+                                        document.getElementById("cardCountInput").value = cardCount;
+                                    }
+
+                                    function showSelectedOption(cardIndex) {
+                                        var selectElement = document.getElementById(`inputGroupSelect${cardIndex}`);
+                                        var selectedOption = selectElement.options[selectElement.selectedIndex];
+                                        var cardImg = document.getElementById(`cardImg${cardIndex}`);
+                                        var cardTitle = document.getElementById(`cardTitle${cardIndex}`);
+
+                                        // Retrieve the data attributes from the selected option
+                                        var pic = selectedOption.getAttribute("data-pic");
+                                        var name = selectedOption.getAttribute("data-name");
+                                        var p_price = selectedOption.getAttribute("data-price");
+                                        var partId = selectedOption.value;
+
+                                        // Update the card image and title with the selected option's data
+                                        cardImg.src = pic;
+                                        cardTitle.textContent = name;
+                                        // Hide the selected option in the next select dropdown
+                                        selectedOption.style.display = "none";
+
+                                        // Disable the selected option to prevent selection
+                                        selectedOption.disabled = true;
+                                    }
+                                    var cardCount = 0;
+                                    var cardValues = {}; // Object to store card values
+
+                                    function increment(inputId) {
+                                        var input = document.getElementById(inputId);
+                                        var value = parseInt(input.value);
+                                        input.value = value + 1;
+                                        cardValues[inputId] = value + 1; // Update card value in the object
+                                        calculateTotalPrice(inputId.slice(4)); // Calculate total price when incremented
+                                    }
+
+                                    function decrement(inputId) {
+                                        var input = document.getElementById(inputId);
+                                        var value = parseInt(input.value);
+                                        if (value > 0) {
+                                            input.value = value - 1;
+                                            cardValues[inputId] = value - 1; // Update card value in the object
+                                            calculateTotalPrice(inputId.slice(4)); // Calculate total price when decremented
+                                        }
+                                    }
+
+                                    function deleteCard(cardId) {
+                                        var cardContainer = document.getElementById("cardContainer");
+                                        var cardSection = document.getElementById("cardSection");
+
+                                        if (cardId in cardValues) {
+                                            delete cardValues[cardId]; // Remove card value from the object
+                                        }
+
+                                        var cardElement = document.getElementById(cardId);
+                                        if (cardElement) {
+                                            cardElement.closest("tr").remove(); // Remove the card row from the DOM
+                                        }
+
+                                        cardCount--; // Decrease the card count
+
+                                        if (cardCount === 0) {
+                                            cardContainer.style.display = "none"; // Hide the card section if there are no cards
+                                        }
+                                    }
+                                </script>
+                                <hr>
                             </div>
+
                         </div>
                     </div>
                 </form>
@@ -212,7 +432,6 @@ if (!isset($_SESSION['role_id'])) {
 
         </div>
         <!-- End of Main Content -->
-
 
     </div>
     <!-- End of Content Wrapper -->

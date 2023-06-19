@@ -120,7 +120,7 @@ if (!isset($_SESSION["r_id_1"])) {
     $_SESSION["number_model_1"] = $_POST['number_model'];
     $_SESSION["tel_1"] = $_POST['tel'];
     $_SESSION["description_1"] = $_POST['description'];
-    $_SESSION["company_1"] = $_POST['company'];
+    $_SESSION["company_1"] = $_SESSION["company"];
 
     $_SESSION["image1_1"] = $_POST['image1'];
     $_SESSION["image2_1"] = $_POST['image2'];
