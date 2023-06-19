@@ -136,7 +136,7 @@ if (!isset($_SESSION['role_id'])) {
 
                 <h1 class="pt-5 text-center">บันทึกคำสั่งซื้อ</h1>
                 <center>
-                    <p>บันทึกการซ่อมด้วยตัวเอง สินค้าที่เสียหายจะต้องซ่อมเสร็จสิ้นแล้วเท่านั้น</p>
+                    <p>บันทึกการซ่อมด้วยตัวเอง สินค้าที่ซื้อใหม่จากทางร้าน</p>
                 </center>
                 <br>
                 <form id="self_newserialnumber" action="action/add_self_newequipment.php" method="POST" enctype="multipart/form-data">
@@ -213,7 +213,7 @@ if (!isset($_SESSION['role_id'])) {
                                     </div>
                                     <div class="col-2">
                                         <div style="padding-top: 2rem;">
-                                            <button type="button" class="btn btn-primary" onclick="generateSerialNumber()">สุ่มตัวเลข</button>
+                                            <button type="button" class="btn btn-primary" onclick="generateSerialNumber()">สุ่ม Serial Number</button>
                                         </div>
                                     </div>
                                     <script>
