@@ -78,12 +78,12 @@ if (!isset($_SESSION['role_id'])) {
                                     <thead>
                                         <tr>
                                             <th>ลำดับ</th>
+                                            <th>วันที่ออกเข้าสู่ระบบ</th>
+                                            <th>วันที่ออกจากระบบ</th>
                                             <th>รหัสพนักงาน</th>
                                             <th>Email</th>
                                             <th>ชื่อ - สกุล</th>
-                                            <th>วันที่ออกเข้าสู่ระบบ</th>
-                                            <th>วันที่ออกจากระบบ</th>
-                                            <th>ลบ</th>
+                                            <!-- <th>ลบ</th> -->
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -100,6 +100,25 @@ if (!isset($_SESSION['role_id'])) {
                                                         echo "-";
                                                     } else {
                                                         echo $i;
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['date_in'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        // echo $row['date_in'];
+                                                        echo $formattedDate = date("Y-m-d H:i:s", strtotime($row['date_in']));
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if ($row['date_out'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        // echo $row['date_out'];
+                                                        echo $formattedDate = date("Y-m-d H:i:s", strtotime($row['date_out']));
                                                     }
                                                     ?>
                                                 </td>
@@ -129,39 +148,18 @@ if (!isset($_SESSION['role_id'])) {
                                                     if ($row['e_id'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $rows['e_fname'] . ' '.$rows['e_lname'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                               
-                                                <td><?php
-                                                    if ($row['date_in'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        // echo $row['date_in'];
-                                                        echo $formattedDate = date("Y-m-d H:i:s", strtotime($row['date_in']));
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    if ($row['date_out'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        // echo $row['date_out'];
-                                                        echo $formattedDate = date("Y-m-d H:i:s", strtotime($row['date_out']));
+                                                        echo $rows['e_fname'] . ' ' . $rows['e_lname'];
                                                     }
                                                     ?>
                                                 </td>
 
-                                                <td>
+
+
+                                                <!-- <td>
                                                     <center>
                                                         <a href="action/del_employee.php?id=<?= $row['e_id'] ?>" class="btn btn-danger" onclick="return confirmDelete(event);">ลบ</a>&nbsp; &nbsp;
                                                     </center>
-                                                    <!-- Include SweetAlert library -->
                                                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-                                                    <!-- JavaScript function for confirmation -->
                                                     <script>
                                                         function confirmDelete(event) {
                                                             event.preventDefault(); // Prevent the default action of the link
@@ -182,8 +180,7 @@ if (!isset($_SESSION['role_id'])) {
                                                             });
                                                         }
                                                     </script>
-                                                    <!-- <a class="btn btn-warning" href="edit_employee.php?id=<?= $row['e_id'] ?>">แก้ไข</a> -->
-                                                </td>
+                                                </td> -->
                                             </tr>
                                         <?php } ?>
                                     </tbody>

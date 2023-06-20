@@ -78,13 +78,13 @@ if (!isset($_SESSION['role_id'])) {
                                     <thead>
                                         <tr>
                                             <th>ลำดับ</th>
+                                            <th>วันที่ทำรายการ</th>
                                             <th>หมายเลขอะไหล่</th>
                                             <th>Brand</th>
                                             <th>Model</th>
                                             <th>จำนวนที่ทำรายการ</th>
                                             <th>ประเภทที่ทำรายการ</th>
-                                            <th>วันที่ทำรายการ</th>
-                                            <th>ลบ</th>
+                                            <!-- <th>ลบ</th> -->
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -101,6 +101,15 @@ if (!isset($_SESSION['role_id'])) {
                                                         echo "-";
                                                     } else {
                                                         echo $i;
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if ($row['pl_date'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $formattedDate = date("Y-m-d H:i:s", strtotime($row['pl_date']));
                                                     }
                                                     ?>
                                                 </td>
@@ -152,24 +161,13 @@ if (!isset($_SESSION['role_id'])) {
                                                     }
                                                     ?>
                                                 </td>
-                                                <td>
-                                                    <?php
-                                                    if ($row['pl_date'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $formattedDate = date("Y-m-d H:i:s", strtotime($row['pl_date']));
-                                                    }
-                                                    ?>
-                                                </td>
 
-                                                <td>
+
+                                                <!-- <td>
                                                     <center>
                                                         <a href="action/del_employee.php?id=<?= $row['e_id'] ?>" class="btn btn-danger" onclick="return confirmDelete(event);">ลบ</a>&nbsp; &nbsp;
                                                     </center>
-                                                    <!-- Include SweetAlert library -->
                                                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-                                                    <!-- JavaScript function for confirmation -->
                                                     <script>
                                                         function confirmDelete(event) {
                                                             event.preventDefault(); // Prevent the default action of the link
@@ -190,8 +188,7 @@ if (!isset($_SESSION['role_id'])) {
                                                             });
                                                         }
                                                     </script>
-                                                    <!-- <a class="btn btn-warning" href="edit_employee.php?id=<?= $row['e_id'] ?>">แก้ไข</a> -->
-                                                </td>
+                                                </td> -->
                                             </tr>
                                         <?php } ?>
                                     </tbody>
