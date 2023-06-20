@@ -57,6 +57,7 @@
                 <h6 class="collapse-header">รายละเอียด :</h6>
                 <a class="collapse-item" href="employee_listview.php">ข้อมูลพนักงาน</a>
                 <a class="collapse-item" href="add_employee.php">เพิ่มข้อมูล</a>
+                <a class="collapse-item" href="log_employee.php">ข้อมูลการ เข้า-ออก ระบบ</a>
                 <hr>
                 <h6 class="collapse-header">แผนกพนักงาน :</h6>
                 <a class="collapse-item" href="add_em_type.php">แผนก</a>
@@ -74,6 +75,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">รายละเอียด :</h6>
                 <a class="collapse-item" href="listview_member.php">ข้อมูลลูกค้า</a>
+                <a class="collapse-item" href="log_member.php">ข้อมูลการ เข้า-ออก ระบบ</a>
                 <!-- <a class="collapse-item" href="repair.html">การส่งซ่อม</a> -->
             </div>
         </div>
@@ -90,6 +92,7 @@
                 <h6 class="collapse-header">รายละเอียด :</h6>
                 <a class="collapse-item" href="listview_parts.php">ข้อมูลอะไหล่</a>
                 <a class="collapse-item" href="add_parts.php">เพิ่มข้อมูลอะไหล่</a>
+                <a class="collapse-item" href="log_part.php">ประวัติการ เพิ่ม-ลด อะไหล่</a>
                 <hr>
                 <h6 class="collapse-header">ประเภทอะไหล่ :</h6>
                 <a class="collapse-item" href="add_parts_type.php">ประเภทอะไหล่</a>
