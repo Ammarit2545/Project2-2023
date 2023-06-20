@@ -410,6 +410,7 @@ if (!isset($_SESSION['role_id'])) {
                                     <thead>
                                         <tr>
                                             <th>ลำดับ</th>
+                                            <th>รหัสอะไหล่</th>
                                             <th>รูปภาพ</th>
                                             <th>Brand</th>
                                             <th>Model</th>
@@ -426,13 +427,22 @@ if (!isset($_SESSION['role_id'])) {
                                         $i = 1;
                                         while (isset($_SESSION['part_p_id_' . $i])) {
 
+                                            $p_id = $_SESSION['part_p_id_' . $i];
 
-                                            $sql = "SELECT * FROM parts LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id WHERE parts.del_flg = '0' AND parts.p_id = '$i' LIMIT 1";
+                                            $sql = "SELECT * FROM parts LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id WHERE parts.del_flg = '0' AND parts.p_id = ' $p_id' LIMIT 1";
                                             $result = mysqli_query($conn, $sql);
 
                                             $row = mysqli_fetch_array($result);
                                         ?>
                                             <tr>
+                                                <td><?php
+                                                    if ($i == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $i;
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <td><?php
                                                     if ($row['p_id'] == NULL) {
                                                         echo "-";
@@ -531,6 +541,34 @@ if (!isset($_SESSION['role_id'])) {
                                                     </script>
 
                                                     <center>
+                                                        <!-- <button class="btn btn-danger" onclick="delete_stock_conf()">ลบ</button>
+
+                                                        <script>
+                                                            function delete_stock_conf() {
+                                                                Swal.fire({
+                                                                    title: "คุณต้องการลบรายการนี้หรือไม่",
+                                                                    text: "โปรดตรวจสอบข้อมูล",
+                                                                    icon: "warning",
+                                                                    showCancelButton: true,
+                                                                    confirmButtonColor: "#3085d6",
+                                                                    cancelButtonColor: "#d33",
+                                                                    confirmButtonText: "ยืนยัน",
+                                                                    cancelButtonText: "ยกเลิก"
+                                                                }).then((result) => {
+                                                                    if (result.isConfirmed) {
+                                                                        // User confirmed, proceed with the action
+                                                                        window.location.href = 'action/delete_part_stock.php?id=<?= $_SESSION['part_p_id_' . $i] ?>';
+                                                                    } else {
+                                                                        // User canceled, do nothing
+                                                                        return false;
+                                                                    }
+                                                                });
+                                                            }
+                                                        </script> -->
+                                                        <?= $i ?>
+
+                                                        <button class="btn btn-danger" href="action/delete_part_stock.php?id=<?= $i ?>" onclick="deleteStock('action/delete_part_stock.php?id=<?= $i ?>')">ลบ</button>
+
                                                         <a class="btn btn-warning" href="edit_parts.php?id=<?= $row['p_id'] ?>">แก้ไข</a>
                                                     </center>
                                                 </td>
@@ -539,56 +577,17 @@ if (!isset($_SESSION['role_id'])) {
                                             $i++;
                                         }
                                         ?>
-
-
-
-
-                                        <!-- <tr>
-                                            <td>Tiger Nixon</td>
-                                            <td>Yamaha</td>
-                                            <td>cc61</td>
-                                            <td>หูฟังไร้สาย เชื่อมต่อผ่าน bluetooth</td>
-                                            <td>$320,800</td>
-                                            <th>2</th>
-                                            <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Garrett Winters</td>
-                                            <td>KKM</td>
-                                            <td>aas63</td>
-                                            <td>ลำโพงใหญ่ โคตรดัง</td>
-                                            <td>$170,750</td>
-                                            <th>2</th>
-                                            <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>Senior Marketing Designer</td>
-                                            <td>4545</td>
-                                            <td>43</td>
-                                            <td>กีต้าร์ไร้สาย หาสายเอาเอง</td>
-                                            <td>$313,500</td>
-                                            <th>2</th>
-                                            <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Tatyana Fitzpatrick</td>
-                                            <td>Regional Director</td>
-                                            <td>19</td>
-                                            <td>กลองชุด</td>
-                                            <td>$385,750</td>
-                                            <th>2</th>
-                                            <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td>
-                                        </tr> -->
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                     <center>
-                        <button href="action/delete_parts.php" class="btn btn-danger" onclick="return showConfirmation('ล้างทั้งหมด', 'คุณต้องการล้างทั้งหมดหรือไม่')">ทำการล้างทั้งหมด</button>
+                        <p style="color : red">*** โปรดตรวจสอบข้อมูลทั้งหมดให้ครบถ้วนก่อนทำการเพิ่มอะไหล่ ***</p>
 
-                        <button href="action/add_stock_part_db.php" class="btn btn-success" onclick="return showConfirmation('เพิ่มจำนวนอะไหล่ไปสู่คลัง', 'คุณต้องการเพิ่มจำนวนอะไหล่ไปสู่คลังหรือไม่')">เพิ่มจำนวนอะไหล่ไปสู่คลัง</button>
+                        <button class="btn btn-danger" onclick="deleteStock('action/delete_part_stock.php?delete=1')">ทำการล้างทั้งหมด</button>
+
+                        <button href="action/add_stock_part_db.php" class="btn btn-success" onclick="return showConfirmation('action/add_stock_part_db.php')">เพิ่มจำนวนอะไหล่ไปสู่คลัง</button>
 
                         <!-- Example CDNs, use appropriate versions and sources -->
                         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -615,9 +614,26 @@ if (!isset($_SESSION['role_id'])) {
                                 });
                             }
 
-
-
-                            return false; // Prevent default link behavior
+                            function deleteStock(deleteUrl) {
+                                Swal.fire({
+                                    title: "คุณต้องการลบรายการนี้หรือไม่",
+                                    text: "โปรดตรวจสอบข้อมูล",
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "ยืนยัน",
+                                    cancelButtonText: "ยกเลิก"
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // User confirmed, proceed with the action
+                                        window.location.href = deleteUrl;
+                                    } else {
+                                        // User canceled, do nothing
+                                        return false;
+                                    }
+                                });
+                            }
                         </script>
 
                     </center>
