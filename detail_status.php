@@ -298,9 +298,6 @@ $check_order = 0;
                     <h4 class="pb-5">เลขที่ส่งซ่อมที่ : <?= $id_get_r ?></h4>
                 </div>
                 <div class="col-6" style="background-color: #F1F1F1;">
-                    <!-- <h4 class="pt-5 text-center"><button class="btn btn-primary">รายละเอียดการซ่อม : </button></h4>
-                    <p class="pt-2 text-center"><?= $row_c['get_r_detail'] ?>
-                    <p> -->
                 </div>
                 <br>
             </div>
@@ -403,12 +400,7 @@ $check_order = 0;
                                 $result_check_p = mysqli_query($conn, $sql_check_p);
                                 $row_check_part = mysqli_fetch_array($result_check_p);
 
-                                // if ($row['rs_id'] > 0) {
-                                //     $part_check = $part_check + $row['rs_id'];
-                                // } 
-
                                 if ($row_p['rs_id'] == $row1['rs_id'] && $row_check_part['rd_id'] != NULL) {
-                                    // if ($row_p['rs_id'] == $row1['rs_id'] && $row_check_part['rd_id'] != NULL && $row1['status_id'] != '11') {
                                     if ($row1['status_id'] != 8) {
                                         if ($row1['status_id'] == 9 || $row1['status_id'] == 10) {
                                 ?>
@@ -420,7 +412,6 @@ $check_order = 0;
                                         <?php }
                                     } else {
                                         ?>
-                                        <!-- <a class="btn btn-primary" style="margin-left: 20px" href="#" onclick="openModalPay('pay')">ชำระค่าบริการ</a> -->
                                 <?php
                                     }
                                 }
@@ -516,6 +507,14 @@ $check_order = 0;
                                 <hr>
                                 <h5 class="btn btn-outline-primary">รายละเอียด</h5>
                                 <p class="mt-2" style="margin-left: 30px;"><?= $row1['rs_detail'] ?></p>
+                                <hr>
+                                <h5 class="btn btn-outline-primary">เลือกวิธีการจัดส่งอุปกรณ์มาที่ร้าน</h5>
+                                <!-- <p class="mt-2" style="margin-left: 30px;"><?= $row1['rs_detail'] ?></p> -->
+                                <center>
+                                    <button id="bounce-item" class="btn btn-primary">ส่งที่หน้าร้าน</button>
+                                    <button id="bounce-item" class="btn btn-warning">จัดส่งผ่านไปรษณีย์</button>
+                                </center>
+                                
 
                                 <?php if ($row1['status_id'] == 4 || $row1['status_id'] == 17 && $row1['rs_conf'] == NULL || $row1['rs_conf'] == 1) {
                                     $total =  $row1['get_wages'] + $row1['get_add_price'];
@@ -529,10 +528,7 @@ $check_order = 0;
                                 <?php }  ?>
                                 <?php if ($row1['get_add_price'] != NULL) {  ?>
                                     <p class="mt-2" style="margin-left: 30px;"> - ค่าจัดส่ง <?= number_format($row1['get_add_price']) ?> บาท</span></p>
-                                <?php }  ?>
-
-
-                                <?php
+                                <?php }
                                         $total_part = 0;
                                         $sql_c = "SELECT
                                      repair_detail.p_id,
@@ -581,8 +577,6 @@ $check_order = 0;
                             }
 
                             ?>
-
-                            <!-- <button class="btn btn_custom" type="button">ยืนยัน</button> -->
                             <div class="col text-left" style="background-color: #F1F1F1;">
                                 <?php
                                 $sql_pic = "SELECT * FROM repair_pic WHERE rs_id = $rs_id AND del_flg = 0 ";
@@ -597,8 +591,6 @@ $check_order = 0;
                                 <?php
                                 }
                                 ?>
-                                <!-- <h3 class="pt-5"><button class="btn btn-primary">รูปภาพ : </button></h3>
-                                     -->
                                 <?php
                                 $status_id = $row1['status_id'];
 
@@ -612,7 +604,6 @@ $check_order = 0;
 
                                 while ($row_pic = mysqli_fetch_array($result_pic)) {
                                 ?>
-                                    <!-- <img src="<?= $row_pic['rp_pic'] ?>" width="100px"> -->
                                     <?php
                                     $rp_pic = $row_pic['rp_pic'];
                                     $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);

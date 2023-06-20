@@ -32,7 +32,7 @@ if (!isset($_SESSION['role_id'])) {
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    
+
 
 </head>
 <style>
@@ -448,7 +448,43 @@ if (!isset($_SESSION['role_id'])) {
                                     <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะ "ดำเนินการ" ไปที่สมาชิก ***</p>
                                 </center>
                                 <br>
-                            <?php } else if ($row['status_id'] == 3) {
+                            <?php } else if ($row['rs_conf'] != NULL && $row['rs_conf'] == 0 && $row['status_id'] == 17) {
+                            ?>
+                                <div class="alert alert-danger" role="alert">
+                                    <center>
+                                        <h4>ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
+                                    </center>
+                                </div>
+                                <center>
+                                    <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะไปที่สมาชิก ***</p>
+                                </center>ะเงินแล้ว
+                                <br>
+                            <?php
+                            } else if ($row['rs_conf'] != NULL && $row['rs_conf'] == 0 && $row['status_id'] == 4) {
+                                ?>
+                                    <div class="alert alert-danger" role="alert">
+                                        <center>
+                                            <h4>ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
+                                        </center>
+                                    </div>
+                                    <center>
+                                        <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะไปที่สมาชิก ***</p>
+                                    </center>ะเงินแล้ว
+                                    <br>
+                                <?php
+                                }else if ($row_s['rs_cancel_detail'] != NULL) {
+                            ?>
+                                <div class="alert alert-danger" role="alert">
+                                    <center>
+                                        <h4>ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
+                                    </center>
+                                </div>
+                                <center>
+                                    <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะไปที่สมาชิก ***</p>
+                                </center>ะเงินแล้ว
+                                <br>
+                            <?php
+                            } else if ($row['status_id'] == 3) {
                             ?>
                                 <div class="alert alert-success" role="alert">
                                     <center>
@@ -494,18 +530,6 @@ if (!isset($_SESSION['role_id'])) {
                                 <center>
                                     <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะไปที่สมาชิก ***</p>
                                 </center>
-                                <br>
-                            <?php
-                            } else if ($row['rs_conf'] != NULL && $row['rs_conf'] == 0 && $row['status_id'] == 4) {
-                            ?>
-                                <div class="alert alert-danger" role="alert">
-                                    <center>
-                                        <h4>ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
-                                    </center>
-                                </div>
-                                <center>
-                                    <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะไปที่สมาชิก ***</p>
-                                </center>ะเงินแล้ว
                                 <br>
                             <?php
                             } else if ($row['rs_conf'] == 1 && $row['status_id'] == 24) {
@@ -1051,7 +1075,7 @@ if (!isset($_SESSION['role_id'])) {
                                                     <?= $row_get_c['r_brand'] . " " . $row_get_c['r_model'] . " - Model : " . $row_get_c['r_number_model'] . " - Serial Number : " . $row_get_c['r_serial_number']  ?>
                                                 </div>
                                                 <div class="col-4">
-                                                    <label for="basic-url" class="form-label">รหัสสมาชิก</label>
+                                                    <!-- <label for="basic-url" class="form-label">รหัสสมาชิก</label>
                                                     <input type="text" name="m_id" class="form-control" id="myInput" onclick="openModal()" placeholder="ค้นหาข้อมูลสมาชิก">
                                                     <div id="myModal" class="modal">
                                                         <div class="modal-overlay" id="myModal">
@@ -1064,7 +1088,7 @@ if (!isset($_SESSION['role_id'])) {
                                                         </div>
 
 
-                                                    </div>
+                                                    </div> -->
                                                     <?php
                                                     $sql1 = "SELECT * FROM member WHERE del_flg = 0";
                                                     $result1 = mysqli_query($conn, $sql1);
@@ -1465,11 +1489,23 @@ if (!isset($_SESSION['role_id'])) {
                                             while ($row_p = mysqli_fetch_array($result_p)) {
                                                 $optionsHTML .= '<option value="' . $row_p['p_id'] . '" data-pic="../' . $row_p['p_pic'] . '" data-price="' . $row_p['p_price'] . '" data-name="' . $row_p['p_name'] . '">' . $row_p['p_name'] . '</option>';
                                             }
+
+                                            // $sql_d = "SELECT * FROM get_detail 
+                                            // LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                            // WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0'";
+                                            // $result_d = mysqli_query($conn, $sql_d);
+                                            // $optionsHTMLDetail = "";
+                                            // while ($row_d = mysqli_fetch_array($result_d)) {
+                                            //     $optionsHTMLDetail .= '<option value="' . $row_get_c['get_d_id'] . '"r_brand="../' . $row_get_c['r_brand'] . '" r_model"' . $row_get_c['r_model'] . '"r_number_model="' . $row_get_c['r_number_model'] . '">' .  $row_get_c['r_serial_number'] . '</option>';
+                                            // }
                                             ?>
 
                                             <script>
                                                 var partsOptions = '<?php echo $optionsHTML; ?>';
                                                 var partsData = <?php echo json_encode($partsData); ?>;
+
+                                                // var partsOptionsDetail = '<?php echo $optionsHTMLDetail; ?>';
+
 
                                                 function showNextCard() {
                                                     cardCount++;
@@ -1485,6 +1521,24 @@ if (!isset($_SESSION['role_id'])) {
                                                         tableRow.innerHTML = `
                                                                 <td><img id="cardImg${i}" alt="Card image cap" style="max-width: 150px;"></td>
                                                                 <td id="cardTitle${i}"></td>
+                                                                <td>
+                                                                    <select name="get_d_id_${i}" class="custom-select" id="inputGroupSelectGet${i}" onchange="showSelectedOptionGet_D(${i})">
+                                                                        <option selected>กรุณาเลือกรายการซ่อมที่ต้องการ...</option>
+                                                                        <?php
+                                                                        $count_conf = 0;
+                                                                        $sql_get_c = "SELECT * FROM get_detail 
+                                                                                    LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                                                    WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
+                                                                        $result_get_c = mysqli_query($conn, $sql_get_c);
+                                                                        while ($row_get_c = mysqli_fetch_array($result_get_c)) {
+                                                                            $count_conf++;
+                                                                        ?>
+                                                                             <option value="<?= $row_get_c['get_d_id'] ?>"> <?= $row_get_c['r_brand'] . " " . $row_get_c['r_model'] . " - Model : " . $row_get_c['r_number_model'] . " - Serial Number : " . $row_get_c['r_serial_number']  ?></option>
+                                                                            <?php
+                                                                        }
+                                                                            ?>
+                                                                    </select>
+                                                                </td>
                                                                 <td>
                                                                     <select name="p_id${i}" class="custom-select" id="inputGroupSelect${i}" onchange="showSelectedOption(${i})">
                                                                         <option selected>Choose...</option>
@@ -1562,6 +1616,44 @@ if (!isset($_SESSION['role_id'])) {
 
                                                     // Calculate the total price when the option is selected
                                                     calculateTotalPrice(cardIndex);
+                                                }
+
+                                                function showSelectedOptionGet_D(cardIndex) {
+                                                    var selectElement = document.getElementById(`inputGroupSelectGet${cardIndex}`);
+                                                    var selectedOption = selectElement.options[selectElement.selectedIndex];
+                                                    // var cardImg = document.getElementById(`cardImg${cardIndex}`);
+                                                    // var cardTitle = document.getElementById(`cardTitle${cardIndex}`);
+                                                    // var cardPrice = document.getElementById(`cardPrice${cardIndex}`);
+
+                                                    // Retrieve the data attributes from the selected option
+                                                    var pic = selectedOption.getAttribute("data-pic");
+                                                    var name = selectedOption.getAttribute("data-name");
+                                                    var p_price = selectedOption.getAttribute("data-price");
+                                                    var partId = selectedOption.value;
+
+                                                    // Update the card image and title with the selected option's data
+                                                    cardImg.src = pic;
+                                                    cardTitle.textContent = name;
+
+                                                    // Assign the price value directly as a string
+                                                    cardPrice.value = p_price;
+
+                                                    // Find the selected part in the partsData array
+                                                    var selectedPart = partsData.find(function(part) {
+                                                        return part.p_id === partId;
+                                                    });
+
+                                                    if (selectedPart) {
+                                                        // Update the input field value with the price from the database
+                                                        var price = parseFloat(selectedPart.p_price);
+                                                        cardPrice.value = parseInt(price).toString();
+                                                    }
+
+                                                    // Hide the selected option in the next select dropdown
+                                                    selectedOption.style.display = "none";
+
+                                                    // Disable the selected option to prevent selection
+                                                    selectedOption.disabled = true;
                                                 }
 
 

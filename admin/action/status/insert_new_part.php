@@ -106,7 +106,8 @@ if ($row[0] > 0) {
 
     if ($rs_id > 0) {
         $sql_m = "SELECT repair.m_id FROM repair 
-                  LEFT JOIN get_repair ON get_repair.r_id = repair.r_id
+                LEFT JOIN get_detail ON get_detail.r_id = repair.r_id
+                  LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
                   WHERE get_repair.get_r_id = '$get_r_id' AND get_repair.del_flg = '0'";
         $result_m = mysqli_query($conn, $sql_m);
         $row_m = mysqli_fetch_array($result_m);
@@ -166,6 +167,7 @@ if ($row[0] > 0) {
         }
         if ($result_e) {
             // Process parts data
+            $i = 1;
             foreach ($parts as $part) {
                 $partId = $part['partId'];
                 $quantity = $part['quantity'];
@@ -179,8 +181,10 @@ if ($row[0] > 0) {
                     $p_stock = $row_s['p_stock'] - $quantity;
                     $total_s = $row_s['p_price'] * $quantity;
 
-                    $sql3 = "INSERT INTO repair_detail (`p_id`, `rd_value_parts`, `rd_parts_price`, `rs_id`, `rd_date_in`)
-                VALUES ('$partId', '$quantity', '$total_s', '$rs_id', NOW())";
+                    $get_d_id = $_POST['get_d_id_' . $i];
+
+                    $sql3 = "INSERT INTO repair_detail (`p_id`, `rd_value_parts`, `rd_parts_price`, `rs_id`, `rd_date_in`, `get_d_id`)
+                            VALUES ('$partId', '$quantity', '$total_s', '$rs_id', NOW(), '$get_d_id')";
                     $result3 = mysqli_query($conn, $sql3);
 
                     if ($result3) {
@@ -196,6 +200,7 @@ if ($row[0] > 0) {
                         // Handle the case when the insert query into repair_detail table fails
                         // ...
                     }
+                    $i++;
                 } else {
                     // Handle the case when the select query for parts data fails or no rows are found
                     // ...
