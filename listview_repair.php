@@ -146,7 +146,7 @@ $row = mysqli_fetch_array($result);
 
                                     <hr>
                                     <div class="d-flex justify-content-end">
-                                        <a href="#" class="btn btn-outline-primary" style="margin-right: 10px;">แก้ไข</a>
+                                        <!-- <a href="#" class="btn btn-outline-primary" style="margin-right: 10px;">แก้ไข</a> -->
                                         <a href="#" class="btn btn-outline-danger ml-2" onclick="confirmDelete('<?= $_SESSION[$r_id] ?>')">ลบ</a>
                                     </div>
                                 </div>
