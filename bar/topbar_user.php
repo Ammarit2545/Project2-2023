@@ -138,3 +138,258 @@
   }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+<style>
+  body {
+    opacity: 0;
+    background-color: white;
+    transition: opacity 1s ease-in;
+  }
+
+  body.loaded {
+    opacity: 1;
+  }
+</style>
+
+<!-- Your page content here -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  // Fade in when the page loads
+  window.addEventListener("load", function() {
+    document.body.classList.add("loaded");
+  });
+
+  // Fade out when the page is being closed
+  window.addEventListener("beforeunload", function() {
+    document.body.style.transition = "opacity 0.25s ease-out";
+    document.body.style.opacity = "0";
+  });
+</script>
+<link rel="stylesheet" href="styles.css">
+
+<!-- 
+<style>
+  html {
+    box-sizing: border-box;
+  }
+
+  *,
+  *:before,
+  *:after {
+    box-sizing: inherit;
+    padding: 0;
+  }
+
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .buttons {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    z-index: -1;
+  }
+
+  .buttons button {
+    border: none;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .buttons button:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  .buttons #top {
+    position: absolute;
+    top: 0%;
+    left: 50%;
+  }
+
+  .buttons #bottom {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+  }
+
+  .buttons #left {
+    position: absolute;
+    top: 50%;
+    left: 0px;
+  }
+
+  .buttons #right {
+    position: absolute;
+    top: 50%;
+    right: 0;
+  }
+
+  .top-layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: -100%;
+    left: 0;
+    bottom: auto;
+    right: auto;
+    background: #6c567b;
+    transition: all 0.9s cubic-bezier(0.6, 0.05, 0.4, 1);
+  }
+
+  .top-layer.active {
+    top: 100%;
+  }
+
+  .top-layer--2 {
+    background: #393e46;
+    transition-delay: 0.6s;
+  }
+
+  .top-layer--3 {
+    background: #6c5b7b;
+    transition-delay: 0.4s;
+  }
+
+  .top-layer--4 {
+    background: #c06c84;
+    transition-delay: 0.2s;
+  }
+
+  .top-layer--5 {
+    background: #f67280;
+    transition-delay: 0.1s;
+  }
+
+  .bottom-layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 100%;
+    left: 0;
+    bottom: auto;
+    right: auto;
+    background: #48466d;
+    transition: all 0.7s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+
+  .bottom-layer.active {
+    top: -100%;
+  }
+
+  .bottom-layer--2 {
+    background: #ecf3a3;
+    transition-delay: 0.12s;
+  }
+
+  .bottom-layer--3 {
+    background: #95a792;
+    transition-delay: 0.4s;
+  }
+
+  .left-layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: auto;
+    left: -100%;
+    bottom: auto;
+    right: auto;
+    background: #4d606e;
+    transition: all 0.7s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+
+  .left-layer.active {
+    left: 100%;
+  }
+
+  .left-layer--2 {
+    background: #d3d4d8;
+    transition-delay: 0.3s;
+  }
+
+  .left-layer--3 {
+    background: #d3d4d8;
+    transition-delay: 0.12s;
+  }
+
+  .left-layer--4 {
+    background: #c06c84;
+    transition-delay: 0.08s;
+  }
+
+  .right-layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: auto;
+    left: 100%;
+    bottom: auto;
+    right: auto;
+    background: #7f4a88;
+    transition: all 0.9s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+
+  .right-layer.active {
+    left: -100%;
+  }
+
+  .right-layer--2 {
+    background: #c79ecf;
+    transition-delay: 0.3s;
+  }
+
+  .right-layer--3 {
+    background: #fe9191;
+    transition-delay: 0.2s;
+  }
+</style>
+
+
+
+
+<div class="container">
+  <div class="top-layer"></div>
+  <div class="top-layer top-layer--2"></div>
+  <div class="top-layer top-layer--3"></div>
+  <div class="top-layer top-layer--4"></div>
+  <div class="top-layer top-layer--5"></div>
+  <div class="bottom-layer"></div>
+  <div class="bottom-layer bottom-layer--2"></div>
+  <div class="bottom-layer bottom-layer--3"></div>
+  <div class="left-layer"></div>
+  <div class="left-layer left-layer--2"></div>
+  <div class="left-layer left-layer--3"></div>
+  <div class="left-layer left-layer--4"></div>
+  <div class="right-layer"></div>
+  <div class="right-layer right-layer--2"></div>
+  <div class="right-layer right-layer--3"></div>
+  <div class="buttons">
+    <button id="top"><img src="https://icongr.am/feather/arrow-down.svg" /></button>
+    <button id="bottom"><img src="https://icongr.am/feather/arrow-up.svg" /></button>
+    <button id="left"><img src="https://icongr.am/feather/arrow-right.svg" /></button>
+    <button id="right"><img src="https://icongr.am/feather/arrow-left.svg" /></button>
+  </div>
+</div>
+
+<script>
+  const buttons = document.getElementsByTagName("button");
+
+  for (const button of buttons) {
+    button.addEventListener('click', () => {
+      var id = button.getAttribute("id");
+
+      var layerClass = "." + id + "-layer";
+      var layers = document.querySelectorAll(layerClass);
+      for (const layer of layers) {
+        layer.classList.toggle("active");
+      }
+    });
+  }
+</script> -->

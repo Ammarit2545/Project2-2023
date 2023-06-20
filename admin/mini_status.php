@@ -253,8 +253,9 @@ $id_g = $_GET['id'];
 
     <!-- <div class="background"></div> -->
     <br><br>
-    <div class="px-5 pt-5 repair">
-        <div class="container">
+    <!-- <div class="px-5 pt-5 repair"> -->
+    <div class="repair">
+        <!-- <div class="container">
             <div class="row">
                 <div class="col-6 text-left" style="background-color: #F1F1F1;">
                     <h3 class="pt-5"><button class="btn btn-primary">ยี่ห้อ : <?= $row_c['r_brand'] ?> , รุ่น : <?= $row_c['r_model'] ?></button></h3>
@@ -270,11 +271,10 @@ $id_g = $_GET['id'];
             </div>
         </div>
         <div class="container">
-            <!-- <iframe src="pay_qr.php?id=<?= $id_get_r ?>" frameborder="0" width="100%" style="height: 1000px;"></iframe> -->
-        </div>
+        </div> -->
 
 
-        <div class="container my-5 p-4" style="background-color: #F1F1F1; border-radius : 1%;">
+        <div class="container my-5 p-1" style="background-color: #F1F1F1; border-radius : 1%;">
             <?php if ($row_2['status_id'] == 3) { ?>
                 <div class="alert alert-success" role="alert">
                     <i class="fa fa-check-square"></i> ดำเนินการซ่อมเสร็จสิ้น

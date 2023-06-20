@@ -298,9 +298,9 @@ $check_order = 0;
                     <h4 class="pb-5">เลขที่ส่งซ่อมที่ : <?= $id_get_r ?></h4>
                 </div>
                 <div class="col-6" style="background-color: #F1F1F1;">
-                    <h4 class="pt-5 text-center"><button class="btn btn-primary">รายละเอียดการซ่อม : </button></h4>
+                    <!-- <h4 class="pt-5 text-center"><button class="btn btn-primary">รายละเอียดการซ่อม : </button></h4>
                     <p class="pt-2 text-center"><?= $row_c['get_r_detail'] ?>
-                    <p>
+                    <p> -->
                 </div>
                 <br>
             </div>

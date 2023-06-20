@@ -68,6 +68,7 @@ if ($_SESSION["log_login"] == 0) {
 
   <link rel="icon" type="image/x-icon" href="img brand/anelogo.jpg">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  
 </head>
 
 <body>

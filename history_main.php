@@ -217,7 +217,7 @@ if (isset($_GET["status_id"])) {
         <?php
         } ?>
         <br>
-        ิ<br>
+        <br>
         <form action="action/add_repair_non_gua.php" method="POST">
             <div class="container">
                 <div class="grid">

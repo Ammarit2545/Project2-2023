@@ -60,3 +60,31 @@
 <div id="scrollToTop" onclick="scrollToTop()">
   &uarr;
 </div>
+<style>
+    body {
+      opacity: 0;
+      background-color: white;
+      transition: opacity 1s ease-in;
+    }
+
+    body.loaded {
+      opacity: 1;
+    }
+  </style>
+
+  <!-- Your page content here -->
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    // Fade in when the page loads
+    window.addEventListener("load", function() {
+      document.body.classList.add("loaded");
+    });
+
+    // Fade out when the page is being closed
+    window.addEventListener("beforeunload", function() {
+      document.body.style.transition = "opacity 0.25s ease-out";
+      document.body.style.opacity = "0";
+    });
+  </script>
+  <link rel="stylesheet" href="styles.css">

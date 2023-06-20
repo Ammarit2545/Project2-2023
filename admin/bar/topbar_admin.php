@@ -59,7 +59,7 @@
                 GROUP BY get_repair.get_r_id, get_detail.get_d_id, repair.r_id
                 ORDER BY get_repair.get_r_id DESC
                 LIMIT 3;";
-    
+
                 $result_nofi = mysqli_query($conn, $sql_nofi);
 
                 $sql_nofi_count = "SELECT COUNT(get_repair.get_r_id) FROM repair_status
@@ -68,7 +68,7 @@
                 $result_nofi_count = mysqli_query($conn, $sql_nofi_count);
                 $num_rows = mysqli_fetch_array($result_nofi_count);
                 ?>
-                <span class="badge badge-danger badge-counter"><?= $num_rows[0]-1 ?>+</span>
+                <span class="badge badge-danger badge-counter"><?= $num_rows[0] - 1 ?>+</span>
             </a>
             <!-- Dropdown - Alerts -->
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
@@ -77,7 +77,7 @@
                 </h6>
 
                 <?php
-                
+
 
                 while ($row_nofi = mysqli_fetch_array($result_nofi)) {
                     $dateString = date('d-m-Y', strtotime($row_nofi['get_r_date_in']));
@@ -185,26 +185,54 @@
 </div>
 
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="login.html">Logout</a>
             </div>
         </div>
     </div>
+</div>
+<style>
+    body {
+        opacity: 0;
+        background-color: white;
+        transition: opacity 1s ease-in;
+    }
+
+    body.loaded {
+        opacity: 1;
+    }
+</style>
+
+<!-- Your page content here -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Fade in when the page loads
+    window.addEventListener("load", function() {
+        document.body.classList.add("loaded");
+    });
+
+    // Fade out when the page is being closed
+    window.addEventListener("beforeunload", function() {
+        document.body.style.transition = "opacity 0.25s ease-out";
+        document.body.style.opacity = "0";
+    });
+</script>
+<link rel="stylesheet" href="styles.css">
