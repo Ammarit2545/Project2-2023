@@ -24,6 +24,7 @@ if (!isset($_SESSION['role_id'])) {
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
@@ -98,7 +99,7 @@ if (!isset($_SESSION['role_id'])) {
                                 <label for="staticEmail" class="col-sm-1 col-form-label">Brand</label>
                                 <div class="col-sm-4">
                                 <input type="text" name="p_brand" class="form-control" id="staticEmail" value="<?= $row['p_brand'] ?>" placeholder="กรุณากรอกยี่ห้ออะไหล่">
-                                <input type="text" name="p_id" class="form-control" id="staticEmail" value="<?= $row['p_id'] ?>" placeholder="กรุณากรอกยี่ห้ออะไหล่">
+                                <input type="text" name="p_id" class="form-control" id="staticEmail" value="<?= $row['p_id'] ?>" placeholder="กรุณากรอกยี่ห้ออะไหล่" hidden>
                                 </div>
                                 <label for="inputPassword" class="col-sm-1 col-form-label">Model</label>
                                 <div class="col-sm-4">
@@ -106,16 +107,19 @@ if (!isset($_SESSION['role_id'])) {
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label for="inputPassword" class="col-sm-1 col-form-label">ชื่อ</label>
+                                
                                 <div class="col-sm-2 mr-4">
+                                <label for="inputPassword" class="col-sm-1 col-form-label">ชื่อ</label>
                                     <input type="text" name="p_name" class="form-control" id="inputPassword" placeholder="กรุณาใส่ชื่ออะไหล่" value="<?= $row['p_name'] ?>" required>
                                 </div>
-                                <label for="inputPassword" class="col-sm-0 col-form-label">ราคา</label>
+                                
                                 <div class="col-sm-2 mr-4">
+                                <label for="inputPassword" class="col-sm-0 col-form-label">ราคา</label>     
                                     <input type="text" name="p_price" class="form-control" id="inputPassword" placeholder="กรุณาใส่ราคา" value="<?= $row['p_price'] ?>" required>
                                 </div>
+                                
+                                <div class="col-sm-2 mr-4">
                                 <label for="inputPassword" class="col-sm-0 col-select-label mt-2">ประเภทอะไหล่</label>
-                                <div class="col-sm-2 mr-4 mt-2">
                                     <select name="p_type_id" class="form-select" aria-label="Default select example">
                                         <?php if ($row['p_type_id']) {
                                             $p_type_id = $row['p_type_id'];
@@ -144,6 +148,11 @@ if (!isset($_SESSION['role_id'])) {
 
                                     </select>
                                     
+                                </div>
+
+                                <div class="col-sm-2 mr-4">
+                                <label for="inputPassword" class="col-sm-0 col-form-label">จำนวนอะไหล่คงคลัง</label>     
+                                    <input type="text" name="p_stock" class="form-control" id="inputPassword" placeholder="กรุณาใส่ราคา" value="<?= $row['p_stock'] ?>" required >
                                 </div>
                             </div>
                             <div class="mb-3">

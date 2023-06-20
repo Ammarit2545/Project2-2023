@@ -8,6 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
+$id = $_SESSION['id'];
+
 if (isset($_SESSION['part_p_id_1'])) {
 
     $i = 1;
@@ -22,6 +24,8 @@ if (isset($_SESSION['part_p_id_1'])) {
 
         if ($result) {
             // Update successful, you can add any additional logic here if needed
+            $sql = "INSERT INTO `parts_log` (`p_id`, `pl_value`, `pl_date`, `e_id`, `pl_type`) VALUES ('$p_id', '$p_stock', NOW(), '$id', 'plus')";
+            $result = mysqli_query($conn, $sql);
         } else {
             $_SESSION['add_data_error_alert' . $i] = 1;
         }
@@ -34,10 +38,8 @@ if (isset($_SESSION['part_p_id_1'])) {
     $_SESSION["add_data_alert"] = 0;
     header("Location: ../edit_stock.php");
     exit();
-
 } else {
     $_SESSION["add_data_alert"] = 1;
     header("Location: ../edit_stock.php");
     exit();
 }
-?>

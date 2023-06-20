@@ -17,6 +17,7 @@ $p_detail = $_POST['p_description'];
 $p_stock = $_POST['p_stock'];
 $p_price = $_POST['p_price'];
 $p_pic = $_FILES['p_pic']['name'];
+$id = $_SESSION['id'];
 
 $sql_p = "SELECT * FROM parts WHERE p_brand = '$p_brand'  
 AND p_model = '$p_model' 
@@ -60,16 +61,33 @@ if ($uploadOk == 0) {
         echo "Sorry, there was an error uploading your file.";
     }
 }
+
+$sql = "SELECT * FROM parts WHERE del_flg = '0' AND p_id = $p_id";
+$result = mysqli_query($conn, $sql);
+$row_c = mysqli_fetch_array($result);
+
 if ($p_pic) {
     $pic_path = "parts/$p_type_id/$p_pic";
 
-    $sql = "UPDATE parts SET `p_date_update` = NOW(), `p_type_id` = '$p_type_id', `p_brand` = '$p_brand', `p_model` = '$p_model', `p_name` = '$p_name', `p_detail` ='$p_detail', `p_price`= '$p_price', `p_pic`= '$pic_path' WHERE p_id = $p_id";
+    $sql = "UPDATE parts SET `p_date_update` = NOW(), `p_type_id` = '$p_type_id', `p_brand` = '$p_brand', `p_model` = '$p_model', `p_name` = '$p_name', `p_detail` ='$p_detail', `p_price`= '$p_price', `p_pic`= '$pic_path' , p_stock = '$p_stock' WHERE p_id = $p_id";
 } else {
-    $sql = "UPDATE parts SET `p_date_update` = NOW(), `p_type_id` = '$p_type_id', `p_brand` = '$p_brand', `p_model` = '$p_model', `p_name` = '$p_name', `p_detail` ='$p_detail', `p_price`= '$p_price' WHERE p_id = $p_id";
+    $sql = "UPDATE parts SET `p_date_update` = NOW(), `p_type_id` = '$p_type_id', `p_brand` = '$p_brand', `p_model` = '$p_model', `p_name` = '$p_name', `p_detail` ='$p_detail', `p_price`= '$p_price' , p_stock = '$p_stock' WHERE p_id = $p_id";
 }
 
 
 $result = mysqli_query($conn, $sql);
+
+if ($result) {
+    if ($row_c['p_stock'] < $p_stock) {
+        $p_stock_c = $p_stock - $row_c['p_stock'];
+        $sql = "INSERT INTO `parts_log` (`p_id`, `pl_value`, `pl_date`, `e_id`, `pl_type`) VALUES ('$p_id', '$p_stock_c', NOW(), '$id', 'plus')";
+        $result = mysqli_query($conn, $sql);
+    } elseif ($row_c['p_stock'] > $p_stock) {
+        $p_stock_c = $row_c['p_stock'] -  $p_stock;
+        $sql = "INSERT INTO `parts_log` (`p_id`, `pl_value`, `pl_date`, `e_id`, `pl_type`) VALUES ('$p_id', '$p_stock_c', NOW(), '$id', 'minus')";
+        $result = mysqli_query($conn, $sql);
+    }
+}
 
 // header('Location:../listview_parts.php');
 header('Location:../listview_parts.php');
