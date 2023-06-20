@@ -29,6 +29,9 @@ if (!isset($_SESSION['role_id'])) {
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 </head>
 <style>
     .image-container {
@@ -88,7 +91,7 @@ if (!isset($_SESSION['role_id'])) {
                 ?>
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
-                        <form action="action/edit_parts.php" method="POST" enctype="multipart/form-data">
+                        <form id="editForm" action="action/edit_parts.php" method="POST" enctype="multipart/form-data">
 
                             <!-- Page Heading -->
                             <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -98,8 +101,8 @@ if (!isset($_SESSION['role_id'])) {
                             <div class="mb-3 row">
                                 <label for="staticEmail" class="col-sm-1 col-form-label">Brand</label>
                                 <div class="col-sm-4">
-                                <input type="text" name="p_brand" class="form-control" id="staticEmail" value="<?= $row['p_brand'] ?>" placeholder="กรุณากรอกยี่ห้ออะไหล่">
-                                <input type="text" name="p_id" class="form-control" id="staticEmail" value="<?= $row['p_id'] ?>" placeholder="กรุณากรอกยี่ห้ออะไหล่" hidden>
+                                    <input type="text" name="p_brand" class="form-control" id="staticEmail" value="<?= $row['p_brand'] ?>" placeholder="กรุณากรอกยี่ห้ออะไหล่">
+                                    <input type="text" name="p_id" class="form-control" id="staticEmail" value="<?= $row['p_id'] ?>" placeholder="กรุณากรอกยี่ห้ออะไหล่" hidden>
                                 </div>
                                 <label for="inputPassword" class="col-sm-1 col-form-label">Model</label>
                                 <div class="col-sm-4">
@@ -107,19 +110,19 @@ if (!isset($_SESSION['role_id'])) {
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                
+
                                 <div class="col-sm-2 mr-4">
-                                <label for="inputPassword" class="col-sm-1 col-form-label">ชื่อ</label>
+                                    <label for="inputPassword" class="col-sm-1 col-form-label">ชื่อ</label>
                                     <input type="text" name="p_name" class="form-control" id="inputPassword" placeholder="กรุณาใส่ชื่ออะไหล่" value="<?= $row['p_name'] ?>" required>
                                 </div>
-                                
+
                                 <div class="col-sm-2 mr-4">
-                                <label for="inputPassword" class="col-sm-0 col-form-label">ราคา</label>     
+                                    <label for="inputPassword" class="col-sm-0 col-form-label">ราคา</label>
                                     <input type="text" name="p_price" class="form-control" id="inputPassword" placeholder="กรุณาใส่ราคา" value="<?= $row['p_price'] ?>" required>
                                 </div>
-                                
+
                                 <div class="col-sm-2 mr-4">
-                                <label for="inputPassword" class="col-sm-0 col-select-label mt-2">ประเภทอะไหล่</label>
+                                    <label for="inputPassword" class="col-sm-0 col-select-label mt-2">ประเภทอะไหล่</label>
                                     <select name="p_type_id" class="form-select" aria-label="Default select example">
                                         <?php if ($row['p_type_id']) {
                                             $p_type_id = $row['p_type_id'];
@@ -147,12 +150,12 @@ if (!isset($_SESSION['role_id'])) {
                                         ?>
 
                                     </select>
-                                    
+
                                 </div>
 
                                 <div class="col-sm-2 mr-4">
-                                <label for="inputPassword" class="col-sm-0 col-form-label">จำนวนอะไหล่คงคลัง</label>     
-                                    <input type="text" name="p_stock" class="form-control" id="inputPassword" placeholder="กรุณาใส่ราคา" value="<?= $row['p_stock'] ?>" required >
+                                    <label for="inputPassword" class="col-sm-0 col-form-label">จำนวนอะไหล่คงคลัง</label>
+                                    <input type="text" name="p_stock" class="form-control" id="inputPassword" placeholder="กรุณาใส่ราคา" value="<?= $row['p_stock'] ?>" required>
                                 </div>
                             </div>
                             <div class="mb-3">
@@ -168,8 +171,50 @@ if (!isset($_SESSION['role_id'])) {
                                 </div>
                             </div>
                             <div class="text-center pt-4">
-                                <a href="listview_parts.php" class="btn btn-danger" onclick="return confirm('คุณต้องการยกเลิกการแก้ไขข้อมูลนี้หรือไม่? \nข้อมูลทั้งหมดจะไม่ถูกบันทึก')">ยกเลิก</a>
-                                <button type="submit" class="btn btn-success" onclick="return confirm('Are You Sure You Want to Edit This Parts Information? \nPlease Check Your Information')">ยืนยัน</button>
+                                <a class="btn btn-danger" onclick="return swalConfirmCancel()">ยกเลิก</a>
+                                <a class="btn btn-success" onclick="return swalConfirmEdit()">ยืนยัน</a>
+
+                                <script>
+                                    function swalConfirmCancel() {
+                                        return Swal.fire({
+                                            title: "คุณต้องการยกเลิกการแก้ไขข้อมูลนี้หรือไม่?",
+                                            text: "ข้อมูลทั้งหมดจะไม่ถูกบันทึก",
+                                            icon: "warning",
+                                            showCancelButton: true,
+                                            confirmButtonColor: "#3085d6",
+                                            cancelButtonColor: "#d33",
+                                            confirmButtonText: "ยืนยัน",
+                                            cancelButtonText: "ยกเลิก"
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                window.location.href = "listview_parts.php";
+                                            } else {
+                                                return false;
+                                            }
+                                        });
+                                    }
+
+                                    function swalConfirmEdit() {
+                                        return Swal.fire({
+                                            title: "คุณต้องการแก้ไขข้อมูลหรือไม่?",
+                                            text: "โปรดตรวจสอบข้อมูลของคุณให้ครบถ้วน",
+                                            icon: "warning",
+                                            showCancelButton: true,
+                                            confirmButtonColor: "#3085d6",
+                                            cancelButtonColor: "#d33",
+                                            confirmButtonText: "ยืนยัน",
+                                            cancelButtonText: "ยกเลิก"
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                // Submit the form
+                                                document.getElementById("editForm").submit();
+                                            } else {
+                                                return false;
+                                            }
+                                        });
+                                    }
+                                </script>
+
                             </div>
                     </div>
                     <!-- /.container-fluid -->

@@ -48,12 +48,11 @@ if ($row_p[0] == NULL) {
             $row_p_c = mysqli_fetch_array($result_p_c);
 
             $p_type_id = $row_p_c[0];
-
         } else {
             $p_type_id = $rowp[0];
         }
     }
-    echo "This : ".$p_type_id;
+    echo "This : " . $p_type_id;
 
     $folderName = "../../parts/$p_type_id";
     if (!file_exists($folderName)) {
@@ -66,11 +65,11 @@ if ($row_p[0] == NULL) {
     $target_dir = $folderName . "/";
     $target_file = $target_dir . basename($_FILES["p_pic"]["name"]);
     $uploadOk = 1;
-    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-    if(isset($_POST["submit"])) {
+    if (isset($_POST["submit"])) {
         $check = getimagesize($_FILES["p_pic"]["tmp_name"]);
-        if($check !== false) {
+        if ($check !== false) {
             echo "File is an image - " . $check["mime"] . ".";
             $uploadOk = 1;
         } else {
@@ -83,7 +82,7 @@ if ($row_p[0] == NULL) {
         echo "Sorry, your file was not uploaded.";
     } else {
         if (move_uploaded_file($_FILES["p_pic"]["tmp_name"], $target_file)) {
-            echo "The file ". htmlspecialchars( basename( $_FILES["p_pic"]["name"])). " has been uploaded.";
+            echo "The file " . htmlspecialchars(basename($_FILES["p_pic"]["name"])) . " has been uploaded.";
         } else {
             echo "Sorry, there was an error uploading your file.";
         }
@@ -91,17 +90,18 @@ if ($row_p[0] == NULL) {
 
     $pic_path = "parts/$p_type_id/$p_pic ";
 
-    $sql = "INSERT INTO parts ('p_date_in',`p_type_id`, `p_brand`, `p_model`, `p_name`, `p_detail`, `p_stock`, `p_price`, `p_pic`, `del_flg`)
-    VALUES (NOW(),'$p_type_id ','$p_brand','$p_model','$p_name','$p_detail','$p_stock','$p_price','$pic_path','0')";
+    $sql = "INSERT INTO parts (p_date_in, p_type_id, p_brand, p_model, p_name, p_detail, p_stock, p_price, p_pic, del_flg)
+    VALUES (NOW(), '$p_type_id', '$p_brand', '$p_model', '$p_name', '$p_detail', '$p_stock', '$p_price', '$pic_path', '0')";
     $result = mysqli_query($conn, $sql);
 
+    $_SESSION["add_data_alert"] = 0;
     // header('Location:../listview_parts.php');
     header('Location:../listview_parts.php');
 
     // display an alert message
     echo "<script>alert('Success!');</script>";
-
 } else {
+    $_SESSION["add_data_alert"] = 1;
     // redirect to a new page
     header('Location:../add_part.php');
 

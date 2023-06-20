@@ -84,7 +84,7 @@ if (!isset($_SESSION['role_id'])) {
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <form action="action/add_part.php" method="POST" enctype="multipart/form-data">
+                <form id="your-form-id" action="action/add_part.php" method="POST" enctype="multipart/form-data">
                     <div class="container-fluid">
                         <!-- Page Heading -->
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -230,7 +230,7 @@ if (!isset($_SESSION['role_id'])) {
                             <div id="image-container"></div>
                         </div>
                         <div class="text-center pt-4">
-                            <button type="submit" class="btn btn-success">ยืนยัน</button>
+                            <button type="submit" class="btn btn-success" onclick="confirmSend()">ยืนยัน</button>
 
                             <script>
                                 function confirmSend() {

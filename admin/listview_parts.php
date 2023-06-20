@@ -316,6 +316,50 @@ if (!isset($_SESSION['role_id'])) {
 
     <!-- Page level custom scripts -->
     <script src="js/demo/datatables-demo.js"></script>
+    <!-- Sweet Alert Show Start -->
+    <?php
+    if (isset($_SESSION['add_data_alert'])) {
+        if ($_SESSION['add_data_alert'] == 0) {
+            $id = 123; // Replace 123 with the actual ID you want to pass to the deletion action
+    ?>
+            <script>
+                Swal.fire({
+                    title: 'ข้อมูลของคุณได้ถูกบันทึกแล้ว',
+                    text: 'กด Accept เพื่อออก',
+                    icon: 'success',
+                    confirmButtonText: 'Accept'
+                });
+            </script>
+        <?php
+            unset($_SESSION['add_data_alert']);
+        } else if ($_SESSION['add_data_alert'] == 1) {
+        ?>
+            <script>
+                Swal.fire({
+                    title: 'ข้อมูลของคุณไม่ได้ถูกบันทึก',
+                    text: 'กด Accept เพื่อออก',
+                    icon: 'error',
+                    confirmButtonText: 'Accept'
+                });
+            </script>
+
+        <?php
+            unset($_SESSION['add_data_alert']);
+        } else if ($_SESSION['add_data_alert'] == 2) {
+        ?>
+            <script>
+                Swal.fire({
+                    title: 'ข้อมูลของคุณได้ถูกลบแล้ว',
+                    text: 'กด Accept เพื่อออก',
+                    icon: 'success',
+                    confirmButtonText: 'Accept'
+                });
+            </script>
+    <?php unset($_SESSION['add_data_alert']);
+        }
+    }
+    ?>
+    <!-- Sweet Alert Show End -->
 
 </body>
 
