@@ -358,21 +358,13 @@ if (!isset($_SESSION['role_id'])) {
                             </div>
                             <div class="text-center pt-4" id="width_pe">
                                 <a href="edit_stock.php" class="btn btn-danger" onclick="return showCancellation()">ยกเลิก</a>
-
-
-
-
                                 <a class="btn btn-success" onclick="return showConfirmationSession()">ยืนยัน</a>
-
-
-
-
                             </div>
                             <script>
                                 function showConfirmationSession() {
                                     Swal.fire({
-                                        title: "Are You Sure?",
-                                        text: "You want to edit this Parts Type information.",
+                                        title: "คุณแน่ใจหรือไม่?",
+                                        text: "คุณต้องการเพิ่มอะไหล่ใช่หรือไม่.",
                                         icon: "warning",
                                         showCancelButton: true,
                                         confirmButtonColor: "#3085d6",
@@ -393,11 +385,6 @@ if (!isset($_SESSION['role_id'])) {
                     </form>
                     <br>
                     <br>
-
-
-
-
-
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
@@ -510,17 +497,35 @@ if (!isset($_SESSION['role_id'])) {
                                                     } else {
                                                     ?>
                                                         <center>
-                                                            <p style="color:red; font-weight:bold"><?= $_SESSION['part_p_stock_' . $i] ?></p>
+                                                            <form action="action/edit_part_stock.php" method="POST">
+                                                                <input type="text" name="session_value" class="form-control" value="<?= $i ?>" hidden>
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <input type="number" name="unit" class="form-control" value="<?= $_SESSION['part_p_stock_' . $i] ?>" onchange="saveValue(this, <?= $row['p_id'] ?>,<?= $i ?>)">
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+
+                                                            <script>
+                                                                function saveValue(input, pId , SessionID) {
+                                                                    var newValue = input.value;
+                                                                    var xhr = new XMLHttpRequest();
+                                                                    xhr.open("POST", "action/edit_part_stock.php", true);
+                                                                    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                                                                    xhr.onreadystatechange = function() {
+                                                                        if (xhr.readyState === 4 && xhr.status === 200) {
+                                                                            console.log("Value saved successfully!");
+                                                                        }
+                                                                    };
+                                                                    xhr.send("session_value="+SessionID+"&unit=" + newValue + "&p_id=" + pId);
+                                                                }
+                                                            </script>
                                                         </center>
                                                     <?php
                                                     }
                                                     ?>
                                                 </td>
                                                 <td>
-                                                    <!-- <button onclick="confirmDelete(<?= $row['p_id'] ?>)" class="btn btn-danger">ลบ</button> -->
-
-
-                                                    <!-- JavaScript function for confirmation -->
                                                     <script>
                                                         function confirmDelete(id) {
                                                             Swal.fire({
@@ -541,35 +546,8 @@ if (!isset($_SESSION['role_id'])) {
                                                     </script>
 
                                                     <center>
-                                                        <!-- <button class="btn btn-danger" onclick="delete_stock_conf()">ลบ</button>
-
-                                                        <script>
-                                                            function delete_stock_conf() {
-                                                                Swal.fire({
-                                                                    title: "คุณต้องการลบรายการนี้หรือไม่",
-                                                                    text: "โปรดตรวจสอบข้อมูล",
-                                                                    icon: "warning",
-                                                                    showCancelButton: true,
-                                                                    confirmButtonColor: "#3085d6",
-                                                                    cancelButtonColor: "#d33",
-                                                                    confirmButtonText: "ยืนยัน",
-                                                                    cancelButtonText: "ยกเลิก"
-                                                                }).then((result) => {
-                                                                    if (result.isConfirmed) {
-                                                                        // User confirmed, proceed with the action
-                                                                        window.location.href = 'action/delete_part_stock.php?id=<?= $_SESSION['part_p_id_' . $i] ?>';
-                                                                    } else {
-                                                                        // User canceled, do nothing
-                                                                        return false;
-                                                                    }
-                                                                });
-                                                            }
-                                                        </script> -->
-                                                        <?= $i ?>
-
                                                         <button class="btn btn-danger" href="action/delete_part_stock.php?id=<?= $i ?>" onclick="deleteStock('action/delete_part_stock.php?id=<?= $i ?>')">ลบ</button>
 
-                                                        <a class="btn btn-warning" href="edit_parts.php?id=<?= $row['p_id'] ?>">แก้ไข</a>
                                                     </center>
                                                 </td>
                                             </tr>
