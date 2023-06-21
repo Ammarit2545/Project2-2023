@@ -209,7 +209,7 @@ if (!isset($_SESSION['role_id'])) {
                     $get_r_id = $_GET['id'];
 
                     $sql_get_count = "SELECT COUNT(get_r_id) FROM get_detail 
-                    WHERE get_r_id = '$get_r_id'";
+                    WHERE get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
                     $result_get_count = mysqli_query($conn, $sql_get_count);
                     $row_get_count = mysqli_fetch_array($result_get_count);
 

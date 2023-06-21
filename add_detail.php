@@ -8,6 +8,11 @@ $sql = "SELECT * FROM member WHERE m_id = '$id'";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
+if (!isset($_SESSION['r_id_1'])) {
+    $_SESSION['add_data_detail'] = 1 ;
+    header('location:listview_repair.php');
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -93,20 +98,20 @@ $row = mysqli_fetch_array($result);
                     <div class="row">
                         <div class="col-4" id="bounce-item">
                             <label for="exampleFormControlTextarea1" class="col-form-label">จังหวัด :</label>
-                            <input type="text" class="form-control" value="<?= $row_p[0] ?>" readonly>
+                            <input type="text" class="form-control" value="<?= $row_p[0] ?>" placeholder="กรุณาเลือกจังหวัดที่ต้องการ" readonly>
                         </div>
                         <div class="col-4" id="bounce-item">
                             <label for="exampleFormControlTextarea1" class="col-form-label">อำเภอ :</label>
-                            <input type="text" class="form-control" value="<?= $row_p[1] ?>" readonly>
+                            <input type="text" class="form-control" value="<?= $row_p[1] ?>" placeholder="กรุณาเลือกอำเภอที่ต้องการ" readonly>
                         </div>
                         <div class="col-4" id="bounce-item">
                             <label for="exampleFormControlTextarea1" class="col-form-label">ตำบล :</label>
-                            <input type="text" class="form-control" value="<?= $row_p[2] ?>" readonly>
+                            <input type="text" class="form-control" value="<?= $row_p[2] ?>" placeholder="กรุณาเลือกตำบลที่ต้องการ" readonly>
                         </div>
                     </div>
                     <br>
                     <label for="exampleFormControlTextarea1" class="col-form-label" id="bounce-item">รายละเอียดเพิ่มเติม :</label>
-                    <textarea class="form-control" id="bounce-item" rows="3" disabled="disabled"><?php
+                    <textarea class="form-control" id="bounce-item" rows="3" disabled="disabled" required><?php
                                                                                                     if ($obj->description        == NULL) {
                                                                                                         echo "ไม่มีข้อมูล";
                                                                                                     } else {
@@ -171,7 +176,7 @@ $row = mysqli_fetch_array($result);
                 <input type="text" name="get_r_id" value="<?= $id_g ?>" required hidden>
                 <br>
                 <label for="exampleFormControlTextarea1" class="form-label">กรุณากรอกที่อยู่ที่ต้องการจัดส่ง</label>
-                <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3" required><?= $_SESSION['address'] ?></textarea>
+                <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3" required></textarea>
                 <center>
                     <br>
                     <a class="btn btn-warning" onclick="New_address()" href="">ต้องการใช้ที่อยู่เดิม</a>

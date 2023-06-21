@@ -280,6 +280,23 @@ $row = mysqli_fetch_array($result);
         var icon = document.querySelector('#card-show i');
         icon.classList.add('fas', 'fa-plus');
     </script>
+    <?php
+    if (isset($_SESSION['add_data_detail'])) {
+        if ($_SESSION['add_data_detail'] == 1) {
+    ?>
+            <script>
+                Swal.fire({
+                    title: 'โปรดทำการเพิ่มรายการส่งซ่อมก่อนทำรายการ',
+                    text: 'กด Accept เพื่อออก',
+                    icon: 'error',
+                    confirmButtonText: 'Accept'
+                });
+            </script>
+    <?php
+            unset($_SESSION['add_data_detail']);
+        }
+    }
+    ?>
     <div id="modalimg" class="modal">
         <span class="close" onclick="closeModalIMG()">&times;</span>
         <img id="modal-image" src="" alt="Modal Photo">
