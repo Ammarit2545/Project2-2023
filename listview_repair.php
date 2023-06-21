@@ -4,6 +4,11 @@ include('database/condb.php');
 
 $id = $_SESSION["id"];
 
+if (!isset($_SESSION["id"])) {
+    header('Location:home.php');
+}
+
+
 $sql = "SELECT * FROM member WHERE m_id = '$id'";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
