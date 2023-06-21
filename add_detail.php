@@ -15,6 +15,8 @@ if (!isset($_SESSION['r_id_1'])) {
 
 ?>
 
+<!-- MAIN -->
+
 <!DOCTYPE html>
 <html lang="en">
 
