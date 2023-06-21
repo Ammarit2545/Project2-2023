@@ -10,6 +10,8 @@ $row = mysqli_fetch_array($result);
 
 ?>
 
+<!-- MAIN -->
+
 <!DOCTYPE html>
 <html lang="en">
 
