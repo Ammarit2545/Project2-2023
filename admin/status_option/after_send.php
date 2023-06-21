@@ -57,7 +57,7 @@
 
         $sql_get = "SELECT * FROM get_detail 
                                                         LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                        WHERE get_detail.get_r_id = '$get_r_id'";
+                                                        WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = '0'";
         $result_count = mysqli_query($conn, $sql_get);
         $result_get = mysqli_query($conn, $sql_get);
         while ($row_get = mysqli_fetch_array($result_get)) {

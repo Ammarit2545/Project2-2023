@@ -508,18 +508,24 @@ $check_order = 0;
                                 <h5 class="btn btn-outline-primary">รายละเอียด</h5>
                                 <p class="mt-2" style="margin-left: 30px;"><?= $row1['rs_detail'] ?></p>
                                 <hr>
-                                <h5 class="btn btn-outline-primary">เลือกวิธีการจัดส่งอุปกรณ์มาที่ร้าน</h5>
-                                <!-- <p class="mt-2" style="margin-left: 30px;"><?= $row1['rs_detail'] ?></p> -->
+                                <?php
+                                if($row1['status_id'] == 5  && $row1['rs_conf'] == NULL){
+                                    ?>
+                                    <!-- <h5 class="btn btn-outline-primary">เลือกวิธีการจัดส่งอุปกรณ์มาที่ร้าน</h5>
                                 <center>
                                     <button id="bounce-item" class="btn btn-primary">ส่งที่หน้าร้าน</button>
                                     <button id="bounce-item" class="btn btn-warning">จัดส่งผ่านไปรษณีย์</button>
-                                </center>
+                                     <hr>
+                                </center> -->
+                                    <?php
+                                }
+                                ?>
                                 
 
                                 <?php if ($row1['status_id'] == 4 || $row1['status_id'] == 17 && $row1['rs_conf'] == NULL || $row1['rs_conf'] == 1) {
                                     $total =  $row1['get_wages'] + $row1['get_add_price'];
                                 ?><?php if ($check_order  == 0) { ?>
-                                <hr>
+                               
                                 <?php if ($row1['get_date_conf'] != NULL) {  ?>
                                     <p class="mt-2" style="margin-left: 30px;"> - ระยะเวลาซ่อม <?= number_format($row1['get_date_conf']) ?> วัน <span style="color:red">( นับจากวันที่รับอุปกรณ์ )</span></p>
                                 <?php }  ?>

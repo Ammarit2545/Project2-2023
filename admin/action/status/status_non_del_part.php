@@ -34,12 +34,12 @@ $sql = "SELECT * FROM repair_status
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
-if ($row[0] > 0) {
-    // if it already has data
-    echo $row[0];
-    $_SESSION["add_data_alert"] = 1;
-    header("Location: ../../detail_repair.php?id=$get_r_id");
-} else {
+// if ($row[0] > 0) {
+//     // if it already has data
+//     echo $row[0];
+//     $_SESSION["add_data_alert"] = 1;
+//     header("Location: ../../detail_repair.php?id=$get_r_id");
+// } else {
 
     // เอาคืน Stock ทั้งหมดจากคำสั่งซื้อ
 
@@ -75,7 +75,8 @@ if ($row[0] > 0) {
 
     if ($rs_id > 0) {
         $sql_m = "SELECT repair.m_id FROM repair 
-                  LEFT JOIN get_repair ON get_repair.r_id = repair.r_id
+                  LEFT JOIN get_detail ON get_detail.r_id = repair.r_id
+                  LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
                   WHERE get_repair.get_r_id = '$get_r_id' AND get_repair.del_flg = '0'";
         $result_m = mysqli_query($conn, $sql_m);
         $row_m = mysqli_fetch_array($result_m);
@@ -136,4 +137,4 @@ if ($row[0] > 0) {
         $_SESSION["add_data_alert"] = 0;
         header("Location: ../../detail_repair.php?id=$get_r_id");
     }
-}
+// }

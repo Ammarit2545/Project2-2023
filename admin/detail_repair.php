@@ -245,8 +245,9 @@ if (!isset($_SESSION['role_id'])) {
                             <h2>สถานะล่าสุด : <button id="bounce-item" onclick="openModalStatus('quantitystatus')" style="background-color: <?= $row['status_color'] ?>; color : white;" class="btn btn"> <?= $row['status_name'] ?>
                                     <?php
                                     if ($row['status_id'] == 6) {
+                                        $get_r_id = $row['get_r_id'];
                                         $carry_out_id = $row['status_id'];
-                                        $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = 155 AND status_id = 6 ORDER BY rs_date_time DESC;";
+                                        $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = '$get_r_id' AND status_id = 6 ORDER BY rs_date_time DESC;";
                                         $result_carry_out = mysqli_query($conn, $sql_cary_out);
                                         $row_carry_out = mysqli_fetch_array($result_carry_out);
 
