@@ -110,53 +110,56 @@ $row = mysqli_fetch_array($result);
                         $image4 = 'image4_' . $i;
             ?>
                         <div class="grid-item">
-                            <div class="card" id="card-detail">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <h5 style="display:inline; margin-right:10px" class="btn btn-secondary"><?= $_SESSION[$r_id] ?></h5><?= $_SESSION[$name_brand] ?> <?= $_SESSION[$name_model] ?>
+                            <a href="">
+                                <div class="card" id="card-detail">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <h5 style="display:inline; margin-right:10px" class="btn btn-secondary"><?= $_SESSION[$r_id] ?></h5><?= $_SESSION[$name_brand] ?> <?= $_SESSION[$name_model] ?>
+                                            <?php
+                                            $company_name = $_SESSION[$company];
+                                            if ($company_name != NULL) {
+                                                $sql_c = "SELECT * FROM company WHERE com_id = '$company_name' AND del_flg = '0'";
+                                                $result_c = mysqli_query($conn, $sql_c);
+                                                $row_c = mysqli_fetch_array($result_c);
+
+                                                $company_name = $row_c['com_name'];
+                                            ?><h5 style="display:inline; margin-right:10px" class="btn btn-secondary"><?= $company_name ?></h5>
+                                            <?php } ?>
+                                        </h5>
+                                        <br><br>
+                                        <h6 class="card-subtitle mb-2 text-muted">Serial Number : <?= $_SESSION[$serial_number] ?></h6>
+                                        <hr>
+                                        <h6 style="display:inline">รายละเอียดการซ่อม : </h6>
+                                        <p class="card-text" style="display:inline"><?= $_SESSION[$description] ?></p>
+                                        <hr>
+                                        <h6>รูปภาพประกอบ</h6>
                                         <?php
-                                        $company_name = $_SESSION[$company];
-                                        if ($company_name != NULL) {
-                                            $sql_c = "SELECT * FROM company WHERE com_id = '$company_name' AND del_flg = '0'";
-                                            $result_c = mysqli_query($conn, $sql_c);
-                                            $row_c = mysqli_fetch_array($result_c);
+                                        $folderPath = "uploads/$id/Holder/$i/"; // Replace with the actual path to your folder
 
-                                            $company_name = $row_c['com_name'];
-                                        ?><h5 style="display:inline; margin-right:10px" class="btn btn-secondary"><?= $company_name ?></h5>
-                                        <?php } ?>
-                                    </h5>
-                                    <br><br>
-                                    <h6 class="card-subtitle mb-2 text-muted">Serial Number : <?= $_SESSION[$serial_number] ?></h6>
-                                    <hr>
-                                    <p class="card-text"><?= $_SESSION[$description] ?></p>
-                                    <hr>
-                                    <h6>รูปภาพประกอบ</h6>
-                                    <?php
-                                    $folderPath = "uploads/$id/Holder/$i/"; // Replace with the actual path to your folder
+                                        $files = scandir($folderPath);
 
-                                    $files = scandir($folderPath);
+                                        foreach ($files as $file) {
+                                            if ($file === '.' || $file === '..') {
+                                                continue; // Skip current and parent directory entries
+                                            }
 
-                                    foreach ($files as $file) {
-                                        if ($file === '.' || $file === '..') {
-                                            continue; // Skip current and parent directory entries
+                                        ?>
+                                            <img src="<?= $folderPath . '/' . $file ?>" id="drop-shadow" class="picture_modal" alt="" onclick="openModalIMG(this)">
+                                        <?php
                                         }
 
-                                    ?>
-                                        <img src="<?= $folderPath . '/' . $file ?>" id="drop-shadow" class="picture_modal" alt="" onclick="openModalIMG(this)">
-                                    <?php
-                                    }
-
-                                    ?>
+                                        ?>
 
 
-                                    <hr>
-                                    <div class="d-flex justify-content-end">
-                                        <!-- <a href="#" class="btn btn-outline-primary" style="margin-right: 10px;">แก้ไข</a> -->
-                                        <a href="#" class="btn btn-outline-danger ml-2" onclick="confirmDelete('<?= $_SESSION[$r_id] ?>')">ลบ</a>
+                                        <hr>
+                                        <div class="d-flex justify-content-end">
+                                            <a href="edit_repair.php" class="btn btn-outline-primary" style="margin-right: 10px;">แก้ไข</a>
+                                            <a class="btn btn-outline-danger ml-2" onclick="confirmDelete('<?= $_SESSION[$r_id] ?>')">ลบ</a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <span class="tooltip">คำส่งซ่อมที่ #<?= $_SESSION[$r_id] ?></span>
+                                <span class="tooltip">คำส่งซ่อมที่ #<?= $_SESSION[$r_id] ?></span>
+                            </a>
                         </div>
 
             <?php }
