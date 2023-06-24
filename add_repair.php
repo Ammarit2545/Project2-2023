@@ -86,7 +86,8 @@ $row = mysqli_fetch_array($result);
     <div class="px-5 pt-5 edit">
         <h1 class="pt-5 text-center">การบริการส่งซ่อม</h1>
         <center>
-            <p>แบบไม่มีกับมีประกันทางร้าน</p>
+            <!-- <p>แบบไม่มีกับมีประกันทางร้าน</p> -->
+            <p>กรุณาใส่รายละเอียดการซ่อมของท่าน</p>
         </center>
         <br>
         <br>
@@ -111,23 +112,23 @@ $row = mysqli_fetch_array($result);
                     </div>
                     <div class="grid-item">
                         <label for="borderinput1" class="form-label">ประเภทของการซ่อม</label>
-                        <!-- <input type="text" class="form-control" id="borderinput" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $row['m_tel'] ?>" required> -->
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" >
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" value="have_non_gua" id="flexRadioDefault1" onclick="return check_non_gua()" checked>
                             <label class="form-check-label" for="flexRadioDefault1">
                                 ไม่มีประกันกับทางร้าน
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" value="have_gua" id="flexRadioDefault2" onclick="return check_gua()">
                             <label class="form-check-label" for="flexRadioDefault2">
                                 มีประกันกับทางร้าน
                             </label>
                         </div>
                     </div>
-                    <div class="grid-item">
+
+                    <div class="grid-item" id="check_gua" style="display: none;">
                         <label for="borderinput1" class="form-label">บริษัท</label>
-                        <select class="form-select" name="company" aria-label="Default select example" required>
+                        <select class="form-select" name="company" id="company" aria-label="Default select example" >
                             <option value="" selected>กรุณาเลือกบริษัทที่ต้องการเคลม</option>
                             <?php
                             $sql_company = "SELECT * FROM company WHERE del_flg = '0'";
@@ -140,6 +141,22 @@ $row = mysqli_fetch_array($result);
                             ?>
                         </select>
                     </div>
+
+                    <script>
+                        function check_non_gua() {
+                            document.getElementById("check_gua").style.display = "none";
+                            document.getElementById("company").required = false;
+                            return true;
+                        }
+
+                        function check_gua() {
+                            document.getElementById("check_gua").style.display = "block";
+                            document.getElementById("company").required = true;
+                            return true;
+                        }
+                    </script>
+
+
                 </div>
                 <div class="mb-3">
                     <label for="inputtext" class="form-label">กรุณากรอกรายละเอียด</label>
@@ -148,7 +165,7 @@ $row = mysqli_fetch_array($result);
             </div>
             <br>
             <div class="container">
-                <label for="borderinput" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ (สูงสุด 4 ไฟล์)</label>
+                <label for="borderinput" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ (สูงสุด 4 ไฟล์) <p id="insert_bill" style="display: none; color:red">*** เพิ่มรูปใบเสร็จของท่านเพื่อเป็นการยืนยันอย่างน้อย 1 รูป ***</p></label>
                 <!-- <a class="btn btn-primary" style="margin-left:10px;" onclick="addImage4()">+</a> -->
                 <div class="row grid">
                     <div class="col-3 grid-item">
@@ -182,8 +199,17 @@ $row = mysqli_fetch_array($result);
                     </div>
                 </div>
             </div>
-
             <script>
+                function check_gua() {
+                    document.getElementById('check_gua').style.display = 'block';
+                    document.getElementById('insert_bill').style.display = 'inline-block';
+                }
+
+                function check_non_gua() {
+                    document.getElementById('check_gua').style.display = 'none';
+                    document.getElementById('insert_bill').style.display = 'none';
+                }
+
                 function addImage4() {
                     var fileInput = document.createElement('input');
                     fileInput.setAttribute('type', 'file');

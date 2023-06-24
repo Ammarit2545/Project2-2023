@@ -65,7 +65,8 @@ $row = mysqli_fetch_array($result);
     <div class="container">
         <div class="grid">
             <div class="grid-item">
-                <a href="add_repair_information.php" class="card-show">
+                <!-- <a href="add_repair_information.php" class="card-show"> -->
+                <a href="add_repair.php" class="card-show">
                     <div class="alert alert-secondary" id="card-show">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                     </div>
