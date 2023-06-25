@@ -77,7 +77,7 @@ for ($i = 1; $i <= 4; $i++) {
     if (isset($_FILES[$image_name])) {
         $target_dir = $folderName;
         $file_extension = strtolower(pathinfo($_FILES[$image_name]["name"], PATHINFO_EXTENSION));
-        $filename = $serial_number . $i . "." . $file_extension; // New filename
+        $filename = $i . "_" . $serial_number . "." . $file_extension; // New filename
         $target_file = $target_dir . $filename;
 
         $target_file_db = "/uploads/$id/Holder/$i/" . $filename;
