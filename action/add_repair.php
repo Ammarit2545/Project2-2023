@@ -23,10 +23,9 @@ $image4 = $_POST['image4'];
 $count = 1;
 while (isset($_FILES['image' . $count])) {
     if($_FILES['image' . $count]['name'] != NULL){
-        echo $_FILES['image' . $count]['name'];
-  
+        echo '<br>'.$_FILES['image' . $count]['name'];
     }else{
-        echo 'is_null_'.$count;
+        echo '<br>'.'is_null_'.$count;
     }
     $count++;
 }
