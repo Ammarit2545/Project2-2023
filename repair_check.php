@@ -259,7 +259,7 @@ $row = mysqli_fetch_array($result);
                             $rp_pic = "uploads/{$id}/Holder/{$i}/" . $file->getFilename();
                             $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
                     ?>
-                            <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'jiff'])) : ?>
+                            <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'jfif'])) : ?>
                                 <div class="col-3">
                                     <a href="#">
                                         <img src="<?= $rp_pic ?>" style="max-width: 100%; height: auto; border-radius:2%" alt="picture error" onclick="openModalIMG(this)">

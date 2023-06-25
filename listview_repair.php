@@ -145,7 +145,7 @@ $row = mysqli_fetch_array($result);
                                     $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
                             ?>
 
-                                    <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'jiff'])) : ?>
+                                    <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'jfif'])) : ?>
                                         <img src="<?= $folderPath . '/' . $file ?>" class="picture_modal" alt="" onclick="openModalIMG(this)" style="width: 10%; height :10%; border : 1px solid gray; border-radius: 10%;">
                                     <?php elseif (in_array($file_extension, ['mp4', 'ogg', 'mov'])) : ?>
                                         <video style="width: 10%; height: 10%; border-radius: 10%; border : 1px solid gray" class="picture_modal_video" alt="picture error" autoplay muted onclick="openModalVideo(this)" src="<?= $rp_pic ?>">
@@ -372,21 +372,21 @@ if (isset($_SESSION['add_data_detail'])) {
                 confirmButtonText: 'Accept'
             });
         </script>
-<?php
+    <?php
         unset($_SESSION['add_data_detail']);
     } elseif ($_SESSION['add_data_detail'] == 2) {
-        ?>
-                <script>
-                    Swal.fire({
-                        title: 'ไม่มีรายการนี้',
-                        text: 'กด Accept เพื่อออก',
-                        icon: 'error',
-                        confirmButtonText: 'Accept'
-                    });
-                </script>
-        <?php
-                unset($_SESSION['add_data_detail']);
-            }
+    ?>
+        <script>
+            Swal.fire({
+                title: 'ไม่มีรายการนี้',
+                text: 'กด Accept เพื่อออก',
+                icon: 'error',
+                confirmButtonText: 'Accept'
+            });
+        </script>
+<?php
+        unset($_SESSION['add_data_detail']);
+    }
 }
 ?>
 <div id="modalimg" class="modal">

@@ -156,7 +156,7 @@ $row = mysqli_fetch_array($result);
         </center>
         <br>
         <br>
-        <form action="action/add_repair.php" method="POST" enctype="multipart/form-data">
+        <form action="action/edit_new_repair.php" method="POST" enctype="multipart/form-data">
             <div class="container">
                 <div class="grid">
                     <div class="grid-item">
@@ -254,287 +254,336 @@ $row = mysqli_fetch_array($result);
 
             <div class="container">
                 <div class="grid-pic">
-                    <div class="grid-pic">
-                        <div class="grid-item">
+                    <div class="grid-item">
 
-                            <div id="image-preview1">
-                                <div class="container">
-                                    <div class="row">
-                                        <!-- Add any desired content here -->
-                                    </div>
+                        <div id="image-preview1">
+                            <div class="container">
+                                <div class="row">
+                                    <!-- Add any desired content here -->
                                 </div>
-
-                                <?php
-                                $directory = "uploads/$id/Holder/$count_session/"; // Directory path where your files are located
-                                $files = glob($directory . "1" . "*"); // Get all files that start with index 1
-
-                                ?>
-
-                                <?php
-
-                                if (empty($files)) {
-                                    // Display a card or message when there are no files
-                                ?>
-                                    <center>
-                                        <a id="bounce-item">
-                                            <label id="plus_img_card">
-                                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" alt="">
-                                                <input type="file" name="image1" onchange="previewImage('image-preview1', this)" id="fileToUpload" style="display: none;">
-                                            </label>
-                                        </a>
-                                    </center>
-                                    <?php
-                                } else {
-                                    foreach ($files as $file) {
-                                    ?>
-                                        <div class="image-container">
-                                            <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview1',1)" title="Delete">&times;</button>
-                                            <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
-                                        </div>
-                                <?php
-                                    }
-                                }
-                                ?>
                             </div>
-                            <center>
-                                <div id="insert_pic_1" style="display: none;">
-                                    <a id="bounce-item">
-                                        <label id="plus_img_card">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" alt="">
-                                            <input type="file" name="image1" onchange="previewImage('image-preview1', this)" id="fileToUpload" style="display: none;">
-                                        </label>
-                                    </a>
-                                </div>
-                            </center>
-                        </div>
-                        <div class="grid-item">
-                            <div id="image-preview2">
-                                <div class="container">
-                                    <div class="row">
-                                        <!-- Add any desired content here -->
+
+                            <?php
+                            $directory = "uploads/$id/Holder/$count_session/"; // Directory path where your files are located
+                            $files = glob($directory . "1" . "*"); // Get all files that start with index 1
+
+                            ?>
+
+                            <?php
+
+                            if (empty($files)) {
+                                // Display a card or message when there are no files
+                            ?>
+                                <center>
+                                    <div class="image-container">
+                                        <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview1',1)" title="Delete" id="deleteButton">&times;</button>
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function() {
+                                                var deleteButton = document.getElementById('deleteButton');
+                                                deleteButton.click();
+                                            });
+                                        </script>
+                                        <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
                                     </div>
-                                </div>
-
+                                </center>
                                 <?php
-                                $files = glob($directory . "2" . "*"); // Get all files that start with index 2
-
-                                if (empty($files)) {
-                                    // Display a card or message when there are no files
+                            } else {
+                                foreach ($files as $file) {
                                 ?>
-                                    <center>
-                                        <a id="bounce-item">
-                                            <label id="plus_img_card">
-                                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" alt="">
-                                                <input type="file" name="image2" onchange="previewImage('image-preview2', this)" id="fileToUpload" style="display: none;">
-                                            </label>
-                                        </a>
-                                    </center>
-                                    <?php
-                                } else {
-                                    foreach ($files as $file) {
-                                    ?>
-                                        <div class="image-container">
-                                            <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview2' ,2)" title="Delete">&times;</button>
-                                            <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
-                                        </div>
-                                <?php
-                                    }
-                                }
-                                ?>
-                            </div>
-                            <center>
-                                <div id="insert_pic_2" style="display: none;">
-                                    <a id="bounce-item">
-                                        <label id="plus_img_card">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" alt="">
-                                            <input type="file" name="image2" onchange="previewImage('image-preview1', this)" id="fileToUpload" style="display: none;">
-                                        </label>
-                                    </a>
-                                </div>
-                            </center>
-                        </div>
-                        <div class="grid-item">
-                            <div id="image-preview3">
-                                <div class="container">
-                                    <div class="row">
-                                        <!-- Add any desired content here -->
+                                    <div class="image-container">
+                                        <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview1',1)" title="Delete">&times;</button>
+                                        <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
                                     </div>
-                                </div>
-
-                                <?php
-                                $files = glob($directory . "3" . "*"); // Get all files that start with index 3
-
-                                if (empty($files)) {
-                                    // Display a card or message when there are no files
-                                ?>
-                                    <center>
-                                        <a id="bounce-item">
-                                            <label id="plus_img_card">
-                                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" alt="">
-                                                <input type="file" name="image3" onchange="previewImage('image-preview3', this)" id="fileToUpload" style="display: none;">
-                                            </label>
-                                        </a>
-                                    </center>
-                                    <?php
-                                } else {
-                                    foreach ($files as $file) {
-                                    ?>
-                                        <div class="image-container">
-                                            <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview3',3)" title="Delete">&times;</button>
-                                            <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
-                                        </div>
-                                <?php
-                                    }
+                            <?php
                                 }
-                                ?>
-                            </div>
-                            <center>
-                                <div id="insert_pic_3" style="display: none;">
-                                    <a id="bounce-item">
-                                        <label id="plus_img_card">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" alt="">
-                                            <input type="file" name="image3" onchange="previewImage('image-preview1', this)" id="fileToUpload" style="display: none;">
-                                        </label>
-                                    </a>
-                                </div>
-                            </center>
+                            }
+                            ?>
                         </div>
-                        <div class="grid-item">
-                            <div id="image-preview4">
-                                <div class="container">
-                                    <div class="row">
-                                        <!-- Add any desired content here -->
-                                    </div>
-                                </div>
-
-                                <?php
-                                $files = glob($directory . "4" . "*"); // Get all files that start with index 4
-
-                                if (empty($files)) {
-                                    // Display a card or message when there are no files
-                                ?>
-                                    <center>
-                                        <a id="bounce-item">
-                                            <label id="plus_img_card">
-                                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" alt="">
-                                                <input type="file" name="image4" onchange="previewImage('image-preview4', this)" id="fileToUpload" style="display: none;">
-                                            </label>
-                                        </a>
-                                    </center>
-                                    <?php
-                                } else {
-                                    foreach ($files as $file) {
-                                    ?>
-                                        <div class="image-container">
-                                            <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview4',4)" title="Delete">&times;</button>
-                                            <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
-                                        </div>
-                                <?php
-                                    }
-                                }
-                                ?>
+                        <center>
+                            <div id="insert_pic_1" style="display: none;">
+                                <a id="bounce-item">
+                                    <label id="plus_img_card">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" id="plus-button-1" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%;" alt="">
+                                        <p  id="change-button-1" class="btn btn-primary" style="display : none" alt="">เปลี่ยนรูปภาพ</p>
+                                        <input type="file" name="image1" onchange="previewImage_NEW('image-preview1', this, 'preview-image-new-1',1)" id="fileToUpload" style="display: none;">
+                                    </label>
+                                </a>
+                                <div id="preview-image-new-1"></div>
                             </div>
-                            <center>
-                                <div id="insert_pic_4" style="display: none;">
-                                    <a id="bounce-item">
-                                        <label id="plus_img_card">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" alt="">
-                                            <input type="file" name="image4" onchange="previewImage('image-preview1', this)" id="fileToUpload" style="display: none;">
-                                        </label>
-                                    </a>
-                                </div>
-                            </center>
-                        </div>
+                        </center>
                     </div>
+                    <div class="grid-item">
+                        <div id="image-preview2">
+                            <div class="container">
+                                <div class="row">
+                                    <!-- Add any desired content here -->
+                                </div>
+                            </div>
 
+                            <?php
+                            $files = glob($directory . "2" . "*"); // Get all files that start with index 2
+
+                            if (empty($files)) {
+                                // Display a card or message when there are no files
+                            ?>
+                                <center>
+                                    <div class="image-container">
+                                        <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview2',2)" title="Delete" id="deleteButton">&times;</button>
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function() {
+                                                var deleteButton = document.getElementById('deleteButton');
+                                                deleteButton.click();
+                                            });
+                                        </script>
+                                        <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
+                                    </div>
+                                </center>
+                                <?php
+                            } else {
+                                foreach ($files as $file) {
+                                ?>
+                                    <div class="image-container">
+                                        <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview2' ,2)" title="Delete">&times;</button>
+                                        <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
+                                    </div>
+                            <?php
+                                }
+                            }
+                            ?>
+                        </div>
+                        <center>
+                            <div id="insert_pic_2" style="display: none;">
+                            <a id="bounce-item">
+                                    <label id="plus_img_card">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" id="plus-button-2" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" alt="">
+                                        <p  id="change-button-2" class="btn btn-primary" style="display : none" alt="">เปลี่ยนรูปภาพ</p>
+                                        <input type="file" name="image2" onchange="previewImage_NEW('image-preview2', this, 'preview-image-new-2',2)" id="fileToUpload" style="display: none;">
+                                    </label>
+                                </a>
+                                <div id="preview-image-new-2"></div>
+                            </div>
+                        </center>
+                    </div>
+                    <div class="grid-item">
+                        <div id="image-preview3">
+                            <div class="container">
+                                <div class="row">
+                                    <!-- Add any desired content here -->
+                                </div>
+                            </div>
+
+                            <?php
+                            $files = glob($directory . "3" . "*"); // Get all files that start with index 3
+
+                            if (empty($files)) {
+                                // Display a card or message when there are no files
+                            ?>
+                                <center>
+                                    <div class="image-container">
+                                        <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview3',3)" title="Delete" id="deleteButton">&times;</button>
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function() {
+                                                var deleteButton = document.getElementById('deleteButton');
+                                                deleteButton.click();
+                                            });
+                                        </script>
+                                        <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
+                                    </div>
+                                </center>
+                                <?php
+                            } else {
+                                foreach ($files as $file) {
+                                ?>
+                                    <div class="image-container">
+                                        <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview3',3)" title="Delete">&times;</button>
+                                        <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
+                                    </div>
+                            <?php
+                                }
+                            }
+                            ?>
+                        </div>
+                        <center>
+                            <div id="insert_pic_3" style="display: none;">
+                                <a id="bounce-item">
+                                    <label id="plus_img_card">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" id="plus-button-3" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" alt="">
+                                        <p  id="change-button-3" class="btn btn-primary" style="display : none" alt="">เปลี่ยนรูปภาพ</p>
+                                        <input type="file" name="image3" onchange="previewImage_NEW('image-preview3', this, 'preview-image-new-3',3)" id="fileToUpload" style="display: none;">
+                                    </label>
+                                </a>
+                                <div id="preview-image-new-3"></div>
+                            </div>
+                        </center>
+                    </div>
+                    <div class="grid-item">
+                        <div id="image-preview4">
+                            <div class="container">
+                                <div class="row">
+                                    <!-- Add any desired content here -->
+                                </div>
+                            </div>
+
+                            <?php
+                            $files = glob($directory . "4" . "*"); // Get all files that start with index 4
+
+                            if (empty($files)) {
+                                // Display a card or message when there are no files
+                            ?>
+                                <center>
+                                    <div class="image-container">
+                                        <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview4',4)" title="Delete" id="deleteButton">&times;</button>
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function() {
+                                                var deleteButton = document.getElementById('deleteButton');
+                                                deleteButton.click();
+                                            });
+                                        </script>
+                                        <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
+                                    </div>
+                                </center>
+                                <?php
+                            } else {
+                                foreach ($files as $file) {
+                                ?>
+                                    <div class="image-container">
+                                        <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview4',4)" title="Delete">&times;</button>
+                                        <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
+                                    </div>
+                            <?php
+                                }
+                            }
+                            ?>
+                        </div>
+                        <center>
+                            <div id="insert_pic_4" style="display: none;">
+                                <a id="bounce-item">
+                                    <label id="plus_img_card">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" id="plus-button-4" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" alt="">
+                                        <p  id="change-button-4" class="btn btn-primary" style="display : none" alt="">เปลี่ยนรูปภาพ</p>
+                                        <input type="file" name="image4" onchange="previewImage_NEW('image-preview4', this, 'preview-image-new-4',4)" id="fileToUpload" style="display: none;">
+                                    </label>
+                                </a>
+                                
+                                <div id="preview-image-new-4"></div>
+                            </div>
+                        </center>
+                    </div>
                 </div>
-                <script>
-                    function deleteImage(file, previewId, numberPreview) {
-                        var imageContainer = document.getElementById(previewId);
-                        imageContainer.parentNode.removeChild(imageContainer);
-
-                        document.getElementById("insert_pic_" + numberPreview).style.display = 'block';
-                        // Perform additional logic for deleting the file from the server
-                        // You can use the 'file' parameter to send the necessary data to the server
-                    }
-                </script>
-
-
 
             </div>
-
             <script>
-                function check_gua() {
-                    document.getElementById('check_gua').style.display = 'block';
-                    document.getElementById('insert_bill').style.display = 'inline-block';
-                }
+                function previewImage_NEW(previewContainerId, fileInput, previewImageId, count) {
+                    var previewContainer = document.getElementById(previewContainerId);
+                    var previewImage = document.getElementById(previewImageId);
 
-                function check_non_gua() {
-                    document.getElementById('check_gua').style.display = 'none';
-                    document.getElementById('insert_bill').style.display = 'none';
-                }
-
-                function addImage4() {
-                    var fileInput = document.createElement('input');
-                    fileInput.setAttribute('type', 'file');
-                    fileInput.setAttribute('name', 'image1');
-                    fileInput.setAttribute('onchange', "previewImage('image-preview1', this)");
-                    fileInput.setAttribute('id', 'fileToUpload');
-
-                    var gridItems = document.querySelectorAll('.grid-item input[type="file"]');
-                    var emptyGridItem = Array.prototype.find.call(gridItems, function(item) {
-                        return !item.value; // Find the first empty grid item
-                    });
-                    s
-                    if (emptyGridItem) {
-                        emptyGridItem.parentNode.replaceChild(fileInput, emptyGridItem);
-                    } else {
-                        console.log('Maximum number of images reached');
-                    }
-                }
-
-                function previewImage(previewId, input) {
-                    var previewContainer = document.getElementById(previewId);
-                    var previewImage = document.createElement('img');
-
-                    // Set the maximum width and maximum height of the image
-                    previewImage.style.maxWidth = '200px';
-                    previewImage.style.maxHeight = '200px';
-
-                    // Set the border radius and border style of the image
-                    previewImage.style.borderRadius = '10%';
-                    previewImage.style.border = '2px solid gray';
-
-                    if (input.files && input.files[0]) {
+                    if (fileInput.files && fileInput.files[0]) {
                         var reader = new FileReader();
+
+                        // document.getElementById('plus-button-1').style.display = 'none';
+                        document.getElementById('plus-button-' + count).style.display = 'none';
+
+                        // document.getElementById('plus-button-1').style.display = 'none';
+                        document.getElementById('change-button-' + count).style.display = 'block';
+
                         reader.onload = function(e) {
-                            previewImage.setAttribute('src', e.target.result);
-                            previewContainer.innerHTML = ''; // Clear previous content
-                            previewContainer.appendChild(previewImage);
+                            previewImage.innerHTML = '<img src="' + e.target.result + '" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">';
                         };
-                        reader.readAsDataURL(input.files[0]);
+
+                        reader.readAsDataURL(fileInput.files[0]);
+                        previewContainer.style.display = 'block';
+
+
+
+                    } else {
+                        previewImage.innerHTML = '';
+                        previewContainer.style.display = 'none';
                     }
+                }
+
+                function deleteImage(file, previewId, numberPreview) {
+                    var imageContainer = document.getElementById(previewId);
+                    imageContainer.parentNode.removeChild(imageContainer);
+
+                    document.getElementById("insert_pic_" + numberPreview).style.display = 'block';
+                    // Perform additional logic for deleting the file from the server
+                    // You can use the 'file' parameter to send the necessary data to the server
                 }
             </script>
 
-            <center>
-                <div class="row">
-                    <!-- <div class="mb-3">
+
+
+    </div>
+
+    <script>
+        function check_gua() {
+            document.getElementById('check_gua').style.display = 'block';
+            document.getElementById('insert_bill').style.display = 'inline-block';
+        }
+
+        function check_non_gua() {
+            document.getElementById('check_gua').style.display = 'none';
+            document.getElementById('insert_bill').style.display = 'none';
+        }
+
+        function addImage4() {
+            var fileInput = document.createElement('input');
+            fileInput.setAttribute('type', 'file');
+            fileInput.setAttribute('name', 'image1');
+            fileInput.setAttribute('onchange', "previewImage('image-preview1', this)");
+            fileInput.setAttribute('id', 'fileToUpload');
+
+            var gridItems = document.querySelectorAll('.grid-item input[type="file"]');
+            var emptyGridItem = Array.prototype.find.call(gridItems, function(item) {
+                return !item.value; // Find the first empty grid item
+            });
+            s
+            if (emptyGridItem) {
+                emptyGridItem.parentNode.replaceChild(fileInput, emptyGridItem);
+            } else {
+                console.log('Maximum number of images reached');
+            }
+        }
+
+        function previewImage(previewId, input) {
+            var previewContainer = document.getElementById(previewId);
+            var previewImage = document.createElement('img');
+
+            // Set the maximum width and maximum height of the image
+            previewImage.style.maxWidth = '200px';
+            previewImage.style.maxHeight = '200px';
+
+            // Set the border radius and border style of the image
+            previewImage.style.borderRadius = '10%';
+            previewImage.style.border = '2px solid gray';
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.setAttribute('src', e.target.result);
+                    previewContainer.innerHTML = ''; // Clear previous content
+                    previewContainer.appendChild(previewImage);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+
+    <center>
+        <div class="row">
+            <!-- <div class="mb-3">
                         <label for="inputtext" class="form-label">รายละเอียดการซ่อม</label>
                         <textarea class="form-control" id="inputtext" rows="3" name="description" readonly require><?= $description ?></textarea>
                     </div> -->
 
-                    <div class="text-center py-4">
-                        <a class="btn btn-danger" onclick="cancel_edit()" id="bounce-item">ยกเลิก</a>
-                        <button type="submit" class="btn btn-success" id="bounce-item">ยืนยัน</button>
-                    </div>
+            <div class="text-center py-4">
+                <a class="btn btn-danger" onclick="cancel_edit()" id="bounce-item">ยกเลิก</a>
+                <button type="submit" class="btn btn-success" id="bounce-item">ยืนยัน</button>
+            </div>
 
-                </div>
-            </center>
-        </form>
-
-
-    </div>
+        </div>
+    </center>
+    </form>
     </div>
 
     <!-- footer-->
