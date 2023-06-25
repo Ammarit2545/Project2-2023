@@ -5,6 +5,11 @@ include('database/condb.php');
 $id = $_SESSION["id"];
 $id_session = $_GET['id'];
 
+if (!isset($_SESSION['r_id_'.$id_session])) {
+    $_SESSION['add_data_detail'] = 2;
+    header('Location: listview_repair.php');
+}
+
 $sql = "SELECT * FROM member WHERE m_id = '$id'";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
@@ -142,12 +147,13 @@ $row = mysqli_fetch_array($result);
             </center>
             <br>
             <br>
-            <form action="action/add_repair.php" method="POST" class="contact-form" name="inputname" enctype="multipart/form-data">
+            <form action="action/edit_repair.php" method="POST" class="contact-form" name="inputname" enctype="multipart/form-data">
                 <div class="container">
                     <div class="grid">
                         <div class="grid-item">
                             <label for="borderinput1" class="form-label">ชื่อยี่ห้อ</label>
                             <input type="text" class="form-control input" id="borderinput" name="name_brand" value="<?= $name_brand_data ?>" placeholder="กรุณากรอกชื่อยี่ห้อ" required>
+                            <input type="text" class="form-control input" id="borderinput" name="session_number" value="<?= $id_session ?>" placeholder="กรุณากรอกชื่อยี่ห้อ" required hidden >
                         </div>
                         <div class="grid-item">
                             <label for="borderinput1" class="form-label">เลข Serial Number</label>

@@ -374,7 +374,19 @@ if (isset($_SESSION['add_data_detail'])) {
         </script>
 <?php
         unset($_SESSION['add_data_detail']);
-    }
+    } elseif ($_SESSION['add_data_detail'] == 2) {
+        ?>
+                <script>
+                    Swal.fire({
+                        title: 'ไม่มีรายการนี้',
+                        text: 'กด Accept เพื่อออก',
+                        icon: 'error',
+                        confirmButtonText: 'Accept'
+                    });
+                </script>
+        <?php
+                unset($_SESSION['add_data_detail']);
+            }
 }
 ?>
 <div id="modalimg" class="modal">

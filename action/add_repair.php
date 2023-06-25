@@ -72,85 +72,37 @@ if (!file_exists($folderName)) { // check if the folder already exists
 
 // Loop over the four images
 for ($i = 1; $i <= 4; $i++) {
+
     $image_name = "image" . $i;
     if (isset($_FILES[$image_name])) {
-        // Your existing code for file upload...
+        $target_dir = $folderName;
+        $file_extension = strtolower(pathinfo($_FILES[$image_name]["name"], PATHINFO_EXTENSION));
+        $filename = $serial_number . $i . "." . $file_extension; // New filename
+        $target_file = $target_dir . $filename;
 
-        // After file upload, resize the image
-        $resized_target_file = $target_dir . "resized_" . $filename;
-        $max_width = 800; // Maximum width for the resized image
-        $max_height = 600; // Maximum height for the resized image
+        $target_file_db = "/uploads/$id/Holder/$i/" . $filename;
 
-        list($original_width, $original_height) = getimagesize($target_file);
-        $aspect_ratio = $original_width / $original_height;
+        $uploadOk = 1;
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-        if ($original_width > $max_width || $original_height > $max_height) {
-            if ($max_width / $max_height > $aspect_ratio) {
-                $max_width = $max_height * $aspect_ratio;
-            } else {
-                $max_height = $max_width / $aspect_ratio;
-            }
+        // Check if file already exists
+        if (file_exists($target_file)) {
+            echo "Sorry, file already exists.";
+            $uploadOk = 0;
+        }
 
-            $resized_image = imagecreatetruecolor($max_width, $max_height);
+        // Allow certain file formats
+        $allowed_extensions = ["jpg", "jpeg", "png", "gif", "mp4", "mov", "jiff"];
+        if (!in_array($file_extension, $allowed_extensions)) {
+            echo "Sorry, only JPG, JPEG, PNG, GIF, MP4, and MOV files are allowed.";
+            $uploadOk = 0;
+        }
 
-            // Load the original image
-            switch ($imageFileType) {
-                case "jpg":
-                case "jpeg":
-                    $source_image = imagecreatefromjpeg($target_file);
-                    break;
-                case "png":
-                    $source_image = imagecreatefrompng($target_file);
-                    break;
-                case "gif":
-                    $source_image = imagecreatefromgif($target_file);
-                    break;
-                    // Add support for other image formats if needed
-                default:
-                    // Unsupported image format
-                    $source_image = null;
-            }
-
-            if ($source_image) {
-                // Resize the image
-                imagecopyresampled(
-                    $resized_image,
-                    $source_image,
-                    0,
-                    0,
-                    0,
-                    0,
-                    $max_width,
-                    $max_height,
-                    $original_width,
-                    $original_height
-                );
-
-                // Save the resized image
-                switch ($imageFileType) {
-                    case "jpg":
-                    case "jpeg":
-                        imagejpeg($resized_image, $resized_target_file);
-                        break;
-                    case "png":
-                        imagepng($resized_image, $resized_target_file);
-                        break;
-                    case "gif":
-                        imagegif($resized_image, $resized_target_file);
-                        break;
-                        // Add support for other image formats if needed
-                }
-
-                imagedestroy($source_image);
-                imagedestroy($resized_image);
-
-                // Output success message
-                echo "The file has been uploaded and resized.";
-            } else {
-                echo "Sorry, there was an error resizing the image.";
-            }
+        // Check if $uploadOk is set to 0 by an error
+        if ($uploadOk == 0) {
+            echo "Sorry, your file was not uploaded.";
+            // if everything is ok, try to upload file
         } else {
-            // No need to resize, simply move the uploaded file to the target directory
             if (move_uploaded_file($_FILES[$image_name]["tmp_name"], $target_file)) {
                 echo "The file " . htmlspecialchars(basename($_FILES[$image_name]["name"])) . " has been uploaded.";
             } else {
@@ -159,7 +111,6 @@ for ($i = 1; $i <= 4; $i++) {
         }
     }
 }
-
 
 $target_dir = "../uploads/$id/"; // Change this to the desired location
 $target_file = $target_dir . basename($_FILES["pphoto"]["name"]);
