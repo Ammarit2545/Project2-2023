@@ -64,6 +64,70 @@ $row = mysqli_fetch_array($result);
         .preview_pic {
             width: 0.02px;
         }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            /* Dim black background */
+        }
+
+        .modal-content {
+            margin: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 100%;
+            max-height: 100%;
+            background-color: black;
+            /* Set the background color to black */
+        }
+
+        #modal-image {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            margin: auto;
+            /* Center the image horizontally */
+        }
+
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .iframe-container {
+            display: none;
+        }
+
+        .check_icon {
+            margin-left: 10px;
+        }
+
+        #drop-shadow {
+            border-radius: 5%;
+            box-shadow: 0 2px 4px rgba(0, 0.2, 0.2, 0.2);
+            /* Adjust the shadow properties as needed */
+        }
     </style>
 </head>
 
@@ -112,7 +176,6 @@ $row = mysqli_fetch_array($result);
     <div class="px-5 pt-5 edit">
         <h1 class="pt-5 text-center">การบริการส่งซ่อม</h1>
         <center>
-            <!-- <p>แบบไม่มีกับมีประกันทางร้าน</p> -->
             <p>กรุณาใส่รายละเอียดการซ่อมของท่าน</p>
         </center>
         <br>
@@ -149,28 +212,18 @@ $row = mysqli_fetch_array($result);
                                 } ?>
                             </label>
                         </div>
-                        <!-- <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" onclick="return check_gua()">
-                            <label class="form-check-label" for="flexRadioDefault2">
-                                มีประกันกับทางร้าน
-                            </label>
-                        </div> -->
                     </div>
 
                     <div class="grid-item" id="check_gua">
-
-                        <!-- <select class="form-select" name="company" aria-label="Default select example" required>
-                            <option value="" selected>กรุณาเลือกบริษัทที่ต้องการเคลม</option> -->
                         <label for="borderinput1" class="form-label">บริษัท</label>
                         <?php
                         $sql_company = "SELECT * FROM company WHERE del_flg = '0' AND com_id = '$company'";
                         $result_company = mysqli_query($conn, $sql_company);
                         $row_company = mysqli_fetch_array($result_company);
                         if ($row_company[0] > 0) {
-                            
+
                         ?>
                             <input type="text" class="form-control input" id="borderinput" value="<?= $row_company['com_name'] ?>" name="com_name" placeholder="กรุณากรอกชื่อรุ่น" required readonly>
-                            <!-- <input type="text" class="form-control input" id="borderinput" value="ไม่มีประกัน" name="com_name" placeholder="กรุณากรอกชื่อรุ่น" required> -->
                         <?php
                         } else {
                         ?>
@@ -178,7 +231,6 @@ $row = mysqli_fetch_array($result);
                         <?php
                         }
                         ?>
-                        <!-- </select> -->
                     </div>
                 </div>
                 <div class="mb-3">
@@ -190,109 +242,6 @@ $row = mysqli_fetch_array($result);
             <div class="container">
                 <label for="borderinput1" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ</label>
                 <div class="row">
-                    <!-- <?php
-                            $folderName = "uploads/$id/Holder"; // the name of the new folder
-                            if (!file_exists($folderName)) { // check if the folder already exists
-                                mkdir($folderName); // create the new folder
-                                // echo "Folder created successfully";
-                            } else {
-                                // echo "Folder already exists";
-                            }
-
-
-                            if (isset($_POST['submit'])) {
-                                // handle image upload
-                                $fileNames = array();
-                                $counter = 0; // initialize counter
-                                foreach ($_FILES['image']['tmp_name'] as $key => $tmp_name) {
-                                    if ($counter >= 5) { // check counter against limit
-                                        break;
-                                    }
-                                    $file = $_FILES['image'];
-                                    $fileName = $file['name'][$key];
-                                    $fileTmpName = $file['tmp_name'][$key];
-                                    $fileSize = $file['size'][$key];
-                                    $fileError = $file['error'][$key];
-                                    $fileType = $file['type'][$key];
-
-                                    // check for errors
-                                    if ($fileError === UPLOAD_ERR_OK) {
-                                        $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-                                        $allowedExt = array('jpg', 'jpeg', 'png', 'gif');
-                                        if (in_array($fileExt, $allowedExt)) {
-                                            if ($fileSize < 5000000) { // 5 MB max file size
-                                                // generate unique file name
-                                                $newFileName = uniqid('', true) . '.' . $fileExt;
-                                                $fileDest = 'uploads/' . $newFileName;
-                                                // move uploaded file to destination folder
-                                                move_uploaded_file($fileTmpName, $fileDest);
-                                                $fileNames[] = $newFileName;
-                                                $counter++; // increment counter
-                                            } else {
-                                                echo "File size too large.";
-                                            }
-                                        } else {
-                                            echo "Invalid file type.";
-                                        }
-                                    } else {
-                                        echo "Error uploading file.";
-                                    }
-                                }
-
-                                // insert image filenames into database
-                                $db = new mysqli("localhost", "username", "password", "database_name");
-                                $stmt = $db->prepare("INSERT INTO images (filename) VALUES (?)");
-                                foreach ($fileNames as $fileName) {
-                                    $stmt->bind_param("s", $fileName);
-                                    $stmt->execute();
-                                }
-                                $stmt->close();
-                                $db->close();
-                                echo "Images inserted successfully.";
-
-                                // display uploaded images
-                                foreach ($fileNames as $fileName) {
-                                    echo '<img src="uploads/' . $fileName . '">';
-                                }
-                            }
-                            ?>
-                            <div class="col-2">
-                                <label for="">กรูณาใส่รูปภาพ (ไม่เกิน 4 รูป)</label>
-                                <button type="button" class="btn btn-primary" onclick="addInput()">Add more images</button>
-                            </div>
-                            <div id="file-inputs">
-                                <input type="file" name="image[]">
-                            </div>
-
-                            <script>
-                                function addInput() {
-                                    var div = document.getElementById("file-inputs");
-                                    var inputCount = div.getElementsByTagName("input").length;
-                                    if (inputCount >= 4) { // check input count against limit
-                                        return;
-                                    }
-                                    var input = document.createElement("input");
-                                    input.type = "file";
-                                    input.name = "image[]";
-                                    div.appendChild(input);
-                                }
-                            </script> -->
-
-                    <!-- <div class="col-3">
-                                <input type="file" name="image1" onchange="previewImage('image-preview1')" id="fileToUpload">
-                            </div>
-                            <div class="col-3">
-                                <input type="file" name="image2" onchange="previewImage('image-preview2')" id="fileToUpload">
-                                <div id="image-preview2"></div>
-                            </div>
-                            <div class="col-3">
-                                <input type="file" name="image3" onchange="previewImage('image-preview3')" id="fileToUpload">
-                                <div id="image-preview3"></div>
-                            </div>
-                            <div class="col-3">
-                                <input type="file" name="image4" onchange="previewImage('image-preview4')" id="fileToUpload">
-                                <div id="image-preview4"></div>
-                            </div> -->
                     <?php
                     $i = 1;
                     while (isset($_SESSION['r_id_' . $i])) {
@@ -305,34 +254,91 @@ $row = mysqli_fetch_array($result);
                             // echo "Folder already exists";
                         }
                     }
-                    // $i -= 1;
                     foreach (new DirectoryIterator("uploads/$id/Holder/$i/") as $file) {
                         if ($file->isFile()) {
-                            // print $file->getFilename() . "\n";
+                            $rp_pic = "uploads/{$id}/Holder/{$i}/" . $file->getFilename();
+                            $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
                     ?>
-                            <div class="col-3">
-                                <img src="uploads/<?= $id ?>/Holder/<?= $i ?>/<?= $file ?>" style="max-width: 100%; height: auto;" alt="picture error">
-                            </div>
+                            <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'jiff'])) : ?>
+                                <div class="col-3">
+                                    <a href="#">
+                                        <img src="<?= $rp_pic ?>" style="max-width: 100%; height: auto; border-radius:2%" alt="picture error" onclick="openModalIMG(this)">
+                                    </a>
+                                </div>
+                            <?php elseif (in_array($file_extension, ['mp4', 'ogg', 'mov'])) : ?>
+                                <div class="col-3">
+                                    <a href="#">
+                                        <video style="max-width: 100%; height: auto; border-radius:2%" alt="picture error" autoplay muted onclick="openModalVideo(this)" src="<?= $rp_pic ?>">
+                                            <source src="<?= $rp_pic ?>" type="video/mp4">
+                                            <source src="<?= $rp_pic ?>" type="video/ogg">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </a>
+                                </div>
+                            <?php endif; ?>
+
                     <?php
                         }
                     }
                     ?>
+                    <div id="modalimg" class="modal">
+                        <span class="close" onclick="closeModalIMG()">&times;</span>
+                        <img id="modal-image" src="" alt="Modal Photo">
+                    </div>
+                    <script src="script.js"></script>
+                    <script>
+                        function openModalIMG(img) {
+                            var modal = document.getElementById("modalimg");
+                            var modalImg = document.getElementById("modal-image");
+                            modal.style.display = "block";
+                            modalImg.src = img.src;
+                            modalImg.style.width = "60%"; // Set the width to 1000 pixels
+                            modalImg.style.borderRadius = "2%"; // Set the border radius to 20%
+                            modal.classList.add("show");
+                        }
+
+                        function closeModalIMG() {
+                            var modal = document.getElementById("modalimg");
+                            modal.style.display = "none";
+                        }
+                    </script>
+                    <!-- Modal -->
+                    <div id="modal" class="modal">
+                        <span class="close" onclick="closeModal()">&times;</span>
+                        <video id="modal-video" controls class="modal-video"></video>
+                    </div>
 
                     <script>
-                        function previewImage(previewId) {
-                            var input = event.target;
-                            var previewContainer = document.getElementById(previewId);
-                            var previewImage = document.createElement('img');
+                        function openModalVideo(element) {
+                            var modal = document.getElementById('modal');
+                            var modalVideo = document.getElementById('modal-video');
 
-                            if (input.files && input.files[0]) {
-                                var reader = new FileReader();
-                                reader.onload = function(e) {
-                                    previewImage.setAttribute('src', e.target.result);
-                                    previewContainer.appendChild(previewImage);
-                                };
-                                reader.readAsDataURL(input.files[0]);
-                            }
+                            modal.style.display = 'block';
+                            modal.classList.add('show');
+
+                            modalVideo.src = element.src;
+                            modalVideo.style.height = '90%';
+                            modalVideo.style.borderRadius = '2%';
+                            modalVideo.style.display = 'block';
+                            modalVideo.style.margin = '0 auto';
                         }
+
+
+                        function closeModal() {
+                            var modal = document.getElementById('modal');
+                            var modalVideo = document.getElementById('modal-video');
+                            modalVideo.pause();
+                            modalVideo.currentTime = 0;
+                            modalVideo.src = ""; // Reset the video source
+                            modal.style.display = 'none';
+                        }
+
+                        window.addEventListener('click', function(event) {
+                            var modal = document.getElementById('modal');
+                            if (event.target === modal) {
+                                closeModal();
+                            }
+                        });
                     </script>
 
                 </div>
@@ -395,22 +401,13 @@ $row = mysqli_fetch_array($result);
 
             <center>
                 <div class="row">
-                    <!-- <div class="mb-3">
-                        <label for="inputtext" class="form-label">รายละเอียดการซ่อม</label>
-                        <textarea class="form-control" id="inputtext" rows="3" name="description" readonly require><?= $description ?></textarea>
-                    </div> -->
-
                     <div class="text-center py-4">
                         <a href="repair_edit.php" class="btn btn-danger">แก้ไขข้อมูล</a>
                         <button type="submit" class="btn btn-success">ยืนยัน</button>
-
                     </div>
-
                 </div>
             </center>
         </form>
-
-
     </div>
     </div>
 

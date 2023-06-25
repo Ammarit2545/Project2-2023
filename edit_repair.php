@@ -162,31 +162,47 @@ $row = mysqli_fetch_array($result);
                             <label for="borderinput1" class="form-label">หมายเลขรุ่น</label>
                             <input type="text" class="form-control input" id="borderinput" name="number_model" value="<?= $number_model_data ?>" placeholder="กรุณากรอก หมายเลขรุ่น  (ไม่จำเป็น)">
                         </div>
-                        <!-- <div class="grid-item">
-                            <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
-                            <input type="text" class="form-control" id="borderinput" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $name_brand ?>" value="<?= $row['m_tel'] ?>" required>
-                        </div> -->
                         <div class="grid-item">
+                            <label for="borderinput1" class="form-label">ประเภทของการซ่อม</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="flexRadioDefault" value="have_non_gua" id="flexRadioDefault1" onclick="return check_non_gua()" <?php if ($company_data == NULL) {
+                                                                                                                                                                                    ?>checked<?php
+                                                                                                                                                                                            } ?>>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    ไม่มีประกันกับทางร้าน
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="flexRadioDefault" value="have_gua" id="flexRadioDefault2" onclick="return check_gua()" <?php if ($company_data != NULL) {
+                                                                                                                                                                            ?>checked<?php
+                                                                                                                                                                                    } ?>>
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                    มีประกันกับทางร้าน
+                                </label>
+                            </div>
+                        </div>
+                        <div class="grid-item" id="check_gua" <?php if ($company_data == NULL) {
+                                                                ?>style="display:none" <?php } ?>>
                             <label for="borderinput1" class="form-label">บริษัท</label>
                             <select class="form-select" name="company" aria-label="Default select example" required>
-                                
+
                                 <?php
-                                 $sql_company_old = "SELECT * FROM company WHERE del_flg = '0' AND com_id = '$company_data'";
-                                 $result_company_old = mysqli_query($conn, $sql_company_old);
-                                 $row_company_old = mysqli_fetch_array($result_company_old);
-                                 if($row_company_old[0] > 0){
-                                    ?>
+                                $sql_company_old = "SELECT * FROM company WHERE del_flg = '0' AND com_id = '$company_data'";
+                                $result_company_old = mysqli_query($conn, $sql_company_old);
+                                $row_company_old = mysqli_fetch_array($result_company_old);
+                                if ($row_company_old[0] > 0) {
+                                ?>
                                     <option value="<?= $row_company_old['com_id'] ?>" selected><?= $row_company_old['com_name'] ?></option>
-                                    <?php
-                                 }else{
-                                    ?>
+                                <?php
+                                } else {
+                                ?>
                                     <option value="" selected>กรุณาเลือกบริษัทที่ต้องการเคลม</option>
-                                    <?php
-                                 }
+                                <?php
+                                }
                                 ?>
 
                                 <?php
-                                $sql_company = "SELECT * FROM company WHERE del_flg = '0' AND NOT com_id = $company_data";
+                                $sql_company = "SELECT * FROM company WHERE del_flg = '0' AND NOT com_id = '$company_data'";
                                 $result_company = mysqli_query($conn, $sql_company);
                                 while ($row_company = mysqli_fetch_array($result_company)) {
                                 ?>
@@ -238,8 +254,19 @@ $row = mysqli_fetch_array($result);
                         </div>
                     </div>
                 </div>
-
                 <script>
+                    function check_non_gua() {
+                        document.getElementById("check_gua").style.display = "none";
+                        document.getElementById("company").required = false;
+                        return true;
+                    }
+
+                    function check_gua() {
+                        document.getElementById("check_gua").style.display = "block";
+                        document.getElementById("company").required = true;
+                        return true;
+                    }
+
                     function addImage4() {
                         var fileInput = document.createElement('input');
                         fileInput.setAttribute('type', 'file');
