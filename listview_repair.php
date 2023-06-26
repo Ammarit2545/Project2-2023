@@ -148,7 +148,7 @@ $row = mysqli_fetch_array($result);
                                     <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'jfif'])) : ?>
                                         <img src="<?= $folderPath . '/' . $file ?>" class="picture_modal" alt="" onclick="openModalIMG(this)" style="width: 10%; height :10%; border : 1px solid gray; border-radius: 10%;">
                                     <?php elseif (in_array($file_extension, ['mp4', 'ogg', 'mov'])) : ?>
-                                        <video style="width: 10%; height: 10%; border-radius: 10%; border : 1px solid gray" class="picture_modal_video" alt="picture error" autoplay muted onclick="openModalVideo(this)" src="<?= $rp_pic ?>">
+                                        <video style="width: 10%; height: 10%; border-radius: 10%; border : 1px solid gray;" class="picture_modal_video" alt="picture error" autoplay muted onclick="openModalVideo(this)" src="<?= $rp_pic ?>">
                                             <source src="<?= $rp_pic ?>" type="video/mp4">
                                             <source src="<?= $rp_pic ?>" type="video/ogg">
                                             Your browser does not support the video tag.

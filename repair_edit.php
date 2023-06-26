@@ -292,7 +292,15 @@ $row = mysqli_fetch_array($result);
                                 ?>
                                     <div class="image-container">
                                         <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview1',1)" title="Delete">&times;</button>
-                                        <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
+                                        <?php
+                                        $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
+                                        if (in_array(strtolower($fileExtension), ['mp4', 'avi', 'mkv', 'mov'])) {
+                                            echo '<video src="' . $file . '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" autoplay muted controls></video>';
+                                        } else {
+                                            echo '<img src="' . $file . '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%">';
+                                        }
+                                        ?>
+
                                     </div>
                             <?php
                                 }
@@ -304,7 +312,7 @@ $row = mysqli_fetch_array($result);
                                 <a id="bounce-item">
                                     <label id="plus_img_card">
                                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" id="plus-button-1" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%;" alt="">
-                                        <p  id="change-button-1" class="btn btn-primary" style="display : none" alt="">เปลี่ยนรูปภาพ</p>
+                                        <p id="change-button-1" class="btn btn-primary" style="display : none" alt="">เปลี่ยนรูปภาพ</p>
                                         <input type="file" name="image1" onchange="previewImage_NEW('image-preview1', this, 'preview-image-new-1',1)" id="fileToUpload" style="display: none;">
                                     </label>
                                 </a>
@@ -312,6 +320,8 @@ $row = mysqli_fetch_array($result);
                             </div>
                         </center>
                     </div>
+
+                    <!-- img 2 -->
                     <div class="grid-item">
                         <div id="image-preview2">
                             <div class="container">
@@ -344,7 +354,14 @@ $row = mysqli_fetch_array($result);
                                 ?>
                                     <div class="image-container">
                                         <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview2' ,2)" title="Delete">&times;</button>
-                                        <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
+                                        <?php
+                                        $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
+                                        if (in_array(strtolower($fileExtension), ['mp4', 'avi', 'mkv', 'mov'])) {
+                                            echo '<video src="' . $file . '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" autoplay muted controls></video>';
+                                        } else {
+                                            echo '<img src="' . $file . '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%">';
+                                        }
+                                        ?>
                                     </div>
                             <?php
                                 }
@@ -353,10 +370,10 @@ $row = mysqli_fetch_array($result);
                         </div>
                         <center>
                             <div id="insert_pic_2" style="display: none;">
-                            <a id="bounce-item">
+                                <a id="bounce-item">
                                     <label id="plus_img_card">
                                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" id="plus-button-2" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" alt="">
-                                        <p  id="change-button-2" class="btn btn-primary" style="display : none" alt="">เปลี่ยนรูปภาพ</p>
+                                        <p id="change-button-2" class="btn btn-primary" style="display : none" alt="">เปลี่ยนรูปภาพ</p>
                                         <input type="file" name="image2" onchange="previewImage_NEW('image-preview2', this, 'preview-image-new-2',2)" id="fileToUpload" style="display: none;">
                                     </label>
                                 </a>
@@ -364,6 +381,8 @@ $row = mysqli_fetch_array($result);
                             </div>
                         </center>
                     </div>
+
+                    <!-- img 3 -->
                     <div class="grid-item">
                         <div id="image-preview3">
                             <div class="container">
@@ -396,7 +415,14 @@ $row = mysqli_fetch_array($result);
                                 ?>
                                     <div class="image-container">
                                         <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview3',3)" title="Delete">&times;</button>
-                                        <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
+                                        <?php
+                                        $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
+                                        if (in_array(strtolower($fileExtension), ['mp4', 'avi', 'mkv', 'mov'])) {
+                                            echo '<video src="' . $file . '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" autoplay muted controls></video>';
+                                        } else {
+                                            echo '<img src="' . $file . '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%">';
+                                        }
+                                        ?>
                                     </div>
                             <?php
                                 }
@@ -408,7 +434,7 @@ $row = mysqli_fetch_array($result);
                                 <a id="bounce-item">
                                     <label id="plus_img_card">
                                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" id="plus-button-3" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" alt="">
-                                        <p  id="change-button-3" class="btn btn-primary" style="display : none" alt="">เปลี่ยนรูปภาพ</p>
+                                        <p id="change-button-3" class="btn btn-primary" style="display : none" alt="">เปลี่ยนรูปภาพ</p>
                                         <input type="file" name="image3" onchange="previewImage_NEW('image-preview3', this, 'preview-image-new-3',3)" id="fileToUpload" style="display: none;">
                                     </label>
                                 </a>
@@ -448,7 +474,14 @@ $row = mysqli_fetch_array($result);
                                 ?>
                                     <div class="image-container">
                                         <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview4',4)" title="Delete">&times;</button>
-                                        <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
+                                        <?php
+                                        $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
+                                        if (in_array(strtolower($fileExtension), ['mp4', 'avi', 'mkv', 'mov'])) {
+                                            echo '<video src="' . $file . '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" autoplay muted controls></video>';
+                                        } else {
+                                            echo '<img src="' . $file . '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%">';
+                                        }
+                                        ?>
                                     </div>
                             <?php
                                 }
@@ -460,11 +493,11 @@ $row = mysqli_fetch_array($result);
                                 <a id="bounce-item">
                                     <label id="plus_img_card">
                                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" id="plus-button-4" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" alt="">
-                                        <p  id="change-button-4" class="btn btn-primary" style="display : none" alt="">เปลี่ยนรูปภาพ</p>
+                                        <p id="change-button-4" class="btn btn-primary" style="display : none" alt="">เปลี่ยนรูปภาพ</p>
                                         <input type="file" name="image4" onchange="previewImage_NEW('image-preview4', this, 'preview-image-new-4',4)" id="fileToUpload" style="display: none;">
                                     </label>
                                 </a>
-                                
+
                                 <div id="preview-image-new-4"></div>
                             </div>
                         </center>
@@ -480,21 +513,22 @@ $row = mysqli_fetch_array($result);
                     if (fileInput.files && fileInput.files[0]) {
                         var reader = new FileReader();
 
-                        // document.getElementById('plus-button-1').style.display = 'none';
+                        // Hide the plus button and show the change button
                         document.getElementById('plus-button-' + count).style.display = 'none';
-
-                        // document.getElementById('plus-button-1').style.display = 'none';
                         document.getElementById('change-button-' + count).style.display = 'block';
 
                         reader.onload = function(e) {
-                            previewImage.innerHTML = '<img src="' + e.target.result + '" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">';
+                            if (fileInput.files[0].type.includes('video')) {
+                                // If the file is a video, create a video element
+                                previewImage.innerHTML = '<video src="' + e.target.result + '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%;" autoplay muted controls></video>';
+                            } else {
+                                // If the file is an image, create an image element
+                                previewImage.innerHTML = '<img src="' + e.target.result + '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%">';
+                            }
                         };
 
                         reader.readAsDataURL(fileInput.files[0]);
                         previewContainer.style.display = 'block';
-
-
-
                     } else {
                         previewImage.innerHTML = '';
                         previewContainer.style.display = 'none';

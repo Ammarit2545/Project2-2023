@@ -94,7 +94,7 @@ for ($i = 1; $i <= 4; $i++) {
         }
 
         // Allow certain file formats
-        $allowed_extensions = ["jpg", "jpeg", "png", "gif", "mp4", "mov", "jiff"];
+        $allowed_extensions = ["jpg", "jpeg", "png", "gif", "mp4", "mov", "jfif"];
         if (!in_array($file_extension, $allowed_extensions)) {
             echo "Sorry, only JPG, JPEG, PNG, GIF, MP4, and MOV files are allowed.";
             $uploadOk = 0;

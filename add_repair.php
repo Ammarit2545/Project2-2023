@@ -128,7 +128,7 @@ $row = mysqli_fetch_array($result);
 
                     <div class="grid-item" id="check_gua" style="display: none;">
                         <label for="borderinput1" class="form-label">บริษัท</label>
-                        <select class="form-select" name="company" id="company" aria-label="Default select example" >
+                        <select class="form-select" name="company" id="company" aria-label="Default select example">
                             <option value="" selected>กรุณาเลือกบริษัทที่ต้องการเคลม</option>
                             <?php
                             $sql_company = "SELECT * FROM company WHERE del_flg = '0'";
@@ -231,22 +231,28 @@ $row = mysqli_fetch_array($result);
 
                 function previewImage(previewId, input) {
                     var previewContainer = document.getElementById(previewId);
-                    var previewImage = document.createElement('img');
-
-                    // Set the maximum width and maximum height of the image
-                    previewImage.style.maxWidth = '200px';
-                    previewImage.style.maxHeight = '200px';
-
-                    // Set the border radius and border style of the image
-                    previewImage.style.borderRadius = '10%';
-                    previewImage.style.border = '2px solid gray';
+                    var previewElement;
 
                     if (input.files && input.files[0]) {
                         var reader = new FileReader();
                         reader.onload = function(e) {
-                            previewImage.setAttribute('src', e.target.result);
+                            if (input.files[0].type.includes('video')) {
+                                // If the file is a video, create a video element
+                                previewElement = document.createElement('video');
+                                previewElement.setAttribute('src', e.target.result);
+                                previewElement.setAttribute('style', 'max-width: 200px; max-height: 200px; border-radius: 10%; border: 2px solid gray;');
+                                previewElement.setAttribute('autoplay', 'true');
+                                previewElement.setAttribute('muted', 'true');
+                                previewElement.setAttribute('controls', 'true');
+                            } else {
+                                // If the file is an image, create an image element
+                                previewElement = document.createElement('img');
+                                previewElement.setAttribute('src', e.target.result);
+                                previewElement.setAttribute('style', 'max-width: 200px; max-height: 200px; border-radius: 10%; border: 2px solid gray;');
+                            }
+
                             previewContainer.innerHTML = ''; // Clear previous content
-                            previewContainer.appendChild(previewImage);
+                            previewContainer.appendChild(previewElement);
                         };
                         reader.readAsDataURL(input.files[0]);
                     }
