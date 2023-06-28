@@ -1,42 +1,3 @@
-<?php
-session_start();
-
-// Check if the button has been clicked
-if (isset($_POST['switchButton'])) {
-    // Toggle the input field index stored in the session
-    $_SESSION['inputIndex'] = isset($_SESSION['inputIndex']) ? $_SESSION['inputIndex'] + 1 : 1;
-    if ($_SESSION['inputIndex'] > 4) {
-        $_SESSION['inputIndex'] = 1;
-        echo '<script>
-            Swal.fire({
-                icon: "warning",
-                text: "Can only insert up to 4 files",
-                timer: 2000,
-                timerProgressBar: true,
-                showConfirmButton: false
-            });
-        </script>';
-    }
-}
-
-// Get the current input field index from the session or set it to 1 by default
-$inputIndex = isset($_SESSION['inputIndex']) ? $_SESSION['inputIndex'] : 1;
-
-// Remove the following code block
-if ($_SESSION['inputIndex'] > 4) {
-    $_SESSION['inputIndex'] = 1;
-    echo '<script>
-        Swal.fire({
-            icon: "warning",
-            text: "Can only insert up to 4 files",
-            timer: 2000,
-            timerProgressBar: true,
-            showConfirmButton: false
-        });
-    </script>';
-}
-?>
-
 <!DOCTYPE html>
 <html>
 
@@ -49,6 +10,7 @@ if ($_SESSION['inputIndex'] > 4) {
             var nextIndex = inputIndex + 1;
             if (nextIndex > 4) {
                 nextIndex = 4;
+                document.querySelector('button').style.display = 'none';
             }
             document.getElementById('inputIndex').value = nextIndex;
 
@@ -70,7 +32,6 @@ if ($_SESSION['inputIndex'] > 4) {
                 cancelable: true
             });
             currentInputField.dispatchEvent(clickEvent);
-
         }
 
         window.onload = function() {
@@ -85,10 +46,18 @@ if ($_SESSION['inputIndex'] > 4) {
 </head>
 
 <body>
+    <div class="container">
+        <label for="borderinput" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ (สูงสุด 4 ไฟล์) <p id="insert_bill" style="display: none; color:red">*** เพิ่มรูปใบเสร็จของท่านเพื่อเป็นการยืนยันอย่างน้อย 1 รูป ***</p></label>
+        <div class="row grid">
+            <?php for ($i = 1; $i <= 4; $i++) : ?>
+                <div class="col-3 grid-item">
+                    <input type="file" name="image<?php echo $i; ?>" onchange="previewImage('image-preview<?php echo $i; ?>', this)" id="input<?php echo $i; ?>" class="input-field" <?php if ($inputIndex == $i) echo 'style="display: block;"'; ?>>
+                </div>
+            <?php endfor; ?>
+        </div>
+    </div>
+
     <form method="POST" action="">
-        <?php for ($i = 1; $i <= 4; $i++) : ?>
-            <input type="file" name="input<?php echo $i; ?>" id="input<?php echo $i; ?>" class="input-field" placeholder="Input <?php echo $i; ?>" <?php if ($inputIndex == $i) echo 'style="display: block;"'; ?>>
-        <?php endfor; ?>
         <input type="hidden" id="inputIndex" value="<?php echo $inputIndex; ?>">
         <br><br>
         <button type="button" onclick="switchInput()">Switch Input</button>

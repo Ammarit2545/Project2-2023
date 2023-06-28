@@ -169,19 +169,55 @@ $row = mysqli_fetch_array($result);
                 <!-- <a class="btn btn-primary" style="margin-left:10px;" onclick="addImage4()">+</a> -->
                 <div class="row grid">
                     <div class="col-3 grid-item">
-                        <input type="file" name="image1" onchange="previewImage('image-preview1', this)" id="fileToUpload">
+                        <input type="file" name="image1" onchange="previewImage('image-preview1', this)" id="input1">
                     </div>
                     <div class="col-3 grid-item">
-                        <input type="file" name="image2" onchange="previewImage('image-preview2', this)" id="fileToUpload">
+                        <input type="file" name="image2" onchange="previewImage('image-preview2', this)" id="input2">
                     </div>
                     <div class="col-3 grid-item">
-                        <input type="file" name="image3" onchange="previewImage('image-preview3', this)" id="fileToUpload">
+                        <input type="file" name="image3" onchange="previewImage('image-preview3', this)" id="input3">
                     </div>
                     <div class="col-3 grid-item">
-                        <input type="file" name="image4" onchange="previewImage('image-preview4', this)" id="fileToUpload">
+                        <input type="file" name="image4" onchange="previewImage('image-preview4', this)" id="input1">
                     </div>
                 </div>
             </div>
+
+            <script>
+                function switchInput() {
+                    var inputIndex = parseInt(document.getElementById('inputIndex').value);
+                    var nextIndex = inputIndex + 1;
+                    if (nextIndex > 4) {
+                        nextIndex = 4;
+                        document.querySelector('button').style.display = 'none';
+                    }
+                    document.getElementById('inputIndex').value = nextIndex;
+
+                    // Hide all input fields
+                    var inputFields = document.getElementsByClassName('input-field');
+                    for (var i = 0; i < inputFields.length; i++) {
+                        inputFields[i].style.display = 'none';
+                    }
+
+                    // Show the input field corresponding to the current index
+                    var currentInputField = document.getElementById('input' + nextIndex);
+                    currentInputField.style.display = 'block';
+                    currentInputField.focus();
+
+                    // Trigger click event on the input field
+                    var clickEvent = new MouseEvent('click', {
+                        view: window,
+                        bubbles: true,
+                        cancelable: true
+                    });
+                    currentInputField.dispatchEvent(clickEvent);
+                }
+
+                window.onload = function() {
+                    switchInput(); // Automatically trigger the switchInput() function on page load
+                };
+            </script>
+            <button type="button" onclick="switchInput()">Switch Input</button>
 
             <div class="container">
                 <div class="grid-pic">
