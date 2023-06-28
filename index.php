@@ -642,9 +642,33 @@ if ($_SESSION["log_login"] == 0) {
     ?>
       <script>
         Swal.fire({
-          title: 'สมัครบัญชีผู้ใช้ของคุฯเสวร็จสิ้น',
+          title: 'สมัครบัญชีผู้ใช้ของคุณเสร็จสิ้น',
           text: 'กด Accept เพื่อออกและทำการ Login',
           icon: 'success',
+          confirmButtonText: 'Accept'
+        });
+      </script>
+    <?php
+      unset($_SESSION['add_data_alert']);
+    } else if ($_SESSION['add_data_alert'] == 5) {
+    ?>
+      <script>
+        Swal.fire({
+          title: 'แก้ไขข้อมูลของคุณเสร็จสิ้น',
+          text: 'กด Accept เพื่อออก',
+          icon: 'success',
+          confirmButtonText: 'Accept'
+        });
+      </script>
+    <?php
+      unset($_SESSION['add_data_alert']);
+    } else if ($_SESSION['add_data_alert'] == 6) {
+    ?>
+      <script>
+        Swal.fire({
+          title: 'ข้อมูลไม่ถูกต้อง',
+          text: 'กด Accept เพื่อออก',
+          icon: 'error',
           confirmButtonText: 'Accept'
         });
       </script>
