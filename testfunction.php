@@ -1,68 +1,233 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Toggle Input Field</title>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.3"></script>
-    <script>
-        function switchInput() {
-            var inputIndex = parseInt(document.getElementById('inputIndex').value);
-            var nextIndex = inputIndex + 1;
-            if (nextIndex > 4) {
-                nextIndex = 4;
-                document.querySelector('button').style.display = 'none';
-            }
-            document.getElementById('inputIndex').value = nextIndex;
-
-            // Hide all input fields
-            var inputFields = document.getElementsByClassName('input-field');
-            for (var i = 0; i < inputFields.length; i++) {
-                inputFields[i].style.display = 'none';
-            }
-
-            // Show the input field corresponding to the current index
-            var currentInputField = document.getElementById('input' + nextIndex);
-            currentInputField.style.display = 'block';
-            currentInputField.focus();
-
-            // Trigger click event on the input field
-            var clickEvent = new MouseEvent('click', {
-                view: window,
-                bubbles: true,
-                cancelable: true
-            });
-            currentInputField.dispatchEvent(clickEvent);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .end {
+            text-align: end;
         }
 
-        window.onload = function() {
-            switchInput(); // Automatically trigger the switchInput() function on page load
-        };
-    </script>
-    <style>
-        .input-field {
-            display: none;
+        .start {
+            text-align: end;
+        }
+
+        .center {
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <label for="borderinput" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ (สูงสุด 4 ไฟล์) <p id="insert_bill" style="display: none; color:red">*** เพิ่มรูปใบเสร็จของท่านเพื่อเป็นการยืนยันอย่างน้อย 1 รูป ***</p></label>
-        <div class="row grid">
-            <?php for ($i = 1; $i <= 4; $i++) : ?>
-                <div class="col-3 grid-item">
-                    <input type="file" name="image<?php echo $i; ?>" onchange="previewImage('image-preview<?php echo $i; ?>', this)" id="input<?php echo $i; ?>" class="input-field" <?php if ($inputIndex == $i) echo 'style="display: block;"'; ?>>
-                </div>
-            <?php endfor; ?>
-        </div>
-    </div>
 
-    <form method="POST" action="">
-        <input type="hidden" id="inputIndex" value="<?php echo $inputIndex; ?>">
-        <br><br>
-        <button type="button" onclick="switchInput()">Switch Input</button>
-        <input type="submit" name="switchButton" style="display: none;">
-    </form>
+    <h3 class="center">สมัครสมาชิก</h3>
+
+    <center>
+        <table width="40%">
+            <tr>
+                <td style="background:yellow;" colspan="3">
+                    <h3>ข้อมูลส่วนตัว</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="end">คำนำหน้า</p>
+                </td>
+                <td class="center">
+                    :
+                </td>
+                <td>
+                    <select name="" id="">
+                        <option value="select">กรุณาเลือก</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="end">ชื่อ</p>
+                </td>
+                <td class="center">
+                    :
+                </td>
+                <td>
+                    <input type="text">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="end">นามสกุล</p>
+                </td>
+                <td class="center">
+                    :
+                </td>
+                <td>
+                    <input type="text">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="end">วันเดือนปีเกิด</p>
+                </td>
+                <td class="center">
+                    :
+                </td>
+                <td>
+                    <input type="text">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="end">เพศ</p>
+                </td>
+                <td class="center">
+                    :
+                </td>
+                <td>
+                    <input type="radio" name="" id="" placeholder="dkapdj">ชาย
+                    <input type="radio" name="" id="" placeholder="dkapdj">หญิง
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="end">อีเมล์</p>
+                </td>
+                <td class="center">
+                    :
+                </td>
+                <td>
+                    <input type="text" name="" id="">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="end">เบอร์โทรศัพท์</p>
+                </td>
+                <td class="center">
+                    :
+                </td>
+                <td>
+                    <input type="text">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="end">ที่อยู่ปัจจุบัน</p>
+                </td>
+                <td class="center">
+                    :
+                </td>
+                <td>
+                    <textarea name="" id="" cols="30" rows="10"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="end">อำเภอ</p>
+                </td>
+                <td class="center">
+                    :
+                </td>
+                <td>
+                    <input type="text">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="end">จังหวัด</p>
+                </td>
+                <td class="center">
+                    :
+                </td>
+                <td>
+                    <input type="text">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="end">รหัสไปรษณีย์</p>
+                </td>
+                <td class="center">
+                    :
+                </td>
+                <td>
+                    <input type="text">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="end">คำนำหน้า</p>
+                </td>
+                <td class="center">
+                    :
+                </td>
+                <td>
+                    <select name="" id="">
+                        <option value="select">กรุณาเลือก</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    <p class="end">งานอดิเรก</p>
+                </td>
+                <td class="center">
+                    :
+                </td>
+                <td>
+                    <input type="checkbox" name="" id="" placeholder="dkapdj">อ่านหนังสือ
+                    <input type="checkbox" name="" id="" placeholder="dkapdj">เล่นเกม
+                    <input type="checkbox" name="" id="" placeholder="dkapdj">ดูหนัง
+                </td>
+
+            </tr>
+            <tr>
+
+                <td class="center">
+                </td>
+                <td>
+                    <input type="checkbox" name="" id="" placeholder="dkapdj">ฟังเพลง
+                    <input type="checkbox" name="" id="" placeholder="dkapdj">ปลูกต้นไม้
+                    <input type="checkbox" name="" id="" placeholder="dkapdj">ท่องเที่ยว
+                </td>
+
+            </tr>
+            <tr>
+                <td style="background:red;" colspan="3">
+                    <h3>ข้อมูลผู้ใช้</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="end">Username</p>
+                </td>
+                <td class="center">
+                    :
+                </td>
+                <td>
+                    <input type="text">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="end">Password</p>
+                </td>
+                <td class="center">
+                    :
+                </td>
+                <td>
+                    <input type="text">
+                </td>
+            </tr>
+        </table>
+        <button>
+            สมัครสมาชิก
+        </button>
+        <button>
+            ยกเลิก
+        </button>
+    </center>
 </body>
 
 </html>

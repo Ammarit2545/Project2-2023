@@ -421,7 +421,7 @@ $get_add_price = $row1['get_add_price'];
 
                 ?>
                 <form id="addressForm" action="action/add_address.php" method="POST">
-                    <div class="form-group" style="display:block'>
+                    <div class="form-group" style="display:block">
                         <label for="sel1">จังหวัด:</label>
                         <select class="form-control" name="Ref_prov_id" id="provinces">
                             <option value="" selected disabled>-กรุณาเลือกจังหวัด-</option>
