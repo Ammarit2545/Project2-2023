@@ -104,27 +104,27 @@ if (!isset($_SESSION['role_id'])) {
                                         ;
                                          ";
                                         } else {
-                                            $sql_nofi = "SELECT get_repair.get_r_id, get_detail.get_d_id, repair.r_id, status_type.status_id, get_repair.get_deli
-                                                    FROM get_repair
-                                                    LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
-                                                    LEFT JOIN repair ON get_detail.r_id = repair.r_id   
-                                                    LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
-                                                    LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
-                                                    WHERE get_repair.del_flg = '0' AND get_detail.del_flg = '0'
-                                                    GROUP BY get_repair.get_r_id
-                                                    ORDER BY get_repair.get_r_id DESC;";
+                                            $sql_nofi = "SELECT get_repair.get_r_id, MAX(get_detail.get_d_id) AS get_d_id, MAX(repair.r_id) AS r_id, MAX(status_type.status_id) AS status_id, MAX(get_repair.get_deli) AS get_deli
+                                                        FROM get_repair
+                                                        LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
+                                                        LEFT JOIN repair ON get_detail.r_id = repair.r_id   
+                                                        LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
+                                                        LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
+                                                        WHERE get_repair.del_flg = '0' AND get_detail.del_flg = '0'
+                                                        GROUP BY get_repair.get_r_id
+                                                        ORDER BY get_repair.get_r_id DESC;";
                                         }
-
 
                                         $result_nofi = mysqli_query($conn, $sql_nofi);
                                         $num_rows = mysqli_fetch_array($result_nofi_count);
                                         $i = 0;
                                         while ($row = mysqli_fetch_array($result_nofi)) {
-                                            if ($row['get_r_date_in'] !== null) {
+                                            if (isset($row['get_r_date_in']) && $row['get_r_date_in'] !== null) {
                                                 $dateString = date('d-m-Y', strtotime($row['get_r_date_in']));
                                                 // Rest of the code that uses $dateString
-                                            }
-                                            $date = DateTime::createFromFormat('d-m-Y', $dateString);
+                                                $date = DateTime::createFromFormat('d-m-Y', $dateString);
+                                                // Additional code using $date
+                                            }                                            
                                             $formattedDate = $date->format('F / d / Y');
                                             $i = $i + 1;
                                             $get_r_id = $row['get_r_id'];
@@ -169,30 +169,32 @@ if (!isset($_SESSION['role_id'])) {
                                                     } ?>
                                                 </td>
                                                 <td><?php
-                                                    if ($row['r_brand'] != NULL && $row_get_count[0] == 1) {
+                                                    if (isset($row['r_brand']) && $row_get_count[0] == 1) {
                                                         echo $row['r_brand'];
                                                     } elseif ($row_get_count[0] > 1) {
-                                                    ?>
+                                                        ?>
                                                         <p style="color:blue">มากกว่า 1 ชิ้น</p>
-                                                    <?php
+                                                        <?php
                                                     } else {
                                                         echo "-";
-                                                    } ?>
+                                                    }
+                                                     ?>
                                                 </td>
                                                 <td><?php
-                                                    if ($row['r_model'] != NULL && $row_get_count[0] == 1) {
+                                                    if (isset($row['r_model']) && $row_get_count[0] == 1) {
                                                         echo $row['r_model'];
                                                     } elseif ($row_get_count[0] > 1) {
-                                                    ?>
+                                                        ?>
                                                         <p style="color:blue">มากกว่า 1 ชิ้น</p>
-                                                    <?php
+                                                        <?php
                                                     } else {
                                                         echo "-";
-                                                    } ?>
+                                                    }
+                                                    ?>
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if ($row['get_d_record'] != NULL && $row_get_count[0] == 1) {
+                                                    if (isset($row['get_d_record']) != NULL && $row_get_count[0] == 1) {
                                                         echo $row['get_d_record'];
                                                     } elseif ($row_get_count[0] > 1) {
                                                     ?>
@@ -203,7 +205,7 @@ if (!isset($_SESSION['role_id'])) {
                                                     } ?>
                                                 </td>
                                                 <td><?php
-                                                    if ($row['r_serial_number'] != NULL && $row_get_count[0] == 1) {
+                                                    if (isset($row['r_serial_number']) != NULL && $row_get_count[0] == 1) {
                                                         echo $row['r_serial_number'];
                                                     } elseif ($row_get_count[0] > 1) {
                                                     ?>
