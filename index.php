@@ -541,7 +541,7 @@ if ($_SESSION["log_login"] == 0) {
               <center><img src="https://tcatexpress.com/images/icon/why-choose-4.png" alt="Bootstrap" width="70" height="70" class="rounded-circle border border-white"></center>
           </li> -->
           <center><img src="https://tcatexpress.com/images/icon/why-choose-4.png" alt="Bootstrap" width="70" height="70" class="rounded-circle border border-white"></center>
-               <center><h5>มีบริการจัดส่งพัสดุ</h5></center>
+               <center><h5>มีบริการจัดส่งพัสดุจัดส่งถึงหน้าบ้านคุณ</h5></center>
             <a href="#" class="icon-link">
               <svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"></use></svg>
             </a>
@@ -551,7 +551,7 @@ if ($_SESSION["log_login"] == 0) {
               <center><img src="https://cdn.icon-icons.com/icons2/3724/PNG/512/problem_solve_observation_connect_key_solution_icon_230488.png" alt="Bootstrap" width="70" height="70" class="rounded-circle border border-white"></center>
           </li> -->
            <center><img src="https://cdn.icon-icons.com/icons2/3724/PNG/512/problem_solve_observation_connect_key_solution_icon_230488.png" alt="Bootstrap" width="70" height="70" class="rounded-circle border border-white"></center>
-              <center><h5>รับบริการและความช่วยเหลือจากผู้เชี่ยวชาญ</h5></center>
+              <center><h5>รับบริการและความช่วยเหลือจากผู้เชี่ยวชาญโดยตรง</h5></center>
             <a href="#" class="icon-link">
               <svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"></use></svg>
             </a>
@@ -559,7 +559,17 @@ if ($_SESSION["log_login"] == 0) {
           </div> 
         </div>
       <!-- End Features2 -->
-
+      
+       <!-- ล่าสุด -->
+       <div class="px-1 py-1 my-1 text-center">
+          <div class="col-lg-6 mx-auto">
+          <h2 class="pb-2 border-bottom">บริการจริงจากประสบการณ์มากกว่า30ปี</h2>
+          <img class="d-block mx-auto my-4 imglogo" src="img brand/s4.jpg" alt="" width="100%">
+          <h2 class="pb-2 border-bottom">🔥ทางเรายังมีสินค้าเข้าใหม่ที่คุณอาจให้ความสนใจ🔥</h2>
+          <img class="d-block mx-auto my-4 imglogo" src="img brand/s5.jpg" alt="" width="100%">
+        </div>
+      </div>
+      <!-- End ล่าสุด -->
   <!-- footer-->
   <?php
   include('footer/footer.php')
