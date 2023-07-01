@@ -473,7 +473,7 @@ if (!isset($_SESSION['role_id'])) {
                                     </center>ะเงินแล้ว
                                     <br>
                                 <?php
-                                }else if ($row_s['rs_cancel_detail'] != NULL) {
+                                }else if (isset($row_s['rs_cancel_detail']) != NULL) {
                             ?>
                                 <div class="alert alert-danger" role="alert">
                                     <center>
@@ -647,11 +647,13 @@ if (!isset($_SESSION['role_id'])) {
 
                                 <h6 for="staticEmail" class="col-sm-1 col-form-label">ชื่อ</h6>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="staticEmail" value="<?= $row['m_fname']  ?>" placeholder="ไม่มีข้อมูล" disabled>
+                                    <!-- <input type="text" class="form-control" id="staticEmail" value="<?= $row['m_fname']  ?>" placeholder="ไม่มีข้อมูล" disabled> -->
+                                    <p class="col-form-label"><?= $row['m_fname']  ?></p>
                                 </div>
                                 <label for="inputPassword" class="col-sm-1 col-form-label">นามสกุล</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="inputPassword" value="<?= $row['m_lname']  ?>" placeholder="ไม่มีข้อมูล" disabled="disabled">
+                                    <!-- <input type="text" class="form-control" id="inputPassword" value="<?= $row['m_lname']  ?>" placeholder="ไม่มีข้อมูล" disabled="disabled"> -->
+                                    <p class="col-form-label"><?= $row['m_lname']  ?></p>
                                 </div>
                             </div>
                             <?php
@@ -660,11 +662,13 @@ if (!isset($_SESSION['role_id'])) {
                                 <div class="mb-3 row">
                                     <label for="inputPassword" class="col-sm-1 col-form-label">Brand :</label>
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control" id="inputPassword" value="<?= $row['r_brand']  ?>" placeholder="ไม่มีข้อมูล" disabled="disabled">
+                                        <!-- <input type="text" class="form-control" id="inputPassword" value="<?= $row['r_brand']  ?>" placeholder="ไม่มีข้อมูล" disabled="disabled"> -->
+                                        <p class="col-form-label"><?= $row['r_brand']  ?></p>
                                     </div>
                                     <label for="inputPassword" class="col-sm-1 col-form-label">Model :</label>
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control" id="inputPassword" value="<?= $row['r_model']  ?>" placeholder="ไม่มีข้อมูล" disabled="disabled">
+                                        <!-- <input type="text" class="form-control" id="inputPassword" value="<?= $row['r_model']  ?>" placeholder="ไม่มีข้อมูล" disabled="disabled"> -->
+                                        <p class="col-form-label"><?= $row['r_model']  ?></p>
                                     </div>
                                 </div>
                             <?php
@@ -678,11 +682,12 @@ if (!isset($_SESSION['role_id'])) {
                             <div class="mb-3 row">
                                 <label for="inputPassword" class="col-sm-1 col-form-label">เบอร์โทรศัพท์</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="inputPassword" placeholder="ไม่มีข้อมูล" value="<?= $row['get_tel']  ?>" disabled="disabled">
+                                    <!-- <input type="text" class="form-control" id="inputPassword" placeholder="ไม่มีข้อมูล" value="<?= $row['get_tel']  ?>" disabled="disabled"> -->
+                                    <p class="col-form-label"><?= $row['get_tel']  ?></p>
                                 </div>
                                 <label for="inputPassword" class="col-sm-1 col-form-label">บริษัท</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="inputPassword" placeholder="ไม่มีข้อมูล" value="<?php
+                                    <!-- <input type="text" class="form-control" id="inputPassword" placeholder="ไม่มีข้อมูล" value="<?php
                                                                                                                                 if ($row['com_id'] == NULL) {
                                                                                                                                     echo "ไม่มีข้อมูล";
                                                                                                                                 } else {
@@ -693,7 +698,19 @@ if (!isset($_SESSION['role_id'])) {
 
                                                                                                                                     echo $row_com['com_name'];
                                                                                                                                 }
-                                                                                                                                ?>" disabled="disabled">
+                                                                                                                                ?>" disabled="disabled"> -->
+                                    <p class="col-form-label"><?php
+                                                                                                                                if ($row['com_id'] == NULL) {
+                                                                                                                                    echo "ไม่มีข้อมูล";
+                                                                                                                                } else {
+                                                                                                                                    $com_id = $row['com_id'];
+                                                                                                                                    $sql_com = "SELECT * FROM company WHERE com_id = '$com_id'";
+                                                                                                                                    $result_com = mysqli_query($conn, $sql_com);
+                                                                                                                                    $row_com = mysqli_fetch_array($result_com);
+
+                                                                                                                                    echo $row_com['com_name'];
+                                                                                                                                }
+                                                                                                                                ?></p>
                                 </div>
                             </div>
                             <hr>
@@ -703,21 +720,24 @@ if (!isset($_SESSION['role_id'])) {
                                 <?php if ($row['get_add'] != NULL) {
                                 ?>
                                     <div class="row">
-                                        <div class="col-4">
-                                            <label for="exampleFormControlTextarea1" class="col-form-label">จังหวัด :</label>
-                                            <input type="text" class="form-control" value="<?= $row_p[0] ?>" readonly>
+                                    <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">จังหวัด :</label>
+                                        <div class="col">
+                                            <!-- <input type="text" class="form-control" value="<?= $row_p[0] ?>" readonly> -->
+                                            <p class="col-form-label"><?= $row_p[0] ?></p>
                                         </div>
-                                        <div class="col-4">
-                                            <label for="exampleFormControlTextarea1" class="col-form-label">อำเภอ :</label>
-                                            <input type="text" class="form-control" value="<?= $row_p[1] ?>" readonly>
+                                        <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">อำเภอ :</label>
+                                        <div class="col">
+                                            <!-- <input type="text" class="form-control" value="<?= $row_p[1] ?>" readonly> -->
+                                            <p class="col-form-label"><?= $row_p[1] ?></p>
                                         </div>
-                                        <div class="col-4">
-                                            <label for="exampleFormControlTextarea1" class="col-form-label">ตำบล :</label>
-                                            <input type="text" class="form-control" value="<?= $row_p[2] ?>" readonly>
+                                        <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">ตำบล :</label>
+                                        <div class="col">
+                                            <!-- <input type="text" class="form-control" value="<?= $row_p[2] ?>" readonly> -->
+                                            <p class="col-form-label"><?= $row_p[2] ?></p>
                                         </div>
                                     </div>
                                     <br>
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?php
+                                    <!-- <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?php
                                                                                                                                     if ($row['get_add'] == NULL) {
                                                                                                                                         echo "ไม่มีข้อมูล";
                                                                                                                                     } else {
@@ -725,7 +745,15 @@ if (!isset($_SESSION['role_id'])) {
                                                                                                                                         echo $obj->description;
                                                                                                                                     }
                                                                                                                                     ?>
-                                </textarea>
+                                </textarea> -->
+                                <p class="col-form-label"><?php
+                                                                                                                                    if ($row['get_add'] == NULL) {
+                                                                                                                                        echo "ไม่มีข้อมูล";
+                                                                                                                                    } else {
+
+                                                                                                                                        echo $obj->description;
+                                                                                                                                    }
+                                                                                                                                    ?></p>
                                 <?php
                                 } else {
                                 ?>
@@ -752,7 +780,8 @@ if (!isset($_SESSION['role_id'])) {
                             ?>
                             <div class="mb-3">
                                 <label for="exampleFormControlTextarea1" class="btn btn-outline-primary">รายละเอียด</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?= $row_s['rs_detail']  ?></textarea>
+                                <!-- <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?= $row_s['rs_detail']  ?></textarea> -->
+                                <p class="col-form-label"><?= $row_s['rs_detail']  ?></p>
                             </div>
 
                             <?php
@@ -773,7 +802,7 @@ if (!isset($_SESSION['role_id'])) {
                                 $sql_pic3 = "SELECT * FROM repair_pic WHERE rs_id = '$rs_id' AND del_flg = 0 ";
                                 $result_pic3 = mysqli_query($conn, $sql_pic3);
                                 $roe_c =  mysqli_fetch_array($result_pic3);
-                                if ($roe_c[0] == NULL) {
+                                if (isset($roe_c[0]) == NULL) {
                                 ?>
                                     <label for="exampleFormControlTextarea1" class="btn btn-outline-primary" style="display:none">รูปภาพประกอบ:</label>
                                 <?php

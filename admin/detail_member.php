@@ -59,8 +59,9 @@ if (!isset($_SESSION['role_id'])) {
                 <!-- Begin Page Content -->
                 <form action="action/edit_employee.php?id=<?= $e_id ?>" method="POST">
                     <div class="container-fluid">
-
-                        <!-- Page Heading -->
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- Page Heading -->
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
                             <h1 class="h3 mb-0 text-gray-800">แก้ไขข้อมูลลูกค้า</h1>
                         </div>
@@ -73,33 +74,86 @@ if (!isset($_SESSION['role_id'])) {
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-1 col-form-label">ชื่อ</label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="e_fname" id="staticEmail" value="<?= $row['m_fname'] ?>" placeholder="กรุณากรอกชื่อ">
+                                <!-- <input type="text" class="form-control" name="e_fname" id="staticEmail" value="<?= $row['m_fname'] ?>" placeholder="กรุณากรอกชื่อ" readonly> -->
+                                <p class="col-form-label"><?= $row['m_fname'] ?></p>
                             </div>
                             <label for="inputPassword" class="col-sm-1 col-form-label">นามสกุล</label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="e_lname" id="inputPassword" value="<?= $row['m_lname'] ?>" placeholder="กรุณากรอกนามสกุล">
+                                <!-- <input type="text" class="form-control" name="e_lname" id="inputPassword" value="<?= $row['m_lname'] ?>" placeholder="กรุณากรอกนามสกุล" readonly> -->
+                                <p class="col-form-label"><?= $row['m_lname'] ?></p>
                             </div>
                         </div>
                         <div class="mb-3 row">
                             <label for="inputPassword" class="col-sm-1 col-form-label">เบอร์โทรศัพท์</label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="e_tel" id="inputPassword" value="<?= $row['m_tel'] ?>" placeholder="กรุณากรอกเบอร์โทร">
+                                <!-- <input type="text" class="form-control" name="e_tel" id="inputPassword" value="<?= $row['m_tel'] ?>" placeholder="กรุณากรอกเบอร์โทร" readonly> -->
+                                <p class="col-form-label"><?= $row['m_tel'] ?></p>
                             </div>
                             <label for="inputPassword" class="col-sm-1 col-form-label">email</label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" id="inputPassword" value="<?= $row['m_email'] ?>" placeholder="ไม่มีข้อมูล" readonly>
+                                <!-- <input type="text" class="form-control" id="inputPassword" value="<?= $row['m_email'] ?>" placeholder="ไม่มีข้อมูล" readonly> -->
+                                <p class="col-form-label"><?= $row['m_email'] ?></p>
                             </div>
                         </div>
+                        <hr>
+                        <?php
+                            if (isset($row['m_add'])) {
+                                $jsonobj = $row['m_add'];
+                                $obj = json_decode($jsonobj);
+                                $sql_p = "SELECT provinces.name_en, amphures.name_en, districts.name_en
+                                          FROM provinces
+                                          LEFT JOIN amphures ON provinces.id = amphures.province_id
+                                          LEFT JOIN districts ON amphures.id = districts.amphure_id
+                                          WHERE provinces.id = '$obj->province' AND amphures.id = '$obj->district' AND districts.id = '$obj->sub_district';";
+                                $result_p = mysqli_query($conn, $sql_p);
+                                $row_p = mysqli_fetch_array($result_p);
+                            }                            
+                        ?>
                         <div class="mb-3">
-                            <label for="exampleFormControlTextarea1" class="col-form-label">ที่อยู่ :</label>
-                            <textarea name="p_description" class="form-control" id="exampleFormControlTextarea1" rows="3"><?= $row['m_add'] ?></textarea>
-                        </div>
-                        <br>
-                        <div class="text-center pt-4">
-                            <button type="submit" class="btn btn-success" onclick="return confirm('คุฯต้องการแก้ไขข้อมูลพนักงานหรือไม่?\n*โปรดตรวจสอบข้อมูลให้ถูกต้อง')">ยืนยัน</button>
-                        </div>
+                            <?php if (isset($row['m_add']) != NULL) {
+                                ?>
+                                <div class="row">
+                                    <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">จังหวัด :</label>
+                                    <div class="col">
+                                        <p class="col-form-label"><?= $row_p[0] ?></p>
+                                    </div>
+                                    <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">อำเภอ :</label>
+                                    <div class="col">
+                                        <p class="col-form-label"><?= $row_p[1] ?></p>
+                                    </div>
+                                    <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">ตำบล :</label>
+                                    <div class="col">
+                                        <p class="col-form-label"><?= $row_p[2] ?></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">รายละเอียดที่อยู่:</label>
+                                    <div class="col">
+                                        <p class="col-form-label mb-0"><?php
+                                            if ($row['m_add'] == NULL) {
+                                                echo "ไม่มีข้อมูล";
+                                            } else {
 
+                                                echo $obj->description;
+                                            }
+                                            ?></p>
+                                        <?php
+                                        } else {
+                                        ?>
+                                            <center>
+                                                <h5>ไม่มีข้อมูลที่อยู่</h5>
+                                            </center>
+                                        <?php
+                                        }
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <div class="text-center pt-4">
+                            <a class="btn btn-success" href="listview_member.php">Back</a>
+                        </div>
                 </form>
                 <!-- /.container-fluid -->
 
@@ -107,13 +161,13 @@ if (!isset($_SESSION['role_id'])) {
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
+            <!-- <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>Copyright &copy; Your Website 2020</span>
                     </div>
                 </div>
-            </footer>
+            </footer> -->
             <!-- End of Footer -->
 
         </div>
