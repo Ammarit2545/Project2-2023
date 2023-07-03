@@ -24,8 +24,8 @@ $row = mysqli_fetch_array($result);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
-    <link rel="stylesheet" href="css/repair_non_gua.css">
-    <link rel="stylesheet" href="css/all_page.css">
+    <!-- <link rel="stylesheet" href="css/repair_non_gua.css"> -->
+    <!-- <link rel="stylesheet" href="css/all_page.css"> -->
     <link rel="stylesheet" href="css/list_view_repair.css">
     <link rel="icon" type="image/x-icon" href="img brand/anelogo.jpg">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -110,7 +110,7 @@ $row = mysqli_fetch_array($result);
                         $image4 = 'image4_' . $i;
             ?>
                         <div class="grid-item">
-                            <a href="">
+                            <a href="detail_new_repair.php?session_id=<?= $i ?>">
                                 <div class="card" id="card-detail">
                                     <div class="card-body">
                                         <h5 class="card-title">
@@ -129,9 +129,9 @@ $row = mysqli_fetch_array($result);
                                         <br><br>
                                         <h6 class="card-subtitle mb-2 text-muted">Serial Number : <?= $_SESSION[$serial_number] ?></h6>
                                         <hr>
-                                        <h6 style="display:inline">รายละเอียดการซ่อม : </h6>
+                                        <!-- <h6 style="display:inline">รายละเอียดการซ่อม : </h6>
                                         <p class="card-text" style="display:inline"><?= $_SESSION[$description] ?></p>
-                                        <hr>
+                                        <hr> -->
                             </a>
                             <h6>รูปภาพประกอบ</h6>
                             <?php
@@ -146,7 +146,7 @@ $row = mysqli_fetch_array($result);
                             ?>
 
                                     <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'jfif'])) : ?>
-                                        <img src="<?= $folderPath . '/' . $file ?>" class="picture_modal" alt="" onclick="openModalIMG(this)" style="width: 10%; height :10%; border : 1px solid gray; border-radius: 10%;">
+                                        <img src="<?= $folderPath . '/' . $file ?>" class="picture_modal" alt="" onclick="openModalIMG(this)" style="width: 15%;  border : 1px solid gray; border-radius: 10%;">
                                     <?php elseif (in_array($file_extension, ['mp4', 'ogg', 'mov'])) : ?>
                                         <video style="width: 10%; height: 10%; border-radius: 10%; border : 1px solid gray;" class="picture_modal_video" alt="picture error" autoplay muted onclick="openModalVideo(this)" src="<?= $rp_pic ?>">
                                             <source src="<?= $rp_pic ?>" type="video/mp4">
@@ -219,10 +219,7 @@ $row = mysqli_fetch_array($result);
                             </div>
                         </div>
         </div>
-        <span class="tooltip">คำส่งซ่อมที่ #<?= $_SESSION[$r_id] ?></span>
-
-
-
+        <span class="tooltip">คำสั่งซ่อมที่ #<?= $_SESSION[$r_id] ?></span>
     </div>
 
 <?php }

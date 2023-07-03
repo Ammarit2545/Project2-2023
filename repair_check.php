@@ -240,7 +240,7 @@ $row = mysqli_fetch_array($result);
             </div>
             <br>
             <div class="container">
-                <label for="borderinput1" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ</label>
+                <label for="borderinput1" class="form-label">ไฟล์อ้างอิงของท่าน</label>
                 <div class="row">
                     <?php
                     $i = 1;
