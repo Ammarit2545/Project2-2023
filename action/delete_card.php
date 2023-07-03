@@ -31,7 +31,6 @@ if ($r_id != NULL) {
     // After :
     for ($i = $r_id; $i <= $sum; $i++) {
         if ($i == $r_id) {
-
             unsetSessionData($i);
             $folderName = "../uploads/{$id}/Holder/{$i}"; // the name of the folder to be deleted
             deleteDirectory($folderName);

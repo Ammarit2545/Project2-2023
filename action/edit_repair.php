@@ -9,7 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 $id = $_SESSION["id"];
 $name_brand = $_POST['name_brand'];
-$serial_number_change = $_POST['serial_number'];
+$serial_number = $_POST['serial_number'];
+$img_serial_number = $_POST['serial_number'];
 $name_model = $_POST['name_model'];
 $number_model = $_POST['number_model'];
 $tel = $_POST['tel'];
@@ -112,7 +113,7 @@ while (isset($_FILES['image' . $count])) {
         if (isset($_FILES[$image_name])) {
             $target_dir = $directory;
             $file_extension = strtolower(pathinfo($_FILES[$image_name]["name"], PATHINFO_EXTENSION));
-            $filename = $count . "_" . $serial_number . "." . $file_extension; // New filename
+            $filename = $count . "_" . $img_serial_number . "." . $file_extension; // New filename
             $target_file = $target_dir . $filename;
 
             $target_file_db = "/uploads/$id/Holder/$session_number/" . $filename;

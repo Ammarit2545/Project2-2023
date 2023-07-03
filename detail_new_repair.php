@@ -264,7 +264,7 @@ $row = mysqli_fetch_array($result);
                     <div class="row">
                         <?php
                         $i = $id_session;
-                        foreach (new DirectoryIterator("uploads/$id/Holder/$i/") as $file) {
+                        foreach (new DirectoryIterator("uploads/$id/Holder/$i/") as $file) {    
                             if ($file->isFile()) {
                                 $rp_pic = "uploads/{$id}/Holder/{$i}/" . $file->getFilename();
                                 $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
