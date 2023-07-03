@@ -121,7 +121,7 @@
                                                                     });
                                                                 }
                                                             </script>
-                                                            <a href="edit_member.php?id=<?= $row['m_id'] ?>" class="btn btn-warning">แก้ไข</a>
+                                                            <a href="detail_member.php?id=<?= $row['m_id'] ?>" class="btn btn-warning">แก้ไข</a>
                                                         </td>
                                                     </tr>
                                                 <?php
