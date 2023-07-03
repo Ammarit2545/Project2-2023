@@ -33,7 +33,7 @@ if ($result) {
     $_SESSION["address"] = $row['m_add'];
 
     // echo "<script>alert('บันทึกข้อมูลเสร็จสิ้น');</script>";
-    $_SESSION['add_data_alert'] = 6;
+    $_SESSION['add_data_alert'] = 5;
     header("location:../index.php");
     // echo "<script>window.location='../index.php';</script>";
 } else {
