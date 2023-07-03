@@ -110,10 +110,10 @@ $row = mysqli_fetch_array($result);
                         <label for="borderinput1" class="form-label">หมายเลขรุ่น</label>
                         <input type="text" class="form-control input" id="borderinput" name="number_model" placeholder="กรุณากรอก หมายเลขรุ่น  (ไม่จำเป็น)">
                     </div>
-                    <div class="grid-item">
+                    <!-- <div class="grid-item">
                         <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
                         <input type="text" class="form-control" id="borderinput" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $row['m_tel'] ?>" required>
-                    </div>
+                    </div> -->
                     <div class="grid-item">
                         <label for="borderinput1" class="form-label">บริษัท</label>
                         <select class="form-select" name="company" aria-label="Default select example" required>

@@ -451,13 +451,10 @@ if ($row1[0] == NULL) {
 
                                     while ($row_pic = mysqli_fetch_array($result_pic)) {
                                     ?>
-                                        <!-- <img src="<?= $row_pic['rp_pic'] ?>" width="100px"> -->
                                         <?php
                                         $rp_pic = $row_pic['rp_pic'];
                                         $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
-                                        ?>
-
-                                        <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                        if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
                                             <a href="#">
                                                 <img src="<?= $rp_pic ?>" width="100px" id="drop-shadow" class="picture_modal" alt="" onclick="openModalIMG(this)">
                                             </a>

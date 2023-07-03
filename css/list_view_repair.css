@@ -122,7 +122,6 @@ a:hover {
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.8);
-    /* Dim black background */
 }
 
 .modal-content {
@@ -141,11 +140,9 @@ a:hover {
     max-height: 100%;
     display: block;
     margin: auto;
-    /* Center the image horizontally */
 }
 
 /* Modal Close  */
-
 
 .close {
     position: absolute;

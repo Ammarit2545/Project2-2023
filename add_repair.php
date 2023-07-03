@@ -86,7 +86,8 @@ $row = mysqli_fetch_array($result);
     <div class="px-5 pt-5 edit">
         <h1 class="pt-5 text-center">การบริการส่งซ่อม</h1>
         <center>
-            <p>แบบไม่มีกับมีประกันทางร้าน</p>
+            <!-- <p>แบบไม่มีกับมีประกันทางร้าน</p> -->
+            <p>กรุณาใส่รายละเอียดการซ่อมของท่าน</p>
         </center>
         <br>
         <br>
@@ -101,8 +102,6 @@ $row = mysqli_fetch_array($result);
                         <label for="borderinput1" class="form-label">เลข Serial Number</label>
                         <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)">
                     </div>
-
-
                     <div class="grid-item">
                         <label for="borderinput1" class="form-label">ชื่อรุ่น</label>
                         <input type="text" class="form-control input" id="borderinput" name="name_model" placeholder="กรุณากรอกชื่อรุ่น" required>
@@ -111,13 +110,54 @@ $row = mysqli_fetch_array($result);
                         <label for="borderinput1" class="form-label">หมายเลขรุ่น</label>
                         <input type="text" class="form-control input" id="borderinput" name="number_model" placeholder="กรุณากรอก หมายเลขรุ่น  (ไม่จำเป็น)">
                     </div>
-                    <!-- <div class="grid-item">
-                        <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
-                        <input type="text" class="form-control" id="borderinput" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $row['m_tel'] ?>" required>
-                    </div> -->
+                    <div class="grid-item">
+                        <label for="borderinput1" class="form-label">ประเภทของการซ่อม</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" value="have_non_gua" id="flexRadioDefault1" onclick="return check_non_gua()" checked>
+                            <label class="form-check-label" for="flexRadioDefault1">
+                                ไม่มีประกันกับทางร้าน
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" value="have_gua" id="flexRadioDefault2" onclick="return check_gua()">
+                            <label class="form-check-label" for="flexRadioDefault2">
+                                มีประกันกับทางร้าน
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="grid-item" id="check_gua" style="display: none;">
+                        <label for="borderinput1" class="form-label">บริษัท</label>
+                        <select class="form-select" name="company" id="company" aria-label="Default select example">
+                            <option value="" selected>กรุณาเลือกบริษัทที่ต้องการเคลม</option>
+                            <?php
+                            $sql_company = "SELECT * FROM company WHERE del_flg = '0'";
+                            $result_company = mysqli_query($conn, $sql_company);
+                            while ($row_company = mysqli_fetch_array($result_company)) {
+                            ?>
+                                <option value="<?= $row_company['com_id'] ?>"><?= $row_company['com_name'] ?></option>
+                            <?php
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                    <script>
+                        function check_non_gua() {
+                            document.getElementById("check_gua").style.display = "none";
+                            document.getElementById("company").required = false;
+                            return true;
+                        }
+
+                        function check_gua() {
+                            document.getElementById("check_gua").style.display = "block";
+                            document.getElementById("company").required = true;
+                            return true;
+                        }
+                    </script>
+
+
                 </div>
-
-
                 <div class="mb-3">
                     <label for="inputtext" class="form-label">กรุณากรอกรายละเอียด</label>
                     <textarea class="form-control" id="inputtext" rows="3" name="description" required placeholder="กรุณากรอกรายละเอียด"></textarea>
@@ -125,23 +165,59 @@ $row = mysqli_fetch_array($result);
             </div>
             <br>
             <div class="container">
-                <label for="borderinput" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ (สูงสุด 4 ไฟล์)</label>
+                <label for="borderinput" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ (สูงสุด 4 ไฟล์) <p id="insert_bill" style="display: none; color:red">*** เพิ่มรูปใบเสร็จของท่านเพื่อเป็นการยืนยันอย่างน้อย 1 รูป ***</p></label>
                 <!-- <a class="btn btn-primary" style="margin-left:10px;" onclick="addImage4()">+</a> -->
                 <div class="row grid">
                     <div class="col-3 grid-item">
-                        <input type="file" name="image1" onchange="previewImage('image-preview1', this)" id="fileToUpload">
+                        <input type="file" name="image1" onchange="previewImage('image-preview1', this)" id="input1">
                     </div>
                     <div class="col-3 grid-item">
-                        <input type="file" name="image2" onchange="previewImage('image-preview2', this)" id="fileToUpload">
+                        <input type="file" name="image2" onchange="previewImage('image-preview2', this)" id="input2">
                     </div>
                     <div class="col-3 grid-item">
-                        <input type="file" name="image3" onchange="previewImage('image-preview3', this)" id="fileToUpload">
+                        <input type="file" name="image3" onchange="previewImage('image-preview3', this)" id="input3">
                     </div>
                     <div class="col-3 grid-item">
-                        <input type="file" name="image4" onchange="previewImage('image-preview4', this)" id="fileToUpload">
+                        <input type="file" name="image4" onchange="previewImage('image-preview4', this)" id="input1">
                     </div>
                 </div>
             </div>
+
+            <script>
+                function switchInput() {
+                    var inputIndex = parseInt(document.getElementById('inputIndex').value);
+                    var nextIndex = inputIndex + 1;
+                    if (nextIndex > 4) {
+                        nextIndex = 4;
+                        document.querySelector('button').style.display = 'none';
+                    }
+                    document.getElementById('inputIndex').value = nextIndex;
+
+                    // Hide all input fields
+                    var inputFields = document.getElementsByClassName('input-field');
+                    for (var i = 0; i < inputFields.length; i++) {
+                        inputFields[i].style.display = 'none';
+                    }
+
+                    // Show the input field corresponding to the current index
+                    var currentInputField = document.getElementById('input' + nextIndex);
+                    currentInputField.style.display = 'block';
+                    currentInputField.focus();
+
+                    // Trigger click event on the input field
+                    var clickEvent = new MouseEvent('click', {
+                        view: window,
+                        bubbles: true,
+                        cancelable: true
+                    });
+                    currentInputField.dispatchEvent(clickEvent);
+                }
+
+                window.onload = function() {
+                    switchInput(); // Automatically trigger the switchInput() function on page load
+                };
+            </script>
+            <!-- <button type="button" onclick="switchInput()">Switch Input</button> -->
 
             <div class="container">
                 <div class="grid-pic">
@@ -159,8 +235,17 @@ $row = mysqli_fetch_array($result);
                     </div>
                 </div>
             </div>
-
             <script>
+                function check_gua() {
+                    document.getElementById('check_gua').style.display = 'block';
+                    document.getElementById('insert_bill').style.display = 'inline-block';
+                }
+
+                function check_non_gua() {
+                    document.getElementById('check_gua').style.display = 'none';
+                    document.getElementById('insert_bill').style.display = 'none';
+                }
+
                 function addImage4() {
                     var fileInput = document.createElement('input');
                     fileInput.setAttribute('type', 'file');
@@ -182,22 +267,28 @@ $row = mysqli_fetch_array($result);
 
                 function previewImage(previewId, input) {
                     var previewContainer = document.getElementById(previewId);
-                    var previewImage = document.createElement('img');
-
-                    // Set the maximum width and maximum height of the image
-                    previewImage.style.maxWidth = '200px';
-                    previewImage.style.maxHeight = '200px';
-
-                    // Set the border radius and border style of the image
-                    previewImage.style.borderRadius = '10%';
-                    previewImage.style.border = '2px solid gray';
+                    var previewElement;
 
                     if (input.files && input.files[0]) {
                         var reader = new FileReader();
                         reader.onload = function(e) {
-                            previewImage.setAttribute('src', e.target.result);
+                            if (input.files[0].type.includes('video')) {
+                                // If the file is a video, create a video element
+                                previewElement = document.createElement('video');
+                                previewElement.setAttribute('src', e.target.result);
+                                previewElement.setAttribute('style', 'max-width: 200px; max-height: 200px; border-radius: 10%; border: 2px solid gray;');
+                                previewElement.setAttribute('autoplay', 'true');
+                                previewElement.setAttribute('muted', 'true');
+                                previewElement.setAttribute('controls', 'true');
+                            } else {
+                                // If the file is an image, create an image element
+                                previewElement = document.createElement('img');
+                                previewElement.setAttribute('src', e.target.result);
+                                previewElement.setAttribute('style', 'max-width: 200px; max-height: 200px; border-radius: 10%; border: 2px solid gray;');
+                            }
+
                             previewContainer.innerHTML = ''; // Clear previous content
-                            previewContainer.appendChild(previewImage);
+                            previewContainer.appendChild(previewElement);
                         };
                         reader.readAsDataURL(input.files[0]);
                     }
@@ -207,7 +298,7 @@ $row = mysqli_fetch_array($result);
             <center>
                 <br>
                 <a href="repair_have.php" class="btn btn-primary" style="color:white">เคยซ่อมแล้วหรือไม่?</a>
-                <button type="submit" class="btn btn-success" value="Upload Image" name="submit">ยืนยัน</button>
+                <button type="submit" class="btn btn-success" name="submit">ยืนยัน</button>
             </center>
         </form>
 

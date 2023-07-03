@@ -20,6 +20,8 @@ $image2 = $_POST['image2'];
 $image3 = $_POST['image3'];
 $image4 = $_POST['image4'];
 
+
+
 function deleteDirectory($dir)
 {
     if (!file_exists($dir)) {
@@ -76,9 +78,11 @@ for ($i = 1; $i <= 4; $i++) {
     $image_name = "image" . $i;
     if (isset($_FILES[$image_name])) {
         $target_dir = $folderName;
-        $target_file = $target_dir . basename($_FILES[$image_name]["name"]);
+        $file_extension = strtolower(pathinfo($_FILES[$image_name]["name"], PATHINFO_EXTENSION));
+        $filename = $i . "_" . $serial_number . "." . $file_extension; // New filename
+        $target_file = $target_dir . $filename;
 
-        $target_file_db = "/uploads/$id/Holder/$i/" . basename($_FILES[$image_name]["name"]);
+        $target_file_db = "/uploads/$id/Holder/$i/" . $filename;
 
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
@@ -90,11 +94,9 @@ for ($i = 1; $i <= 4; $i++) {
         }
 
         // Allow certain file formats
-        if (
-            $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-            && $imageFileType != "gif" && $imageFileType != "mp4" && $imageFileType != "mov"
-        ) {
-            echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+        $allowed_extensions = ["jpg", "jpeg", "png", "gif", "mp4", "mov", "jfif"];
+        if (!in_array($file_extension, $allowed_extensions)) {
+            echo "Sorry, only JPG, JPEG, PNG, GIF, MP4, and MOV files are allowed.";
             $uploadOk = 0;
         }
 
@@ -105,11 +107,6 @@ for ($i = 1; $i <= 4; $i++) {
         } else {
             if (move_uploaded_file($_FILES[$image_name]["tmp_name"], $target_file)) {
                 echo "The file " . htmlspecialchars(basename($_FILES[$image_name]["name"])) . " has been uploaded.";
-
-                // Insert To  DATABASE 
-                // $sql_p = "INSERT INTO repair_pic ( r_get_id, rp_pic, rp_date)
-                //     VALUES ('$id_r_g', '$target_file_db', NOW())";
-                // $result_p = mysqli_query($conn, $sql_p);
             } else {
                 echo "Sorry, there was an error uploading your file.";
             }
@@ -127,7 +124,12 @@ $_SESSION["name_model"] = $_POST['name_model'];
 $_SESSION["number_model"] = $_POST['number_model'];
 $_SESSION["tel"] = $_POST['tel'];
 $_SESSION["description"] = $_POST['description'];
-$_SESSION["company"] = $_POST['company'];
+if ($_POST['flexRadioDefault'] == 'have_gua') {
+    $_SESSION["company"] = $_POST['company'];
+} else {
+    $_SESSION["company"] = NULL;
+}
+
 
 $_SESSION["image1"] = $_POST['image1'];
 $_SESSION["image2"] = $_POST['image2'];
