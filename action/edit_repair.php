@@ -8,7 +8,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 $id = $_SESSION["id"];
-
 $name_brand = $_POST['name_brand'];
 $serial_number_change = $_POST['serial_number'];
 $name_model = $_POST['name_model'];
@@ -90,26 +89,33 @@ function deleteDirectory($dir)
     return rmdir($dir);
 }
 
-$folderName = "../uploads/$id/Holder/$i/"; // the name of the new folder
-if (!file_exists($folderName)) { // check if the folder already exists
-    mkdir($folderName); // create the new folder
-    echo "Folder created successfully";
-} else {
-    echo "Folder already exists";
+$directory = "../uploads/$id/Holder/$session_number/"; // Directory path where your files will be located
+
+if (!is_dir($directory)) {
+    mkdir($directory, 0777, true); // Create the directory if it doesn't exist
 }
 
-// Loop over the four images
-for ($i = 1; $i <= 4; $i++) {
+$count = 1;
+while (isset($_FILES['image' . $count])) {
+    if ($_FILES['image' . $count]['name'] != '') {
+        echo '<br>' . $_FILES['image' . $count]['name'];
 
-    $image_name = "image" . $i;
-    if (isset($_FILES[$image_name])) {
-        if ($_FILES[$image_name] != NULL) {
-            $target_dir = $folderName;
+        $files = glob($directory . $count . "_*"); // Get all files that start with the specified index
+
+        foreach ($files as $file) {
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        }
+
+        $image_name = "image" . $count;
+        if (isset($_FILES[$image_name])) {
+            $target_dir = $directory;
             $file_extension = strtolower(pathinfo($_FILES[$image_name]["name"], PATHINFO_EXTENSION));
-            $filename = $i . "_" . $serial_number_change . "." . $file_extension; // New filename
+            $filename = $count . "_" . $serial_number . "." . $file_extension; // New filename
             $target_file = $target_dir . $filename;
 
-            $target_file_db = "/uploads/$id/Holder/$i/" . $filename;
+            $target_file_db = "/uploads/$id/Holder/$session_number/" . $filename;
 
             $uploadOk = 1;
             $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
@@ -121,7 +127,7 @@ for ($i = 1; $i <= 4; $i++) {
             }
 
             // Allow certain file formats
-            $allowed_extensions = ["jpg", "jpeg", "png", "gif", "mp4", "mov", "jiff"];
+            $allowed_extensions = ["jpg", "jpeg", "png", "gif", "mp4", "mov", "jfif"];
             if (!in_array($file_extension, $allowed_extensions)) {
                 echo "Sorry, only JPG, JPEG, PNG, GIF, MP4, and MOV files are allowed.";
                 $uploadOk = 0;
@@ -139,15 +145,22 @@ for ($i = 1; $i <= 4; $i++) {
                 }
             }
         }
+    } else {
+        echo '<br>' . 'is_null_' . $count;
     }
+    $count++;
 }
 
+// Store the uploaded file names in session variables
+for ($i = 1; $i <= 4; $i++) {
+    $image_name = "image" . $i;
+    if (isset($_FILES[$image_name])) {
+        $_SESSION[$image_name] = $_FILES[$image_name]["name"];
+    }
+}
 $target_dir = "../uploads/$id/"; // Change this to the desired location
 $target_file = $target_dir . basename($_FILES["pphoto"]["name"]);
 move_uploaded_file($_FILES["pphoto"]["tmp_name"], $target_file);
-
-
-
 
 for ($i = 1; $i <= 4; $i++) {
     $image_name = "image" . $i;

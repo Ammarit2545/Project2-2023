@@ -217,7 +217,7 @@ $row = mysqli_fetch_array($result);
                     switchInput(); // Automatically trigger the switchInput() function on page load
                 };
             </script>
-            <button type="button" onclick="switchInput()">Switch Input</button>
+            <!-- <button type="button" onclick="switchInput()">Switch Input</button> -->
 
             <div class="container">
                 <div class="grid-pic">
