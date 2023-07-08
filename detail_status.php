@@ -34,6 +34,8 @@ $check_order = 0;
 
     <!-- Example CDNs, use appropriate versions and sources -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <style>
@@ -233,10 +235,11 @@ $check_order = 0;
         }
 
         #bounce-item:hover {
-            transform: scale(1.1);
+            transform: scale(1.02);
             /* Increase size on hover */
-            /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
             /* Increase shadow size and intensity on hover */
+            /* border: 2px solid gray; */
 
         }
 
@@ -257,6 +260,13 @@ $check_order = 0;
         }
 
         #bounce-item:hover #tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
+            animation: tooltipFadeIn 0.3s, tooltipBounce 0.6s;
+        }
+
+        #process-status:hover #tooltip {
             visibility: visible;
             opacity: 1;
             transform: translateX(-50%) translateY(-10px);
@@ -316,15 +326,12 @@ $check_order = 0;
     $row_c = mysqli_fetch_array($result_c);
 
     $get_add_price = $row_c['get_add_price'];
+    
     ?>
-
-    <!-- end navbar-->
-
-    <!-- <div class="background"></div> -->
     <br><br>
 
     <div class="px-5 pt-5 repair">
-        <div class="container">
+        <div class="container" style="display: none;">
             <div class="row">
                 <div class="col-6 text-left" style="background-color: #F1F1F1;">
                     <!-- <h3 class="pt-5"><button class="btn btn-primary">ยี่ห้อ : <?= $row_c['r_brand'] ?> , รุ่น : <?= $row_c['r_model'] ?></button></h3> -->
@@ -337,7 +344,6 @@ $check_order = 0;
                 <br>
             </div>
         </div>
-
         <br>
         <div class="container">
             <div id="MiniDetailStatusSuc" style="display: block;">
@@ -348,12 +354,177 @@ $check_order = 0;
                 <?php } ?>
             </div>
             <div class="row">
-                <!-- <div class="col-md-5">
+                <style>
+                    .card {
+                        z-index: 0;
+                        background-color: #ECEFF1;
+                        padding-bottom: 20px;
+                        border-radius: 10px;
+                    }
 
-                </div> -->
+                    .top {
+                        padding-top: 40px;
+                        padding-left: 13% !important;
+                        padding-right: 13% !important;
+                    }
+
+                    /*Icon progressbar*/
+                    #progressbar {
+                        margin-bottom: 30px;
+                        overflow: hidden;
+                        color: #455A64;
+                        padding-left: 0px;
+                        margin-top: 30px;
+                    }
+
+                    #progressbar li {
+                        list-style-type: none;
+                        font-size: 13px;
+                        width: 12.5%;
+                        float: left;
+                        position: relative;
+                        font-weight: 400;
+                    }
+
+                    #progressbar .step0:before {
+                        font-family: FontAwesome;
+                        content: "\f10c";
+                        color: #fff;
+                    }
+
+                    #progressbar li:before {
+                        width: 40px;
+                        height: 40px;
+                        line-height: 45px;
+                        display: block;
+                        font-size: 20px;
+                        background: #C5CAE9;
+                        border-radius: 50%;
+                        margin: auto;
+                        padding: 0px;
+                        position: relative;
+                        z-index: 1;
+                    }
+
+                    /*ProgressBar connectors*/
+                    #progressbar li:after {
+                        content: '';
+                        width: 100%;
+                        height: 12px;
+                        background: #C5CAE9;
+                        position: absolute;
+                        left: -50%;
+                        top: 16px;
+                        z-index: -1;
+                    }
+
+                    #progressbar li:first-child:after {
+                        border-top-left-radius: 10px;
+                        border-bottom-left-radius: 10px;
+                        position: absolute;
+                        left: 0;
+                    }
+
+                    #progressbar li:last-child:after {
+                        border-top-right-radius: 10px;
+                        border-bottom-right-radius: 10px;
+                    }
+
+                    /*Color number of the step and the connector before it*/
+                    #progressbar li.active:before,
+                    #progressbar li.active:after {
+                        background: green;
+                    }
+
+                    #progressbar li.active:before {
+                        font-family: FontAwesome;
+                        content: "\f00c";
+                    }
+
+                    .icon {
+                        width: 60px;
+                        height: 60px;
+                        margin-right: 15px;
+                    }
+
+                    .icon-content {
+                        padding-bottom: 20px;
+                    }
+
+                    #font-status {
+                        font-style: oblique;
+                        font-weight: 100;
+                    }
+
+                    #progressbar li:first-child:after {
+                        content: none;
+                    }
+
+
+                    @media screen and (max-width: 992px) {
+                        .icon-content {
+                            width: 50%;
+                        }
+                    }
+                </style>
+
+                <div class="container px-md-4 py-5 mx-auto">
+                    <div class="card" id="process-status">
+                        <div class="row p-4">
+                            <div class="d-flex">
+                                <h5>หมายเลขส่งซ่อมที่ <span class="text-primary font-weight-bold">#<?= $id_get_r ?></span></h5>
+                            </div>
+                            <div class="d-flex flex-column text-sm-right">
+                                <p class="mb-0">วันที่ยื่นเรื่อง : <?= date('d F Y', strtotime($row_2['rs_date_time'])); ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_2['rs_date_time'])); ?></span></p>
+                                <!-- <p>USPS <span class="font-weight-bold">234094567242423422898</span></p> -->
+                            </div>
+                        </div>
+                        <!-- Add class 'active' to progress -->
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-12">
+                                <ul id="progressbar" class="text-center">
+                                    <li class="active step0">
+                                        <br>
+                                        <p id="font-status">ส่งเรื่อง</p>
+                                    </li>
+                                    <li class="active step0">
+                                        <br>
+                                        <p id="font-status">รับเรื่อง</p>
+                                    </li>
+                                    <li class="active step0">
+                                        <br>
+                                        <p id="font-status">แก้ไข</p>
+                                    </li>
+                                    <li class="active step0">
+                                        <br>
+                                        <p id="font-status">ตรวจสอบ</p>
+                                    </li>
+                                    <li class="active step0">
+                                        <br>
+                                        <p id="font-status">ตรวจสอบ</p>
+                                    </li>
+                                    <li class="active step0">
+                                        <br>
+                                        <p id="font-status">ส่งคืน</p>
+                                    </li>
+                                    <li class="step0">
+                                        <br>
+                                        <p id="font-status">ส่งคืน</p>
+                                    </li>
+                                    <li class="step0">
+                                        <br>
+                                        <p id="font-status">เสร็จสิ้น</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <span id="tooltip">ข้อมูลการซ่อมของคุณ</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
 
                 <div class="col-md-12">
-                    <!-- <iframe src="pay_qr.php?id=<?= $id_get_r ?>" frameborder="0" width="100%" style="height: 1000px;"></iframe> -->
                     <div class="accordion accordion" id="accordionFlushExample" style="background-color: #F1F1F1;">
                         <div class="accordion-item">
                             <div id="bounce-item">
@@ -379,9 +550,8 @@ $check_order = 0;
                                                 $row_lastest_status = mysqli_fetch_array($result_lastest_status);
                                                 ?>
                                                 <p>สถานะล่าสุด : <span style="background-color:<?= $row_lastest_status['status_color']  ?>;color:white" class="btn btn-light"><?= $row_lastest_status['status_name'] ?></span></p>
-                                                <span>วันที่/เวลา : <?= date('d F Y', strtotime($row_lastest['rs_date_time'])); ?> <span style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_lastest['rs_date_time'])); ?></span> </span>
+                                                <span>วันที่ : <?= date('d F Y', strtotime($row_lastest['rs_date_time'])); ?> <span style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_lastest['rs_date_time'])); ?></span> </span>
                                                 <span>
-
                                                 </span>
                                                 <P>
                                                     <br>
@@ -416,15 +586,15 @@ $check_order = 0;
                                     // Triggering reflow to apply initial styles before the animation
                                     void miniDetailStatus.offsetWidth;
 
-                                    miniDetailStatus.style.transition = "opacity 0.1s";
+                                    miniDetailStatus.style.transition = "opacity 0.5s";
                                     miniDetailStatus.style.opacity = "1"; // Fade-in effect
 
-                                    showMiniOfStatus.style.transition = "opacity 0.1s";
+                                    showMiniOfStatus.style.transition = "opacity 0.5s";
                                     showMiniOfStatus.style.opacity = "0"; // Fade-out effect after 0.5 seconds
 
                                     setTimeout(function() {
                                         showMiniOfStatus.style.display = "none"; // Hide the element after fade-out
-                                    }, 250); // 0.5 seconds (the same duration as the fade-out transition)
+                                    }, 500); // 0.5 seconds (the same duration as the fade-out transition)
                                 }
 
                                 function ShowMiniStatus() {
@@ -438,15 +608,15 @@ $check_order = 0;
                                     // Triggering reflow to apply initial styles before the animation
                                     void showMiniOfStatus.offsetWidth;
 
-                                    showMiniOfStatus.style.transition = "opacity 0.1s";
+                                    showMiniOfStatus.style.transition = "opacity 0.5s";
                                     showMiniOfStatus.style.opacity = "1"; // Fade-in effect
 
-                                    miniDetailStatus.style.transition = "opacity 0.1s";
+                                    miniDetailStatus.style.transition = "opacity 0.5s";
                                     miniDetailStatus.style.opacity = "0"; // Fade-out effect after 0.5 seconds
 
                                     setTimeout(function() {
                                         miniDetailStatus.style.display = "none"; // Hide the element after fade-out
-                                    }, 250); // 0.5 seconds (the same duration as the fade-out transition)
+                                    }, 500); // 0.5 seconds (the same duration as the fade-out transition)
                                 }
                             </script>
                             <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
@@ -460,9 +630,6 @@ $check_order = 0;
 
                                         <div class="row">
                                             <div class="col">
-                                                <!-- <br>
-                                        <h2 style="margin-left: 1.2rem;">ติดตามสถานะ (Status)</h2>
-                                        <br> -->
                                                 <ul class="timeline-3">
                                                     <?php
                                                     while ($row1 = mysqli_fetch_array($result)) {
@@ -594,12 +761,9 @@ $check_order = 0;
                                                                 </script>
 
                                                             <?php
-                                                            } ?>
-
-                                                            <?php if ($row1['status_id'] == 4 || $row1['status_id'] == 17 && $row1['rs_conf'] == NULL || $row1['rs_conf'] == 1) {
-
+                                                            }
+                                                            if ($row1['status_id'] == 4 || $row1['status_id'] == 17 && $row1['rs_conf'] == NULL || $row1['rs_conf'] == 1) {
                                                             ?>
-
                                                                 <div>
 
                                                                     <?php if ($check_order  == 0) { ?>
@@ -609,8 +773,8 @@ $check_order = 0;
                                                                         $count_conf = 0;
 
                                                                         $sql_get_c = "SELECT * FROM get_detail 
-                                                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                        WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.del_flg = 0";
+                                                                                    LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                                                    WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.del_flg = 0";
                                                                         $result_get_c = mysqli_query($conn, $sql_get_c);
 
                                                                         while ($row_get_c = mysqli_fetch_array($result_get_c)) {
@@ -2101,7 +2265,9 @@ $check_order = 0;
                 </div>
             </div>
         </div>
+        <?php include('footer/footer.php'); ?>
     </div>
+
 
     <!-- Sweet Alert Show Start -->
     <?php
@@ -2146,7 +2312,11 @@ $check_order = 0;
             unset($_SESSION['add_data_alert']);
         }
     }
+
+
     ?>
+
+
     <!-- Sweet Alert Show End -->
     <br><br>
     <!-- Place this in the <head> section of your HTML document -->
@@ -2157,6 +2327,7 @@ $check_order = 0;
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.10/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>
