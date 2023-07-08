@@ -15,17 +15,6 @@ if ($id == NULL) {
 $count_carry_out = 0;
 $check_order = 0;
 
-// $id_g = $_GET['id'];
-// $sql1 = "SELECT * FROM get_repair 
-// LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
-// LEFT JOIN repair ON repair.r_id = get_repair.r_id
-// WHERE repair.m_id = '$id' AND get_repair.get_r_id = '$id_g'";
-// $result1 = mysqli_query($conn, $sql1);
-// $row1 = mysqli_fetch_array($result1);
-// if ($row1[0] == NULL) {
-//     header('Location: status.php?search=ERROR 405');
-// }
-
 ?>
 
 <!DOCTYPE html>
@@ -327,6 +316,28 @@ $check_order = 0;
                 <br>
             </div>
         </div>
+        <br>
+        <div class="container" height="1000px" style="background-color: #F1F1F1; ">
+            <div class="row p-3">
+                <div class="col-5 text-left" id="bounce-item">
+                    <center>
+                        <h4><a style="text-decoration: none;">ดูรายละเอียดอุปกรณ์ของท่าน</a></h4>
+
+                    </center>
+                </div>
+                <div class="col-2 ">
+                    <center>
+                        <h3>|</h3>
+                    </center>
+                </div>
+                <div class="col-5" id="bounce-item">
+                    <center>
+                        <h4><a style="text-decoration: none; " onclick="openModalPart('quantitypart')">ดูยอดอะไหล่ของท่าน</a></h4>
+                    </center>
+                </div>
+                <br>
+            </div>
+        </div>
 
         <div class="container my-5 p-4" style="background-color: #F1F1F1; border-radius : 1%;">
             <?php if ($row_2['status_id'] == 3) { ?>
@@ -343,6 +354,7 @@ $check_order = 0;
                     <ul class="timeline-3">
                         <?php
                         while ($row1 = mysqli_fetch_array($result)) {
+
                             $i = $i + 1;
                             $id_r = $row1[0];
                             $sql_c = "SELECT * FROM get_detail WHERE r_id = '$id_r' AND del_flg = '0' ORDER BY get_r_id DESC LIMIT 1";
@@ -361,12 +373,17 @@ $check_order = 0;
 
                             $status_id = $row1['status_id'];
 
+                            if ($status_id = 13) {
+                                $cancel_id = 13;
+                            }
+
                             $sql_c = "SELECT * FROM repair_status WHERE get_r_id = '$id_get_r' AND del_flg = 0 ORDER BY rs_id DESC";
                             $result_c = mysqli_query($conn, $sql_c);
                             $row_p = mysqli_fetch_array($result_c);
                         ?>
-                            <hr style="border: 5px solid black;">
+
                             <li>
+                                <hr style="border: 5px solid black;">
                                 <h5 style="display:inline"><button class="btn btn-outline-secondary" style="color : white; background-color : <?= $row1['status_color'] ?>; border : 2px solid <?= $row1['status_color'] ?>;"><?= $row1['status_name'] ?>
                                         <?php
                                         if ($row1['status_id'] == 6) {
@@ -507,25 +524,25 @@ $check_order = 0;
                                 <hr>
                                 <h5 class="btn btn-outline-primary">รายละเอียด</h5>
                                 <p class="mt-2" style="margin-left: 30px;"><?= $row1['rs_detail'] ?></p>
-                                <hr>
+                                <!-- <hr> -->
                                 <?php
-                                if($row1['status_id'] == 5  && $row1['rs_conf'] == NULL){
-                                    ?>
+                                if ($row1['status_id'] == 5  && $row1['rs_conf'] == NULL) {
+                                ?>
                                     <!-- <h5 class="btn btn-outline-primary">เลือกวิธีการจัดส่งอุปกรณ์มาที่ร้าน</h5>
                                 <center>
                                     <button id="bounce-item" class="btn btn-primary">ส่งที่หน้าร้าน</button>
                                     <button id="bounce-item" class="btn btn-warning">จัดส่งผ่านไปรษณีย์</button>
                                      <hr>
                                 </center> -->
-                                    <?php
+                                <?php
                                 }
                                 ?>
-                                
+
 
                                 <?php if ($row1['status_id'] == 4 || $row1['status_id'] == 17 && $row1['rs_conf'] == NULL || $row1['rs_conf'] == 1) {
                                     $total =  $row1['get_wages'] + $row1['get_add_price'];
                                 ?><?php if ($check_order  == 0) { ?>
-                               
+
                                 <?php if ($row1['get_date_conf'] != NULL) {  ?>
                                     <p class="mt-2" style="margin-left: 30px;"> - ระยะเวลาซ่อม <?= number_format($row1['get_date_conf']) ?> วัน <span style="color:red">( นับจากวันที่รับอุปกรณ์ )</span></p>
                                 <?php }  ?>
@@ -561,9 +578,7 @@ $check_order = 0;
                                         while ($row_c = mysqli_fetch_array($result_c)) {
                                             $total_part += $row_c['p_price'];
                                         }
-
-                                ?>
-                                <?php if ($total_part > 0) {  ?>
+                                        if ($total_part > 0) {  ?>
                                     <p class="mt-2" style="margin-left: 30px;display:inline"> - ค่าอะไหล่ <?= $total_part ?> บาท</span></p> <a onclick="openModalPart('quantitypart')" style="display:inline; color:red">ดูอะไหล่ที่ต้องใช้</a>
                                 <?php }  ?>
                                 <h5 class="alert alert-primary" style="margin-left: 30px;">รวมราคา <?= number_format($total + $total_part) ?> บาท</span></h3>
@@ -575,7 +590,6 @@ $check_order = 0;
 
                             <?php if ($row1['rs_cancel_detail'] != NULL) {
                             ?>
-                                <hr>
                                 <h5 class="btn btn-outline-danger">เหตุผลการไม่ยืนยัน</h5>
                                 <p class="mt-2"><?= $row1['rs_cancel_detail'] ?></p>
                             <?php
@@ -815,16 +829,24 @@ $check_order = 0;
                                 </script>
 
                                 <br>
-                            <?php
+                                <?php
                             }
-                            ?>
-
-                            <?php
-                            if ($row[0] > 0) {
+                            if ($row[0] > 0 || $status_id == 1) {
                                 if ($row1['rs_conf'] == NULL) { ?>
-                                    <hr>
-                                    <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
-                                    <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน</a>
+                                    <?php if ($status_id == 1 && !isset($cancel_id)) {
+                                    ?>
+                                        <p style="margin-left: 2%; color:red">*** หากต้องการยกเลิกคำส่งซ่อม ***</p>
+                                        <a class="btn btn-danger" style="margin-left: 2%" onclick="showDivCancel()">ยกเลิก</a>
+                                    <?php
+                                    } else if ($status_id != 1 && isset($cancel_id)) {
+                                    ?>
+                                        <hr>
+                                        <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
+                                        <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน</a>
+                                        <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a>
+                                    <?php
+                                    } ?>
+
 
                                     <!-- Add your button href="action/conf_part.php?id=<?= $id_get_r ?>" -->
                                     <!-- <a  class="btn btn-success" id="confirmButtonSuccess">ยืนยัน</a> -->
@@ -850,13 +872,15 @@ $check_order = 0;
                                             });
                                         });
                                     </script>
-                                    <!-- Update the anchor tag to include PHP code for the dynamic link -->
-                                    <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a>
-                                    <br>
+
+
+
 
                                     <div id="myDiv" style="display: none; margin: 20px 30px;">
+                                        <br>
                                         <form id="canf_cancel" action="action/conf_cancel.php" method="POST">
                                             <hr>
+
                                             <h4 style="color: red">โปรดระบุเหตุผลที่ยกเลิก</h4>
                                             <input type="text" name="get_r_id" value="<?= $id_get_r ?>" hidden>
                                             <input type="text" name="status_id" value="<?= $status_id ?>" hidden>
@@ -918,6 +942,75 @@ $check_order = 0;
                                             </script>
 
                                         </form>
+                                        <br><br>
+                                    </div>
+
+                                    <div id="cancel_status_1" style="display: none; margin: 20px 30px;">
+                                        <form id="canf_cancel_1" action="action/status_non_del_part.php" method="POST">
+                                            <hr>
+
+                                            <h4 style="color: red">โปรดระบุเหตุผลที่ยกเลิกของคุณ</h4>
+                                            <input type="text" name="get_r_id" value="<?= $id_get_r ?>" hidden>
+                                            <input type="text" name="status_id" value="12" hidden>
+                                            <label>
+                                                <input class="form-check-input" type="checkbox" name="checkbox1" value="ต้องการยกเลิกคำสั่งซ่อม" onclick="uncheckOtherCheckboxes('checkbox1')">
+                                                ต้องการยกเลิกคำสั่งซ่อม
+                                            </label><br>
+
+                                            <label>
+                                                <input class="form-check-input" type="checkbox" name="checkbox2" value="ไม่อยากใช้อะไหล่ข้างต้น" onclick="uncheckOtherCheckboxes('checkbox2')">
+                                                ไม่อยากใช้อะไหล่ข้างต้น
+                                            </label><br>
+
+                                            <label>
+                                                <input class="form-check-input" type="checkbox" name="checkbox3" value="อยากได้อะไหล่ที่ถูกกว่านี้" onclick="uncheckOtherCheckboxes('checkbox3')">
+                                                อยากได้อะไหล่ที่ถูกกว่านี้
+                                            </label><br>
+
+                                            <label>
+                                                <input class="form-check-input" type="checkbox" name="checkbox4" onclick="showTextarea(); uncheckOtherCheckboxes('checkbox4')">
+                                                อื่นๆ (หรือยื่นข้อเสนอ)
+                                            </label><br>
+
+                                            <textarea id="myTextarea" name="detail_cancel" style="display: none;" placeholder="โปรดระบุสาเหตุ"></textarea>
+
+                                            <br>
+                                            <a class="btn btn-danger" onclick="Cancel_Start()">ยกเลิก</a>
+                                            <a class="btn btn-success" id="confirmButtoncancel1">ยืนยัน</a>
+
+                                            <script>
+                                                document.addEventListener('DOMContentLoaded', function() {
+                                                    var id_get_r = <?php echo json_encode($id_get_r); ?>; // Pass PHP variable to JavaScript
+                                                    var dialogShown = false; // Flag variable to track if the dialog is already displayed
+
+                                                    document.getElementById('confirmButtoncancel1').addEventListener('click', function() {
+                                                        if (dialogShown) {
+                                                            return; // Exit if the dialog is already shown
+                                                        }
+
+                                                        dialogShown = true; // Set the flag to true to indicate that the dialog is displayed
+
+                                                        Swal.fire({
+                                                            icon: 'warning',
+                                                            title: 'ยืนยันดำเนินการส่งซ่อม',
+                                                            text: 'การ "ยืนยันเพื่อยกเลิก" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
+                                                            showCancelButton: true,
+                                                            confirmButtonText: 'ยืนยัน',
+                                                            cancelButtonText: 'ยกเลิก'
+                                                        }).then((willConfirm) => {
+                                                            if (willConfirm.isConfirmed) {
+                                                                var form = document.getElementById('canf_cancel_1');
+                                                                form.submit(); // Submit the form
+                                                            }
+
+                                                            dialogShown = false; // Reset the flag when the dialog is closed
+                                                        });
+                                                    });
+                                                });
+                                            </script>
+
+                                        </form>
+                                        <br><br>
                                     </div>
 
                                     <script>
@@ -950,15 +1043,29 @@ $check_order = 0;
                                             conf.style.display = "none";
                                         }
 
+                                        function showDivCancel() {
+                                            var div = document.getElementById("cancel_status_1");
+                                            var conf = document.getElementById("confirmButtonSuccess");
+                                            div.style.display = "block";
+                                            conf.style.display = "none";
+                                        }
+
                                         function hideDiv() {
                                             var div = document.getElementById("myDiv");
                                             var conf = document.getElementById("confirmButtonSuccess");
                                             div.style.display = "none";
                                             conf.style.display = "inline-block";
                                         }
+
+                                        function Cancel_Start() {
+                                            var div = document.getElementById("cancel_status_1");
+                                            var conf = document.getElementById("confirmButtonSuccess");
+                                            div.style.display = "none";
+                                            conf.style.display = "inline-block";
+                                        }
                                     </script>
 
-                                    <br><br>
+                                  
                                 <?php
                                 }
                             }

@@ -949,10 +949,11 @@ if (!isset($_SESSION['role_id'])) {
                                     <br>
                                     <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
                                     <br>
-                                    <form id="cancel_status_id" action="action/status/add_cencel_status.php" method="POST" enctype="multipart/form-data">
+                                    <form id="cancel_status_id" action="action/status/status_non_del_part.php" method="POST" enctype="multipart/form-data">
                                         <label for="cancelFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : red"> ปฏิเสธการซ่อม</p> :</label>
                                         <textarea class="form-control" name="rs_detail" id="cancelFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการปฏิเสธการซ่อม"></textarea>
                                         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
+                                        <input type="text" name="status_id" value="11" hidden>
                                         <br>
                                         <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
                                         <hr>
