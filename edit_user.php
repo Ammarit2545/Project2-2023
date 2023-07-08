@@ -145,8 +145,8 @@ if(!isset($_SESSION["id"])){
                         <label for="exampleFormControlTextarea1" class="form-label fw-bold">รายละเอียดข้อมูลการติดต่อ</label>
                         <br>
                         <label for="sel1">จังหวัด:</label>
-                        <select class="form-control" name="Ref_prov_id" id="provinces">
-                            <option value="" selected disabled>-กรุณาเลือกจังหวัด-</option>
+                        <select class="form-control" name="Ref_prov_id" id="provinces" required>
+                            <option value="" selected disabled>กรุณาเลือกจังหวัด</option>
                             <?php foreach ($query as $value) { ?>
                                 <option value="<?= $value['id'] ?>"><?= $value['name_th'] ?></option>
                             <?php } ?>
@@ -155,13 +155,13 @@ if(!isset($_SESSION["id"])){
 
                         <label for="sel1">อำเภอ:</label>
                         <select class="form-control" name="Ref_dist_id" id="amphures" required>
-                            <option value="" selected disabled>-กรุณาเลือกอำเภอ-</option>
+                            <option value="" selected disabled>กรุณาเลือกอำเภอ</option>
                         </select>
                         <br>
 
                         <label for="sel1">ตำบล:</label>
                         <select class="form-control" name="Ref_subdist_id" id="districts" required>
-                            <option value="" selected disabled>-กรุณาเลือกตำบล-</option>
+                            <option value="" selected disabled>กรุณาเลือกตำบล</option>
                         </select>
                         <br>
 
@@ -171,6 +171,10 @@ if(!isset($_SESSION["id"])){
 
                         <label for="exampleFormControlTextarea1" class="form-label">กรุณากรอกที่อยู่ที่ต้องการจัดส่ง</label>
                         <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3" required></textarea>
+
+                        <div class="text-center py-4">
+                            <a class="btn btn_custom" name="submit" onclick="validateForm()">ยืนยัน</a>
+                        </div>
                     </div>
 
                     <script>
@@ -230,7 +234,7 @@ if(!isset($_SESSION["id"])){
                                 }
                             });
                         }
-                        
+
                         // Function to load district data
                         function loadDistrictData(amphurId) {
                             // Perform an AJAX request to fetch the district data
@@ -258,6 +262,24 @@ if(!isset($_SESSION["id"])){
                                 }
                             });
                         }
+
+                        // Function to validate the form before submission
+                        function validateForm() {
+                            // Check if all required fields have values
+                            let provinceValue = provinceSelect.value;
+                            let amphurValue = amphurSelect.value;
+                            let districtValue = districtSelect.value;
+                            let zipCodeValue = document.getElementById("zip_code").value;
+                            let descriptionValue = document.getElementById("exampleFormControlTextarea1").value;
+
+                            if (provinceValue && amphurValue && districtValue && zipCodeValue && descriptionValue) {
+                                // All required fields have values, proceed with submission
+                                showConfirmation();
+                            } else {
+                                // Missing required fields, display an error message or take appropriate action
+                                incompleteInformation();
+                            }
+                        }
                     </script>
                 <!-- <center>
                     <br>
@@ -266,9 +288,7 @@ if(!isset($_SESSION["id"])){
                 <br>
             </div>
         </div>
-        <div class="text-center pb-4">
-          <a class="btn btn_custom" name="submit" onclick="showConfirmation()">ยืนยัน</a>
-        </div>
+        
         <script>
             function showConfirmation() {
                 Swal.fire({
@@ -286,6 +306,15 @@ if(!isset($_SESSION["id"])){
                         document.getElementById("edit_user").submit();
                     }
                 });
+            }
+
+            function incompleteInformation() {
+                Swal.fire({
+                    title: "ข้อมูลของคุณยังไม่ครบ",
+                    text: "กรุณากรอกข้อมูลให้ครบถ้วน",
+                    icon: "warning",
+                    confirmButtonText: "ตกลง!",
+                })
             }
         </script>
       </div>
