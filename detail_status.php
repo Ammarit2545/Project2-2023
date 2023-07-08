@@ -239,6 +239,51 @@ $check_order = 0;
             /* Increase shadow size and intensity on hover */
 
         }
+
+        #tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            white-space: nowrap;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        #bounce-item:hover #tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
+            animation: tooltipFadeIn 0.3s, tooltipBounce 0.6s;
+        }
+
+        @keyframes tooltipFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes tooltipBounce {
+
+            0%,
+            100% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+
+            50% {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -295,94 +340,58 @@ $check_order = 0;
 
         <br>
         <div class="container">
+            <div id="MiniDetailStatusSuc" style="display: block;">
+                <?php if ($row_2['status_id'] == 3) { ?>
+                    <div class="alert alert-success" role="alert">
+                        <i class="fa fa-check-square"></i> ดำเนินการซ่อมเสร็จสิ้น
+                    </div>
+                <?php } ?>
+            </div>
             <div class="row">
                 <!-- <div class="col-md-5">
 
                 </div> -->
-                <style>
-                    #tooltip {
-                        visibility: hidden;
-                        opacity: 0;
-                        position: absolute;
-                        bottom: 100%;
-                        left: 50%;
-                        transform: translateX(-50%);
-                        background-color: rgba(0, 0, 0, 0.8);
-                        color: #fff;
-                        padding: 8px;
-                        border-radius: 4px;
-                        font-size: 14px;
-                        white-space: nowrap;
-                        transition: opacity 0.3s, transform 0.3s;
-                    }
 
-                    #bounce-item:hover #tooltip {
-                        visibility: visible;
-                        opacity: 1;
-                        transform: translateX(-50%) translateY(-10px);
-                        animation: tooltipFadeIn 0.3s, tooltipBounce 0.6s;
-                    }
-
-                    @keyframes tooltipFadeIn {
-                        from {
-                            opacity: 0;
-                        }
-
-                        to {
-                            opacity: 1;
-                        }
-                    }
-
-                    @keyframes tooltipBounce {
-
-                        0%,
-                        100% {
-                            transform: translateX(-50%) translateY(-10px);
-                        }
-
-                        50% {
-                            transform: translateX(-50%) translateY(0);
-                        }
-                    }
-                </style>
                 <div class="col-md-12">
                     <!-- <iframe src="pay_qr.php?id=<?= $id_get_r ?>" frameborder="0" width="100%" style="height: 1000px;"></iframe> -->
                     <div class="accordion accordion" id="accordionFlushExample" style="background-color: #F1F1F1;">
-                        <div class="accordion-item" id="bounce-item">
-                            <h2 class="accordion-header" id="flush-headingOne">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" onclick="return MiniStatus()">
-                                    <font>
-                                        <br>
-                                        <h2 style="margin-left: 1.2rem;">ติดตามสถานะ (Status)</h2>
-                                        <div id="ShowMiniOfStatus" style="display: none;">
-                                            <span id="tooltip">กดเพื่อปิดรายละเอียดสถานะ</span>
-                                        </div>
-                                        <div id="MiniDetailStatus" style="display: block;">
-                                            <span id="tooltip">กดเพื่อดูสถานะทั้งหมด</span>
-                                            <hr>
-                                            <?php
-                                            $sql_lastest = "SELECT * FROM `repair_status` WHERE del_flg = '0' AND get_r_id = ' $id_get_r' ORDER BY rs_date_time DESC LIMIT 1";
-                                            $result_lastest = mysqli_query($conn, $sql_lastest);
-                                            $row_lastest = mysqli_fetch_array($result_lastest);
-                                            $status_id_last = $row_lastest['status_id'];
+                        <div class="accordion-item">
+                            <div id="bounce-item">
+                                <h2 class="accordion-header" id="flush-headingOne">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" onclick="return MiniStatus()">
+                                        <font>
+                                            <br>
+                                            <h2 style="margin-left: 1.2rem;">ติดตามสถานะ (Status)</h2>
+                                            <div id="ShowMiniOfStatus" style="display: none;">
+                                                <span id="tooltip">ย่อรายละเอียดสถานะ</span>
+                                            </div>
+                                            <div id="MiniDetailStatus" style="display: block;">
+                                                <span id="tooltip">กดเพื่อดูสถานะทั้งหมด</span>
+                                                <hr>
+                                                <?php
+                                                $sql_lastest = "SELECT * FROM `repair_status` WHERE del_flg = '0' AND get_r_id = ' $id_get_r' ORDER BY rs_date_time DESC LIMIT 1";
+                                                $result_lastest = mysqli_query($conn, $sql_lastest);
+                                                $row_lastest = mysqli_fetch_array($result_lastest);
+                                                $status_id_last = $row_lastest['status_id'];
 
-                                            $sql_lastest_status = "SELECT * FROM `status_type` WHERE del_flg = '0' AND status_id = '$status_id_last'";
-                                            $result_lastest_status = mysqli_query($conn, $sql_lastest_status);
-                                            $row_lastest_status = mysqli_fetch_array($result_lastest_status);
-                                            ?>
-                                            <p>สถานะล่าสุด : <span style="background-color:<?= $row_lastest_status['status_color']  ?>;color:white" class="btn btn-light"><?= $row_lastest_status['status_name'] ?></span></p>
-                                            <span>วันที่/เวลา : <?= date('d F Y', strtotime($row_lastest['rs_date_time'])); ?> <span style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_lastest['rs_date_time'])); ?></span> </span>
-                                            <span>
+                                                $sql_lastest_status = "SELECT * FROM `status_type` WHERE del_flg = '0' AND status_id = '$status_id_last'";
+                                                $result_lastest_status = mysqli_query($conn, $sql_lastest_status);
+                                                $row_lastest_status = mysqli_fetch_array($result_lastest_status);
+                                                ?>
+                                                <p>สถานะล่าสุด : <span style="background-color:<?= $row_lastest_status['status_color']  ?>;color:white" class="btn btn-light"><?= $row_lastest_status['status_name'] ?></span></p>
+                                                <span>วันที่/เวลา : <?= date('d F Y', strtotime($row_lastest['rs_date_time'])); ?> <span style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_lastest['rs_date_time'])); ?></span> </span>
+                                                <span>
 
-                                            </span>
-                                            <P>
-                                                <br>
-                                                <a href="#" style="color:GRAY;">ดูรายละเอียดเพิ่มเติม ...</a>
-                                            </P>
-                                        </div>
-                                    </font>
-                                </button>
-                            </h2>
+                                                </span>
+                                                <P>
+                                                    <br>
+                                                    <a href="#" style="color:GRAY;">ดูรายละเอียดเพิ่มเติม ...</a>
+                                                </P>
+                                            </div>
+                                        </font>
+                                    </button>
+                                </h2>
+                            </div>
                             <script>
                                 var i = 0;
 
@@ -402,6 +411,7 @@ $check_order = 0;
 
                                     miniDetailStatus.style.opacity = "0"; // Set initial opacity to 0 for fade-in effect
                                     miniDetailStatus.style.display = "block"; // Show the element
+                                    document.getElementById("MiniDetailStatusSuc").style.display = "block";
 
                                     // Triggering reflow to apply initial styles before the animation
                                     void miniDetailStatus.offsetWidth;
@@ -423,6 +433,7 @@ $check_order = 0;
 
                                     showMiniOfStatus.style.opacity = "0"; // Set initial opacity to 0 for fade-in effect
                                     showMiniOfStatus.style.display = "block"; // Show the element
+                                    document.getElementById("MiniDetailStatusSuc").style.display = "none";
 
                                     // Triggering reflow to apply initial styles before the animation
                                     void showMiniOfStatus.offsetWidth;
