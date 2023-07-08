@@ -27,6 +27,7 @@ $check_order = 0;
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
     <link rel="stylesheet" href="css/status_ok_problem_ok.css">
     <link rel="stylesheet" href="css/all_page.css">
+    <link rel="stylesheet" href="css/detail_status.css">
     <link rel="icon" type="image/x-icon" href="img brand/anelogo.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Status - ANE</title>
@@ -36,264 +37,6 @@ $check_order = 0;
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
-    <style>
-        body {
-            font-family: sans-serif;
-        }
-
-        .file-upload {
-            width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .file-upload-btn {
-            width: 100%;
-            margin: 0;
-            color: #fff;
-            background: #0090C6;
-            border: none;
-            padding: 10px;
-            border-radius: 4px;
-            border-bottom: 4px solid #0090C6;
-            transition: all .2s ease;
-            outline: none;
-            text-transform: uppercase;
-            font-weight: 700;
-        }
-
-        .file-upload-btn:hover {
-            background: #0090C6;
-            transition: all .2s ease;
-            cursor: pointer;
-        }
-
-        .file-upload-btn:active {
-            border: 0;
-            transition: all .2s ease;
-        }
-
-        .file-upload-content {
-            display: none;
-            text-align: center;
-        }
-
-        .file-upload-input {
-            position: absolute;
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            outline: none;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .image-upload-wrap {
-            margin-top: 20px;
-            border: 4px dashed #0090C6;
-            position: relative;
-        }
-
-        .image-dropping,
-        .image-upload-wrap:hover {
-            background-color: #0090C6;
-        }
-
-        .image-title-wrap {
-            padding: 0 15px 15px 15px;
-            color: #222;
-        }
-
-        .drag-text {
-            text-align: center;
-        }
-
-        .drag-text h3 {
-            font-weight: 100;
-            text-transform: uppercase;
-            color: gray;
-            padding: 60px 0;
-        }
-
-        .file-upload-image {
-            max-height: 200px;
-            max-width: 200px;
-            margin: auto;
-            padding: 20px;
-        }
-
-        .remove-image {
-            width: 200px;
-            margin: 0;
-            color: #fff;
-            background: #cd4535;
-            border: none;
-            padding: 10px;
-            border-radius: 4px;
-            border-bottom: 4px solid #b02818;
-            transition: all .2s ease;
-            outline: none;
-            text-transform: uppercase;
-            font-weight: 700;
-        }
-
-        .remove-image:hover {
-            background: #c13b2a;
-            color: #ffffff;
-            transition: all .2s ease;
-            cursor: pointer;
-        }
-
-        .remove-image:active {
-            border: 0;
-            transition: all .2s ease;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.8);
-            /* Dim black background */
-        }
-
-        .modal-content {
-            margin: auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            max-width: 100%;
-            max-height: 100%;
-            background-color: black;
-            /* Set the background color to black */
-        }
-
-        #modal-image {
-            max-width: 100%;
-            max-height: 100%;
-            display: block;
-            margin: auto;
-            /* Center the image horizontally */
-        }
-
-
-        .close {
-            position: absolute;
-            top: 15px;
-            right: 35px;
-            color: #f1f1f1;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #bbb;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .iframe-container {
-            display: none;
-        }
-
-        .check_icon {
-            margin-left: 10px;
-        }
-
-        #drop-shadow {
-            border-radius: 5%;
-            box-shadow: 0 2px 4px rgba(0, 0.2, 0.2, 0.2);
-            /* Adjust the shadow properties as needed */
-        }
-
-        a {
-            color: gray;
-            transition: transform 0.3s ease;
-        }
-
-        a:hover {
-            color: blue;
-            transform: scale(1.2);
-        }
-
-
-        #bounce-item {
-            /* box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3); */
-            /* Add a gray shadow */
-            transition: transform 0.3s, box-shadow 0.3s;
-            /* Add transition for transform and box-shadow */
-        }
-
-        #bounce-item:hover {
-            transform: scale(1.02);
-            /* Increase size on hover */
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-            /* Increase shadow size and intensity on hover */
-            /* border: 2px solid gray; */
-
-        }
-
-        #tooltip {
-            visibility: hidden;
-            opacity: 0;
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            padding: 8px;
-            border-radius: 4px;
-            font-size: 14px;
-            white-space: nowrap;
-            transition: opacity 0.3s, transform 0.3s;
-        }
-
-        #bounce-item:hover #tooltip {
-            visibility: visible;
-            opacity: 1;
-            transform: translateX(-50%) translateY(-10px);
-            animation: tooltipFadeIn 0.3s, tooltipBounce 0.6s;
-        }
-
-        #process-status:hover #tooltip {
-            visibility: visible;
-            opacity: 1;
-            transform: translateX(-50%) translateY(-10px);
-            animation: tooltipFadeIn 0.3s, tooltipBounce 0.6s;
-        }
-
-        @keyframes tooltipFadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes tooltipBounce {
-
-            0%,
-            100% {
-                transform: translateX(-50%) translateY(-10px);
-            }
-
-            50% {
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -322,9 +65,7 @@ $check_order = 0;
     $process_dot = 0;
     $allowedStatusIds1 = [1, 2];
     $allowedStatusIds2 = [5];
-    $allowedStatusIds3 = [
-        4, 17, 19
-    ];
+    $allowedStatusIds3 = [4, 17, 19];
     $allowedStatusIds4 = [6, 13];
     $allowedStatusIds5 = [7, 8];
     $allowedStatusIds6 = [9, 10, 25];
@@ -356,7 +97,6 @@ $check_order = 0;
 
     $get_add_price = $row_c['get_add_price']; ?>
     <br><br>
-
     <div class="px-5 pt-5 repair">
         <div class="container" style="display: none;">
             <div class="row">
@@ -381,119 +121,6 @@ $check_order = 0;
                 <?php } ?>
             </div>
             <div class="row">
-                <style>
-                    .card {
-                        z-index: 0;
-                        background-color: #ECEFF1;
-                        padding-bottom: 20px;
-                        border-radius: 10px;
-                    }
-
-                    .top {
-                        padding-top: 40px;
-                        padding-left: 13% !important;
-                        padding-right: 13% !important;
-                    }
-
-                    /*Icon progressbar*/
-                    #progressbar {
-                        margin-bottom: 30px;
-                        overflow: hidden;
-                        color: #455A64;
-                        padding-left: 0px;
-                        margin-top: 30px;
-                    }
-
-                    #progressbar li {
-                        list-style-type: none;
-                        font-size: 13px;
-                        width: 12.5%;
-                        float: left;
-                        position: relative;
-                        font-weight: 400;
-                    }
-
-                    #progressbar .step0:before {
-                        font-family: FontAwesome;
-                        content: "\f10c";
-                        color: #fff;
-                    }
-
-                    #progressbar li:before {
-                        width: 40px;
-                        height: 40px;
-                        line-height: 45px;
-                        display: block;
-                        font-size: 20px;
-                        background: #C5CAE9;
-                        border-radius: 50%;
-                        margin: auto;
-                        padding: 0px;
-                        position: relative;
-                        z-index: 1;
-                    }
-
-                    /*ProgressBar connectors*/
-                    #progressbar li:after {
-                        content: '';
-                        width: 100%;
-                        height: 12px;
-                        background: #C5CAE9;
-                        position: absolute;
-                        left: -50%;
-                        top: 16px;
-                        z-index: -1;
-                    }
-
-                    #progressbar li:first-child:after {
-                        border-top-left-radius: 10px;
-                        border-bottom-left-radius: 10px;
-                        position: absolute;
-                        left: 0;
-                    }
-
-                    #progressbar li:last-child:after {
-                        border-top-right-radius: 10px;
-                        border-bottom-right-radius: 10px;
-                    }
-
-                    /*Color number of the step and the connector before it*/
-                    #progressbar li.active:before,
-                    #progressbar li.active:after {
-                        background: green;
-                    }
-
-                    #progressbar li.active:before {
-                        font-family: FontAwesome;
-                        content: "\f00c";
-                    }
-
-                    .icon {
-                        width: 60px;
-                        height: 60px;
-                        margin-right: 15px;
-                    }
-
-                    .icon-content {
-                        padding-bottom: 20px;
-                    }
-
-                    #font-status {
-                        font-style: oblique;
-                        font-weight: 100;
-                    }
-
-                    #progressbar li:first-child:after {
-                        content: none;
-                    }
-
-
-                    @media screen and (max-width: 992px) {
-                        .icon-content {
-                            width: 50%;
-                        }
-                    }
-                </style>
                 <div class="container px-md-4 py-5 mx-auto">
                     <div class="card" id="process-status">
                         <div class="row p-4">
@@ -609,10 +236,10 @@ $check_order = 0;
                                                 <span>วันที่ : <?= date('d F Y', strtotime($row_lastest['rs_date_time'])); ?> <span style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_lastest['rs_date_time'])); ?></span> </span>
                                                 <span>
                                                 </span>
-                                                <P>
+                                                <p>
                                                     <br>
-                                                    <a href="#" style="color:GRAY;">ดูรายละเอียดเพิ่มเติม ...</a>
-                                                </P>
+                                                    <a href="#" style="color:gray;">ดูรายละเอียดเพิ่มเติม ...</a>
+                                                </p>
                                             </div>
                                         </font>
                                     </button>

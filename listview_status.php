@@ -423,7 +423,7 @@ if (isset($_GET["status_id"])) {
                         $i = $i + 1;
                         $id_r = $row1[0];
                         $id_r_get = $row1['r_id'];
-                        $sql_c = "SELECT COUNT(get_r_id) FROM get_detail WHERE get_r_id = '$id_r'";
+                        $sql_c = "SELECT COUNT(get_r_id) FROM get_detail WHERE get_r_id = '$id_r' AND del_flg = '0'";
                         $result_c = mysqli_query($conn, $sql_c);
                         $row_c = mysqli_fetch_array($result_c);
 
