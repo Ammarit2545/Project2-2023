@@ -4,7 +4,6 @@ include('database/condb.php');
 $id = $_SESSION['id'];
 $status_id = 0;
 
-
 $sql1 = "SELECT * FROM member WHERE m_id = '$id'";
 $result1 = mysqli_query($conn, $sql1);
 $row1 = mysqli_fetch_array($result1);
@@ -319,15 +318,43 @@ $check_order = 0;
     $result2 = mysqli_query($conn, $sql2);
     $row_2 = mysqli_fetch_array($result2);
 
+    // check status Process Bar
+    $process_dot = 0;
+    $allowedStatusIds1 = [1, 2];
+    $allowedStatusIds2 = [5];
+    $allowedStatusIds3 = [
+        4, 17, 19
+    ];
+    $allowedStatusIds4 = [6, 13];
+    $allowedStatusIds5 = [7, 8];
+    $allowedStatusIds6 = [9, 10, 25];
+    $allowedStatusIds7 = [24];
+    $allowedStatusIds8 = [3];
+    if (in_array($row_2['status_id'], $allowedStatusIds1)) {
+        $process_dot = 1;
+    } elseif (in_array($row_2['status_id'], $allowedStatusIds2)) {
+        $process_dot = 2;
+    } elseif (in_array($row_2['status_id'], $allowedStatusIds3)) {
+        $process_dot = 3;
+    } elseif (in_array($row_2['status_id'], $allowedStatusIds4)) {
+        $process_dot = 4;
+    } elseif (in_array($row_2['status_id'], $allowedStatusIds5)) {
+        $process_dot = 5;
+    } elseif (in_array($row_2['status_id'], $allowedStatusIds6)) {
+        $process_dot = 6;
+    } elseif (in_array($row_2['status_id'], $allowedStatusIds7)) {
+        $process_dot = 7;
+    } elseif (in_array($row_2['status_id'], $allowedStatusIds8)) {
+        $process_dot = 8;
+    }
+
     $sql_c = "SELECT * FROM get_detail
     LEFT JOIN get_repair ON get_detail.get_r_id = get_repair.get_r_id 
     LEFT JOIN repair ON repair.r_id = get_detail.r_id WHERE get_repair.get_r_id = '$id_get_r' AND repair.del_flg = '0'";
     $result_c = mysqli_query($conn, $sql_c);
     $row_c = mysqli_fetch_array($result_c);
 
-    $get_add_price = $row_c['get_add_price'];
-    
-    ?>
+    $get_add_price = $row_c['get_add_price']; ?>
     <br><br>
 
     <div class="px-5 pt-5 repair">
@@ -467,7 +494,6 @@ $check_order = 0;
                         }
                     }
                 </style>
-
                 <div class="container px-md-4 py-5 mx-auto">
                     <div class="card" id="process-status">
                         <div class="row p-4">
@@ -476,42 +502,73 @@ $check_order = 0;
                             </div>
                             <div class="d-flex flex-column text-sm-right">
                                 <p class="mb-0">วันที่ยื่นเรื่อง : <?= date('d F Y', strtotime($row_2['rs_date_time'])); ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_2['rs_date_time'])); ?></span></p>
-                                <!-- <p>USPS <span class="font-weight-bold">234094567242423422898</span></p> -->
                             </div>
                         </div>
                         <!-- Add class 'active' to progress -->
                         <div class="row d-flex justify-content-center">
                             <div class="col-12">
                                 <ul id="progressbar" class="text-center">
-                                    <li class="active step0">
+                                    <li class="<?php
+                                                if ($process_dot >= 1) {
+                                                    echo 'active';
+                                                }
+                                                ?> step0">
                                         <br>
                                         <p id="font-status">ส่งเรื่อง</p>
                                     </li>
-                                    <li class="active step0">
+                                    <li class="<?php
+                                                if ($process_dot >= 2) {
+                                                    echo 'active';
+                                                }
+                                                ?> step0">
                                         <br>
-                                        <p id="font-status">รับเรื่อง</p>
+                                        <p id="font-status">ยื่นข้อเสนอ</p>
                                     </li>
-                                    <li class="active step0">
+                                    <li class="<?php
+                                                if ($process_dot >= 3) {
+                                                    echo 'active';
+                                                }
+                                                ?> step0">
                                         <br>
-                                        <p id="font-status">แก้ไข</p>
+                                        <p id="font-status">รอการส่งอุปกรณ์จากคุณ</p>
                                     </li>
-                                    <li class="active step0">
+                                    <li class="<?php
+                                                if ($process_dot >= 4) {
+                                                    echo 'active';
+                                                }
+                                                ?> step0">
                                         <br>
-                                        <p id="font-status">ตรวจสอบ</p>
+                                        <p id="font-status">ดำเนินการซ่อม</p>
                                     </li>
-                                    <li class="active step0">
+                                    <li class="<?php
+                                                if ($process_dot >= 5) {
+                                                    echo 'active';
+                                                }
+                                                ?> step0">
                                         <br>
-                                        <p id="font-status">ตรวจสอบ</p>
+                                        <p id="font-status">ดำเนินการตรวจเช็ค</p>
                                     </li>
-                                    <li class="active step0">
+                                    <li class="<?php
+                                                if ($process_dot >= 6) {
+                                                    echo 'active';
+                                                }
+                                                ?> step0">
                                         <br>
-                                        <p id="font-status">ส่งคืน</p>
+                                        <p id="font-status">ชำระเงิน</p>
                                     </li>
-                                    <li class="step0">
+                                    <li class="<?php
+                                                if ($process_dot >= 7) {
+                                                    echo 'active';
+                                                }
+                                                ?> step0">
                                         <br>
-                                        <p id="font-status">ส่งคืน</p>
+                                        <p id="font-status">ส่งคืนอุปกรณ์</p>
                                     </li>
-                                    <li class="step0">
+                                    <li class="<?php
+                                                if ($process_dot >= 8) {
+                                                    echo 'active';
+                                                }
+                                                ?> step0">
                                         <br>
                                         <p id="font-status">เสร็จสิ้น</p>
                                     </li>
@@ -523,7 +580,6 @@ $check_order = 0;
                 </div>
             </div>
             <div class="row">
-
                 <div class="col-md-12">
                     <div class="accordion accordion" id="accordionFlushExample" style="background-color: #F1F1F1;">
                         <div class="accordion-item">
@@ -627,7 +683,6 @@ $check_order = 0;
                                                 <i class="fa fa-check-square"></i> ดำเนินการซ่อมเสร็จสิ้น
                                             </div>
                                         <?php } ?>
-
                                         <div class="row">
                                             <div class="col">
                                                 <ul class="timeline-3">
@@ -660,24 +715,19 @@ $check_order = 0;
                                                         $result_c = mysqli_query($conn, $sql_c);
                                                         $row_p = mysqli_fetch_array($result_c);
                                                     ?>
-
                                                         <li>
                                                             <hr style="border: 3px solid black;">
                                                             <h5 style="display:inline"><button class="btn btn-outline-secondary" style="color : white; background-color : <?= $row1['status_color'] ?>; border : 2px solid <?= $row1['status_color'] ?>;"><?= $row1['status_name'] ?>
-                                                                    <?php
-                                                                    if ($row1['status_id'] == 6) {
+                                                                    <?php if ($row1['status_id'] == 6) {
 
                                                                         $carry_out_id = $row['status_id'];
                                                                         $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = 155 AND status_id = 6 ORDER BY rs_date_time DESC;";
                                                                         $result_carry_out = mysqli_query($conn, $sql_cary_out);
                                                                         $row_carry_out = mysqli_fetch_array($result_carry_out);
 
-                                                                        if ($row_carry_out[0] > 1) {
-                                                                    ?>
+                                                                        if ($row_carry_out[0] > 1) { ?>
                                                                             #ครั้งที่<?= $row_carry_out[0] - $count_carry_out ?>
-
-                                                                    <?php
-                                                                        }
+                                                                    <?php }
                                                                         $count_carry_out += 1;
                                                                     } ?></button></h5>
                                                             <h6 style="display:inline;"><i class="uil uil-book"></i>&nbsp;<?= $formattedDate ?></h6>
@@ -698,29 +748,20 @@ $check_order = 0;
 
                                                             if ($row_p['rs_id'] == $row1['rs_id'] && $row_check_part['rd_id'] != NULL) {
                                                                 if ($row1['status_id'] != 8) {
-                                                                    if ($row1['status_id'] == 9 || $row1['status_id'] == 10) {
-                                                            ?>
+                                                                    if ($row1['status_id'] == 9 || $row1['status_id'] == 10) {  ?>
                                                                         <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">จำนวนอะไหล่</a>
                                                                     <?php
                                                                     } else {
                                                                     ?>
                                                                         <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a>
-                                                                    <?php }
-                                                                } else {
-                                                                    ?>
-                                                            <?php
+                                                                <?php }
                                                                 }
                                                             }
-
-                                                            ?>
-                                                            <?php if ($row1['status_id'] == 8 && $row1['rs_conf'] == NULL) {
-
-                                                            ?>
+                                                            if ($row1['status_id'] == 8 && $row1['rs_conf'] == NULL) { ?>
                                                                 <a href="form_pay.php?id=<?= $id_get_r ?>" class="btn btn-primary">ทำการชำระเงิน</a>
                                                             <?php
-                                                            } ?>
-                                                            <?php if ($row1['get_track'] != NULL && $row1['status_id'] == 24) {
-                                                            ?>
+                                                            }
+                                                            if ($row1['get_track'] != NULL && $row1['status_id'] == 24) { ?>
                                                                 <hr>
                                                                 <h5 class="btn btn-outline-primary">หมายเลข Tracking ของท่าน</h5>
                                                                 <!-- HTML -->
@@ -730,7 +771,6 @@ $check_order = 0;
                                                                     <br>
                                                                     <span id="copyMessage" class="btn btn-success" style="display: none; color:white; margin-left: 30px;"></span>
                                                                 </div>
-
                                                                 <script>
                                                                     document.getElementById("copyText").addEventListener("click", function() {
                                                                         var textToCopy = "<?= $row1['get_track'] ?>";
@@ -759,13 +799,10 @@ $check_order = 0;
                                                                         }, 2000);
                                                                     });
                                                                 </script>
-
                                                             <?php
                                                             }
-                                                            if ($row1['status_id'] == 4 || $row1['status_id'] == 17 && $row1['rs_conf'] == NULL || $row1['rs_conf'] == 1) {
-                                                            ?>
+                                                            if ($row1['status_id'] == 4 || $row1['status_id'] == 17 && $row1['rs_conf'] == NULL || $row1['rs_conf'] == 1) { ?>
                                                                 <div>
-
                                                                     <?php if ($check_order  == 0) { ?>
                                                                         <hr>
                                                                         <p class="btn btn-outline-primary">รายการที่สามารถซ่อมได้</p>
@@ -788,34 +825,19 @@ $check_order = 0;
                                                                                 <?= $row_get_c['r_brand'] . " " . $row_get_c['r_model'] . " - Model : " . $row_get_c['r_number_model'] . " - Serial Number : " . $row_get_c['r_serial_number']  ?>
                                                                             </div>
                                                                     <?php
-
                                                                         }
                                                                     }
-
                                                                     ?>
                                                                 </div>
                                                             <?php
                                                             } ?>
-
                                                             <hr>
                                                             <h5 class="btn btn-outline-primary">รายละเอียด</h5>
                                                             <p class="mt-2" style="margin-left: 30px;"><?= $row1['rs_detail'] ?></p>
-                                                            <!-- <hr> -->
                                                             <?php
                                                             if ($row1['status_id'] == 5  && $row1['rs_conf'] == NULL) {
-                                                            ?>
-                                                                <!-- <h5 class="btn btn-outline-primary">เลือกวิธีการจัดส่งอุปกรณ์มาที่ร้าน</h5>
-                                <center>
-                                    <button id="bounce-item" class="btn btn-primary">ส่งที่หน้าร้าน</button>
-                                    <button id="bounce-item" class="btn btn-warning">จัดส่งผ่านไปรษณีย์</button>
-                                     <hr>
-                                </center> -->
-                                                            <?php
                                                             }
-                                                            ?>
-
-
-                                                            <?php if ($row1['status_id'] == 4 || $row1['status_id'] == 17 && $row1['rs_conf'] == NULL || $row1['rs_conf'] == 1) {
+                                                            if ($row1['status_id'] == 4 || $row1['status_id'] == 17 && $row1['rs_conf'] == NULL || $row1['rs_conf'] == 1) {
                                                                 $total =  $row1['get_wages'] + $row1['get_add_price'];
                                                             ?><?php if ($check_order  == 0) { ?>
 
@@ -830,26 +852,26 @@ $check_order = 0;
                                                             <?php }
                                                                     $total_part = 0;
                                                                     $sql_c = "SELECT
-                                     repair_detail.p_id,
-                                     COUNT(repair_detail.p_id) AS count,
-                                     parts.p_brand,
-                                     parts.p_model,
-                                     parts.p_price,
-                                     parts_type.p_type_name,
-                                     repair_status.rs_id,
-                                     parts.p_pic
-                                   FROM
-                                     `repair_detail`
-                                        LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
-                                        LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
-                                        JOIN parts ON parts.p_id = repair_detail.p_id
-                                        LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
-                                   WHERE
-                                     get_repair.del_flg = 0 AND repair_detail.del_flg = 0
-                                     AND get_repair.get_r_id = '$id_get_r'
-                                   GROUP BY
-                                     p_id;
-                                     ";
+                                                                                repair_detail.p_id,
+                                                                                COUNT(repair_detail.p_id) AS count,
+                                                                                parts.p_brand,
+                                                                                parts.p_model,
+                                                                                parts.p_price,
+                                                                                parts_type.p_type_name,
+                                                                                repair_status.rs_id,
+                                                                                parts.p_pic
+                                                                            FROM
+                                                                                `repair_detail`
+                                                                                    LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
+                                                                                    LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
+                                                                                    JOIN parts ON parts.p_id = repair_detail.p_id
+                                                                                    LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
+                                                                            WHERE
+                                                                                get_repair.del_flg = 0 AND repair_detail.del_flg = 0
+                                                                                AND get_repair.get_r_id = '$id_get_r'
+                                                                            GROUP BY
+                                                                                p_id;
+                                                                                ";
                                                                     $result_c = mysqli_query($conn, $sql_c);
                                                                     while ($row_c = mysqli_fetch_array($result_c)) {
                                                                         $total_part += $row_c['p_price'];
@@ -858,36 +880,26 @@ $check_order = 0;
                                                                 <p class="mt-2" style="margin-left: 30px;display:inline"> - ค่าอะไหล่ <?= $total_part ?> บาท</span></p> <a onclick="openModalPart('quantitypart')" style="display:inline; color:red">ดูอะไหล่ที่ต้องใช้</a>
                                                             <?php }  ?>
                                                             <h5 class="alert alert-primary" style="margin-left: 30px;">รวมราคา <?= number_format($total + $total_part) ?> บาท</span></h3>
-                                                        <?php
+                                                            <?php
                                                                 }
                                                                 $check_order = 1;
-                                                            } ?>
-
-
-                                                        <?php if ($row1['rs_cancel_detail'] != NULL) {
-                                                        ?>
+                                                            }
+                                                            if ($row1['rs_cancel_detail'] != NULL) {  ?>
                                                             <h5 class="btn btn-outline-danger">เหตุผลการไม่ยืนยัน</h5>
                                                             <p class="mt-2"><?= $row1['rs_cancel_detail'] ?></p>
-                                                        <?php
-
-                                                        }
-
-                                                        ?>
+                                                        <?php  } ?>
                                                         <div class="col text-left" style="background-color: #F1F1F1;">
                                                             <?php
                                                             $sql_pic = "SELECT * FROM repair_pic WHERE rs_id = $rs_id AND del_flg = 0 ";
                                                             $result_pic = mysqli_query($conn, $sql_pic);
                                                             $row_pic_check = mysqli_fetch_array($result_pic);
 
-                                                            if ($row_pic_check[0] > 0) {
-                                                            ?>
+                                                            if ($row_pic_check[0] > 0) { ?>
                                                                 <hr>
                                                                 <h6 class="btn btn-outline-secondary">รูปภาพประกอบ</h6>
                                                                 <br><br>
                                                             <?php
                                                             }
-                                                            ?>
-                                                            <?php
                                                             $status_id = $row1['status_id'];
 
                                                             $sql_s = "SELECT * FROM repair_status WHERE status_id = '$status_id' AND del_flg = '0' AND get_r_id = $id_get_r ORDER BY rs_date_time DESC LIMIT 1";
@@ -1405,10 +1417,9 @@ $check_order = 0;
                                                                 คุณได้ทำการยืนยันการยกเลิกแล้ว "โปรดรอการตอบกลับ"
                                                             </div>
                                                             <span class="check_icon"><i class="fa fa-check"></i> ส่งวันที่ : <?= $row1['rs_conf_date'] ?></span>
-                                                        <?php
-                                                        }  ?>
-
-                                                    <?php } ?>
+                                                    <?php
+                                                        }
+                                                    } ?>
                                                 </ul>
                                             </div>
                                         </div>
@@ -1421,59 +1432,13 @@ $check_order = 0;
             </div>
         </div>
         <br>
-
         <br>
-        <!-- <div class="container" height="1000px" style="background-color: #F1F1F1; ">
-            <div class="row p-3">
-                <div class="col-5 text-left" id="bounce-item">
-                    <center>
-                        <h4><a style="text-decoration: none;">ดูรายละเอียดอุปกรณ์ของท่าน</a></h4>
-
-                    </center>
-                </div>
-                <div class="col-2 ">
-                    <center>
-                        <h3>|</h3>
-                    </center>
-                </div>
-                <div class="col-5" id="bounce-item">
-                    <center>
-                        <h4><a style="text-decoration: none; " onclick="openModalPart('quantitypart')">ดูยอดอะไหล่ของท่าน</a></h4>
-                    </center>
-                </div>
-                <br>
-            </div>
-        </div>
-        <br>
-        <div class="container" height="1000px" style="background-color: #F1F1F1; ">
-            <div class="row p-3">
-                <div class="col-5 text-left" id="bounce-item">
-                    <center>
-                        <h4><a style="text-decoration: none;">ดูรายละเอียดอุปกรณ์ของท่าน</a></h4>
-
-                    </center>
-                </div>
-                <div class="col-2 ">
-                    <center>
-                        <h3>|</h3>
-                    </center>
-                </div>
-                <div class="col-5" id="bounce-item">
-                    <center>
-                        <h4><a style="text-decoration: none; " onclick="openModalPart('quantitypart')">ดูยอดอะไหล่ของท่าน</a></h4>
-                    </center>
-                </div>
-                <br>
-            </div>
-        </div> -->
-
         <div class="container my-5 p-4" style="background-color: #F1F1F1; border-radius : 1%;display:none">
             <?php if ($row_2['status_id'] == 3) { ?>
                 <div class="alert alert-success" role="alert">
                     <i class="fa fa-check-square"></i> ดำเนินการซ่อมเสร็จสิ้น
                 </div>
             <?php } ?>
-
             <div class="row">
                 <div class="col">
                     <br>
@@ -1509,7 +1474,6 @@ $check_order = 0;
                             $result_c = mysqli_query($conn, $sql_c);
                             $row_p = mysqli_fetch_array($result_c);
                         ?>
-
                             <li>
                                 <hr style="border: 5px solid black;">
                                 <h5 style="display:inline"><button class="btn btn-outline-secondary" style="color : white; background-color : <?= $row1['status_color'] ?>; border : 2px solid <?= $row1['status_color'] ?>;"><?= $row1['status_name'] ?>
@@ -1522,9 +1486,7 @@ $check_order = 0;
                                             $row_carry_out = mysqli_fetch_array($result_carry_out);
 
                                             if ($row_carry_out[0] > 1) {
-                                        ?>
-                                                #ครั้งที่<?= $row_carry_out[0] - $count_carry_out ?>
-
+                                        ?> #ครั้งที่<?= $row_carry_out[0] - $count_carry_out ?>
                                         <?php
                                             }
                                             $count_carry_out += 1;
@@ -1547,24 +1509,16 @@ $check_order = 0;
 
                                 if ($row_p['rs_id'] == $row1['rs_id'] && $row_check_part['rd_id'] != NULL) {
                                     if ($row1['status_id'] != 8) {
-                                        if ($row1['status_id'] == 9 || $row1['status_id'] == 10) {
-                                ?>
+                                        if ($row1['status_id'] == 9 || $row1['status_id'] == 10) {  ?>
                                             <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">จำนวนอะไหล่</a>
                                         <?php
                                         } else {
                                         ?>
                                             <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a>
-                                        <?php }
-                                    } else {
-                                        ?>
-                                <?php
+                                    <?php }
                                     }
                                 }
-
-                                ?>
-                                <?php if ($row1['status_id'] == 8 && $row1['rs_conf'] == NULL) {
-
-                                ?>
+                                if ($row1['status_id'] == 8 && $row1['rs_conf'] == NULL) { ?>
                                     <a href="form_pay.php?id=<?= $id_get_r ?>" class="btn btn-primary">ทำการชำระเงิน</a>
                                 <?php
                                 } ?>
@@ -1608,29 +1562,22 @@ $check_order = 0;
                                             }, 2000);
                                         });
                                     </script>
+                                <?php }
+                                if ($row1['status_id'] == 4 || $row1['status_id'] == 17 && $row1['rs_conf'] == NULL || $row1['rs_conf'] == 1) {
 
-                                <?php
-                                } ?>
-
-                                <?php if ($row1['status_id'] == 4 || $row1['status_id'] == 17 && $row1['rs_conf'] == NULL || $row1['rs_conf'] == 1) {
-
-                                ?>
-
-                                    <div>
-
-                                        <?php if ($check_order  == 0) { ?>
+                                ?> <div> <?php if ($check_order  == 0) { ?>
                                             <hr>
                                             <p class="btn btn-outline-primary">รายการที่สามารถซ่อมได้</p>
                                             <?php
-                                            $count_conf = 0;
+                                                $count_conf = 0;
 
-                                            $sql_get_c = "SELECT * FROM get_detail 
+                                                $sql_get_c = "SELECT * FROM get_detail 
                                                         LEFT JOIN repair ON repair.r_id = get_detail.r_id
                                                         WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.del_flg = 0";
-                                            $result_get_c = mysqli_query($conn, $sql_get_c);
+                                                $result_get_c = mysqli_query($conn, $sql_get_c);
 
-                                            while ($row_get_c = mysqli_fetch_array($result_get_c)) {
-                                                $count_conf++;
+                                                while ($row_get_c = mysqli_fetch_array($result_get_c)) {
+                                                    $count_conf++;
                                             ?>
                                                 <div class="alert alert-<?php if ($row_get_c['get_d_conf'] == 0) { ?>primary<?php } elseif ($row_get_c['get_d_conf'] == 1) { ?>danger<?php } ?>" role="alert">
                                                     <div class="form-check form-check-inline">
@@ -1639,47 +1586,29 @@ $check_order = 0;
                                                     </div>
                                                     <?= $row_get_c['r_brand'] . " " . $row_get_c['r_model'] . " - Model : " . $row_get_c['r_number_model'] . " - Serial Number : " . $row_get_c['r_serial_number']  ?>
                                                 </div>
-                                        <?php
-
-                                            }
-                                        }
-
-                                        ?>
+                                        <?php }
+                                            }  ?>
                                     </div>
-                                <?php
-                                } ?>
-
+                                <?php  } ?>
                                 <hr>
                                 <h5 class="btn btn-outline-primary">รายละเอียด</h5>
                                 <p class="mt-2" style="margin-left: 30px;"><?= $row1['rs_detail'] ?></p>
-                                <!-- <hr> -->
                                 <?php
                                 if ($row1['status_id'] == 5  && $row1['rs_conf'] == NULL) {
-                                ?>
-                                    <!-- <h5 class="btn btn-outline-primary">เลือกวิธีการจัดส่งอุปกรณ์มาที่ร้าน</h5>
-                                <center>
-                                    <button id="bounce-item" class="btn btn-primary">ส่งที่หน้าร้าน</button>
-                                    <button id="bounce-item" class="btn btn-warning">จัดส่งผ่านไปรษณีย์</button>
-                                     <hr>
-                                </center> -->
-                                <?php
                                 }
-                                ?>
-
-
-                                <?php if ($row1['status_id'] == 4 || $row1['status_id'] == 17 && $row1['rs_conf'] == NULL || $row1['rs_conf'] == 1) {
+                                if ($row1['status_id'] == 4 || $row1['status_id'] == 17 && $row1['rs_conf'] == NULL || $row1['rs_conf'] == 1) {
                                     $total =  $row1['get_wages'] + $row1['get_add_price'];
-                                ?><?php if ($check_order  == 0) { ?>
+                                    if ($check_order  == 0) { ?>
 
-                                <?php if ($row1['get_date_conf'] != NULL) {  ?>
-                                    <p class="mt-2" style="margin-left: 30px;"> - ระยะเวลาซ่อม <?= number_format($row1['get_date_conf']) ?> วัน <span style="color:red">( นับจากวันที่รับอุปกรณ์ )</span></p>
-                                <?php }  ?>
-                                <?php if ($row1['get_wages'] != NULL) {  ?>
-                                    <p class="mt-2" style="margin-left: 30px;"> - ค่าแรงช่าง <?= number_format($row1['get_wages']) ?> บาท</span></p>
-                                <?php }  ?>
-                                <?php if ($row1['get_add_price'] != NULL) {  ?>
-                                    <p class="mt-2" style="margin-left: 30px;"> - ค่าจัดส่ง <?= number_format($row1['get_add_price']) ?> บาท</span></p>
-                                <?php }
+                                        <?php if ($row1['get_date_conf'] != NULL) {  ?>
+                                            <p class="mt-2" style="margin-left: 30px;"> - ระยะเวลาซ่อม <?= number_format($row1['get_date_conf']) ?> วัน <span style="color:red">( นับจากวันที่รับอุปกรณ์ )</span></p>
+                                        <?php }  ?>
+                                        <?php if ($row1['get_wages'] != NULL) {  ?>
+                                            <p class="mt-2" style="margin-left: 30px;"> - ค่าแรงช่าง <?= number_format($row1['get_wages']) ?> บาท</span></p>
+                                        <?php }  ?>
+                                        <?php if ($row1['get_add_price'] != NULL) {  ?>
+                                            <p class="mt-2" style="margin-left: 30px;"> - ค่าจัดส่ง <?= number_format($row1['get_add_price']) ?> บาท</span></p>
+                                        <?php }
                                         $total_part = 0;
                                         $sql_c = "SELECT
                                      repair_detail.p_id,
@@ -1707,225 +1636,216 @@ $check_order = 0;
                                             $total_part += $row_c['p_price'];
                                         }
                                         if ($total_part > 0) {  ?>
-                                    <p class="mt-2" style="margin-left: 30px;display:inline"> - ค่าอะไหล่ <?= $total_part ?> บาท</span></p> <a onclick="openModalPart('quantitypart')" style="display:inline; color:red">ดูอะไหล่ที่ต้องใช้</a>
-                                <?php }  ?>
-                                <h5 class="alert alert-primary" style="margin-left: 30px;">รวมราคา <?= number_format($total + $total_part) ?> บาท</span></h3>
-                            <?php
+                                            <p class="mt-2" style="margin-left: 30px;display:inline"> - ค่าอะไหล่ <?= $total_part ?> บาท</span></p> <a onclick="openModalPart('quantitypart')" style="display:inline; color:red">ดูอะไหล่ที่ต้องใช้</a>
+                                        <?php }  ?>
+                                        <h5 class="alert alert-primary" style="margin-left: 30px;">รวมราคา <?= number_format($total + $total_part) ?> บาท</span></h3>
+                                        <?php
                                     }
                                     $check_order = 1;
-                                } ?>
-
-
-                            <?php if ($row1['rs_cancel_detail'] != NULL) {
-                            ?>
-                                <h5 class="btn btn-outline-danger">เหตุผลการไม่ยืนยัน</h5>
-                                <p class="mt-2"><?= $row1['rs_cancel_detail'] ?></p>
-                            <?php
-
-                            }
-
-                            ?>
-                            <div class="col text-left" style="background-color: #F1F1F1;">
-                                <?php
-                                $sql_pic = "SELECT * FROM repair_pic WHERE rs_id = $rs_id AND del_flg = 0 ";
-                                $result_pic = mysqli_query($conn, $sql_pic);
-                                $row_pic_check = mysqli_fetch_array($result_pic);
-
-                                if ($row_pic_check[0] > 0) {
-                                ?>
-                                    <hr>
-                                    <h6 class="btn btn-outline-secondary">รูปภาพประกอบ</h6>
-                                    <br><br>
-                                <?php
                                 }
-                                ?>
-                                <?php
-                                $status_id = $row1['status_id'];
+                                if ($row1['rs_cancel_detail'] != NULL) {  ?>
+                                        <h5 class="btn btn-outline-danger">เหตุผลการไม่ยืนยัน</h5>
+                                        <p class="mt-2"><?= $row1['rs_cancel_detail'] ?></p>
+                                    <?php  } ?>
+                                    <div class="col text-left" style="background-color: #F1F1F1;">
+                                        <?php
+                                        $sql_pic = "SELECT * FROM repair_pic WHERE rs_id = $rs_id AND del_flg = 0 ";
+                                        $result_pic = mysqli_query($conn, $sql_pic);
+                                        $row_pic_check = mysqli_fetch_array($result_pic);
 
-                                $sql_s = "SELECT * FROM repair_status WHERE status_id = '$status_id' AND del_flg = '0' AND get_r_id = $id_get_r ORDER BY rs_date_time DESC LIMIT 1";
-                                $result_s = mysqli_query($conn, $sql_s);
-                                $row_s = mysqli_fetch_array($result_s);
-                                $rs_id = $row_s['rs_id'];
+                                        if ($row_pic_check[0] > 0) {
+                                        ?>
+                                            <hr>
+                                            <h6 class="btn btn-outline-secondary">รูปภาพประกอบ</h6>
+                                            <br><br>
+                                        <?php
+                                        }
+                                        ?>
+                                        <?php
+                                        $status_id = $row1['status_id'];
 
-                                $sql_pic = "SELECT * FROM repair_pic WHERE rs_id = $rs_id AND del_flg = 0 ";
-                                $result_pic = mysqli_query($conn, $sql_pic);
+                                        $sql_s = "SELECT * FROM repair_status WHERE status_id = '$status_id' AND del_flg = '0' AND get_r_id = $id_get_r ORDER BY rs_date_time DESC LIMIT 1";
+                                        $result_s = mysqli_query($conn, $sql_s);
+                                        $row_s = mysqli_fetch_array($result_s);
+                                        $rs_id = $row_s['rs_id'];
 
-                                while ($row_pic = mysqli_fetch_array($result_pic)) {
-                                ?>
-                                    <?php
-                                    $rp_pic = $row_pic['rp_pic'];
-                                    $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
-                                    ?>
+                                        $sql_pic = "SELECT * FROM repair_pic WHERE rs_id = $rs_id AND del_flg = 0 ";
+                                        $result_pic = mysqli_query($conn, $sql_pic);
 
-                                    <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
-                                        <a href="#">
-                                            <img src="<?= $rp_pic ?>" width="100px" id="drop-shadow" class="picture_modal" alt="" onclick="openModalIMG(this)">
-                                        </a>
-                                    <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
-                                        <a href="#">
-                                            <video width="100px" id="drop-shadow" autoplay muted onclick="openModalVideo(this)" src="<?= $rp_pic ?>">
-                                                <source src="<?= $rp_pic ?>" type="video/mp4">
-                                                <source src="<?= $rp_pic ?>" type="video/ogg">
-                                                Your browser does not support the video tag.
-                                            </video>
-                                        </a>
-                                    <?php endif; ?>
+                                        while ($row_pic = mysqli_fetch_array($result_pic)) {
+                                        ?>
+                                            <?php
+                                            $rp_pic = $row_pic['rp_pic'];
+                                            $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                            ?>
+
+                                            <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                                <a href="#">
+                                                    <img src="<?= $rp_pic ?>" width="100px" id="drop-shadow" class="picture_modal" alt="" onclick="openModalIMG(this)">
+                                                </a>
+                                            <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
+                                                <a href="#">
+                                                    <video width="100px" id="drop-shadow" autoplay muted onclick="openModalVideo(this)" src="<?= $rp_pic ?>">
+                                                        <source src="<?= $rp_pic ?>" type="video/mp4">
+                                                        <source src="<?= $rp_pic ?>" type="video/ogg">
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                </a>
+                                            <?php endif; ?>
+
+                                            <!-- Modal -->
+                                            <div id="modal" class="modal">
+                                                <span class="close" onclick="closeModal()">&times;</span>
+                                                <video id="modal-video" controls class="modal-video"></video>
+                                            </div>
+
+                                            <script>
+                                                function openModalVideo(element) {
+                                                    var modal = document.getElementById('modal');
+                                                    var modalVideo = document.getElementById('modal-video');
+
+                                                    modal.style.display = 'block';
+                                                    modal.classList.add('show');
+
+                                                    modalVideo.src = element.src;
+                                                    modalVideo.style.height = '90%';
+                                                    modalVideo.style.borderRadius = '2%';
+                                                    modalVideo.style.display = 'block';
+                                                    modalVideo.style.margin = '0 auto';
+                                                }
 
 
-                                    <!-- Modal -->
-                                    <div id="modal" class="modal">
-                                        <span class="close" onclick="closeModal()">&times;</span>
-                                        <video id="modal-video" controls class="modal-video"></video>
+                                                function closeModal() {
+                                                    var modal = document.getElementById('modal');
+                                                    var modalVideo = document.getElementById('modal-video');
+                                                    modalVideo.pause();
+                                                    modalVideo.currentTime = 0;
+                                                    modalVideo.src = ""; // Reset the video source
+                                                    modal.style.display = 'none';
+                                                }
+
+                                                window.addEventListener('click', function(event) {
+                                                    var modal = document.getElementById('modal');
+                                                    if (event.target === modal) {
+                                                        closeModal();
+                                                    }
+                                                });
+                                            </script>
+                                        <?php
+                                        } ?>
+                                    </div>
+
+                                    <!--  Part modal -->
+                                    <div id="quantitypartModal" class="modal">
+                                        <div class="modal-content">
+                                            <h2>จำนวนอะไหล่ทั้งหมด</h2>
+                                            <button class="close-button btn btn-primary" onclick="closeModalStatus('quantitypart')" width="200px">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                            <!--  content for Part modal -->
+                                            <iframe src="mini_part_detail.php?id=<?= $id_get_r ?>" style="width: 100%; height: 1000px;" class="no-scrollbar"></iframe>
+                                        </div>
                                     </div>
 
                                     <script>
-                                        function openModalVideo(element) {
-                                            var modal = document.getElementById('modal');
-                                            var modalVideo = document.getElementById('modal-video');
+                                        function readURL(input) {
+                                            if (input.files && input.files[0]) {
 
-                                            modal.style.display = 'block';
-                                            modal.classList.add('show');
+                                                var reader = new FileReader();
 
-                                            modalVideo.src = element.src;
-                                            modalVideo.style.height = '90%';
-                                            modalVideo.style.borderRadius = '2%';
-                                            modalVideo.style.display = 'block';
-                                            modalVideo.style.margin = '0 auto';
-                                        }
+                                                reader.onload = function(e) {
+                                                    $('.image-upload-wrap').hide();
 
+                                                    $('.file-upload-image').attr('src', e.target.result);
+                                                    $('.file-upload-content').show();
 
-                                        function closeModal() {
-                                            var modal = document.getElementById('modal');
-                                            var modalVideo = document.getElementById('modal-video');
-                                            modalVideo.pause();
-                                            modalVideo.currentTime = 0;
-                                            modalVideo.src = ""; // Reset the video source
-                                            modal.style.display = 'none';
-                                        }
+                                                    $('.image-title').html(input.files[0].name);
+                                                };
 
-                                        window.addEventListener('click', function(event) {
-                                            var modal = document.getElementById('modal');
-                                            if (event.target === modal) {
-                                                closeModal();
+                                                reader.readAsDataURL(input.files[0]);
+
+                                            } else {
+                                                removeUpload();
                                             }
+                                        }
+
+                                        function removeUpload() {
+                                            $('.file-upload-input').replaceWith($('.file-upload-input').clone());
+                                            $('.file-upload-content').hide();
+                                            $('.image-upload-wrap').show();
+                                        }
+                                        $('.image-upload-wrap').bind('dragover', function() {
+                                            $('.image-upload-wrap').addClass('image-dropping');
                                         });
+                                        $('.image-upload-wrap').bind('dragleave', function() {
+                                            $('.image-upload-wrap').removeClass('image-dropping');
+                                        });
+
+                                        function openModalPart(modalName) {
+                                            var modal = document.getElementById(modalName + "Modal");
+                                            modal.style.display = "block";
+                                            modal.classList.add("show");
+                                        }
+
+                                        function closeModalPart(modalName) {
+                                            var modal = document.getElementById(modalName + "Modal");
+                                            modal.style.display = "none";
+                                            modal.classList.remove("show");
+                                        }
+                                        // ////////////////////////////////////////////////////////////
+                                        function openModalPay(modalName) {
+                                            var modal = document.getElementById(modalName + "Modal");
+                                            modal.style.display = "block";
+                                            modal.classList.add("show");
+                                        }
+
+                                        function closeModalPay(modalName) {
+                                            var modal = document.getElementById(modalName + "Modal");
+                                            modal.style.display = "none";
+                                            modal.classList.remove("show");
+                                        }
+                                        // ////////////////////////////////////////////////////////////
+
+                                        function openModalStatus(modalName) {
+                                            var modal = document.getElementById(modalName + "Modal");
+                                            modal.style.display = "block";
+                                            modal.classList.add("show");
+                                        }
+
+                                        function closeModalStatus(modalName) {
+                                            var modal = document.getElementById(modalName + "Modal");
+                                            modal.style.display = "none";
+                                            modal.classList.remove("show");
+                                        }
+
+                                        function closeModalPay(modalName) {
+                                            var modal = document.getElementById(modalName + "Modal");
+                                            modal.style.display = "none";
+                                            modal.classList.remove("show");
+                                        }
                                     </script>
-                                <?php
-                                } ?>
-                            </div>
 
-                            <!--  Part modal -->
-                            <div id="quantitypartModal" class="modal">
-                                <div class="modal-content">
-                                    <h2>จำนวนอะไหล่ทั้งหมด</h2>
-                                    <button class="close-button btn btn-primary" onclick="closeModalStatus('quantitypart')" width="200px">
-                                        <i class="fa fa-times"></i>
-                                    </button>
-                                    <!--  content for Part modal -->
-                                    <iframe src="mini_part_detail.php?id=<?= $id_get_r ?>" style="width: 100%; height: 1000px;" class="no-scrollbar"></iframe>
-                                </div>
-                            </div>
+                                    <div id="modalimg" class="modal">
+                                        <span class="close" onclick="closeModalIMG()">&times;</span>
+                                        <img id="modal-image" src="" alt="Modal Photo">
+                                    </div>
+                                    <script src="script.js"></script>
+                                    <script>
+                                        function openModalIMG(img) {
+                                            var modal = document.getElementById("modalimg");
+                                            var modalImg = document.getElementById("modal-image");
+                                            modal.style.display = "block";
+                                            modalImg.src = img.src;
+                                            modalImg.style.width = "60%"; // Set the width to 1000 pixels
+                                            modalImg.style.borderRadius = "2%"; // Set the border radius to 20%
+                                            modal.classList.add("show");
+                                        }
 
-
-                            <script>
-                                function readURL(input) {
-                                    if (input.files && input.files[0]) {
-
-                                        var reader = new FileReader();
-
-                                        reader.onload = function(e) {
-                                            $('.image-upload-wrap').hide();
-
-                                            $('.file-upload-image').attr('src', e.target.result);
-                                            $('.file-upload-content').show();
-
-                                            $('.image-title').html(input.files[0].name);
-                                        };
-
-                                        reader.readAsDataURL(input.files[0]);
-
-                                    } else {
-                                        removeUpload();
-                                    }
-                                }
-
-                                function removeUpload() {
-                                    $('.file-upload-input').replaceWith($('.file-upload-input').clone());
-                                    $('.file-upload-content').hide();
-                                    $('.image-upload-wrap').show();
-                                }
-                                $('.image-upload-wrap').bind('dragover', function() {
-                                    $('.image-upload-wrap').addClass('image-dropping');
-                                });
-                                $('.image-upload-wrap').bind('dragleave', function() {
-                                    $('.image-upload-wrap').removeClass('image-dropping');
-                                });
-
-                                function openModalPart(modalName) {
-                                    var modal = document.getElementById(modalName + "Modal");
-                                    modal.style.display = "block";
-                                    modal.classList.add("show");
-                                }
-
-                                function closeModalPart(modalName) {
-                                    var modal = document.getElementById(modalName + "Modal");
-                                    modal.style.display = "none";
-                                    modal.classList.remove("show");
-                                }
-                                // ////////////////////////////////////////////////////////////
-                                function openModalPay(modalName) {
-                                    var modal = document.getElementById(modalName + "Modal");
-                                    modal.style.display = "block";
-                                    modal.classList.add("show");
-                                }
-
-                                function closeModalPay(modalName) {
-                                    var modal = document.getElementById(modalName + "Modal");
-                                    modal.style.display = "none";
-                                    modal.classList.remove("show");
-                                }
-                                // ////////////////////////////////////////////////////////////
-
-                                function openModalStatus(modalName) {
-                                    var modal = document.getElementById(modalName + "Modal");
-                                    modal.style.display = "block";
-                                    modal.classList.add("show");
-                                }
-
-                                function closeModalStatus(modalName) {
-                                    var modal = document.getElementById(modalName + "Modal");
-                                    modal.style.display = "none";
-                                    modal.classList.remove("show");
-                                }
-
-                                function closeModalPay(modalName) {
-                                    var modal = document.getElementById(modalName + "Modal");
-                                    modal.style.display = "none";
-                                    modal.classList.remove("show");
-                                }
-                            </script>
-
-                            <div id="modalimg" class="modal">
-                                <span class="close" onclick="closeModalIMG()">&times;</span>
-                                <img id="modal-image" src="" alt="Modal Photo">
-                            </div>
-                            <script src="script.js"></script>
-                            <script>
-                                function openModalIMG(img) {
-                                    var modal = document.getElementById("modalimg");
-                                    var modalImg = document.getElementById("modal-image");
-                                    modal.style.display = "block";
-                                    modalImg.src = img.src;
-                                    modalImg.style.width = "60%"; // Set the width to 1000 pixels
-                                    modalImg.style.borderRadius = "2%"; // Set the border radius to 20%
-                                    modal.classList.add("show");
-                                }
-
-                                function closeModalIMG() {
-                                    var modal = document.getElementById("modalimg");
-                                    modal.style.display = "none";
-                                }
-                            </script>
+                                        function closeModalIMG() {
+                                            var modal = document.getElementById("modalimg");
+                                            modal.style.display = "none";
+                                        }
+                                    </script>
                             </li>
                             <br>
                             <?php if ($row1['status_id'] == 24 && $row1['rs_conf'] == NULL) { ?>
@@ -1974,11 +1894,6 @@ $check_order = 0;
                                         <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a>
                                     <?php
                                     } ?>
-
-
-                                    <!-- Add your button href="action/conf_part.php?id=<?= $id_get_r ?>" -->
-                                    <!-- <a  class="btn btn-success" id="confirmButtonSuccess">ยืนยัน</a> -->
-                                    <!-- <button class="btn btn-success" id="confirmButtonSuccess">ยืนยัน</button> -->
                                     <script>
                                         document.addEventListener('DOMContentLoaded', function() {
                                             var id_get_r = <?php echo json_encode($id_get_r); ?>; // Pass PHP variable to JavaScript
@@ -2000,10 +1915,6 @@ $check_order = 0;
                                             });
                                         });
                                     </script>
-
-
-
-
                                     <div id="myDiv" style="display: none; margin: 20px 30px;">
                                         <br>
                                         <form id="canf_cancel" action="action/conf_cancel.php" method="POST">
@@ -2268,7 +2179,6 @@ $check_order = 0;
         <?php include('footer/footer.php'); ?>
     </div>
 
-
     <!-- Sweet Alert Show Start -->
     <?php
     if (isset($_SESSION['add_data_alert'])) {
@@ -2312,10 +2222,7 @@ $check_order = 0;
             unset($_SESSION['add_data_alert']);
         }
     }
-
-
     ?>
-
 
     <!-- Sweet Alert Show End -->
     <br><br>
@@ -2323,7 +2230,6 @@ $check_order = 0;
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <!-- Place this before the closing </body> tag -->
-
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.10/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
