@@ -7,6 +7,14 @@ body {
             margin: 0 auto;
             padding: 20px;
         }
+        #button-status{
+            margin-left: 2%;
+            color : black;
+        }
+
+        #button-status:hover{
+            color : green;
+        }
 
         .file-upload-btn {
             width: 100%;

@@ -112,6 +112,7 @@ $check_order = 0;
             </div>
         </div>
         <br>
+
         <div class="container">
             <div id="MiniDetailStatusSuc" style="display: block;">
                 <?php if ($row_2['status_id'] == 3) { ?>
@@ -131,6 +132,7 @@ $check_order = 0;
                                 <p class="mb-0">วันที่ยื่นเรื่อง : <?= date('d F Y', strtotime($row_2['rs_date_time'])); ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_2['rs_date_time'])); ?></span></p>
                             </div>
                         </div>
+
                         <!-- Add class 'active' to progress -->
                         <div class="row d-flex justify-content-center">
                             <div class="col-12">
@@ -200,19 +202,32 @@ $check_order = 0;
                                         <p id="font-status">เสร็จสิ้น</p>
                                     </li>
                                 </ul>
+
                             </div>
+
+                        </div>
+                        <div class="d-flex justify-content-end p-4">
+                            <a href="" id="button-status">ดูอะไหล่ที่ต้องใช้</a>
+                            <!-- <a onclick="openModalPart('quantitypart')" id="button-status">ดูอะไหล่ที่ต้องใช้</a>
+                            <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a> -->
+                            <a href="" id="button-status">รายละเอียด</a>
                         </div>
                         <span id="tooltip">ข้อมูลการซ่อมของคุณ</span>
                     </div>
                 </div>
             </div>
+            <!-- <hr>
+            <a href="">ascasc</a>
+            <a href="">asdasd</a>
+            <hr> -->
+            <br>
             <div class="row">
                 <div class="col-md-12">
                     <div class="accordion accordion" id="accordionFlushExample" style="background-color: #F1F1F1;">
                         <div class="accordion-item">
                             <div id="bounce-item">
                                 <h2 class="accordion-header" id="flush-headingOne">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" onclick="return MiniStatus()">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" style="background-color: gray;" aria-expanded="false" aria-controls="flush-collapseOne" onclick="return MiniStatus()">
                                         <font>
                                             <br>
                                             <h2 style="margin-left: 1.2rem;">ติดตามสถานะ (Status)</h2>
