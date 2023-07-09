@@ -134,6 +134,6 @@ $row = mysqli_fetch_array($result);
             }
         }
         $_SESSION["add_data_alert"] = 0;
-        header("Location: ../../detail_repair.php?id=$get_r_id");
+        header("Location: ../detail_status.php?id=$get_r_id");
     }
 // }
