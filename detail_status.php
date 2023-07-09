@@ -112,7 +112,6 @@ $check_order = 0;
             </div>
         </div>
         <br>
-
         <div class="container">
             <div id="MiniDetailStatusSuc" style="display: block;">
                 <?php if ($row_2['status_id'] == 3) { ?>
@@ -206,11 +205,22 @@ $check_order = 0;
                             </div>
 
                         </div>
-                        <div class="d-flex justify-content-end p-4">
+                        <!-- <div class="d-flex justify-content-end p-4" style="display:none">
                             <a href="" id="button-status">ดูอะไหล่ที่ต้องใช้</a>
-                            <!-- <a onclick="openModalPart('quantitypart')" id="button-status">ดูอะไหล่ที่ต้องใช้</a>
-                            <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a> -->
+                            <a onclick="openModalPart('quantitypart')" id="button-status">ดูอะไหล่ที่ต้องใช้</a>
+                            <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a>
                             <a href="" id="button-status">รายละเอียด</a>
+                        </div> -->
+                        <div class="d-flex justify-content-end p-4">
+
+
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#">ดูอะไหล่ที่ต้องใช้</a></li>
+                                    <li class="breadcrumb-item"><a href="#">รายละเอียด</a></li>
+                                    <!-- <li class="breadcrumb-item active" aria-current="page">Data</li> -->
+                                </ol>
+                            </nav>
                         </div>
                         <span id="tooltip">ข้อมูลการซ่อมของคุณ</span>
                     </div>
@@ -220,14 +230,13 @@ $check_order = 0;
             <a href="">ascasc</a>
             <a href="">asdasd</a>
             <hr> -->
-            <br>
             <div class="row">
                 <div class="col-md-12">
                     <div class="accordion accordion" id="accordionFlushExample" style="background-color: #F1F1F1;">
                         <div class="accordion-item">
                             <div id="bounce-item">
                                 <h2 class="accordion-header" id="flush-headingOne">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" style="background-color: gray;" aria-expanded="false" aria-controls="flush-collapseOne" onclick="return MiniStatus()">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" style="background-color: #f1f1f1;;" aria-expanded="false" aria-controls="flush-collapseOne" onclick="return MiniStatus()">
                                         <font>
                                             <br>
                                             <h2 style="margin-left: 1.2rem;">ติดตามสถานะ (Status)</h2>
