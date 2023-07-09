@@ -144,7 +144,7 @@ $check_order = 0;
         } ?>
         <?php if ($row_2['status_id'] == 5) { ?>
             <h3> <i class="fa fa-check-square-o"></i> ได้รับการยืนยันแล้ว</h3>
-            <p>ขอให้ท่านดำเนินการส่งอุปกรณ์ไปที่ร้านด้วย <u>ตนเอง</u> หรือ <u>ทำการส่งเลข "Tracking Number"</u> หากท่านส่งด้วยผู้ให้บริการขนส่ง เพื่อให้พนักงานสามารถตรวจสอบข้อมูลของท่านอย่างรวดเร็ว</p>
+            <p>ขอให้ท่านดำเนินการส่งอุปกรณ์ไปที่ร้านด้วย <u>ตนเอง</u> หรือ <u>ทำการส่งหมายเลข "Tracking Number"</u> หากท่านส่งด้วยผู้ให้บริการขนส่ง เพื่อให้พนักงานสามารถตรวจสอบข้อมูลของท่านอย่างรวดเร็ว</p>
         <?php  } ?>
     </div>
 
@@ -174,8 +174,13 @@ $check_order = 0;
                 <?php if ($row_2['status_id'] == 4 || $row_2['status_id'] == 17) {
                     if ($row_2['rs_conf'] == NULL) {  ?>
                         <div class="alert alert-warning" role="alert">
-                            <i class="fa fa-exclamation-triangle"></i>
-                            ตรวจสอบรายละเอียดให้ครบถ้วนเพื่อผลประโยชน์ของท่านเอง
+                            <p>
+                                <i class="fa fa-exclamation-triangle"></i>
+                                ตรวจสอบรายละเอียดให้ครบถ้วนเพื่อผลประโยชน์ของท่านเอง
+                                <a type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                                    <u>ดูอะไหล่ที่ต้องใช้</u>
+                                </a>
+                            </p>
                         </div>
                     <?php } else {  ?>
                         <div class="alert alert-success" role="alert">
@@ -184,7 +189,8 @@ $check_order = 0;
                         </div>
                     <?php  }
                 }
-                if ($row_2['status_id'] == 5) {
+
+                if ($row_2['status_id'] == 5 && $row_c['get_t_id'] == NULL ) {
                     ?>
                     <div class="alert alert-secondary">
                         <div class="alert alert-warning" role="alert">
@@ -203,31 +209,74 @@ $check_order = 0;
                         </p>
                         <div class="collapse" id="collapseExample">
                             <div class="card card-body">
-                                <form action="">
+                                <form action="action/add_tracking.php?id=<?= $id_get_r ?>" method="POST" id="trackingForm">
                                     <?php
-                                    $sql_count_repair = "SELECT * FROM get_detail WHERE get_r_id = '$id_get_r' AND del_flg = 0";
+                                    $count_com = 0;
+                                    $sql_count_repair = "SELECT * FROM get_detail 
+                                                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                                                        WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.del_flg = 0;";
                                     $result_count_repair  = mysqli_query($conn, $sql_count_repair);
                                     while ($row_count_repair = mysqli_fetch_array($result_count_repair)) {
+                                        $count_com += 1;
                                     ?>
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-4 mb-3">
+                                                <h5><span class="badge bg-secondary"><?= $count_com ?></span><?= ' ' . $row_count_repair['r_brand'] . ' ' . $row_count_repair['r_model'] . ' ' ?><span class="badge bg-primary"><?= ' ' . $row_count_repair['r_serial_number'] ?></h5></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
                                                 <label for="formGroupExampleInput" class="form-label">กรุณาเลือกผู้ให้บริการ</label>
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected>Open this select menu</option>
-                                                    <option value="1">One</option>
-                                                    <option value="2">Two</option>
-                                                    <option value="3">Three</option>
+                                                <select class="form-select" aria-label="Default select example" name="com_t_id_<?= $count_com ?>" required>
+                                                    <option value="" disabled selected>เลือกบริษัทขนส่ง</option>
+                                                    <?php
+                                                    $sql_com = "SELECT * FROM company_transport 
+                                                                WHERE del_flg = 0";
+                                                    $result_com  = mysqli_query($conn, $sql_com);
+                                                    while ($row_com = mysqli_fetch_array($result_com)) {
+                                                    ?>
+                                                        <option value="<?= $row_com['com_t_id'] ?>"><?= $row_com['com_t_name'] ?></option>
+                                                    <?php
+                                                    }
+                                                    ?>
                                                 </select>
                                             </div>
                                             <div class="col-md-8">
                                                 <label for="formGroupExampleInput" class="form-label">จัดส่งด้วยผู้ให้บริการ</label>
-                                                <input type="text" class="form-control" id="formGroupExampleInput" placeholder="กรุณาใส่เลข Tracking Number">
+                                                <input type="text" class="form-control" id="formGroupExampleInput" name="tracking_number_<?= $count_com ?>" placeholder="กรุณาใส่เลข Tracking Number" required>
+                                                <input type="text" name="get_d_id_<?= $count_com ?>" value="<?= $row_count_repair['get_d_id'] ?>" hidden>
                                             </div>
                                         </div>
+                                        <hr>
                                     <?php
                                     } ?>
-
+                                    <center>
+                                        <button class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">ยกเลิก</button>
+                                        <button type="button" class="btn btn-success" onclick="showConfirmationTracking()">ยืนยัน</button>
+                                    </center>
                                 </form>
+
+                                <!-- Include SweetAlert library -->
+                                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+                                <script>
+                                    function showConfirmationTracking() {
+                                        Swal.fire({
+                                            title: 'ยืนยันการส่งข้อมูล',
+                                            text: 'คุณต้องการยืนยันการส่งข้อมูลหรือไม่?',
+                                            icon: 'question',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'ยืนยัน',
+                                            cancelButtonText: 'ยกเลิก'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                document.getElementById('trackingForm').submit(); // Submit the form
+                                            }
+                                        });
+                                    }
+                                </script>
+
+
                             </div>
                         </div>
                     </div>
