@@ -206,24 +206,25 @@ $check_order = 0;
                                 </div>
 
                             </div>
+
                             <!-- <div class="d-flex justify-content-end p-4" style="display:none">
                             <a href="" id="button-status">ดูอะไหล่ที่ต้องใช้</a>
                             <a onclick="openModalPart('quantitypart')" id="button-status">ดูอะไหล่ที่ต้องใช้</a>
                             <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a>
                             <a href="" id="button-status">รายละเอียด</a>
                         </div> -->
-                            <div class="d-flex justify-content-end p-4">
+                            <!-- <div class="d-flex justify-content-end p-4">
 
 
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
                                         <li class="breadcrumb-item"><a href="#">ดูอะไหล่ที่ต้องใช้</a></li>
                                         <li class="breadcrumb-item"><a href="#">รายละเอียด</a></li>
-                                        <!-- <li class="breadcrumb-item active" aria-current="page">Data</li> -->
                                     </ol>
                                 </nav>
-                            </div>
+                            </div> -->
                             <span id="tooltip">ข้อมูลการซ่อมของคุณ</span>
+                            <br><br>
                         </div>
                     </div>
                 </div>
@@ -279,50 +280,65 @@ $check_order = 0;
                                     ?>
                                 </p>
                                 <hr>
-                                <div class="accordion-item" id="totalprice">
-                                    <div>
-                                        <h5 class="accordion-header" id="flush-headingTwo">
-                                            <br>
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                                                <h5>
-                                                    รวมการสั่งซ่อม 150 บาท
-                                                </h5>
-                                            </button>
-                                        </h5>
-                                    </div>
+                                <div class="accordion accordion-flush" id="accordionFlushExample" style="background-color: #F1F1F1;">
+                                    <div class="accordion-item" id="totalprice" style="background-color:#F1F1F1">
+                                        <div>
+                                            <h5 class="accordion-header" id="flush-headingTwo" style="background-color: #F1F1F1;">
+                                                <br>
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo" style="background-color: #F1F1F1;">
+                                                    <h5>
+                                                        รวมการสั่งซ่อม 150 บาท
+                                                    </h5>
+                                                </button>
+                                            </h5>
+                                        </div>
 
-                                    <span id="tooltip">กดเพื่อดูรายละเอียดเพิ่มเติม</span>
+                                        <span id="tooltip">กดเพื่อดูรายละเอียดเพิ่มเติม</span>
 
-                                    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-                                        <div class="accordion-body" style="margin-left : 0%;color : gray">
-                                            <br>
-                                            <div class="row">
-                                                <div class="col-md-6 d-flex  justify-content-start">
-                                                    ค่าอะไหล่
+                                        <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                                            <div class="accordion-body" style="margin-left : 0%;color : gray">
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-6 d-flex  justify-content-start">
+                                                        ค่าอะไหล่
+                                                    </div>
+                                                    <div class="col-md-6 d-flex  justify-content-end">
+                                                        ฿150
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-6 d-flex  justify-content-end">
-                                                    ฿150
+                                                <div class="row">
+                                                    <div class="col-md-6 d-flex  justify-content-start">
+                                                        ค่าแรง
+                                                    </div>
+                                                    <div class="col-md-6 d-flex  justify-content-end">
+                                                        ฿150
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6 d-flex  justify-content-start">
-                                                    ค่าแรง
+                                                <div class="row">
+                                                    <div class="col-md-6 d-flex  justify-content-start">
+                                                        ค่าจัดส่ง
+                                                    </div>
+                                                    <div class="col-md-6 d-flex  justify-content-end">
+                                                        ฿150
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-6 d-flex  justify-content-end">
-                                                    ฿150
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6 d-flex  justify-content-start">
-                                                    ค่าจัดส่ง
-                                                </div>
-                                                <div class="col-md-6 d-flex  justify-content-end">
-                                                    ฿150
+                                                <div class="row">
+                                                    <div class="d-flex justify-content-center p-4">
+
+
+                                                        <nav aria-label="breadcrumb">
+                                                            <ol class="breadcrumb">
+                                                                <li class="breadcrumb-item"><a href="#">ดูรายการอะไหล่</a></li>
+                                                                <!-- <li class="breadcrumb-item"><a href="#">รายละเอียด</a></li> -->
+                                                                <!-- <li class="breadcrumb-item active" aria-current="page">Data</li> -->
+                                                            </ol>
+                                                        </nav>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
-                                    
                                 </div>
 
                             </div>
