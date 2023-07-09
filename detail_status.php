@@ -271,10 +271,10 @@ $check_order = 0;
                                 </font>
                                 <p style="margin-left : 5%;color : gray">
                                     <?php
-                                    if (1 == 1) {
-                                        echo 'รับที่ร้าน';
+                                    if ($row_2['get_deli'] == 0) {
+                                        echo 'รับอุปกรณ์ที่ร้าน';
                                     } else {
-                                        echo 'จัดส่ง';
+                                        echo 'จัดส่งอุปกรณ์ผ่านขนส่ง';
                                     }
                                     ?>
                                 </p>
