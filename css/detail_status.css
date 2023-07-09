@@ -201,6 +201,15 @@ body {
             /* Add transition for transform and box-shadow */
         }
 
+        #bounce-item:hover #totalprice{
+            transform: scale(1.02);
+            /* Increase size on hover */
+            /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); */
+            /* Increase shadow size and intensity on hover */
+            /* border: 2px solid gray; */
+
+        }
+
         #bounce-item:hover {
             transform: scale(1.02);
             /* Increase size on hover */
@@ -227,6 +236,14 @@ body {
         }
 
         #bounce-item:hover #tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
+            animation: tooltipFadeIn 0.3s, tooltipBounce 0.6s;
+        }
+
+        
+        #totalprice:hover #tooltip {
             visibility: visible;
             opacity: 1;
             transform: translateX(-50%) translateY(-10px);

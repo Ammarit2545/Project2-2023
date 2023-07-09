@@ -121,108 +121,212 @@ $check_order = 0;
                 <?php } ?>
             </div>
             <div class="row">
-                <div class="container px-md-4 py-5 mx-auto">
-                    <div class="card" id="process-status">
-                        <div class="row p-4">
-                            <div class="d-flex">
-                                <h5>หมายเลขส่งซ่อมที่ <span class="text-primary font-weight-bold">#<?= $id_get_r ?></span></h5>
-                            </div>
-                            <div class="d-flex flex-column text-sm-right">
-                                <p class="mb-0">วันที่ยื่นเรื่อง : <?= date('d F Y', strtotime($row_2['rs_date_time'])); ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_2['rs_date_time'])); ?></span></p>
-                            </div>
-                        </div>
-
-                        <!-- Add class 'active' to progress -->
-                        <div class="row d-flex justify-content-center">
-                            <div class="col-12">
-                                <ul id="progressbar" class="text-center">
-                                    <li class="<?php
-                                                if ($process_dot >= 1) {
-                                                    echo 'active';
-                                                }
-                                                ?> step0">
-                                        <br>
-                                        <p id="font-status">ส่งเรื่อง</p>
-                                    </li>
-                                    <li class="<?php
-                                                if ($process_dot >= 2) {
-                                                    echo 'active';
-                                                }
-                                                ?> step0">
-                                        <br>
-                                        <p id="font-status">ยื่นข้อเสนอ</p>
-                                    </li>
-                                    <li class="<?php
-                                                if ($process_dot >= 3) {
-                                                    echo 'active';
-                                                }
-                                                ?> step0">
-                                        <br>
-                                        <p id="font-status">รอการส่งอุปกรณ์จากคุณ</p>
-                                    </li>
-                                    <li class="<?php
-                                                if ($process_dot >= 4) {
-                                                    echo 'active';
-                                                }
-                                                ?> step0">
-                                        <br>
-                                        <p id="font-status">ดำเนินการซ่อม</p>
-                                    </li>
-                                    <li class="<?php
-                                                if ($process_dot >= 5) {
-                                                    echo 'active';
-                                                }
-                                                ?> step0">
-                                        <br>
-                                        <p id="font-status">ดำเนินการตรวจเช็ค</p>
-                                    </li>
-                                    <li class="<?php
-                                                if ($process_dot >= 6) {
-                                                    echo 'active';
-                                                }
-                                                ?> step0">
-                                        <br>
-                                        <p id="font-status">ชำระเงิน</p>
-                                    </li>
-                                    <li class="<?php
-                                                if ($process_dot >= 7) {
-                                                    echo 'active';
-                                                }
-                                                ?> step0">
-                                        <br>
-                                        <p id="font-status">ส่งคืนอุปกรณ์</p>
-                                    </li>
-                                    <li class="<?php
-                                                if ($process_dot >= 8) {
-                                                    echo 'active';
-                                                }
-                                                ?> step0">
-                                        <br>
-                                        <p id="font-status">เสร็จสิ้น</p>
-                                    </li>
-                                </ul>
-
+                <div class="col-md">
+                    <div class="container px-md-4 py-5 mx-auto">
+                        <div class="card" id="process-status">
+                            <div class="row p-4">
+                                <div class="d-flex">
+                                    <h5>หมายเลขส่งซ่อมที่ <span class="text-primary font-weight-bold">#<?= $id_get_r ?></span></h5>
+                                </div>
+                                <div class="d-flex flex-column text-sm-right">
+                                    <p class="mb-0">วันที่ยื่นเรื่อง : <?= date('d F Y', strtotime($row_2['rs_date_time'])); ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_2['rs_date_time'])); ?></span></p>
+                                </div>
                             </div>
 
-                        </div>
-                        <!-- <div class="d-flex justify-content-end p-4" style="display:none">
+                            <!-- Add class 'active' to progress -->
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-12">
+                                    <ul id="progressbar" class="text-center">
+                                        <li class="<?php
+                                                    if ($process_dot >= 1) {
+                                                        echo 'active';
+                                                    }
+                                                    ?> step0">
+                                            <br>
+                                            <p id="font-status">ส่งเรื่อง</p>
+                                        </li>
+                                        <li class="<?php
+                                                    if ($process_dot >= 2) {
+                                                        echo 'active';
+                                                    }
+                                                    ?> step0">
+                                            <br>
+                                            <p id="font-status">ยื่นข้อเสนอ</p>
+                                        </li>
+                                        <li class="<?php
+                                                    if ($process_dot >= 3) {
+                                                        echo 'active';
+                                                    }
+                                                    ?> step0">
+                                            <br>
+                                            <p id="font-status">รอการส่งอุปกรณ์จากคุณ</p>
+                                        </li>
+                                        <li class="<?php
+                                                    if ($process_dot >= 4) {
+                                                        echo 'active';
+                                                    }
+                                                    ?> step0">
+                                            <br>
+                                            <p id="font-status">ดำเนินการซ่อม</p>
+                                        </li>
+                                        <li class="<?php
+                                                    if ($process_dot >= 5) {
+                                                        echo 'active';
+                                                    }
+                                                    ?> step0">
+                                            <br>
+                                            <p id="font-status">ดำเนินการตรวจเช็ค</p>
+                                        </li>
+                                        <li class="<?php
+                                                    if ($process_dot >= 6) {
+                                                        echo 'active';
+                                                    }
+                                                    ?> step0">
+                                            <br>
+                                            <p id="font-status">ชำระเงิน</p>
+                                        </li>
+                                        <li class="<?php
+                                                    if ($process_dot >= 7) {
+                                                        echo 'active';
+                                                    }
+                                                    ?> step0">
+                                            <br>
+                                            <p id="font-status">ส่งคืนอุปกรณ์</p>
+                                        </li>
+                                        <li class="<?php
+                                                    if ($process_dot >= 8) {
+                                                        echo 'active';
+                                                    }
+                                                    ?> step0">
+                                            <br>
+                                            <p id="font-status">เสร็จสิ้น</p>
+                                        </li>
+                                    </ul>
+
+                                </div>
+
+                            </div>
+                            <!-- <div class="d-flex justify-content-end p-4" style="display:none">
                             <a href="" id="button-status">ดูอะไหล่ที่ต้องใช้</a>
                             <a onclick="openModalPart('quantitypart')" id="button-status">ดูอะไหล่ที่ต้องใช้</a>
                             <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a>
                             <a href="" id="button-status">รายละเอียด</a>
                         </div> -->
-                        <div class="d-flex justify-content-end p-4">
+                            <div class="d-flex justify-content-end p-4">
 
 
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="#">ดูอะไหล่ที่ต้องใช้</a></li>
-                                    <li class="breadcrumb-item"><a href="#">รายละเอียด</a></li>
-                                    <!-- <li class="breadcrumb-item active" aria-current="page">Data</li> -->
-                                </ol>
-                            </nav>
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="#">ดูอะไหล่ที่ต้องใช้</a></li>
+                                        <li class="breadcrumb-item"><a href="#">รายละเอียด</a></li>
+                                        <!-- <li class="breadcrumb-item active" aria-current="page">Data</li> -->
+                                    </ol>
+                                </nav>
+                            </div>
+                            <span id="tooltip">ข้อมูลการซ่อมของคุณ</span>
                         </div>
-                        <span id="tooltip">ข้อมูลการซ่อมของคุณ</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="container px-md-4 py-5 mx-auto">
+                        <div class="card" style="height: 100%;width:100%;">
+                            <div class="card-body">
+                                <font>
+                                    <h5 style="font-style : i">
+                                        <i class="fa fa-map-marker" style="margin-right:1%"></i> ที่อยู่ในการจัดส่ง
+                                    </h5>
+                                    <div style="margin-left : 5%; color : gray">
+                                        <p>
+                                            <?= $row1['m_fname'] . ' ' . $row1['m_lname'] ?>
+
+                                            (+66)<?= $row_2['get_tel'] ?>
+                                            <!-- <?= $row_2['get_add'] ?> -->
+                                        </p>
+                                        <p>
+                                            <?php
+
+                                            $jsonobj = $row_2['get_add'];
+
+                                            $obj = json_decode($jsonobj);
+
+                                            $sql_p = "SELECT provinces.name_en, amphures.name_en, districts.name_en
+                                                    FROM provinces
+                                                    LEFT JOIN amphures ON provinces.id = amphures.province_id
+                                                    LEFT JOIN districts ON amphures.id = districts.amphure_id
+                                                    WHERE provinces.id = '$obj->province' AND amphures.id = '$obj->district' AND districts.id = '$obj->sub_district';";
+                                            $result_p = mysqli_query($conn, $sql_p);
+                                            $row_p = mysqli_fetch_array($result_p);
+
+
+                                            ?>
+
+                                            <?= $obj->description ?>
+                                            ตำบล<?= $row_p[2] ?> อำเภอ<?= $row_p[1] ?> จังหวัด<?= $row_p[0] ?>
+                                        </p>
+                                    </div>
+                                </font>
+                                <hr>
+                                <font>
+                                    <h5><i class="fa fa-shield"></i> วิธีการรับอุปกรณ์</h5>
+                                </font>
+                                <p style="margin-left : 5%;color : gray">
+                                    <?php
+                                    if (1 == 1) {
+                                        echo 'รับที่ร้าน';
+                                    } else {
+                                        echo 'จัดส่ง';
+                                    }
+                                    ?>
+                                </p>
+                                <hr>
+                                <div class="accordion-item" id="totalprice">
+                                    <div>
+                                        <h5 class="accordion-header" id="flush-headingTwo">
+                                            <br>
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                                                <h5>
+                                                    รวมการสั่งซ่อม 150 บาท
+                                                </h5>
+                                            </button>
+                                        </h5>
+                                    </div>
+
+                                    <span id="tooltip">กดเพื่อดูรายละเอียดเพิ่มเติม</span>
+
+                                    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                                        <div class="accordion-body" style="margin-left : 0%;color : gray">
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-6 d-flex  justify-content-start">
+                                                    ค่าอะไหล่
+                                                </div>
+                                                <div class="col-md-6 d-flex  justify-content-end">
+                                                    ฿150
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 d-flex  justify-content-start">
+                                                    ค่าแรง
+                                                </div>
+                                                <div class="col-md-6 d-flex  justify-content-end">
+                                                    ฿150
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 d-flex  justify-content-start">
+                                                    ค่าจัดส่ง
+                                                </div>
+                                                <div class="col-md-6 d-flex  justify-content-end">
+                                                    ฿150
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
