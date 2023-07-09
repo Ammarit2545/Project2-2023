@@ -234,7 +234,7 @@ $check_order = 0;
                             <div class="card-body">
                                 <font>
                                     <h5 style="font-style : i">
-                                        <i class="fa fa-map-marker" style="margin-right:1%"></i> ที่อยู่ในการจัดส่ง
+                                        <i class="fa fa-map-marker" style="margin-right:1%"></i> ที่อยู่ของคุณ
                                     </h5>
                                     <div style="margin-left : 5%; color : gray">
                                         <p>
@@ -353,10 +353,10 @@ $check_order = 0;
             <div class="row">
                 <div class="col-md-12">
                     <div class="accordion accordion" id="accordionFlushExample" style="background-color: #F1F1F1;">
-                        <div class="accordion-item">
-                            <div id="bounce-item">
+                        <div class="accordion-item" style="background-color: #f1f1f1;">
+                            <div id="bounce-item" style="background-color: #f1f1f1;">
                                 <h2 class="accordion-header" id="flush-headingOne">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" style="background-color: #f1f1f1;;" aria-expanded="false" aria-controls="flush-collapseOne" onclick="return MiniStatus()">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" style="background-color: #f1f1f1;border:1px solid #CACACA" aria-expanded="false" aria-controls="flush-collapseOne" onclick="return MiniStatus()">
                                         <font>
                                             <br>
                                             <h2 style="margin-left: 1.2rem;">ติดตามสถานะ (Status)</h2>
@@ -365,7 +365,7 @@ $check_order = 0;
                                             </div>
                                             <div id="MiniDetailStatus" style="display: block;">
                                                 <span id="tooltip">กดเพื่อดูสถานะทั้งหมด</span>
-                                                <hr>
+                                                <hr width="100%">
                                                 <?php
                                                 $sql_lastest = "SELECT * FROM `repair_status` WHERE del_flg = '0' AND get_r_id = ' $id_get_r' ORDER BY rs_date_time DESC LIMIT 1";
                                                 $result_lastest = mysqli_query($conn, $sql_lastest);
@@ -1204,6 +1204,8 @@ $check_order = 0;
         </div>
         <br>
         <br>
+
+        <!-- Main Status Data  -->
         <div class="container my-5 p-4" style="background-color: #F1F1F1; border-radius : 1%;display:none">
             <?php if ($row_2['status_id'] == 3) { ?>
                 <div class="alert alert-success" role="alert">
