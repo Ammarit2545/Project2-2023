@@ -69,7 +69,7 @@ $check_order = 0;
     LEFT JOIN get_detail ON repair_detail.get_d_id = get_detail.get_d_id
     LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
     LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id
-    WHERE get_repair.get_r_id = '$id_get_r' AND repair_detail.rs_id = '$rs_lastest_id' AND repair_detail.del_flg = '0'
+    WHERE get_repair.get_r_id = '$id_get_r' AND repair_detail.del_flg = '0'
     GROUP BY repair_detail.p_id; ";
     $result_c_part = mysqli_query($conn, $sql_c_part);
     while ($row_c_part = mysqli_fetch_array($result_c_part)) {
@@ -275,8 +275,6 @@ $check_order = 0;
                                         });
                                     }
                                 </script>
-
-
                             </div>
                         </div>
                     </div>
