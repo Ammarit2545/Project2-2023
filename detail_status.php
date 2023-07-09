@@ -61,21 +61,26 @@ $check_order = 0;
     $result2 = mysqli_query($conn, $sql2);
     $row_2 = mysqli_fetch_array($result2);
 
+    $rs_lastest_id = $row_2['rs_id'];
+
     // check parts of Get_r_id
-    $sql_c_part = "SELECT * FROM `repair_detail` 
-                    LEFT JOIN get_detail ON repair_detail.get_d_id = get_detail.get_d_id
-                    LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
-                    WHERE get_repair.get_r_id = '$id_get_r';";
+    $sql_c_part = "SELECT *
+    FROM `repair_detail`
+    LEFT JOIN get_detail ON repair_detail.get_d_id = get_detail.get_d_id
+    LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+    LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id
+    WHERE get_repair.get_r_id = '$id_get_r' AND repair_detail.rs_id = '$rs_lastest_id' AND repair_detail.del_flg = '0'
+    GROUP BY repair_detail.p_id; ";
     $result_c_part = mysqli_query($conn, $sql_c_part);
     while ($row_c_part = mysqli_fetch_array($result_c_part)) {
-        $total_part_price +=  $row_c_part['rd_parts_price'] * $row_c_part['rd_value_parts'];
+        $total_part_price +=  $row_c_part['rd_parts_price'];
     }
 
     // check status Process Bar
     $process_dot = 0;
     $allowedStatusIds1 = [1, 2];
-    $allowedStatusIds2 = [5];
-    $allowedStatusIds3 = [4, 17, 19];
+    $allowedStatusIds2 = [4, 5, 17];
+    $allowedStatusIds3 = [19];
     $allowedStatusIds4 = [6, 13];
     $allowedStatusIds5 = [7, 8];
     $allowedStatusIds6 = [9, 10, 25];
@@ -114,7 +119,7 @@ $check_order = 0;
         <?php  } ?>
         <?php if ($row_2['status_id'] == 2) { ?>
             <h3><i class="fa fa-check-square-o"></i> พนักงานได้รับเรื่องแล้ว</h3>
-            <p>โปรดรอการตอบกลับจากพนักงาน</p>
+            <p>โปรดรอการตอบกลับจากพนักงานภายใน 1-2 วัน</p>
         <?php  } ?>
         <?php if ($row_2['status_id'] == 12) { ?>
             <h3><i class="fa fa-check-square-o"></i> ทำการยกเลิกคำสั่งซ่อมแล้ว</h3>
@@ -123,6 +128,23 @@ $check_order = 0;
         <?php if ($row_2['status_id'] == 4) { ?>
             <h3> <i class="fa fa-commenting"></i> โปรดตรวจสอบข้อเสนอจากพนักงาน</h3>
             <p>หากไม่เป็นไปตามที่ต้องการสามารถ "ยื่นข้อเสนอ" ใหม่เพื่อให้พนักงานส่งข้อเสนอที่ตรงกับคุณได้</p>
+        <?php  } ?>
+        <?php if ($row_2['status_id'] == 17) {
+            if ($row_2['rs_conf'] == NULL) { ?>
+                <h3> <i class="fa fa-commenting"></i> โปรดตรวจสอบข้อเสนอจากพนักงาน</h3>
+                <p>หากไม่เป็นไปตามที่ต้องการสามารถ "ยื่นข้อเสนอ" ใหม่เพื่อให้พนักงานส่งข้อเสนอที่ตรงกับคุณได้</p>
+            <?php  } elseif ($row_2['rs_conf'] == 0) {  ?>
+                <h3> <i class="fa fa-commenting"></i> ข้อเสนอของคุณได้ถูกบันทึกแล้ว</h3>
+                <p>โปรดรอการตอบกลับจากพนักงานภายใน 1-2 วัน</p>
+            <?php } elseif ($row_2['rs_conf'] == 1) {  ?>
+                <h3> <i class="fa fa-commenting"></i> คุณได้ทำการยืนยันการส่งซ่อมแล้ว</h3>
+                <p>โปรดรอการตอบกลับจากพนักงานภายใน 1-2 วัน</p>
+        <?php
+            }
+        } ?>
+        <?php if ($row_2['status_id'] == 5) { ?>
+            <h3> <i class="fa fa-check-square-o"></i> ได้รับการยืนยันแล้ว</h3>
+            <p>ขอให้ท่านดำเนินการส่งอุปกรณ์ไปที่ร้านด้วย <u>ตนเอง</u> หรือ <u>ทำการส่งเลข "Tracking Number"</u> หากท่านส่งด้วยผู้ให้บริการขนส่ง เพื่อให้พนักงานสามารถตรวจสอบข้อมูลของท่านอย่างรวดเร็ว</p>
         <?php  } ?>
     </div>
 
@@ -149,12 +171,70 @@ $check_order = 0;
                         <i class="fa fa-check-square"></i> ดำเนินการซ่อมเสร็จสิ้น
                     </div>
                 <?php } ?>
-                <?php if ($row_2['status_id'] == 4) { ?>
-                    <div class="alert alert-warning" role="alert">
-                        <i class="fa fa-exclamation-triangle"></i>
-                        ตรวจสอบรายละเอียดให้ครบถ้วนเพื่อผลประโยชน์ของท่านเอง
+                <?php if ($row_2['status_id'] == 4 || $row_2['status_id'] == 17) {
+                    if ($row_2['rs_conf'] == NULL) {  ?>
+                        <div class="alert alert-warning" role="alert">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            ตรวจสอบรายละเอียดให้ครบถ้วนเพื่อผลประโยชน์ของท่านเอง
+                        </div>
+                    <?php } else {  ?>
+                        <div class="alert alert-success" role="alert">
+                            <i class="fa fa-check-square-o"></i>
+                            ข้อเสนอของคุณได้ถูกบันทึกแล้ว โปรดรอการตอบกลับจากพนักงาน
+                        </div>
+                    <?php  }
+                }
+                if ($row_2['status_id'] == 5) {
+                    ?>
+                    <div class="alert alert-secondary">
+                        <div class="alert alert-warning" role="alert">
+                            <i class="fa fa-paper-plane"></i> กรุณาเลือกวิธีการส่งอุปกรณ์ไปยังที่ร้าน
+                        </div>
+                        <br>
+                        <p>
+                            <center>
+                                <a class="btn btn-primary">
+                                    <i class="fa fa-user-circle"></i> จัดส่งด้วยตัวเอง
+                                </a>
+                                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                    <i class="fa fa-paper-plane"></i> จัดส่งด้วยผู้ให้ขนส่ง
+                                </button>
+                            </center>
+                        </p>
+                        <div class="collapse" id="collapseExample">
+                            <div class="card card-body">
+                                <form action="">
+                                    <?php
+                                    $sql_count_repair = "SELECT * FROM get_detail WHERE get_r_id = '$id_get_r' AND del_flg = 0";
+                                    $result_count_repair  = mysqli_query($conn, $sql_count_repair);
+                                    while ($row_count_repair = mysqli_fetch_array($result_count_repair)) {
+                                    ?>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label for="formGroupExampleInput" class="form-label">กรุณาเลือกผู้ให้บริการ</label>
+                                                <select class="form-select" aria-label="Default select example">
+                                                    <option selected>Open this select menu</option>
+                                                    <option value="1">One</option>
+                                                    <option value="2">Two</option>
+                                                    <option value="3">Three</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <label for="formGroupExampleInput" class="form-label">จัดส่งด้วยผู้ให้บริการ</label>
+                                                <input type="text" class="form-control" id="formGroupExampleInput" placeholder="กรุณาใส่เลข Tracking Number">
+                                            </div>
+                                        </div>
+                                    <?php
+                                    } ?>
+
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                <?php } ?>
+                    <br>
+                    <hr>
+                <?php
+                } ?>
             </div>
             <div class="row">
                 <div class="col-md">
@@ -242,84 +322,28 @@ $check_order = 0;
 
                                     </div>
                                 </div>
-                            <?php } elseif ($row_2['status_id'] == 12) {
-                            ?>
+                            <?php } elseif ($row_2['status_id'] == 12) { ?>
                                 <div class="row d-flex justify-content-center p-4">
-                                    <h2 style="color:red"><i class="fa fa-check"></i>เหตุผลการยกเลิก</h2>
-                                    <br>
-                                    <!-- <h2>เหตุผลการยกเลิก</h2> -->
-                                    <p style="margin-left:8%;color: gray"><?= $row_2['rs_detail'] ?></p>
-                                    <!-- <div class="col-12">
-                                        <ul id="progressbar" class="text-center">
-                                            <li class="<?php
-                                                        if ($process_dot >= 1) {
-                                                            echo 'active';
-                                                        }
-                                                        ?> step0">
-                                                <br>
-                                                <p id="font-status">ส่งเรื่อง</p>
-                                            </li>
-                                            <li class="<?php
-                                                        if ($process_dot >= 2) {
-                                                            echo 'active';
-                                                        }
-                                                        ?> step0">
-                                                <br>
-                                                <p id="font-status">ยื่นข้อเสนอ</p>
-                                            </li>
-                                            <li class="<?php
-                                                        if ($process_dot >= 3) {
-                                                            echo 'active';
-                                                        }
-                                                        ?> step0">
-                                                <br>
-                                                <p id="font-status">รอการส่งอุปกรณ์จากคุณ</p>
-                                            </li>
-                                            <li class="<?php
-                                                        if ($process_dot >= 4) {
-                                                            echo 'active';
-                                                        }
-                                                        ?> step0">
-                                                <br>
-                                                <p id="font-status">ดำเนินการซ่อม</p>
-                                            </li>
-                                            <li class="<?php
-                                                        if ($process_dot >= 5) {
-                                                            echo 'active';
-                                                        }
-                                                        ?> step0">
-                                                <br>
-                                                <p id="font-status">ดำเนินการตรวจเช็ค</p>
-                                            </li>
-                                            <li class="<?php
-                                                        if ($process_dot >= 6) {
-                                                            echo 'active';
-                                                        }
-                                                        ?> step0">
-                                                <br>
-                                                <p id="font-status">ชำระเงิน</p>
-                                            </li>
-                                            <li class="<?php
-                                                        if ($process_dot >= 7) {
-                                                            echo 'active';
-                                                        }
-                                                        ?> step0">
-                                                <br>
-                                                <p id="font-status">ส่งคืนอุปกรณ์</p>
-                                            </li>
-                                            <li class="<?php
-                                                        if ($process_dot >= 8) {
-                                                            echo 'active';
-                                                        }
-                                                        ?> step0">
-                                                <br>
-                                                <p id="font-status">เสร็จสิ้น</p>
-                                            </li>
-                                        </ul>
-                                    </div> -->
+
+                                    <?php if ($row_2['rs_detail'] != NULL) {  ?>
+                                        <h2 style="color:red"><i class="fa fa-check"></i>เหตุผลการยกเลิก</h2>
+                                        <br>
+                                        <p style="margin-left:8%;color: gray">เหตุผล : <?= $row_2['rs_detail'] ?></p>
+                                        <p style="margin-left:8%;color: gray">ยกเลิกเมื่อ<span>วันที่ : <?= date('d F Y', strtotime($row_2['rs_date_time'])); ?> <span style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_2['rs_date_time'])); ?></span> </span>
+                                        <?php
+                                    } else {
+                                        ?>
+                                        <h2 style="color:red"><i class="fa fa-check"></i>ไม่มีเหตุผลการยกเลิก</h2>
+                                        <br>
+                                        <p style="margin-left:8%;color: gray">คุณได้ทำการยกเลิกคำสั่งซ่อมนี้เมื่อ<span>วันที่ : <?= date('d F Y', strtotime($row_2['rs_date_time'])); ?> <span style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_2['rs_date_time'])); ?></span> </span>
+                                        </p>
+                                    <?php
+                                    } ?>
+
                                 </div>
                             <?php
                             } ?>
+
 
 
 
@@ -512,6 +536,7 @@ $check_order = 0;
                                                                                                     $get_id = $id_get_r;
                                                                                                     $sql_op = "SELECT
                                                                                                         repair_detail.p_id,
+                                                                                                        repair_detail.rd_value_parts,
                                                                                                         COUNT(repair_detail.p_id) AS count,
                                                                                                         parts.p_brand,
                                                                                                         parts.p_model,
@@ -604,10 +629,10 @@ $check_order = 0;
                                                                                                                 ?>
                                                                                                             </td>
                                                                                                             <td><?php
-                                                                                                                if ($row_op['count'] == NULL) {
+                                                                                                                if ($row_op['rd_value_parts'] == NULL) {
                                                                                                                     echo "-";
                                                                                                                 } else {
-                                                                                                                    echo $row_op['count'];
+                                                                                                                    echo $row_op['rd_value_parts'];
                                                                                                                 }
                                                                                                                 ?>
                                                                                                             </td>
@@ -616,8 +641,8 @@ $check_order = 0;
                                                                                                                 if ($row_op['p_price'] == NULL) {
                                                                                                                     echo "-";
                                                                                                                 } else {
-                                                                                                                    echo number_format($row_op['count'] * $row_op['p_price']);
-                                                                                                                    $total += $row_op['count'] * $row_op['p_price'];
+                                                                                                                    echo number_format($row_op['rd_value_parts'] * $row_op['p_price']);
+                                                                                                                    $total +=  $row_op['rd_value_parts'] * $row_op['p_price'];
                                                                                                                 }
                                                                                                                 ?>
                                                                                                             </td>
@@ -1275,7 +1300,7 @@ $check_order = 0;
                                                                     ?>
                                                                         <hr>
                                                                         <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
-                                                                        <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน</a>
+                                                                        <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน/ยื่นข้อเสนอ</a>
                                                                         <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a>
                                                                     <?php
                                                                     } ?>
@@ -1284,7 +1309,7 @@ $check_order = 0;
                                                                     <!-- Add your button href="action/conf_part.php?id=<?= $id_get_r ?>" -->
                                                                     <!-- <a  class="btn btn-success" id="confirmButtonSuccess">ยืนยัน</a> -->
                                                                     <!-- <button class="btn btn-success" id="confirmButtonSuccess">ยืนยัน</button> -->
-                                                                    <script>
+                                                                    <!-- <script>
                                                                         document.addEventListener('DOMContentLoaded', function() {
                                                                             var id_get_r = <?php echo json_encode($id_get_r); ?>; // Pass PHP variable to JavaScript
                                                                             var status_id = <?php echo json_encode($status_id); ?>; // Pass PHP variable to JavaScript
@@ -1304,7 +1329,7 @@ $check_order = 0;
                                                                                 });
                                                                             });
                                                                         });
-                                                                    </script>
+                                                                    </script> -->
 
 
 
@@ -1314,7 +1339,7 @@ $check_order = 0;
                                                                         <form id="canf_cancel" action="action/conf_cancel.php" method="POST">
                                                                             <hr>
 
-                                                                            <h4 style="color: red">โปรดระบุเหตุผลที่ยกเลิก</h4>
+                                                                            <h4 style="color: red">โปรดระบุเหตุผล</h4>
                                                                             <input type="text" name="get_r_id" value="<?= $id_get_r ?>" hidden>
                                                                             <input type="text" name="status_id" value="<?= $status_id ?>" hidden>
                                                                             <label>
@@ -1446,57 +1471,7 @@ $check_order = 0;
                                                                         <br><br>
                                                                     </div>
 
-                                                                    <script>
-                                                                        function uncheckOtherCheckboxes(currentCheckboxName) {
-                                                                            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
-                                                                            checkboxes.forEach(function(checkbox) {
-                                                                                if (checkbox.name !== currentCheckboxName) {
-                                                                                    checkbox.checked = false;
-                                                                                }
-                                                                            });
-                                                                        }
-
-                                                                        function showTextarea() {
-                                                                            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-                                                                            var lastCheckbox = checkboxes[checkboxes.length - 1];
-                                                                            var textarea = document.getElementById("myTextarea");
-
-                                                                            if (lastCheckbox.checked) {
-                                                                                textarea.style.display = "block";
-                                                                            } else {
-                                                                                textarea.style.display = "none";
-                                                                            }
-                                                                        }
-
-                                                                        function showDiv() {
-                                                                            var div = document.getElementById("myDiv");
-                                                                            var conf = document.getElementById("confirmButtonSuccess");
-                                                                            div.style.display = "block";
-                                                                            conf.style.display = "none";
-                                                                        }
-
-                                                                        function showDivCancel() {
-                                                                            var div = document.getElementById("cancel_status_1");
-                                                                            var conf = document.getElementById("confirmButtonSuccess");
-                                                                            div.style.display = "block";
-                                                                            conf.style.display = "none";
-                                                                        }
-
-                                                                        function hideDiv() {
-                                                                            var div = document.getElementById("myDiv");
-                                                                            var conf = document.getElementById("confirmButtonSuccess");
-                                                                            div.style.display = "none";
-                                                                            conf.style.display = "inline-block";
-                                                                        }
-
-                                                                        function Cancel_Start() {
-                                                                            var div = document.getElementById("cancel_status_1");
-                                                                            var conf = document.getElementById("confirmButtonSuccess");
-                                                                            div.style.display = "none";
-                                                                            conf.style.display = "inline-block";
-                                                                        }
-                                                                    </script>
 
 
                                                                 <?php
@@ -1576,8 +1551,9 @@ $check_order = 0;
                         <br>
                         <br>
                         <!-- <hr> -->
-                        <div class="d-flex justify-content-center">
-                            <?php if ($status_id_last  == 1 || $status_id_last  == 2) { ?>
+                        <!-- ปุ่มทำการยกเลิก -->
+                        <?php if ($status_id_last  == 1 || $status_id_last  == 2 || $status_id_last  == 14) { ?>
+                            <div class="d-flex justify-content-center">
                                 <div class="accordion accordion-flush" id="accordionFlushExample">
                                     <div class="accordion-item">
                                         <h2 class="accordion-header " id="flush-headingThree">
@@ -1597,36 +1573,91 @@ $check_order = 0;
                                                         <a class="btn btn-success" style="margin: 1%;" onclick="showConfirmationDialog()">ยืนยันการยกเลิก</a>
                                                     </center>
                                                 </form>
-                                                <script>
-                                                    function showConfirmationDialog() {
-                                                        swal({
-                                                                title: "ยืนยันการยกเลิก",
-                                                                text: "คุณต้องการยกเลิกหรือไม่?",
-                                                                icon: "warning",
-                                                                buttons: ["ยกเลิก", "ยืนยัน"],
-                                                                dangerMode: true,
-                                                            })
-                                                            .then((willCancel) => {
-                                                                if (willCancel) {
-                                                                    // The user confirmed the cancellation, you can proceed with the cancellation logic here
-                                                                    document.getElementById("cancel").submit(); // Submit the form
-                                                                } else {
-                                                                    // The user clicked "Cancel", do nothing
-                                                                }
-                                                            });
-                                                    }
-                                                </script>
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                            <?php  } ?>
+                        <?php } elseif ($status_id_last  == 4 && $row_2['rs_conf'] == NULL) { ?>
+                            <!-- <hr> -->
+                            <!-- <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p> -->
+                            <center>
+                                <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยัน</a>
+                                <a class="btn btn-success" id="confirmButtonSuccess1" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
+
+                            </center>
+                        <?php } elseif ($status_id_last  == 17  && $row_2['rs_conf'] == NULL) { ?>
+                            <!-- <hr> -->
+                            <!-- <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p> -->
+                            <center>
+                                <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยัน</a>
+                                <a class="btn btn-success" id="confirmButtonSuccess1" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
+
+                            </center>
+                        <?php } elseif ($status_id_last  == 4 && $row_2['rs_conf'] != NULL) { ?>
+                            <div class="d-flex justify-content-center">
+                                <div class="accordion accordion-flush" id="accordionFlushExample">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header " id="flush-headingThree">
+                                            <button style="background-color:#B90000;color:white;" class="accordion-button collapsed btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                                                ยกเลิกคำสั่งซ่อม
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseThree" style="background-color:#f1f1f1;" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+                                            <div class="accordion-body" style="width:700px;">
+                                                <form action="action/status_non_del_part.php" method="POST" id="cancel">
+                                                    <label for="exampleFormControlInput1" class="form-label">กรุณากรอกรายละเอียดการยกเลิก</label>
+                                                    <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="***ไม่จำเป็น" name="rs_detail">
+                                                    <input type="text" name="get_r_id" value="<?= $id_get_r ?>" hidden>
+                                                    <input type="text" name="status_id" value="12" hidden>
+                                                    <br>
+                                                    <center>
+                                                        <a class="btn btn-success" style="margin: 1%;" onclick="showConfirmationDialog()">ยืนยันการยกเลิก</a>
+                                                    </center>
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } elseif ($status_id_last  == 4 || $status_id_last  == 17 && $row_2['rs_conf'] != NULL) { ?>
+                            <div class="d-flex justify-content-center">
+                                <div class="accordion accordion-flush" id="accordionFlushExample">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header " id="flush-headingThree">
+                                            <button style="background-color:#B90000;color:white;" class="accordion-button collapsed btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                                                ยกเลิกคำสั่งซ่อม
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseThree" style="background-color:#f1f1f1;" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+                                            <div class="accordion-body" style="width:700px;">
+                                                <form action="action/status_non_del_part.php" method="POST" id="cancel">
+                                                    <label for="exampleFormControlInput1" class="form-label">กรุณากรอกรายละเอียดการยกเลิก</label>
+                                                    <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="***ไม่จำเป็น" name="rs_detail">
+                                                    <input type="text" name="get_r_id" value="<?= $id_get_r ?>" hidden>
+                                                    <input type="text" name="status_id" value="12" hidden>
+                                                    <br>
+                                                    <center>
+                                                        <a class="btn btn-success" style="margin: 1%;" onclick="showConfirmationDialog()">ยืนยันการยกเลิก</a>
+                                                    </center>
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        <?php   } ?>
 
 
 
-                            <!-- <button class="btn btn-danger" style="margin: 1%;">ยกเลิกคำสั่งซ่อม</button> -->
-                        </div>
+                        <!-- <button class="btn btn-danger" style="margin: 1%;">ยกเลิกคำสั่งซ่อม</button> -->
+
                     </div>
                 </div>
             </div>
@@ -2095,33 +2126,13 @@ $check_order = 0;
                                             <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a>
                                         <?php
                                         } ?>
-                                        <script>
-                                            document.addEventListener('DOMContentLoaded', function() {
-                                                var id_get_r = <?php echo json_encode($id_get_r); ?>; // Pass PHP variable to JavaScript
-                                                var status_id = <?php echo json_encode($status_id); ?>; // Pass PHP variable to JavaScript
 
-                                                document.getElementById('confirmButtonSuccess').addEventListener('click', function() {
-                                                    Swal.fire({
-                                                        icon: 'question',
-                                                        title: 'ยืนยันดำเนินการส่งซ่อม',
-                                                        text: 'การ "ยืนยัน" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
-                                                        showCancelButton: true,
-                                                        confirmButtonText: 'ยืนยัน',
-                                                        cancelButtonText: 'ยกเลิก'
-                                                    }).then((willConfirm) => {
-                                                        if (willConfirm.isConfirmed) {
-                                                            window.location.href = "action/conf_part.php?id=" + id_get_r + "&status_id=" + status_id; // Redirect with the passed value
-                                                        }
-                                                    });
-                                                });
-                                            });
-                                        </script>
                                         <div id="myDiv" style="display: none; margin: 20px 30px;">
                                             <br>
                                             <form id="canf_cancel" action="action/conf_cancel.php" method="POST">
                                                 <hr>
 
-                                                <h4 style="color: red">โปรดระบุเหตุผลที่ยกเลิก</h4>
+                                                <h4 style="color: red">โปรดระบุเหตุผล</h4>
                                                 <input type="text" name="get_r_id" value="<?= $id_get_r ?>" hidden>
                                                 <input type="text" name="status_id" value="<?= $status_id ?>" hidden>
                                                 <label>
@@ -2424,6 +2435,131 @@ $check_order = 0;
             }
         }
         ?>
+        <script>
+            var status_id = 0;
+
+            function sendValue(value) {
+                // Do something with the value
+                status_id = value; // Update the global status_id variable
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var id_get_r = <?= $id_get_r ?>; // Pass PHP variable to JavaScript
+
+                document.getElementById('confirmButtonSuccess1').addEventListener('click', function() {
+                    Swal.fire({
+                        icon: 'question',
+                        title: 'ยืนยันดำเนินการส่งซ่อม',
+                        text: 'การ "ยืนยัน" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
+                        showCancelButton: true,
+                        confirmButtonText: 'ยืนยัน',
+                        cancelButtonText: 'ยกเลิก'
+                    }).then((willConfirm) => {
+                        if (willConfirm.isConfirmed) {
+                            window.location.href = "action/conf_part.php?id=" + id_get_r + "&status_id=" + status_id; // Redirect with the passed value
+                        }
+                    });
+                });
+            });
+        </script>
+
+        </script>
+
+        <script>
+            function showConfirmationDialog() {
+                swal({
+                        title: "ยืนยันการยกเลิก",
+                        text: "คุณต้องการยกเลิกหรือไม่?",
+                        icon: "warning",
+                        buttons: ["ยกเลิก", "ยืนยัน"],
+                        dangerMode: true,
+                    })
+                    .then((willCancel) => {
+                        if (willCancel) {
+                            // The user confirmed the cancellation, you can proceed with the cancellation logic here
+                            document.getElementById("cancel").submit(); // Submit the form
+                        } else {
+                            // The user clicked "Cancel", do nothing
+                        }
+                    });
+            }
+        </script>
+
+
+        <!-- Cancel Button -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var id_get_r = <?php echo json_encode($id_get_r); ?>; // Pass PHP variable to JavaScript
+                var status_id = 17; // Pass PHP variable to JavaScript
+
+                document.getElementById('confirmButtonSuccess').addEventListener('click', function() {
+                    Swal.fire({
+                        icon: 'question',
+                        title: 'ยืนยันดำเนินการส่งซ่อม',
+                        text: 'การ "ยืนยัน" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
+                        showCancelButton: true,
+                        confirmButtonText: 'ยืนยัน',
+                        cancelButtonText: 'ยกเลิก'
+                    }).then((willConfirm) => {
+                        if (willConfirm.isConfirmed) {
+                            window.location.href = "action/conf_part.php?id=" + id_get_r + "&status_id=" + status_id; // Redirect with the passed value
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <script>
+            function uncheckOtherCheckboxes(currentCheckboxName) {
+                var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+                checkboxes.forEach(function(checkbox) {
+                    if (checkbox.name !== currentCheckboxName) {
+                        checkbox.checked = false;
+                    }
+                });
+            }
+
+            function showTextarea() {
+                var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                var lastCheckbox = checkboxes[checkboxes.length - 1];
+                var textarea = document.getElementById("myTextarea");
+
+                if (lastCheckbox.checked) {
+                    textarea.style.display = "block";
+                } else {
+                    textarea.style.display = "none";
+                }
+            }
+
+            function showDiv() {
+                var div = document.getElementById("myDiv");
+                var conf = document.getElementById("confirmButtonSuccess");
+                div.style.display = "block";
+                conf.style.display = "none";
+            }
+
+            function showDivCancel() {
+                var div = document.getElementById("cancel_status_1");
+                var conf = document.getElementById("confirmButtonSuccess");
+                div.style.display = "block";
+                conf.style.display = "none";
+            }
+
+            function hideDiv() {
+                var div = document.getElementById("myDiv");
+                var conf = document.getElementById("confirmButtonSuccess");
+                div.style.display = "none";
+                conf.style.display = "inline-block";
+            }
+
+            function Cancel_Start() {
+                var div = document.getElementById("cancel_status_1");
+                var conf = document.getElementById("confirmButtonSuccess");
+                div.style.display = "none";
+                conf.style.display = "inline-block";
+            }
+        </script>
 
         <!-- Sweet Alert Show End -->
         <!-- Place this in the <head> section of your HTML document -->

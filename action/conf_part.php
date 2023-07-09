@@ -4,7 +4,7 @@ include('../database/condb.php');
 
 $get_r_id = $_GET['id'];
 $status_id = $_GET['status_id'];
-echo $get_r_id;
+echo $get_r_id.' '.$status_id;
 
 $sql = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' AND del_flg = '0' AND status_id = '$status_id' ORDER BY rs_date_time DESC";
 $result = mysqli_query($conn, $sql);

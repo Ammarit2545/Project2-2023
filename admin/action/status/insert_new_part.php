@@ -66,6 +66,7 @@ while ($row = mysqli_fetch_array($result_1)) {
         echo "the : " . $get_d_id . "update 111 success";
     }
 }
+
 if (isset($_POST['get_date_conf'])) {
     $get_date_conf = $_POST['get_date_conf'];
     $sql = "UPDATE `get_repair` SET `get_date_conf`=' $get_date_conf' WHERE get_r_id = '$get_r_id'";
@@ -74,19 +75,21 @@ if (isset($_POST['get_date_conf'])) {
 }
 
 
-if (isset($_POST['get_add_price']) && isset($_POST['get_wages'])) {
+if (isset($_POST['get_add_price']) || isset($_POST['get_wages'])) {
     $get_add_price = $_POST['get_add_price'];
     $get_wages = $_POST['get_wages'];
     $sql = "UPDATE `get_repair` SET `get_wages`='$get_wages',`get_add_price`='$get_add_price' WHERE get_r_id = '$get_r_id'";
     $result = mysqli_query($conn, $sql);
 }
 
+if ($status_id != 17 && $status_id != 5 ) {
 $sql = "SELECT * FROM repair_status 
         LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
         WHERE repair_status.get_r_id = '$get_r_id' AND repair_status.rs_detail = '$rs_detail' AND repair_status.status_id = '$status_id'";
 
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
+}
 
 if ($row[0] > 0) {
     // if it already has data
