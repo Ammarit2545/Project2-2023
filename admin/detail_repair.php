@@ -247,7 +247,7 @@ if (!isset($_SESSION['role_id'])) {
                                     if ($row['status_id'] == 6) {
                                         $get_r_id = $row['get_r_id'];
                                         $carry_out_id = $row['status_id'];
-                                        $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = '$get_r_id' AND status_id = 6 ORDER BY rs_date_time DESC;";
+                                        $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = '$get_r_id' AND status_id = 6 AND del_flg = 0 ORDER BY rs_date_time DESC;";
                                         $result_carry_out = mysqli_query($conn, $sql_cary_out);
                                         $row_carry_out = mysqli_fetch_array($result_carry_out);
 

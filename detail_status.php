@@ -63,6 +63,11 @@ $check_order = 0;
 
     $rs_lastest_id = $row_2['rs_id'];
 
+    $carry_out_id = $row['status_id'];
+    $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = '$id_get_r' AND status_id = 6 AND del_flg = 0 ORDER BY rs_date_time DESC;";
+    $result_carry_out = mysqli_query($conn, $sql_cary_out);
+    $row_carry_out = mysqli_fetch_array($result_carry_out);
+
     // check parts of Get_r_id
     $sql_c_part = "SELECT *
     FROM `repair_detail`
@@ -136,7 +141,7 @@ $check_order = 0;
 
                                         // echo $modifiedDate;
 
-                                        ?></u> โดยประมาณ</p>
+                                        ?></u> โดยประมาณ (นับจากวันที่ดำเนินการซ่อม)</p>
         <?php  } ?>
         <?php if ($row_2['status_id'] == 2) { ?>
             <h3><i class="fa fa-check-square-o"></i> พนักงานได้รับเรื่องแล้ว</h3>
@@ -888,8 +893,14 @@ $check_order = 0;
                                                     $sql_lastest_status = "SELECT * FROM `status_type` WHERE del_flg = '0' AND status_id = '$status_id_last'";
                                                     $result_lastest_status = mysqli_query($conn, $sql_lastest_status);
                                                     $row_lastest_status = mysqli_fetch_array($result_lastest_status);
+
+                                                    
                                                     ?>
-                                                    <p>สถานะล่าสุด : <span style="background-color:<?= $row_lastest_status['status_color']  ?>;color:white" class="btn btn-light"><?= $row_lastest_status['status_name'] ?></span></p>
+                                                    <p>สถานะล่าสุด : <span style="background-color:<?= $row_lastest_status['status_color']  ?>;color:white" class="btn btn-light"><?= $row_lastest_status['status_name'] . ' ' ?>
+                                                            <?php if ($row_lastest_status['status_id'] == 6) {
+                                                                echo '#ครั้งที่ '.$row_carry_out[0];
+                                                            } ?>
+                                                        </span></p>
                                                     <span>วันที่ : <?= date('d F Y', strtotime($row_lastest['rs_date_time'])); ?> <span style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_lastest['rs_date_time'])); ?></span> </span>
                                                     <span>
                                                     </span>
@@ -1004,10 +1015,13 @@ $check_order = 0;
                                                                 <h5 style="display:inline"><button class="btn btn-outline-secondary" style="color : white; background-color : <?= $row1['status_color'] ?>; border : 2px solid <?= $row1['status_color'] ?>;"><?= $row1['status_name'] ?>
                                                                         <?php if ($row1['status_id'] == 6) {
 
-                                                                            $carry_out_id = $row['status_id'];
-                                                                            $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = 155 AND status_id = 6 ORDER BY rs_date_time DESC;";
-                                                                            $result_carry_out = mysqli_query($conn, $sql_cary_out);
-                                                                            $row_carry_out = mysqli_fetch_array($result_carry_out);
+                                                                            // $carry_out_id = $row['status_id'];
+                                                                            // $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = 155 AND status_id = 6 ORDER BY rs_date_time DESC;";
+                                                                            // $result_carry_out = mysqli_query($conn, $sql_cary_out);
+                                                                            // $row_carry_out = mysqli_fetch_array($result_carry_out);
+
+
+
 
                                                                             if ($row_carry_out[0] > 1) { ?>
                                                                                 #ครั้งที่<?= $row_carry_out[0] - $count_carry_out ?>
@@ -1700,17 +1714,32 @@ $check_order = 0;
                             <center>
                                 <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยัน</a>
                                 <a class="btn btn-success" id="confirmButtonSuccess1" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
-
                             </center>
                         <?php } elseif ($status_id_last  == 17  && $row_2['rs_conf'] == NULL) { ?>
                             <!-- <hr> -->
                             <!-- <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p> -->
-                            <center>
-                                <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยัน</a>
-                                <a class="btn btn-success" id="confirmButtonSuccess1" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
+                            <?php
+                            $sql_c_offer = "SELECT * FROM repair_status WHERE status_id = '19' AND del_flg = '0' AND get_r_id = $id_get_r ORDER BY rs_date_time DESC LIMIT 1";
+                            $result_c_offer = mysqli_query($conn, $sql_c_offer);
+                            $row_c_offer = mysqli_fetch_array($result_c_offer);
 
-                            </center>
-                        <?php } elseif ($status_id_last  == 4 && $row_2['rs_conf'] != NULL) { ?>
+                            if ($row_c_offer[0] > 0) {
+
+                            ?>
+                                <center>
+                                    <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยัน</a>
+                                    <a class="btn btn-success" id="confirmButtonCheck" style="display:inline-block" onclick="sendValuetoArrived(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม6</a>
+
+                                </center>
+                            <?php
+                            } else {
+                            ?> <center>
+                                    <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยัน</a>
+                                    <a class="btn btn-success" id="confirmButtonSuccess1" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม5</a>
+
+                                </center>
+                            <?php }
+                        } elseif ($status_id_last  == 4 && $row_2['rs_conf'] != NULL) { ?>
                             <div class="d-flex justify-content-center">
                                 <div class="accordion accordion-flush" id="accordionFlushExample">
                                     <div class="accordion-item">
@@ -2571,6 +2600,33 @@ $check_order = 0;
                     }).then((willConfirm) => {
                         if (willConfirm.isConfirmed) {
                             window.location.href = "action/conf_part.php?id=" + id_get_r + "&status_id=" + status_id; // Redirect with the passed value
+                        }
+                    });
+                });
+            });
+        </script>
+        <script>
+            var status_id = 0;
+
+            function sendValuetoArrived(value) {
+                // Do something with the value
+                status_id = value; // Update the global status_id variable
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var id_get_r = <?= $id_get_r ?>; // Pass PHP variable to JavaScript
+
+                document.getElementById('confirmButtonCheck').addEventListener('click', function() {
+                    Swal.fire({
+                        icon: 'question',
+                        title: 'ยืนยันดำเนินการส่งซ่อม',
+                        text: 'การ "ยืนยัน" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
+                        showCancelButton: true,
+                        confirmButtonText: 'ยืนยัน',
+                        cancelButtonText: 'ยกเลิก'
+                    }).then((willConfirm) => {
+                        if (willConfirm.isConfirmed) {
+                            window.location.href = "action/conf_part_arrived.php?id=" + id_get_r + "&status_id=19"; // Redirect with the passed value
                         }
                     });
                 });
