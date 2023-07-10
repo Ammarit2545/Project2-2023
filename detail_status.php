@@ -147,6 +147,28 @@ $check_order = 0;
             <h3><i class="fa fa-check-square-o"></i> พนักงานได้รับเรื่องแล้ว</h3>
             <p>โปรดรอการตอบกลับจากพนักงานภายใน 1-2 วัน</p>
         <?php  } ?>
+        <?php if ($row_2['status_id'] == 8) { ?>
+            <h3><i class="fa fa-check-square-o"></i> รอการชำระเงิน</h3>
+            <p>กรุณาชำระเงินและแนบสลิปการโอนเพื่อให้พนักงานได้ตรวจสอบข้อมูลของท่านอย่างรวดเร็ว</p>
+        <?php  } ?>
+        <?php if ($row_2['status_id'] == 9) { ?>
+            <h3><i class="fa fa-check-square-o"></i> ท่านได้ทำการชำระเงินเสร็จสิ้น</h3>
+            <?php 
+             if ($row_2['get_deli'] == 0) {
+                echo 'กรุณามารับอุปกรณ์ที่ร้านได้ในวันเวลาทำการปกติ (ยกเว้นวันหยุดเทศกาล)';
+            } else {
+                echo 'พนักงานกำลังทำการจัดส่งอุปกรณ์ไปให้ท่านในขณะนี้';
+            }
+            ?>
+        <?php  } ?>
+        <?php if ($row_2['status_id'] == 25) { ?>
+            <h3><i class="fa fa-check-square-o"></i> คุณได้ทำการชำระเงินเรียบร้อยแล้ว</h3>
+            <p>โปรดรอการตรวจสอบจากพนักงานภายใน 1 วันทำการ</p>
+        <?php  } ?>
+        <?php if ($row_2['status_id'] == 7) { ?>
+            <h3><i class="fa fa-check-square-o"></i> ช่างกำลังดำเนินการตรวจเช็ค</h3>
+            <p>ช่างกำลังดำเนินการตรวจเช็คและทดสอบอุปกรณ์ของท่านอยู่ในขณะนี้</p>
+        <?php  } ?>
         <?php if ($row_2['status_id'] == 12) { ?>
             <h3><i class="fa fa-check-square-o"></i> ทำการยกเลิกคำสั่งซ่อมแล้ว</h3>
             <p>การยกเลิกสำเร็จเสร็จสิ้น</p>
@@ -195,6 +217,11 @@ $check_order = 0;
         <br>
         <div class="container">
             <div id="MiniDetailStatusSuc" style="display: block;">
+            <?php if ($row_2['status_id'] == 9) { ?>
+                    <div class="alert alert-success" role="alert">
+                        <i class="fa fa-check-square"></i> ท่านได้ทำการชำระเงินเสร็จสิ้น
+                    </div>
+                <?php } ?>
                 <?php if ($row_2['status_id'] == 3) { ?>
                     <div class="alert alert-success" role="alert">
                         <i class="fa fa-check-square"></i> ดำเนินการซ่อมเสร็จสิ้น
