@@ -117,6 +117,27 @@ $check_order = 0;
             <p>โปรดรอการตอบกลับจากพนักงาน<br>หากคุณต้องการยกเลิกคำสั่งซ่อมสามารถทำการ <span style="color:white">"ยกเลิก"</span> ได้</p>
 
         <?php  } ?>
+        <?php if ($row_2['status_id'] == 19) { ?>
+            <h3><i class="fa fa-check-square-o"></i> พนักงานได้รับอุปกรณ์ของคุณแล้ว</h3>
+            <p>โปรดรอการตรวจเช็คจากพนักงานภายใน 1-2 วัน</p>
+        <?php  } ?>
+        <?php if ($row_2['status_id'] == 6) { ?>
+            <h3><i class="fa fa-check-square-o"></i> พนักงานได้ทำการซ่อมอุปกรณ์ให้คุณแล้วในขณะนี้</h3>
+            <?php
+            $sql_date = "SELECT rs_date_time,get_date_conf FROM `repair_status` 
+            LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
+            WHERE repair_status.get_r_id = '$id_get_r' AND status_id = 6 ORDER BY rs_date_time ASC;";
+            $result_date = mysqli_query($conn, $sql_date);
+            $row_date = mysqli_fetch_array($result_date);
+            ?>
+            <p>กำหนดแล้วเสร็จวันที่ <u><?=
+                                    // $date = $row_date['rs_date_time'];
+                                    $modifiedDate = date('d-m-Y ', strtotime( $row_date['rs_date_time'] . ' + ' . $row_date['get_date_conf'] . ' days'));
+
+                                    // echo $modifiedDate;
+
+                                    ?></u> โดยประมาณ</p>
+        <?php  } ?>
         <?php if ($row_2['status_id'] == 2) { ?>
             <h3><i class="fa fa-check-square-o"></i> พนักงานได้รับเรื่องแล้ว</h3>
             <p>โปรดรอการตอบกลับจากพนักงานภายใน 1-2 วัน</p>
@@ -142,7 +163,10 @@ $check_order = 0;
         <?php
             }
         } ?>
-        <?php if ($row_2['status_id'] == 5) { ?>
+        <?php if ($row_2['status_id'] == 5 && $row_c['get_t_id'] != NULL) { ?>
+            <h3> <i class="fa fa-check-square-o"></i> คุณได้ทำการส่งหมายเลขพัสดุแล้ว</h3>
+            <p>กรุณารอให้พนักงานได้รับอุปกรณ์และทำการ <u>ตรวจเช็ค</u> ระยะเวลาส่งขึ้นอยู่กับผู้ให้บริการขนส่งเมื่อถึงแล้วช่างจะใช้เวลาตรวจสอบเป็นระยะเวลา 1-2 วัน</p>
+        <?php  } elseif ($row_2['status_id'] == 5) { ?>
             <h3> <i class="fa fa-check-square-o"></i> ได้รับการยืนยันแล้ว</h3>
             <p>ขอให้ท่านดำเนินการส่งอุปกรณ์ไปที่ร้านด้วย <u>ตนเอง</u> หรือ <u>ทำการส่งหมายเลข "Tracking Number"</u> หากท่านส่งด้วยผู้ให้บริการขนส่ง เพื่อให้พนักงานสามารถตรวจสอบข้อมูลของท่านอย่างรวดเร็ว</p>
         <?php  } ?>
@@ -190,7 +214,7 @@ $check_order = 0;
                     <?php  }
                 }
 
-                if ($row_2['status_id'] == 5 && $row_c['get_t_id'] == NULL ) {
+                if ($row_2['status_id'] == 5 && $row_c['get_t_id'] == NULL) {
                     ?>
                     <div class="alert alert-secondary">
                         <div class="alert alert-warning" role="alert">
@@ -422,6 +446,7 @@ $check_order = 0;
                                 <font>
                                     <h5 style="font-style : i">
                                         <i class="fa fa-map-marker" style="margin-right:1%"></i> ที่อยู่ของคุณ
+
                                     </h5>
                                     <div style="margin-left : 5%; color : gray">
                                         <p>
@@ -445,7 +470,49 @@ $check_order = 0;
                                             ?>
                                             <?= $obj->description ?>
                                             ตำบล<?= $row_p[2] ?> อำเภอ<?= $row_p[1] ?> จังหวัด<?= $row_p[0] ?>
+
                                         </p>
+                                        <?php if ($row_c['get_t_id'] != NULL) { ?>
+                                            <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_unique" aria-controls="offcanvasTop_unique"><u>หมายเลขพัสดุจากคุณ</u></a>
+
+<div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop_unique" aria-labelledby="offcanvasTopLabel" style="height: 70%">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasTopLabel">Offcanvas top</h5>
+        <br>
+        <br>
+        <a type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></a>
+    </div>
+    <div class="offcanvas-body">
+        <a type="button" class="btn-close text-reset d-flex justify-content-end ms-auto" data-bs-dismiss="offcanvas" aria-label="Close"></a>
+        <h2><span class="badge bg-secondary">หมายเลขพัสดุของท่าน</span></h2>
+        <br>
+        <?php
+        $sql_com_m = "SELECT * FROM get_detail
+            LEFT JOIN get_repair ON get_detail.get_r_id = get_repair.get_r_id 
+            LEFT JOIN tracking ON get_detail.get_t_id = tracking.t_id 
+            LEFT JOIN repair ON repair.r_id = get_detail.r_id WHERE get_repair.get_r_id = '$id_get_r' AND repair.del_flg = '0'";
+        $result_com_m = mysqli_query($conn, $sql_com_m);
+
+        $count_com = 0;
+        while ($row_com_m = mysqli_fetch_array($result_com_m)) {
+            $count_com += 1;
+        ?>
+            <a data-bs-toggle="tooltip" data-bs-placement="top" title="<?= $row_com_m['r_serial_number'] ?>">
+                <div class="alert alert-secondary">
+                    <p>
+                        <span class="badge bg-secondary"><?= $count_com ?> </span> :
+                        <span class="inline"><?= $row_com_m['r_brand'] . ' ' . $row_com_m['r_model'] . ' - ' . $row_com_m['t_parcel'] ?></span>
+                        <!-- <span id="tooltip"><?= $row_com_m['r_serial_number'] ?></span> -->
+                    </p>
+                </div>
+            </a>
+        <?php
+        }
+        ?>
+    </div>
+</div>
+
+                                        <?php } ?>
                                     </div>
                                 </font>
                                 <hr>
