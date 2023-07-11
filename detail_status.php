@@ -69,13 +69,30 @@ $check_order = 0;
     $row_carry_out = mysqli_fetch_array($result_carry_out);
 
     // check parts of Get_r_id
-    $sql_c_part = "SELECT *
-    FROM `repair_detail`
-    LEFT JOIN get_detail ON repair_detail.get_d_id = get_detail.get_d_id
-    LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
-    LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id
-    WHERE get_repair.get_r_id = '$id_get_r' AND repair_detail.del_flg = '0'
-    GROUP BY repair_detail.p_id; ";
+    $sql_c_part = "SELECT
+    *,
+    repair_detail.p_id,
+    repair_detail.rd_value_parts,
+    repair_detail.get_d_id,
+    parts.p_brand,
+    parts.p_model,
+    parts.p_price,
+    parts_type.p_type_name,
+    repair_status.rs_id,
+    parts.p_pic
+    
+FROM
+    `repair_detail`
+    LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
+    LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
+    LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
+    LEFT JOIN repair ON get_detail.r_id = repair.r_id
+    JOIN parts ON parts.p_id = repair_detail.p_id
+    LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
+WHERE
+    get_repair.del_flg = 0 AND repair_detail.del_flg = 0
+    AND get_repair.get_r_id = '$id_get_r'
+    GROUP BY rd_id ";
     $result_c_part = mysqli_query($conn, $sql_c_part);
     while ($row_c_part = mysqli_fetch_array($result_c_part)) {
         $total_part_price +=  $row_c_part['rd_parts_price'];
@@ -671,6 +688,8 @@ $check_order = 0;
                                                                                                 <thead>
                                                                                                     <tr>
                                                                                                         <th>ลำดับ</th>
+                                                                                                        <th>หมายเลขอะไหล่</th>
+                                                                                                        <th>รหัสการซ่อม</th>
                                                                                                         <th>ชื่อ</th>
                                                                                                         <th>Brand</th>
                                                                                                         <th>Model</th>
@@ -686,29 +705,34 @@ $check_order = 0;
                                                                                                     <?php
                                                                                                     $get_id = $id_get_r;
                                                                                                     $sql_op = "SELECT
-                                                                                                        repair_detail.p_id,
-                                                                                                        repair_detail.rd_value_parts,
-                                                                                                        COUNT(repair_detail.p_id) AS count,
-                                                                                                        parts.p_brand,
-                                                                                                        parts.p_model,
-                                                                                                        parts.p_price,
-                                                                                                        parts_type.p_type_name,
-                                                                                                        repair_status.rs_id,
-                                                                                                        parts.p_pic
-                                                                                                    FROM
-                                                                                                        `repair_detail`
-                                                                                                        LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
-                                                                                                        LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
-                                                                                                        JOIN parts ON parts.p_id = repair_detail.p_id
-                                                                                                        LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
-                                                                                                    WHERE
-                                                                                                        get_repair.del_flg = 0 AND repair_detail.del_flg = 0
-                                                                                                        AND get_repair.get_r_id = '$get_id'
-                                                                                                    GROUP BY
-                                                                                                        p_id;
-                                                                                                        ";
+                                                                                                    *,
+                                                                                                    repair_detail.p_id,
+                                                                                                    repair_detail.rd_value_parts,
+                                                                                                    repair_detail.get_d_id,
+                                                                                                    parts.p_brand,
+                                                                                                    parts.p_model,
+                                                                                                    parts.p_price,
+                                                                                                    parts_type.p_type_name,
+                                                                                                    repair_status.rs_id,
+                                                                                                    parts.p_pic
+                                                                                                    
+                                                                                                FROM
+                                                                                                    `repair_detail`
+                                                                                                    LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
+                                                                                                    LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
+                                                                                                    LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
+                                                                                                    LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                                                                                                    JOIN parts ON parts.p_id = repair_detail.p_id
+                                                                                                    LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
+                                                                                                WHERE
+                                                                                                    get_repair.del_flg = 0 AND repair_detail.del_flg = 0
+                                                                                                    AND get_repair.get_r_id = '$get_id'
+                                                                                                    GROUP BY rd_id
+                                                                                                    ;";
                                                                                                     $result_op = mysqli_query($conn, $sql_op);
+                                                                                                    $count_part = 0;
                                                                                                     while ($row_op = mysqli_fetch_array($result_op)) {
+                                                                                                        $count_part++;
                                                                                                         $p_id = $row['p_id'];
                                                                                                         $rs_id = $row['rs_id'];
 
@@ -719,10 +743,26 @@ $check_order = 0;
                                                                                                     ?>
                                                                                                         <tr>
                                                                                                             <td><?php
+                                                                                                                if ($count_part == NULL) {
+                                                                                                                    echo "-";
+                                                                                                                } else {
+                                                                                                                    echo $count_part;
+                                                                                                                }
+                                                                                                                ?>
+                                                                                                            </td>
+                                                                                                            <td><?php
                                                                                                                 if ($row_op['p_id'] == NULL) {
                                                                                                                     echo "-";
                                                                                                                 } else {
                                                                                                                     echo $row_op['p_id'];
+                                                                                                                }
+                                                                                                                ?>
+                                                                                                            </td>
+                                                                                                            <td><?php
+                                                                                                                if ($row_op['get_d_id'] == NULL) {
+                                                                                                                    echo "-";
+                                                                                                                } else {
+                                                                                                                    echo $row_op['get_d_id'] .' '. '(' . $row_op['r_brand'] . ' ' . $row_op['r_model'] . ')';
                                                                                                                 }
                                                                                                                 ?>
                                                                                                             </td>
@@ -802,7 +842,7 @@ $check_order = 0;
                                                                                                     }
                                                                                                     ?>
                                                                                                     <tr>
-                                                                                                        <td colspan="5">ยอดอะไหล่ทั้งหมด</td>
+                                                                                                        <td colspan="7">ยอดอะไหล่ทั้งหมด</td>
                                                                                                         <td colspan="2">ราคารวม</td>
                                                                                                         <td><?= number_format($total) ?></td>
                                                                                                         <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
@@ -813,7 +853,7 @@ $check_order = 0;
                                                                                                         $result_w = mysqli_query($conn, $sql_w);
                                                                                                         $row_w = mysqli_fetch_array($result_w);
                                                                                                         ?>
-                                                                                                        <td colspan="5">ค่าแรงช่าง</td>
+                                                                                                        <td colspan="7">ค่าแรงช่าง</td>
                                                                                                         <td colspan="2">ค่าแรง</td>
                                                                                                         <td><?= number_format($row_w['get_wages']) ?></td>
                                                                                                         <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
@@ -827,7 +867,7 @@ $check_order = 0;
                                                                                                         $total += $row_p['get_add_price'];
                                                                                                     ?>
                                                                                                         <tr>
-                                                                                                            <td colspan="5">ค่าจัดส่ง</td>
+                                                                                                            <td colspan="7">ค่าจัดส่ง</td>
                                                                                                             <td colspan="2">ราคาจัดส่ง</td>
                                                                                                             <td><?= number_format($row_p['get_add_price']) ?></td>
                                                                                                             <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
@@ -837,7 +877,7 @@ $check_order = 0;
 
 
                                                                                                     <tr>
-                                                                                                        <td colspan="5"></td>
+                                                                                                        <td colspan="7"></td>
                                                                                                         <td colspan="2">ราคารวมทั้งหมด</td>
                                                                                                         <td>
                                                                                                             <h5><?= number_format($total + $row_w['get_wages']) ?> </h5>
