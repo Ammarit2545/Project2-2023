@@ -122,6 +122,11 @@ $check_order = 0;
             <p>โปรดรอการตอบกลับจากพนักงาน<br>หากคุณต้องการยกเลิกคำสั่งซ่อมสามารถทำการ <span style="color:white">"ยกเลิก"</span> ได้</p>
 
         <?php  } ?>
+        <?php if ($row_2['status_id'] == 3) { ?>
+            <h3><i class="fa fa-check-square-o"></i> เสร็จสิ้น</h3>
+            <p>ดำเนินการซ่อมเสร็จสิ้น<br>หากมีปัญหาโปรดส่งคำร้องไปที่พนักงาน</p>
+
+        <?php  } ?>
         <?php if ($row_2['status_id'] == 19) { ?>
             <h3><i class="fa fa-check-square-o"></i> พนักงานได้รับอุปกรณ์ของคุณแล้ว</h3>
             <p>โปรดรอการตรวจเช็คจากพนักงานภายใน 1-2 วัน</p>
@@ -153,8 +158,8 @@ $check_order = 0;
         <?php  } ?>
         <?php if ($row_2['status_id'] == 9) { ?>
             <h3><i class="fa fa-check-square-o"></i> ท่านได้ทำการชำระเงินเสร็จสิ้น</h3>
-            <?php 
-             if ($row_2['get_deli'] == 0) {
+            <?php
+            if ($row_2['get_deli'] == 0) {
                 echo 'กรุณามารับอุปกรณ์ที่ร้านได้ในวันเวลาทำการปกติ (ยกเว้นวันหยุดเทศกาล)';
             } else {
                 echo 'พนักงานกำลังทำการจัดส่งอุปกรณ์ไปให้ท่านในขณะนี้';
@@ -217,7 +222,7 @@ $check_order = 0;
         <br>
         <div class="container">
             <div id="MiniDetailStatusSuc" style="display: block;">
-            <?php if ($row_2['status_id'] == 9) { ?>
+                <?php if ($row_2['status_id'] == 9) { ?>
                     <div class="alert alert-success" role="alert">
                         <i class="fa fa-check-square"></i> ท่านได้ทำการชำระเงินเสร็จสิ้น
                     </div>
@@ -921,11 +926,11 @@ $check_order = 0;
                                                     $result_lastest_status = mysqli_query($conn, $sql_lastest_status);
                                                     $row_lastest_status = mysqli_fetch_array($result_lastest_status);
 
-                                                    
+
                                                     ?>
                                                     <p>สถานะล่าสุด : <span style="background-color:<?= $row_lastest_status['status_color']  ?>;color:white" class="btn btn-light"><?= $row_lastest_status['status_name'] . ' ' ?>
                                                             <?php if ($row_lastest_status['status_id'] == 6) {
-                                                                echo '#ครั้งที่ '.$row_carry_out[0];
+                                                                echo '#ครั้งที่ ' . $row_carry_out[0];
                                                             } ?>
                                                         </span></p>
                                                     <span>วันที่ : <?= date('d F Y', strtotime($row_lastest['rs_date_time'])); ?> <span style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_lastest['rs_date_time'])); ?></span> </span>
