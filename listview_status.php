@@ -451,7 +451,13 @@ if (isset($_GET["status_id"])) {
                                             </button>
                                             หมายเลขส่งซ่อม : <?= $id_r ?>
                                             <a class="btn" style="background-color: <?= $row_status['status_color'] ?>; color:white;">
-                                                <?= $row_status['status_name'] ?>
+                                                <?= $row_status['status_name'] ?> <?php if ($row_status['status_id'] == 6) {
+                                                                                        $carry_out_id = $row_status['status_id'];
+                                                                                        $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = '$id_r' AND status_id = 6 AND del_flg = 0 ORDER BY rs_date_time DESC;";
+                                                                                        $result_carry_out = mysqli_query($conn, $sql_cary_out);
+                                                                                        $row_carry_out = mysqli_fetch_array($result_carry_out);
+                                                                                        echo '#ครั้งที่ ' . $row_carry_out[0];
+                                                                                    } ?>
                                             </a>
                                             <?php if ($row_c[0] == 1) { ?>
                                                 <a class="btn btn-outline-secondary">#ครั้งที่ <?= $row1['get_d_record'] ?> </a>
