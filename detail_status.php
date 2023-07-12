@@ -104,7 +104,7 @@ WHERE
     $allowedStatusIds2 = [4, 5, 17];
     $allowedStatusIds3 = [19];
     $allowedStatusIds4 = [6, 13];
-    $allowedStatusIds5 = [7, 8];
+    $allowedStatusIds5 = [7, 8, 26];
     $allowedStatusIds6 = [9, 10, 25];
     $allowedStatusIds7 = [24];
     $allowedStatusIds8 = [3];
@@ -137,6 +137,11 @@ WHERE
         <?php if ($row_2['status_id'] == 1) { ?>
             <h3><i class="fa fa-check-square-o"></i> คุณได้ทำการส่งเรื่องแล้ว</h3>
             <p>โปรดรอการตอบกลับจากพนักงาน<br>หากคุณต้องการยกเลิกคำสั่งซ่อมสามารถทำการ <span style="color:white">"ยกเลิก"</span> ได้</p>
+
+        <?php  } ?>
+        <?php if ($row_2['status_id'] == 26) { ?>
+            <h3><i class="fa fa-minus-square"></i> โปรดส่งหลักฐานการชำระเงินใหม่อีกครั้ง</h3>
+            <p>พนักงานได้ตรวจสอบกาชำระเงินของท่านเสร็จสิ้นและขอให้คุณส่งหลักฐานการชำระเงินใหม่อีกครั้ง<br>อ่านรายละเอียดเพิ่มเติมได้ที่ <u>ติดตามสถานะ</u> <span style="color:white">"ยกเลิก"</span> ได้</p>
 
         <?php  } ?>
         <?php if ($row_2['status_id'] == 3) { ?>
@@ -762,7 +767,7 @@ WHERE
                                                                                                                 if ($row_op['get_d_id'] == NULL) {
                                                                                                                     echo "-";
                                                                                                                 } else {
-                                                                                                                    echo $row_op['get_d_id'] .' '. '(' . $row_op['r_brand'] . ' ' . $row_op['r_model'] . ')';
+                                                                                                                    echo $row_op['get_d_id'] . ' ' . '(' . $row_op['r_brand'] . ' ' . $row_op['r_model'] . ')';
                                                                                                                 }
                                                                                                                 ?>
                                                                                                             </td>
@@ -1124,12 +1129,19 @@ WHERE
                                                                         } else {
                                                                         ?>
                                                                             <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a>
-                                                                    <?php }
+                                                                        <?php }
                                                                     }
                                                                 }
-                                                                if ($row1['status_id'] == 8 && $row1['rs_conf'] == NULL) { ?>
-                                                                    <a href="form_pay.php?id=<?= $id_get_r ?>" class="btn btn-primary">ทำการชำระเงิน</a>
-                                                                <?php
+                                                                if ($row1['status_id'] == 8 || $row1['status_id'] == 26  && $row1['rs_conf'] == NULL) {
+                                                                    if ($row1['status_id'] == 26) {
+                                                                        ?>
+                                                                        <a href="form_pay.php?id=<?= $id_get_r ?>" class="btn btn-primary">ส่งหลักฐานการชำระเงิน</a>
+                                                                    <?php
+                                                                    } else {
+                                                                    ?>
+                                                                        <a href="form_pay.php?id=<?= $id_get_r ?>" class="btn btn-primary">ทำการชำระเงิน</a>
+                                                                    <?php
+                                                                    }
                                                                 }
                                                                 if ($row1['get_track'] != NULL && $row1['status_id'] == 24) { ?>
                                                                     <hr>
