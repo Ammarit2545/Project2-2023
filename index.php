@@ -550,45 +550,79 @@ if ($_SESSION["log_login"] == 0) {
       </div>
       <!-- End Features -->
       
-      <!-- Features2 -->
-      <div class="container px-4 py-5" id="featured-3">
-        <h2 class="pb-2 border-bottom">อีกหลายเหตุผลในการเลือกซ่อมกับเรา</h2>
-        <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
-          <div class="feature col">
-            <!-- <li class="me-auto" >
-                <center><img src="https://inwfile.com/s-fy/v70xve.jpg" alt="Bootstrap" width="70" height="70" class="rounded-circle border border-white"></center>
-              </li> -->
-              <center>
-              <img src="https://inwfile.com/s-fy/v70xve.jpg" alt="Bootstrap" width="70" height="70" class="rounded-circle border border-white">
-              </center>
-              <center><h5>ติดต่อได้ทั้งที่หน้าร้านและทางออนไลน์</h5></center>
-            <a href="#" class="icon-link">
-              <svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"></use></svg>
-            </a>
-          </div>
-          <div class="feature col">
-          <!-- <li class="me-auto">
-              <center><img src="https://tcatexpress.com/images/icon/why-choose-4.png" alt="Bootstrap" width="70" height="70" class="rounded-circle border border-white"></center>
-          </li> -->
-          <center><img src="https://tcatexpress.com/images/icon/why-choose-4.png" alt="Bootstrap" width="70" height="70" class="rounded-circle border border-white"></center>
-               <center><h5>มีบริการจัดส่งพัสดุ</h5></center>
-            <a href="#" class="icon-link">
-              <svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"></use></svg>
-            </a>
-          </div>
-          <div class="feature col">
-          <!-- <li class="me-auto">
-              <center><img src="https://cdn.icon-icons.com/icons2/3724/PNG/512/problem_solve_observation_connect_key_solution_icon_230488.png" alt="Bootstrap" width="70" height="70" class="rounded-circle border border-white"></center>
-          </li> -->
-           <center><img src="https://cdn.icon-icons.com/icons2/3724/PNG/512/problem_solve_observation_connect_key_solution_icon_230488.png" alt="Bootstrap" width="70" height="70" class="rounded-circle border border-white"></center>
-              <center><h5>รับบริการและความช่วยเหลือจากผู้เชี่ยวชาญ</h5></center>
-            <a href="#" class="icon-link">
-              <svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"></use></svg>
-            </a>
-          </div>
-          </div> 
-        </div>
-      <!-- End Features2 -->
+  <!-- -ขอแปะเป็นรูปไว้ก่อน -->
+  <div class="px-1 py-1 my-1 text-center">
+  <img class="d-block mx-auto my-4 imglogo" src="img brand/S__4358151.jpg" alt="" width="100%">
+      </div>
+      <!-- End ขอแปะเป็นรูปไว้ก่อน -->
+
+    
+      <html>
+<head>
+<style>
+    .my-div {
+        padding-top: 700px;
+    }
+</style>
+</head>
+<body>
+    <div class="my-div">
+        <!-- สโลแกน -->
+      <main class="px-3">
+      <div class="px-1 py-1 my-1 text-center">
+    <h1>รู้ดีกว่าช่าง กรุณาซ่อมเอง</h1>
+    <p class="lead">ANAN ELECTRONIC</p>
+    <p class="lead">
+      <a href="#" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Learn more</a>
+      </div>
+    </p>
+  </main>
+      <!-- End สโลแกน -->
+    </div>
+</body>
+</html>
+      
+      
+      <!-- รีวิว -->
+  <div class="px-1 py-1 my-1 text-center">
+  <img class="d-block mx-auto my-4 imglogo" src="img brand/S__4358153.jpg" alt="" width="100%">
+  <img class="d-block mx-auto my-4 imglogo" src="img brand/S__4358154.jpg" alt="" width="100%">
+      </div>
+      <!-- End รีวิว -->
+
+      <html>
+<head>
+<style>
+    .my-div {
+        padding-top: 200px;
+        padding-bottom: 200px;
+    }
+</style>
+</head>
+<body>
+    <div class="my-div">
+        <!-- Features อันสุดท้าย -->
+      <main class="px-3">
+      <div class="px-1 py-1 my-1 text-center">
+    <h1>COMING SOON</h1>
+    <p class="lead">สินค้าเข้าใหม่จากทางร้านที่พร้อมให้บริการคุณ</p>
+    <p class="lead">
+      <a href="#" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Learn more</a>
+      </div>
+    </p>
+  </main>
+      <!-- End Featuresอันสุดท้าย -->
+    </div>
+</body>
+</html>
+     
+
+      <!-- แนะนำสินค้า -->
+  <div class="px-1 py-1 my-1 text-center">
+  <img class="d-block mx-auto my-4 imglogo" src="img brand/S__4358156.jpg" alt="" width="100%">
+      </div>
+      <!-- End แนะนำสินค้า -->
+      <html>
 
   <!-- footer-->
   <?php
