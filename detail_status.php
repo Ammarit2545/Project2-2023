@@ -139,11 +139,22 @@ WHERE
             <p>โปรดรอการตอบกลับจากพนักงาน<br>หากคุณต้องการยกเลิกคำสั่งซ่อมสามารถทำการ <span style="color:white">"ยกเลิก"</span> ได้</p>
 
         <?php  } ?>
+        <?php if ($row_2['status_id'] == 10) { ?>
+            <h3><i class="fa fa-paper-plane-o"></i> กำลังดำเนินการส่งอุปกรณ์ให้คุณ</h3>
+            <p>โปรดรอการตอบกลับจากพนักงาน</p>
+
+        <?php  } ?>
+        <?php if ($row_2['status_id'] == 24) { ?>
+            <h3><i class="fa fa-paper-plane-o"></i> พนักงานดำเนินการส่งอุปกรณ์ให้คุณแล้ว</h3>
+            <p>ตรวจสอบได้จากหมายเลขพัสดุของท่านได้ที่ <u>Tracking Number</u> </p>
+
+        <?php  } ?>
         <?php if ($row_2['status_id'] == 26) { ?>
             <h3><i class="fa fa-minus-square"></i> โปรดส่งหลักฐานการชำระเงินใหม่อีกครั้ง</h3>
             <p>พนักงานได้ตรวจสอบกาชำระเงินของท่านเสร็จสิ้นและขอให้คุณส่งหลักฐานการชำระเงินใหม่อีกครั้ง<br>อ่านรายละเอียดเพิ่มเติมได้ที่ <u>ติดตามสถานะ</u> <span style="color:white">"ยกเลิก"</span> ได้</p>
 
         <?php  } ?>
+
         <?php if ($row_2['status_id'] == 3) { ?>
             <h3><i class="fa fa-check-square-o"></i> เสร็จสิ้น</h3>
             <p>ดำเนินการซ่อมเสร็จสิ้น<br>หากมีปัญหาโปรดส่งคำร้องไปที่พนักงาน</p>
@@ -375,7 +386,75 @@ WHERE
                                     <h5>หมายเลขส่งซ่อมที่ <span class="text-primary font-weight-bold">#<?= $id_get_r ?></span></h5>
                                 </div>
                                 <div class="d-flex flex-column text-sm-right">
-                                    <p style="color: gray" class="mb-0">วันที่ยื่นเรื่อง : <?= date('d F Y', strtotime($row_2['rs_date_time'])) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_2['rs_date_time'])); ?></span></p>
+                                    <p style="color: gray" class="mb-0">วันที่ยื่นเรื่อง : <?= date('d F Y', strtotime($row_2['rs_date_time'])) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_2['rs_date_time'])); ?></span> <?php if ($row_2['status_id'] == 24 || $row_2['status_id'] == 3) {                                                                                                                                                                                                                                                                     ?>
+                                            <!-- <a href="">หมายเลขอุปกรณ์ของท่าน</a> -->
+                                            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">หมายเลขอุปกรณ์ของท่าน</button>
+
+                                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                                        <div class="offcanvas-header">
+                                            <h5 id="offcanvasRightLabel">Offcanvas right</h5>
+                                            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                        </div>
+                                        <div class="offcanvas-body">
+                                            <br>
+                                            <!-- <h3><span class="badge bg-secondary">หมายเลขอุปกรณ์ของท่าน</span></h3> -->
+                                            <div class="container">
+                                                <h3>หมายเลขอุปกรณ์ของท่าน</h3>
+                                                <br>
+                                                <!-- <p>Click the button below to copy the Bootstrap code:</p> -->
+
+
+                                                <?php $sql_track = "SELECT * FROM `get_detail` 
+                                                                        LEFT JOIN tracking ON tracking.t_id = get_detail.t_id
+                                                                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                                        WHERE get_detail.get_r_id = '170';";
+                                                                                                                                                                                                                                                                                                                    $result_track = mysqli_query($conn, $sql_track);
+                                                                                                                                                                                                                                                                                                                    while ($row_track = mysqli_fetch_array($result_track)) {
+                                                ?>
+                                                    <div class="row">
+                                                        <h5><?= $row_track['r_brand'] . ' ' . $row_track['r_model'] ?></h5>
+                                                    </div>
+                                                    <!-- <div class="row"> -->
+                                                        <div class="row">
+                                                            <!-- <div class="row"> -->
+                                                                <p style="font-size: 14px;">SN : <?= $row_track['r_serial_number'] ?></p>
+                                                            <!-- </div> -->
+                                                            <!-- <div class="row">
+                                                                <h6><?= $row_track['r_serial_number']  ?></h6>
+                                                            </div> -->
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="row">
+                                                                <p style="display: none;" id="bootstrapCode"><?= $row_track['t_parcel'] ?></p>
+                                                                <div class="col-12">
+                                                                    หมายเลขพัสดุ : <button class="btn btn-primary" id="copyButton" onclick="copyToClipboard()"><?= $row_track['t_parcel'] ?></button>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    <!-- </div> -->
+                                                    <hr>
+                                                    <br>
+                                                <?php }  ?>
+                                                <script>
+                                                    function copyToClipboard() {
+                                                        var copyText = document.getElementById("bootstrapCode");
+                                                        var textarea = document.createElement("textarea");
+                                                        textarea.value = copyText.textContent;
+                                                        document.body.appendChild(textarea);
+                                                        textarea.select();
+                                                        document.execCommand("copy");
+                                                        document.body.removeChild(textarea);
+                                                        alert("Copied to clipboard: " + copyText.textContent);
+                                                    }
+                                                </script>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                <?php } ?>
+                                </p>
                                 </div>
                             </div>
 
@@ -1799,7 +1878,15 @@ WHERE
                                 <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยัน</a>
                                 <a class="btn btn-success" id="confirmButtonSuccess1" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
                             </center>
-                        <?php } elseif ($status_id_last  == 17  && $row_2['rs_conf'] == NULL) { ?>
+                        <?php } elseif ($status_id_last  == 24) { ?>
+                            <!-- <hr> -->
+                            <center>
+                                <p style="margin-left: 2%; color:red">*** ตรวจเช็คความปกติของอุปกรณ์ของท่านว่าใช้ได้หรือไม่ก่อนทำการยืนยันเสร็จสิ้นการซ่อม ***</p>
+                                <a class="btn btn-danger" style="margin-left: 2%" href="send_config.php?id=<?= $id_get_r ?>">แจ้งเจ้าหน้าที่กรณีมีปัญหา</a>
+                                <a class="btn btn-success" style="margin-left: 2%" onclick="showConfirmation()">ยืนยัน</a>
+                            </center>
+                        <?php
+                        } elseif ($status_id_last  == 17  && $row_2['rs_conf'] == NULL) { ?>
                             <!-- <hr> -->
                             <!-- <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p> -->
                             <?php
