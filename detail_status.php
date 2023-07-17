@@ -53,6 +53,7 @@ $check_order = 0;
         LEFT JOIN status_type ON repair_status.status_id  = status_type.status_id 
         WHERE get_repair.get_r_id = $id_get_r AND repair_status.del_flg = '0' ORDER BY repair_status.rs_date_time DESC;";
     $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_array($result);
 
     $sql2 = "SELECT * FROM get_repair
         LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id 
@@ -141,6 +142,11 @@ WHERE
         <?php  } ?>
         <?php if ($row_2['status_id'] == 10) { ?>
             <h3><i class="fa fa-paper-plane-o"></i> กำลังดำเนินการส่งอุปกรณ์ให้คุณ</h3>
+            <p>โปรดรอการตอบกลับจากพนักงาน</p>
+
+        <?php  } ?>
+        <?php if ($row_2['status_id'] == 20) { ?>
+            <h3><i class="fa fa-paper-plane-o"></i> พนักงานกำลังตรวจสอบคำร้องของคุณ</h3>
             <p>โปรดรอการตอบกลับจากพนักงาน</p>
 
         <?php  } ?>
@@ -386,7 +392,7 @@ WHERE
                                     <h5>หมายเลขส่งซ่อมที่ <span class="text-primary font-weight-bold">#<?= $id_get_r ?></span></h5>
                                 </div>
                                 <div class="d-flex flex-column text-sm-right">
-                                    <p style="color: gray" class="mb-0">วันที่ยื่นเรื่อง : <?= date('d F Y', strtotime($row_2['rs_date_time'])) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_2['rs_date_time'])); ?></span> <?php if ($row_2['status_id'] == 24 || $row_2['status_id'] == 3) {                                                                                                                                                                                                                                                                     ?>
+                                    <p style="color: gray" class="mb-0"><i class="	fa fa-calendar"></i> วันที่ยื่นเรื่อง : <?= date('d F Y', strtotime($row['get_r_date_in'])) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row['get_r_date_in'])); ?></span> <?php if ($row_2['status_id'] == 24 || $row_2['status_id'] == 3) { ?>
                                             <!-- <a href="">หมายเลขอุปกรณ์ของท่าน</a> -->
                                             <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">หมายเลขอุปกรณ์ของท่าน</button>
 
@@ -408,30 +414,30 @@ WHERE
                                                                         LEFT JOIN tracking ON tracking.t_id = get_detail.t_id
                                                                         LEFT JOIN repair ON repair.r_id = get_detail.r_id
                                                                         WHERE get_detail.get_r_id = '170';";
-                                                                                                                                                                                                                                                                                                                    $result_track = mysqli_query($conn, $sql_track);
-                                                                                                                                                                                                                                                                                                                    while ($row_track = mysqli_fetch_array($result_track)) {
+                                                                                                                                                                                                                                                                                                                                                    $result_track = mysqli_query($conn, $sql_track);
+                                                                                                                                                                                                                                                                                                                                                    while ($row_track = mysqli_fetch_array($result_track)) {
                                                 ?>
                                                     <div class="row">
                                                         <h5><?= $row_track['r_brand'] . ' ' . $row_track['r_model'] ?></h5>
                                                     </div>
                                                     <!-- <div class="row"> -->
-                                                        <div class="row">
-                                                            <!-- <div class="row"> -->
-                                                                <p style="font-size: 14px;">SN : <?= $row_track['r_serial_number'] ?></p>
-                                                            <!-- </div> -->
-                                                            <!-- <div class="row">
+                                                    <div class="row">
+                                                        <!-- <div class="row"> -->
+                                                        <p style="font-size: 14px;">SN : <?= $row_track['r_serial_number'] ?></p>
+                                                        <!-- </div> -->
+                                                        <!-- <div class="row">
                                                                 <h6><?= $row_track['r_serial_number']  ?></h6>
                                                             </div> -->
-                                                        </div>
+                                                    </div>
+                                                    <div class="row">
                                                         <div class="row">
-                                                            <div class="row">
-                                                                <p style="display: none;" id="bootstrapCode"><?= $row_track['t_parcel'] ?></p>
-                                                                <div class="col-12">
-                                                                    หมายเลขพัสดุ : <button class="btn btn-primary" id="copyButton" onclick="copyToClipboard()"><?= $row_track['t_parcel'] ?></button>
-                                                                </div>
+                                                            <p style="display: none;" id="bootstrapCode"><?= $row_track['t_parcel'] ?></p>
+                                                            <div class="col-12">
+                                                                หมายเลขพัสดุ : <button class="btn btn-primary" id="copyButton" onclick="copyToClipboard()"><?= $row_track['t_parcel'] ?></button>
                                                             </div>
-
                                                         </div>
+
+                                                    </div>
                                                     <!-- </div> -->
                                                     <hr>
                                                     <br>
@@ -453,8 +459,29 @@ WHERE
 
                                         </div>
                                     </div>
+                                <?php }
+                                                                                                                                                                                                                                                                                                                                                $sql_start_repair_date = "SELECT * FROM repair_status 
+                                WHERE get_r_id = '$id_get_r' AND status_id = 19 AND del_flg = 0 ORDER BY rs_date_time DESC;";
+                                                                                                                                                                                                                                                                                                                                                $result_start_repair_date  = mysqli_query($conn, $sql_start_repair_date);
+                                                                                                                                                                                                                                                                                                                                                $row_start_repair_date = mysqli_fetch_array($result_start_repair_date);
+
+                                                                                                                                                                                                                                                                                                                                                if ($row_start_repair_date) {
+                                                                                                                                                                                                                                                                                                                                                    $startRepairDate = $row_start_repair_date['rs_date_time'];
+                                                                                                                                                                                                                                                                                                                                                    $daysToAdd = $row['get_date_conf'];
+
+                                                                                                                                                                                                                                                                                                                                                    $startDate = new DateTime($startRepairDate);
+                                                                                                                                                                                                                                                                                                                                                    $endDate = clone $startDate;
+                                                                                                                                                                                                                                                                                                                                                    $endDate->add(new DateInterval('P' . $daysToAdd . 'D'));
+
+                                                                                                                                                                                                                                                                                                                                                    $formattedEndDate_conf = $endDate->format('d F Y H:i:s');
+                                                                                                                                                                                                                                                                                                                                                    // echo $formattedEndDate_conf;
+
+
+                                ?>
+                                    <p style="color: gray" class="mb-0"><i class="fa fa-calendar-check-o"></i> กำหนดแล้วเสร็จวันที่ : <?= date('d F Y', strtotime($formattedEndDate_conf)) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($formattedEndDate_conf)); ?> <span style="color: #B90000;">(<?= $row['get_date_conf'] ?> วัน)</span></span>
+                                    <!-- <span style="color:red">*** นับจากวันที่รับอุปกรณ์</span> -->
+                                    </p>
                                 <?php } ?>
-                                </p>
                                 </div>
                             </div>
 
@@ -531,6 +558,13 @@ WHERE
 
                                     </div>
                                 </div>
+                                <!-- <div class="row d-flex justify-content-center">
+                                    <div class="col-12">
+                                        <br>
+                                        <hr><br>
+                                        <h5 style="color: red;margin-left:4%" class="mb-0"> กำหนดแล้วเสร็จวันที่ : <?= date('d F Y', strtotime($row_2['rs_date_time'])) . ' ' ?>
+                                    </div>
+                                </div> -->
                             <?php } elseif ($row_2['status_id'] == 12) { ?>
                                 <div class="row d-flex justify-content-center p-4">
 
@@ -675,7 +709,7 @@ WHERE
                                                     <br>
                                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo" style="background-color: #F1F1F1;">
                                                         <h5>
-                                                            รวมการสั่งซ่อม <?= number_format($total_part_price + $row_2['get_wages'] + $row_2['get_add_price']) ?> บาท
+                                                            รวมการสั่งซ่อม <?= number_format($total_part_price + $row_2['get_wages'] + $row_2['get_add_price'] + $row_2['get_check']) ?> บาท
                                                         </h5>
                                                     </button>
                                                 </h5>
@@ -708,6 +742,26 @@ WHERE
                                                                 ?>
                                                         </div>
                                                     </div>
+                                                    <?php
+                                                    if ($row_2['get_check'] != NULL) {
+                                                    ?>
+                                                        <div class="row">
+                                                            <div class="col-md-6 d-flex  justify-content-start">
+                                                                ค่าตรวจสอบอุปกรณ์
+                                                            </div>
+                                                            <div class="col-md-6 d-flex  justify-content-end">
+                                                                ฿ <?php
+                                                                    if ($row_2['get_check'] != NULL) {
+                                                                        echo number_format($row_2['get_check']);
+                                                                    } else {
+                                                                        echo '0';
+                                                                    }
+                                                                    ?>
+                                                            </div>
+                                                        </div>
+                                                    <?php
+                                                    }
+                                                    ?>
                                                     <div class="row">
                                                         <div class="col-md-6 d-flex  justify-content-start">
                                                             ค่าจัดส่ง
@@ -943,7 +997,7 @@ WHERE
                                                                                                         <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
                                                                                                     </tr>
                                                                                                     <?php
-                                                                                                    $sql_p = "SELECT get_deli , get_add_price FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
+                                                                                                    $sql_p = "SELECT get_deli , get_add_price ,get_check FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
                                                                                                     $result_p = mysqli_query($conn, $sql_p);
                                                                                                     $row_p = mysqli_fetch_array($result_p);
 
@@ -954,6 +1008,17 @@ WHERE
                                                                                                             <td colspan="7">ค่าจัดส่ง</td>
                                                                                                             <td colspan="2">ราคาจัดส่ง</td>
                                                                                                             <td><?= number_format($row_p['get_add_price']) ?></td>
+                                                                                                            <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
+                                                                                                        </tr>
+                                                                                                    <?php
+                                                                                                    }
+                                                                                                    if ($row_p['get_check'] != NULL) {
+                                                                                                        $total += $row_p['get_check'];
+                                                                                                    ?>
+                                                                                                        <tr>
+                                                                                                            <td colspan="7">ค่าตรวจเช็คอุปกรณ์</td>
+                                                                                                            <td colspan="2">ค่าบริการตรวจเช็ค</td>
+                                                                                                            <td><?= number_format($row_p['get_check']) ?></td>
                                                                                                             <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
                                                                                                         </tr>
                                                                                                     <?php

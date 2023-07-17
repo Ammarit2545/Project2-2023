@@ -1,46 +1,22 @@
- img:hover {
-            border: 1px solid #777;
-        }
+<!DOCTYPE html>
+<html lang="en">
 
-        div.img img {
-            width: 100%;
-            border-radius: 50%;
-            height: 180px;
-        }
-
-        div.desc {
-            padding: 15px;
-            text-align: center;
-        }
-
-        a:link {
-            color: red;
-            transition: transform 0.3s, box-shadow 0.3s;-
-        }
-
-        a:hover {
-            color: yellow;
-            transform: scale(1.1);
-        }
-    </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
+<script language="javascript">
+    function fncAlert() {
+        alert('Hello World');
+    }
+</script>
 
 <body>
-    <div class="img"><a target="_blank" href="img/1.jpg">
-            <img src="img/1.jpg" alt="Trolltunga Norway" width="300" height="200"> </a>
-        <div class="desc">1</div>
-    </div>
-    <div class="img"><a target="_blank" href="img/2.jpg">
-            <img src="img/2.png" alt="Forest" width="600" height="400">
-            <div class="desc">2</div>
-    </div>
-    <div>
-        <br>
-        <hr>
-        <center>
-            <a href="">
-                <h1>เชี่ยดรีม</h1>
-            </a>
-        </center>
-    </div>
+    <form action="" method="POST" name="form1">
+        Name <input name="txtName" type="text" onblur="JavaScript:fncAlert();">
+        <input type="submit" name="btnSubmit" value="Submit">
+    </form>
 </body>
+
+</html>

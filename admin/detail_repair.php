@@ -1410,11 +1410,18 @@ if (!isset($_SESSION['role_id'])) {
                             } ?>
 
                             <?php
+                            $get_r_id;
+                            $sql_check_send = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' And del_flg = '0' And status_id = '19'";
+                            $result_check_send = mysqli_query($conn,$sql_check_send);
+                            $row_check_send = mysqli_fetch_array($result_check_send);
+
                             $statusIds = array("4", "17", "5", "19", "6", "7", "8", "9", "13", "10", "24", "20", "25");
 
                             if (in_array($row['status_id'], $statusIds)) {
                                 if ($row['rs_conf'] == NULL && !in_array($row['status_id'], ['5', '19', '6', '7', '8', '9', '13', '24', '10', '20', '25'])) {
                                     include('status_option/wait_respond.php');
+                                } elseif ($row['status_id'] == '17' && $row_check_send[0] > 0) {
+                                    include('status_option/send_back.php');
                                 } elseif ($row['status_id'] == '25') {
                                     include('status_option/pay_check.php');
                                 } elseif ($row['status_id'] == '20') {
