@@ -478,7 +478,7 @@ WHERE
 
 
                                 ?>
-                                    <p style="color: gray" class="mb-0"><i class="fa fa-calendar-check-o"></i> กำหนดแล้วเสร็จวันที่ : <?= date('d F Y', strtotime($formattedEndDate_conf)) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($formattedEndDate_conf)); ?> <span style="color: #B90000;">(<?= $row['get_date_conf'] ?> วัน)</span></span>
+                                    <p style="color: gray" class="mb-0"><i class="fa fa-calendar-check-o"></i> กำหนดแล้วเสร็จวันที่ : <?= date('d F Y', strtotime($formattedEndDate_conf)) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($formattedEndDate_conf)); ?> <u style="color: #B90000;">(<?= $row['get_date_conf'] ?> วัน)</u></span>
                                     <!-- <span style="color:red">*** นับจากวันที่รับอุปกรณ์</span> -->
                                     </p>
                                 <?php } ?>
