@@ -9,6 +9,7 @@ $pl_id = $_GET['pl_id'];
 
 $sql = "SELECT * FROM `parts_log`
         LEFT JOIN stock_type ON stock_type.st_id = parts_log.st_id
+        LEFT JOIN company_parts ON company_parts.com_p_id = parts_log.com_p_id
         WHERE parts_log.pl_id = '$pl_id'";
 $result = mysqli_query($conn, $sql);
 $row_pl = mysqli_fetch_array($result);
@@ -90,6 +91,7 @@ $row_pl = mysqli_fetch_array($result);
                                             <p><span class="badge badge-secondary">ประเภท</span> : <?= $row_pl['st_name'] ?></p>
                                             <p><span class="badge badge-secondary">เลขที่ใบเสร็จ</span> : <?= $row_pl['pl_bill_number'] ?></p>
                                             <p><span class="badge badge-secondary">เลขที่กำกับภาษี</span> : <?= $row_pl['pl_tax_number'] ?></p>
+                                            <p><span class="badge badge-secondary">บริษัท</span> : <?= $row_pl['com_p_name'] ?></p>
                                             <p><span class="badge badge-secondary">วันที่ทำรายการ</span> : <?= date('Y-m-d -- H:i:s', strtotime($row_pl['pl_date'])) ?></p>
                                             <p><span class="badge badge-secondary">รายละเอียด</span> : <?= $row_pl['pl_detail'] ?></p>
                                         <?php
