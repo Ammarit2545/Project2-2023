@@ -199,7 +199,7 @@ if (!isset($_SESSION['role_id'])) {
                                     <label for="st_id" class="col-sm-1 col-form-label">เลือกวิธีการเพิ่ม</label>
                                     <div class="col-sm-3">
                                         <?php if (isset($_SESSION['stock_type'])) {  ?>
-                                            <select class="form-select" name="st_id" id="stockType" aria-label="Default select example" onchange="ShowBillFunc()" required>
+                                            <select class="form-select" name="st_id" id="stockType" aria-label="Default select example" onchange="ShowBillFunc(),EditSession(this,6)" required>
                                                 <?php if ($_SESSION['stock_type'] == NULL) {
                                                 ?>
                                                     <option selected>เลือกวิธีการเพิ่มอะไหล่</option>

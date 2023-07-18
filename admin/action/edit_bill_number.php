@@ -39,5 +39,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Redirect to the desired page after updating the session value
         header("Location: ../edit_stock.php");
         exit();
+    }elseif ($type == 6) {
+        // Update the session value with the new unit value
+        $_SESSION['stock_type'] = $_POST['data'];
+
+        // Redirect to the desired page after updating the session value
+        header("Location: ../edit_stock.php");
+        exit();
     }
 }
