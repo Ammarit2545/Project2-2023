@@ -31,22 +31,24 @@ if ($stock_type != NULL) {
             exit();
         } else {
             $sql = "INSERT INTO `parts_log` (`pl_date`, `e_id`, `pl_type`, `pl_bill_number`, `pl_tax_number`, `pl_date_in`, `pl_detail`, `com_p_id`)
-            VALUES (NOW(), '$id', '$stock_type', '$pl_bill_number', '$pl_tax_number', '$pl_date_in', '$pl_detail', '$com_p_id')";
+                    VALUES (NOW(), '$id', '$stock_type', '$pl_bill_number', '$pl_tax_number', '$pl_date_in', '$pl_detail', '$com_p_id')";
             $result = mysqli_query($conn, $sql);
         }
     } else {
         $sql = "INSERT INTO `parts_log` (`pl_date`, `e_id`, `pl_type`)
-        VALUES (NOW(), '$id', '$stock_type')";
+                VALUES (NOW(), '$id', '$stock_type')";
         $result = mysqli_query($conn, $sql);
     }
 }
 
 if ($result) {
+    
     unset($_SESSION['pl_bill_number']);
     unset($_SESSION['pl_tax_number']);
     unset($_SESSION['pl_date_in']);
     unset($_SESSION['pl_detail']);
     unset($_SESSION['com_p_id']);
+    unset($_SESSION['stock_type']);
 
     $pl_id = mysqli_insert_id($conn); // Retrieve the inserted ID
     if (isset($_SESSION['part_p_id_1'])) {
@@ -66,13 +68,10 @@ if ($result) {
             } else {
                 $_SESSION['add_data_error_alert' . $i] = 1;
             }
-
             unset($_SESSION['part_p_id_' . $i]);
             unset($_SESSION['part_p_stock_' . $i]);
-
             $i++;
         }
-
         $_SESSION["add_data_alert"] = 0;
         header("Location: ../edit_stock.php");
         exit();

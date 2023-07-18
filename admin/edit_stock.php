@@ -251,16 +251,16 @@ if (!isset($_SESSION['role_id'])) {
                                 <div class="mb-3 row">
                                     <?php if ($_SESSION['stock_type'] == 2) {
                                     ?>
-                                        <div id="DivShowBill" style="display: block;">
+                                        <div id="DivShowBill" style="display: block;background-color:#F2F2F2">
                                         <?php
                                     } else {
                                         ?>
-                                            <div id="DivShowBill" style="display: none;">
+                                            <div id="DivShowBill" style="display: none;background-color:#F2F2F2">
                                             <?php
                                         } ?>
-                                            <hr>
+                                            <!-- <hr> -->
                                             <br>
-                                            <p class="alert alert-primary">กรุณากรอกที่มาของอุปกรณ์</p>
+                                            <p class="alert alert-primary">ที่มาของอุปกรณ์</p>
                                             <br>
                                             <!-- Content to display when option is selected -->
                                             <div class="mb-3 row">
@@ -345,11 +345,11 @@ if (!isset($_SESSION['role_id'])) {
                                                 </div>
                                             </div>
                                             <br>
-                                            <hr>
+                                            <!-- <hr> -->
                                             </div>
                                         </div>
                                         <div class="mb-3 row">
-                                            <p class="alert alert-primary">กรุณากรอกจำนวนอะไหล่</p>
+                                            <p class="alert alert-primary">จำนวนอะไหล่</p>
                                             <label for="staticEmail" class="col-sm-1 col-form-label">รหัสอะไหล่</label>
 
                                             <div class="col-sm-4">
