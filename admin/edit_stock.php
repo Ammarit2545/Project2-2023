@@ -271,31 +271,7 @@ if (!isset($_SESSION['role_id'])) {
                                                             <input type="text" onchange="EditSession(this,1)" class="form-control" name="pl_bill_number" id="pl_bill_number" placeholder="กรุณากรอกเลขที่ใบเสร็จ *ไม่จำเป็น" value="<?= $_SESSION['pl_bill_number'] ?>">
                                                         </div>
                                                     </div>
-
                                                     <div id="billNumberError" style="display: none; color: red;">เลขที่ใบเสร็จนี้มีอยู่ในระบบแล้ว</div>
-                                                    <script>
-                                                        function checkBillNumber() {
-                                                            var billNumber = document.getElementById('pl_bill_number').value;
-                                                            var xhttp = new XMLHttpRequest();
-                                                            xhttp.onreadystatechange = function() {
-                                                                if (this.readyState == 4 && this.status == 200) {
-                                                                    if (this.responseText == 'exists') {
-                                                                        document.getElementById('billNumberError').style.display = 'block';
-                                                                        document.getElementById('pl_bill_number').setCustomValidity('มีข้อมูลอยู่แล้ว');
-                                                                        document.getElementById('submit-button').disabled = true; // disable the submit button
-                                                                    } else {
-                                                                        document.getElementById('billNumberError').style.display = 'none';
-                                                                        document.getElementById('pl_bill_number').setCustomValidity('');
-                                                                        document.getElementById('submit-button').disabled = false; // enable the submit button
-                                                                    }
-                                                                }
-                                                            };
-                                                            xhttp.open('GET', 'check_bill_number.php?bill_number=' + billNumber, true); // Fixed variable name
-                                                            xhttp.send();
-                                                        }
-                                                    </script>
-
-
                                                 </div>
                                                 <label for="pl_tax_number" class="col-md-1 col-form-label">ใบกำกับภาษี</label>
                                                 <div class="col-md-3">
@@ -313,28 +289,10 @@ if (!isset($_SESSION['role_id'])) {
                                                             <input type="date" onchange="EditSession(this,3)" class="form-control" name="pl_date_in" id="pl_date_in" placeholder="กรุณากรอกวันที่สั่งอุปกรณ์ *ไม่จำเป็น" value="<?= $_SESSION['pl_date_in'] ?>">
                                                         </div>
                                                     </div>
-                                                    <script>
-                                                        function EditSession(input, type) {
-                                                            var newValue = input.value;
-                                                            var xhr = new XMLHttpRequest();
-                                                            var url = "action/edit_bill_number.php?type=" + encodeURIComponent(type);
-                                                            xhr.open("POST", url, true);
-                                                            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                                                            xhr.onreadystatechange = function() {
-                                                                if (xhr.readyState === 4 && xhr.status === 200) {
-                                                                    console.log("Value saved successfully!");
-                                                                }
-                                                            };
-                                                            xhr.send("data=" + encodeURIComponent(newValue));
-                                                        }
-                                                    </script>
-
-                                                    <!-- <input type="date" class="form-control" name="pl_date_in" placeholder="กรุณากรอกวันที่สั่งอุปกรณ์ *ไม่จำเป็น" value="<?= $_SESSION['pl_date_in'] ?>"> -->
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
                                                 <label for="pl_detail" class="col-sm-1 col-form-label">บริษัทที่สั่ง</label>
-
                                                 <div class="col-md">
                                                     <?php if (isset($_SESSION['com_p_id']) && $_SESSION['com_p_id'] != NULL) {
                                                     ?>
@@ -390,21 +348,6 @@ if (!isset($_SESSION['role_id'])) {
                                             <hr>
                                             </div>
                                         </div>
-                                        <script>
-                                            function ShowBillFunc() {
-                                                var stockType = document.getElementById("stockType");
-                                                var selectedOption = stockType.options[stockType.selectedIndex].value;
-                                                var DivShowBill = document.getElementById("DivShowBill");
-
-                                                if (selectedOption == 2) {
-                                                    DivShowBill.style.display = "block";
-                                                } else {
-                                                    DivShowBill.style.display = "none";
-                                                }
-                                            }
-                                        </script>
-
-
                                         <div class="mb-3 row">
                                             <p class="alert alert-primary">กรุณากรอกจำนวนอะไหล่</p>
                                             <label for="staticEmail" class="col-sm-1 col-form-label">รหัสอะไหล่</label>
@@ -949,7 +892,33 @@ if (!isset($_SESSION['role_id'])) {
         ?>
         <!-- Sweet Alert Show End -->
 
+        <script>
+            function ShowBillFunc() {
+                var stockType = document.getElementById("stockType");
+                var selectedOption = stockType.options[stockType.selectedIndex].value;
+                var DivShowBill = document.getElementById("DivShowBill");
 
+                if (selectedOption == 2) {
+                    DivShowBill.style.display = "block";
+                } else {
+                    DivShowBill.style.display = "none";
+                }
+            }
+
+            function EditSession(input, type) {
+                var newValue = input.value;
+                var xhr = new XMLHttpRequest();
+                var url = "action/edit_bill_number.php?type=" + encodeURIComponent(type);
+                xhr.open("POST", url, true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        console.log("Value saved successfully!");
+                    }
+                };
+                xhr.send("data=" + encodeURIComponent(newValue));
+            }
+        </script>
 </body>
 
 </html>
