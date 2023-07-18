@@ -53,7 +53,15 @@ $check_order = 0;
         LEFT JOIN status_type ON repair_status.status_id  = status_type.status_id 
         WHERE get_repair.get_r_id = $id_get_r AND repair_status.del_flg = '0' ORDER BY repair_status.rs_date_time DESC;";
     $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_array($result);
+
+    $sql_c_date_time = "SELECT * FROM get_repair
+    LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id 
+    LEFT JOIN status_type ON repair_status.status_id  = status_type.status_id 
+    WHERE get_repair.get_r_id = $id_get_r AND repair_status.del_flg = '0' ORDER BY repair_status.rs_date_time DESC;";
+    $result_c_date_time = mysqli_query($conn, $sql_c_date_time);
+    $row_c_date_time = mysqli_fetch_array($result_c_date_time);
+
+    // $row = mysqli_fetch_array($result);
 
     $sql2 = "SELECT * FROM get_repair
         LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id 
@@ -392,7 +400,12 @@ WHERE
                                     <h5>หมายเลขส่งซ่อมที่ <span class="text-primary font-weight-bold">#<?= $id_get_r ?></span></h5>
                                 </div>
                                 <div class="d-flex flex-column text-sm-right">
-                                    <p style="color: gray" class="mb-0"><i class="	fa fa-calendar"></i> วันที่ยื่นเรื่อง : <?= date('d F Y', strtotime($row['get_r_date_in'])) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row['get_r_date_in'])); ?></span> <?php if ($row_2['status_id'] == 24 || $row_2['status_id'] == 3) { ?>
+                                    <?php
+                                    $sql_start_day = "SELECT * FROM `get_repair` WHERE get_r_id = '$id_get_r' AND del_flg = '0';";
+                                    $result_start_day = mysqli_query($conn, $sql_start_day);
+                                    $row_start_day = mysqli_fetch_array($result_start_day);
+                                    ?>
+                                    <p style="color: gray" class="mb-0"><i class="	fa fa-calendar"></i> วันที่ยื่นเรื่อง : <?= date('d F Y', strtotime($row_start_day['get_r_date_in'])) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_start_day['get_r_date_in'])); ?></span> <?php if ($row_2['status_id'] == 24 || $row_2['status_id'] == 3) { ?>
                                             <!-- <a href="">หมายเลขอุปกรณ์ของท่าน</a> -->
                                             <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">หมายเลขอุปกรณ์ของท่าน</button>
 
@@ -413,9 +426,9 @@ WHERE
                                                 <?php $sql_track = "SELECT * FROM `get_detail` 
                                                                         LEFT JOIN tracking ON tracking.t_id = get_detail.t_id
                                                                         LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                                        WHERE get_detail.get_r_id = '170';";
-                                                                                                                                                                                                                                                                                                                                                    $result_track = mysqli_query($conn, $sql_track);
-                                                                                                                                                                                                                                                                                                                                                    while ($row_track = mysqli_fetch_array($result_track)) {
+                                                                        WHERE get_detail.get_r_id = '$id_get_r';";
+                                                                                                                                                                                                                                                                                                                                                                        $result_track = mysqli_query($conn, $sql_track);
+                                                                                                                                                                                                                                                                                                                                                                        while ($row_track = mysqli_fetch_array($result_track)) {
                                                 ?>
                                                     <div class="row">
                                                         <h5><?= $row_track['r_brand'] . ' ' . $row_track['r_model'] ?></h5>
@@ -459,29 +472,30 @@ WHERE
 
                                         </div>
                                     </div>
+                                    <?php }
+                                                                                                                                                                                                                                                                                                                                                                    $sql_start_repair_date = "SELECT * FROM repair_status 
+                                WHERE get_r_id = '$id_get_r' AND status_id = 19 OR status_id = 17 AND del_flg = 0 ORDER BY rs_date_time DESC LIMIT 1;";
+                                                                                                                                                                                                                                                                                                                                                                    $result_start_repair_date  = mysqli_query($conn, $sql_start_repair_date);
+                                                                                                                                                                                                                                                                                                                                                                    $row_start_repair_date = mysqli_fetch_array($result_start_repair_date);
+                                                                                                                                                                                                                                                                                                                                                                    if ($row_start_repair_date['rs_date_time']) {
+                                                                                                                                                                                                                                                                                                                                                                        $startRepairDate_C = $row_start_repair_date['rs_date_time'];
+                                                                                                                                                                                                                                                                                                                                                                        if ($row_start_day['get_date_conf']) {
+                                                                                                                                                                                                                                                                                                                                                                            $daysToAdd_C = $row_start_day['get_date_conf'];
+
+                                                                                                                                                                                                                                                                                                                                                                            $startDate_C = new DateTime($startRepairDate_C);
+                                                                                                                                                                                                                                                                                                                                                                            $endDate_C = clone $startDate_C;
+                                                                                                                                                                                                                                                                                                                                                                            $endDate_C->add(new DateInterval('P' . $daysToAdd_C . 'D'));
+
+                                                                                                                                                                                                                                                                                                                                                                            $formattedEndDate_conf_C = $endDate_C->format('d F Y H:i:s');
+                                                                                                                                                                                                                                                                                                                                                                            // echo $formattedEndDate_conf;
+
+
+                                    ?>
+                                        <p style="color: gray" class="mb-0"><i class="fa fa-calendar-check-o"></i> กำหนดแล้วเสร็จวันที่ : <?= date('d F Y', strtotime($formattedEndDate_conf_C)) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($formattedEndDate_conf_C)); ?> <u style="color: #B90000;">(<?= $row_start_day['get_date_conf'] ?> วัน)</u></span>
+                                            <!-- <span style="color:red">*** นับจากวันที่รับอุปกรณ์</span> -->
+                                        </p>
                                 <?php }
-                                                                                                                                                                                                                                                                                                                                                $sql_start_repair_date = "SELECT * FROM repair_status 
-                                WHERE get_r_id = '$id_get_r' AND status_id = 19 AND del_flg = 0 ORDER BY rs_date_time DESC;";
-                                                                                                                                                                                                                                                                                                                                                $result_start_repair_date  = mysqli_query($conn, $sql_start_repair_date);
-                                                                                                                                                                                                                                                                                                                                                $row_start_repair_date = mysqli_fetch_array($result_start_repair_date);
-
-                                                                                                                                                                                                                                                                                                                                                if ($row_start_repair_date) {
-                                                                                                                                                                                                                                                                                                                                                    $startRepairDate = $row_start_repair_date['rs_date_time'];
-                                                                                                                                                                                                                                                                                                                                                    $daysToAdd = $row['get_date_conf'];
-
-                                                                                                                                                                                                                                                                                                                                                    $startDate = new DateTime($startRepairDate);
-                                                                                                                                                                                                                                                                                                                                                    $endDate = clone $startDate;
-                                                                                                                                                                                                                                                                                                                                                    $endDate->add(new DateInterval('P' . $daysToAdd . 'D'));
-
-                                                                                                                                                                                                                                                                                                                                                    $formattedEndDate_conf = $endDate->format('d F Y H:i:s');
-                                                                                                                                                                                                                                                                                                                                                    // echo $formattedEndDate_conf;
-
-
-                                ?>
-                                    <p style="color: gray" class="mb-0"><i class="fa fa-calendar-check-o"></i> กำหนดแล้วเสร็จวันที่ : <?= date('d F Y', strtotime($formattedEndDate_conf)) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($formattedEndDate_conf)); ?> <u style="color: #B90000;">(<?= $row['get_date_conf'] ?> วัน)</u></span>
-                                    <!-- <span style="color:red">*** นับจากวันที่รับอุปกรณ์</span> -->
-                                    </p>
-                                <?php } ?>
+                                                                                                                                                                                                                                                                                                                                                                    } ?>
                                 </div>
                             </div>
 
