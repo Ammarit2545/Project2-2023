@@ -5,7 +5,11 @@ include('../database/condb.php');
 if (!isset($_SESSION['role_id'])) {
     header('Location:../home.php');
 }
+$st_id = -1;
 
+if (isset($_GET['st_id'])) {
+    $st_id = $_GET['st_id'];
+}
 ?>
 
 <!DOCTYPE html>
@@ -64,6 +68,13 @@ if (!isset($_SESSION['role_id'])) {
                     <br>
                     <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ประวัติการจัดการ "อะไหล่"</h1>
                     <!-- <a href="add_employee.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มรายชื่อพนักงานหรือไม่?</a> -->
+                    <hr>
+                    <p>ค้นหาเพิ่มเติมด้วยประเภท</p>
+                    <a href="log_part.php?st_id=2" class="btn btn-primary">มีใบเสร็จ</a>
+                    <a href="log_part.php?st_id=1" class="btn btn-warning">เพิ่มด้วตัวเอง</a>
+                    <a href="log_part.php?st_id=0" class="btn btn-danger">รายการที่ลด</a>
+                    <a href="log_part.php" class="btn btn-success">ทั้งหมด</a>
+                    <br>
                     <br>
                     <br>
 
@@ -92,7 +103,28 @@ if (!isset($_SESSION['role_id'])) {
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $sql = "SELECT * FROM `parts_log` ORDER BY pl_id  DESC";
+                                        if ($st_id == 0) {
+                                            $sql = "SELECT * FROM `parts_log` 
+    LEFT JOIN stock_type ON stock_type.st_id = parts_log.st_id 
+    WHERE stock_type.st_type = 0
+    ORDER BY parts_log.pl_id  DESC";
+                                        } elseif ($st_id == 1) {
+                                            $sql = "SELECT * FROM `parts_log` 
+    LEFT JOIN stock_type ON stock_type.st_id = parts_log.st_id 
+    WHERE stock_type.st_id = 1
+    ORDER BY parts_log.pl_id  DESC";
+                                        } elseif ($st_id == 2) {
+                                            $sql = "SELECT * FROM `parts_log` 
+    LEFT JOIN stock_type ON stock_type.st_id = parts_log.st_id 
+    WHERE stock_type.st_source = 1
+    ORDER BY parts_log.pl_id  DESC";
+                                        } else {
+                                            $sql = "SELECT * FROM `parts_log` 
+    LEFT JOIN stock_type ON stock_type.st_id = parts_log.st_id 
+    ORDER BY parts_log.pl_id  DESC";
+                                        }
+
+
                                         $result = mysqli_query($conn, $sql);
                                         $i = 0;
                                         while ($row = mysqli_fetch_array($result)) {
@@ -127,7 +159,13 @@ if (!isset($_SESSION['role_id'])) {
                                                     if ($row_type['st_name'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $row_type['st_name'];
+                                                        if ($row_type['st_source'] == 1) {
+                                                    ?>
+                                                            <u style="color:blue"><?= $row_type['st_name'] ?></u>
+                                                    <?php
+                                                        } else {
+                                                            echo $row_type['st_name'];
+                                                        }
                                                     }
                                                     ?>
                                                 </td>
