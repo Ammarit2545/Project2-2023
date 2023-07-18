@@ -272,11 +272,14 @@ $row_pl = mysqli_fetch_array($result);
                                     </div>
                                 </div>
                             </div>
+                            <br>
+                            <hr><br>
+                            <center>
+                                <a href="log_part.php" class="btn btn-danger">Back</a>
+                            </center>
+                            <br>
                         </div>
                     </div>
-
-
-
                 </div>
                 <!-- /.container-fluid -->
             </div>
