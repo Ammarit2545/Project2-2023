@@ -2,10 +2,16 @@
 session_start();
 include('../database/condb.php');
 
-if (!isset($_SESSION['role_id'])) {
+if (!isset($_SESSION['role_id']) || !isset($_GET['pl_id'])) {
     header('Location:../home.php');
 }
+$pl_id = $_GET['pl_id'];
 
+$sql = "SELECT * FROM `parts_log`
+        LEFT JOIN stock_type ON stock_type.st_id = parts_log.st_id
+        WHERE parts_log.pl_id = '$pl_id'";
+$result = mysqli_query($conn, $sql);
+$row_pl = mysqli_fetch_array($result);
 ?>
 
 <!DOCTYPE html>
@@ -25,6 +31,9 @@ if (!isset($_SESSION['role_id'])) {
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 
     <!-- Custom styles for this template -->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
@@ -62,11 +71,40 @@ if (!isset($_SESSION['role_id'])) {
 
                     <!-- Page Heading -->
                     <br>
-                    <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ประวัติการจัดการ "อะไหล่"</h1>
-                    <!-- <a href="add_employee.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มรายชื่อพนักงานหรือไม่?</a> -->
-                    <br>
-                    <br>
+                    <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ประวัติการจัดการ <span style="color:#ffff" class="badge badge-primary"> ID #<?= $pl_id ?></span></h1>
 
+                    <div class="accordion mt-4" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    รายละเอียด
+                                </button>
+                            </h2>      
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <font>  
+                                        <br>
+                                        <?php if ($row_pl['st_source'] == 1) {
+                                        ?>
+                                            <p><span class="badge badge-secondary">ประเภท</span> : <?= $row_pl['st_name'] ?></p>
+                                            <p><span class="badge badge-secondary">ประเลขที่ใบเสร็จเภท</span> : <?= $row_pl['pl_bill_number'] ?></p>
+                                            <p><span class="badge badge-secondary">เลขที่กำกับภาษี</span> : <?= $row_pl['pl_tax_number'] ?></p>
+                                            <p><span class="badge badge-secondary">วันที่ทำรายการ</span> : <?= date('Y-m-d -- H:i:s', strtotime($row_pl['pl_date'])) ?></p>
+                                            <p><span class="badge badge-secondary">รายละเอียด</span> : <?= $row_pl['pl_detail'] ?></p>
+                                        <?php
+                                        } else {
+                                        ?>
+                                            <p>ประเภท : <?= $row_pl['st_name'] ?></p>
+                                            <p>วันที่ทำรายการ : <?= date('Y-m-d -- H:i:s', strtotime($row_pl['pl_date'])) ?></p>
+                                            <!-- <p>รายละเอียด : <?= $row_pl['pl_detail'] ?></p> -->
+                                        <?php
+                                        } ?>
+                                    </font> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
@@ -78,21 +116,21 @@ if (!isset($_SESSION['role_id'])) {
                                     <thead>
                                         <tr>
                                             <th>ลำดับ</th>
-                                            <th>วันที่ทำรายการ</th>
-                                            <th>ประเภทที่ทำรายการ</th>
-                                            <th>เพิ่ม / ลบ</th>
-                                            <th>หมายเลขใบเสร็จ</th>
-                                            <th>เลขกำกับภาษี</th>
+                                            <th>รูปภาพ</th>
+                                            <th>ID</th>
+                                            <th>Brand</th>
+                                            <th>Modal</th>
+                                            <th>Number MD</th>
                                             <th>จำนวนที่ทำรายการ</th>
-                                            <th>บริษัท</th>
-                                            <th>เพิ่มเติม</th>
 
                                             <!-- <th>ลบ</th> -->
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $sql = "SELECT * FROM `parts_log` ORDER BY pl_id  DESC";
+                                        $sql = "SELECT * FROM `parts_log_detail` 
+                                                LEFT JOIN parts ON parts_log_detail.p_id = parts.p_id
+                                                WHERE parts_log_detail.pl_id = '$pl_id' ORDER BY pl_id  DESC";
                                         $result = mysqli_query($conn, $sql);
                                         $i = 0;
                                         while ($row = mysqli_fetch_array($result)) {
@@ -108,12 +146,14 @@ if (!isset($_SESSION['role_id'])) {
                                                     }
                                                     ?>
                                                 </td>
-                                                <td>
+                                                <td width="120px">
                                                     <?php
-                                                    if ($row['pl_date'] == NULL) {
+                                                    if ($row['p_pic'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $formattedDate = date("Y-m-d H:i:s", strtotime($row['pl_date']));
+                                                    ?>
+                                                        <img src="../<?= $row['p_pic']  ?>" alt="" width="100%" style="border-radius:20%">
+                                                    <?php
                                                     }
                                                     ?>
                                                 </td>
@@ -124,88 +164,64 @@ if (!isset($_SESSION['role_id'])) {
                                                                 WHERE parts_log.pl_id = '$pl_id' AND stock_type.del_flg = 0";
                                                     $result_type = mysqli_query($conn, $sql_type);
                                                     $row_type = mysqli_fetch_array($result_type);
-                                                    if ($row_type['st_name'] == NULL) {
+                                                    if ($row['p_id'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $row_type['st_name'];
+                                                        echo $row['p_id'];
                                                     }
                                                     ?>
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if ($row_type['st_type'] == NULL) {
+                                                    if ($row['p_brand'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        if ($row_type['st_type'] > 0) {
-                                                            echo 'เพิ่ม';
+                                                        if ($row['p_brand'] > 0) {
+                                                            echo $row['p_brand'];
                                                         } else {
-                                                            echo 'ลบ';
+                                                            echo '0';
                                                         }
                                                     }
                                                     ?>
                                                 </td>
-                                                <td><?php
-                                                    if ($row['pl_bill_number'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['pl_bill_number'];
-                                                    }
-                                                    ?>
-                                                </td>
                                                 <td>
-                                                    <!-- <?php
-
-                                                            $sql_c = "SELECT * FROM `parts`WHERE p_id = '$p_id'";
-                                                            $result_c = mysqli_query($conn, $sql_c);
-                                                            $rows = mysqli_fetch_array($result_c);
-
-                                                            if ($row['p_id'] == NULL) {
-                                                                echo "-";
-                                                            } else {
-                                                                echo $rows['p_brand'] . ' ';
-                                                            }
-                                                            ?> -->
-
                                                     <?php
-                                                    if ($row['pl_tax_number'] == NULL) {
+                                                    if ($row['p_model'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $row['pl_tax_number'];
+                                                        if ($row['p_model'] > 0) {
+                                                            echo $row['p_model'];
+                                                        } else {
+                                                            echo '0';
+                                                        }
                                                     }
                                                     ?>
                                                 </td>
                                                 <td>
                                                     <?php
-
-                                                    $sql_c = "SELECT COUNT(pl_id) FROM `parts_log_detail` WHERE pl_id = '$pl_id' AND del_flg = 0";
-                                                    $result_c = mysqli_query($conn, $sql_c);
-                                                    $rows = mysqli_fetch_array($result_c);
-
-                                                    if ($row[0] == NULL) {
+                                                    if ($row['p_name'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $rows[0] . ' รายการ';
+                                                        if ($row['p_name'] > 0) {
+                                                            echo $row['p_name'];
+                                                        } else {
+                                                            echo '0';
+                                                        }
                                                     }
                                                     ?>
-                                                </td>
-
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    $sql_com = "SELECT * FROM `company_parts` 
-                                                                LEFT JOIN parts_log ON parts_log.com_p_id = company_parts.com_p_id
-                                                                WHERE parts_log.pl_id = '$pl_id' AND company_parts.del_flg = 0";
-                                                    $result_com = mysqli_query($conn, $sql_com);
-                                                    $row_com = mysqli_fetch_array($result_com);
-                                                    if ($row_com['com_p_name'] == NULL) {
+                                                    if ($row['pl_d_value'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $row_com['com_p_name'];
+                                                        if ($row['pl_d_value'] > 0) {
+                                                            echo $row['pl_d_value'];
+                                                        } else {
+                                                            echo '0';
+                                                        }
                                                     }
                                                     ?>
-                                                </td>
-                                                <td>
-                                                    <a href="parts_log_detail.php?pl_id=<?= $pl_id ?>" class="btn btn-info">รายละเอียด</a>
                                                 </td>
 
                                                 <!-- <td>

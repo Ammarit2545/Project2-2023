@@ -30,19 +30,19 @@ if ($stock_type != NULL) {
             header("Location: ../edit_stock.php");
             exit();
         } else {
-            $sql = "INSERT INTO `parts_log` (`pl_date`, `e_id`, `pl_type`, `pl_bill_number`, `pl_tax_number`, `pl_date_in`, `pl_detail`, `com_p_id`)
+            $sql = "INSERT INTO `parts_log` (`pl_date`, `e_id`, `st_id`, `pl_bill_number`, `pl_tax_number`, `pl_date_in`, `pl_detail`, `com_p_id`)
                     VALUES (NOW(), '$id', '$stock_type', '$pl_bill_number', '$pl_tax_number', '$pl_date_in', '$pl_detail', '$com_p_id')";
             $result = mysqli_query($conn, $sql);
         }
     } else {
-        $sql = "INSERT INTO `parts_log` (`pl_date`, `e_id`, `pl_type`)
+        $sql = "INSERT INTO `parts_log` (`pl_date`, `e_id`, `st_id`)
                 VALUES (NOW(), '$id', '$stock_type')";
         $result = mysqli_query($conn, $sql);
     }
 }
 
 if ($result) {
-    
+
     unset($_SESSION['pl_bill_number']);
     unset($_SESSION['pl_tax_number']);
     unset($_SESSION['pl_date_in']);
