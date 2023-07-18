@@ -71,23 +71,24 @@ $row_pl = mysqli_fetch_array($result);
 
                     <!-- Page Heading -->
                     <br>
-                    <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ประวัติการจัดการ <span style="color:#ffff" class="badge badge-primary"> ID #<?= $pl_id ?></span></h1>
-
+                    <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ประวัติการจัดการ <span style="color:#ffff" class="badge badge-primary">#<?= $pl_id ?></span></h1>
+                    <br>
+                    <hr>
                     <div class="accordion mt-4" id="accordionExample">
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingOne">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    รายละเอียด
+                                    <h4>รายละเอียด</h4>
                                 </button>
-                            </h2>      
+                            </h2>
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <font>  
+                                    <font>
                                         <br>
                                         <?php if ($row_pl['st_source'] == 1) {
                                         ?>
                                             <p><span class="badge badge-secondary">ประเภท</span> : <?= $row_pl['st_name'] ?></p>
-                                            <p><span class="badge badge-secondary">ประเลขที่ใบเสร็จเภท</span> : <?= $row_pl['pl_bill_number'] ?></p>
+                                            <p><span class="badge badge-secondary">เลขที่ใบเสร็จ</span> : <?= $row_pl['pl_bill_number'] ?></p>
                                             <p><span class="badge badge-secondary">เลขที่กำกับภาษี</span> : <?= $row_pl['pl_tax_number'] ?></p>
                                             <p><span class="badge badge-secondary">วันที่ทำรายการ</span> : <?= date('Y-m-d -- H:i:s', strtotime($row_pl['pl_date'])) ?></p>
                                             <p><span class="badge badge-secondary">รายละเอียด</span> : <?= $row_pl['pl_detail'] ?></p>
@@ -99,132 +100,144 @@ $row_pl = mysqli_fetch_array($result);
                                             <!-- <p>รายละเอียด : <?= $row_pl['pl_detail'] ?></p> -->
                                         <?php
                                         } ?>
-                                    </font> 
+                                    </font>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <br>
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">ข้อมูลการการจัดการอะไหล่</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>ลำดับ</th>
-                                            <th>รูปภาพ</th>
-                                            <th>ID</th>
-                                            <th>Brand</th>
-                                            <th>Modal</th>
-                                            <th>Number MD</th>
-                                            <th>จำนวนที่ทำรายการ</th>
+                    <hr>
+                    <br>
+                    <div class="accordion" id="uniqueAccordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="uniqueHeadingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#uniqueCollapseOne" aria-expanded="true" aria-controls="uniqueCollapseOne">
+                                    <!-- ข้อมูลการการจัดการอะไหล่ -->
+                                    <h4>ข้อมูลการการจัดการอะไหล่</h4>
+                                </button>
+                            </h2>
+                            <div id="uniqueCollapseOne" class="accordion-collapse collapse show" aria-labelledby="uniqueHeadingOne" data-bs-parent="#uniqueAccordionExample">
+                                <div class="accordion-body">
+                                    <!-- DataTales Example -->
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header py-3">
+                                            <h6 class="m-0 font-weight-bold text-primary">ข้อมูลการการจัดการอะไหล่</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ลำดับ</th>
+                                                            <th>รูปภาพ</th>
+                                                            <th>ID</th>
+                                                            <th>Brand</th>
+                                                            <th>Modal</th>
+                                                            <th>Number MD</th>
+                                                            <th>จำนวนที่ทำรายการ</th>
 
-                                            <!-- <th>ลบ</th> -->
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        $sql = "SELECT * FROM `parts_log_detail` 
+                                                            <!-- <th>ลบ</th> -->
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php
+                                                        $sql = "SELECT * FROM `parts_log_detail` 
                                                 LEFT JOIN parts ON parts_log_detail.p_id = parts.p_id
                                                 WHERE parts_log_detail.pl_id = '$pl_id' ORDER BY pl_id  DESC";
-                                        $result = mysqli_query($conn, $sql);
-                                        $i = 0;
-                                        while ($row = mysqli_fetch_array($result)) {
-                                            $pl_id = $row['pl_id'];
-                                            $i++;
-                                        ?>
-                                            <tr>
-                                                <td><?php
-                                                    if ($i == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $i;
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td width="120px">
-                                                    <?php
-                                                    if ($row['p_pic'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                    ?>
-                                                        <img src="../<?= $row['p_pic']  ?>" alt="" width="100%" style="border-radius:20%">
-                                                    <?php
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    $sql_type = "SELECT * FROM `stock_type` 
+                                                        $result = mysqli_query($conn, $sql);
+                                                        $i = 0;
+                                                        while ($row = mysqli_fetch_array($result)) {
+                                                            $pl_id = $row['pl_id'];
+                                                            $i++;
+                                                        ?>
+                                                            <tr>
+                                                                <td><?php
+                                                                    if ($i == NULL) {
+                                                                        echo "-";
+                                                                    } else {
+                                                                        echo $i;
+                                                                    }
+                                                                    ?>
+                                                                </td>
+                                                                <td width="120px">
+                                                                    <?php
+                                                                    if ($row['p_pic'] == NULL) {
+                                                                        echo "-";
+                                                                    } else {
+                                                                    ?>
+                                                                        <img src="../<?= $row['p_pic']  ?>" alt="" width="100%" style="border-radius:20%">
+                                                                    <?php
+                                                                    }
+                                                                    ?>
+                                                                </td>
+                                                                <td>
+                                                                    <?php
+                                                                    $sql_type = "SELECT * FROM `stock_type` 
                                                                 LEFT JOIN parts_log ON parts_log.st_id = stock_type.st_id
                                                                 WHERE parts_log.pl_id = '$pl_id' AND stock_type.del_flg = 0";
-                                                    $result_type = mysqli_query($conn, $sql_type);
-                                                    $row_type = mysqli_fetch_array($result_type);
-                                                    if ($row['p_id'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['p_id'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    if ($row['p_brand'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        if ($row['p_brand'] > 0) {
-                                                            echo $row['p_brand'];
-                                                        } else {
-                                                            echo '0';
-                                                        }
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    if ($row['p_model'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        if ($row['p_model'] > 0) {
-                                                            echo $row['p_model'];
-                                                        } else {
-                                                            echo '0';
-                                                        }
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    if ($row['p_name'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        if ($row['p_name'] > 0) {
-                                                            echo $row['p_name'];
-                                                        } else {
-                                                            echo '0';
-                                                        }
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    if ($row['pl_d_value'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        if ($row['pl_d_value'] > 0) {
-                                                            echo $row['pl_d_value'];
-                                                        } else {
-                                                            echo '0';
-                                                        }
-                                                    }
-                                                    ?>
-                                                </td>
+                                                                    $result_type = mysqli_query($conn, $sql_type);
+                                                                    $row_type = mysqli_fetch_array($result_type);
+                                                                    if ($row['p_id'] == NULL) {
+                                                                        echo "-";
+                                                                    } else {
+                                                                        echo $row['p_id'];
+                                                                    }
+                                                                    ?>
+                                                                </td>
+                                                                <td>
+                                                                    <?php
+                                                                    if ($row['p_brand'] == NULL) {
+                                                                        echo "-";
+                                                                    } else {
+                                                                        if ($row['p_brand'] > 0) {
+                                                                            echo $row['p_brand'];
+                                                                        } else {
+                                                                            echo '0';
+                                                                        }
+                                                                    }
+                                                                    ?>
+                                                                </td>
+                                                                <td>
+                                                                    <?php
+                                                                    if ($row['p_model'] == NULL) {
+                                                                        echo "-";
+                                                                    } else {
+                                                                        if ($row['p_model'] > 0) {
+                                                                            echo $row['p_model'];
+                                                                        } else {
+                                                                            echo '0';
+                                                                        }
+                                                                    }
+                                                                    ?>
+                                                                </td>
+                                                                <td>
+                                                                    <?php
+                                                                    if ($row['p_name'] == NULL) {
+                                                                        echo "-";
+                                                                    } else {
+                                                                        if ($row['p_name'] > 0) {
+                                                                            echo $row['p_name'];
+                                                                        } else {
+                                                                            echo '0';
+                                                                        }
+                                                                    }
+                                                                    ?>
+                                                                </td>
+                                                                <td>
+                                                                    <?php
+                                                                    if ($row['pl_d_value'] == NULL) {
+                                                                        echo "-";
+                                                                    } else {
+                                                                        if ($row['pl_d_value'] > 0) {
+                                                                            echo $row['pl_d_value'];
+                                                                        } else {
+                                                                            echo '0';
+                                                                        }
+                                                                    }
+                                                                    ?>
+                                                                </td>
 
-                                                <!-- <td>
+                                                                <!-- <td>
                                                     <center>
                                                         <a href="action/del_employee.php?id=<?= $row['e_id'] ?>" class="btn btn-danger" onclick="return confirmDelete(event);">ลบ</a>&nbsp; &nbsp;
                                                     </center>
@@ -250,13 +263,19 @@ $row_pl = mysqli_fetch_array($result);
                                                         }
                                                     </script>
                                                 </td> -->
-                                            </tr>
-                                        <?php } ?>
-                                    </tbody>
-                                </table>
+                                                            </tr>
+                                                        <?php } ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+
 
                 </div>
                 <!-- /.container-fluid -->
