@@ -317,18 +317,35 @@ $get_add_price = $row1['get_add_price'];
                         <div class="row">
                             <div class="col-12">
                                 <center>
-                                    <h5>เลือกวิธีการจัดส่งที่ท่านต้องการ</h5>
+                                    <!-- <h5>เลือกวิธีการจัดส่งที่ท่านต้องการ</h5> -->
                                 </center>
                                 <br>
                             </div>
-                            <div class="col-6 d-flex justify-content-end">
+                            <?php 
+                            $sql_c = "SELECT * FROM get_repair WHERE get_r_id = '$id_g' AND del_flg = '0'";
+                            $result_c = mysqli_query($conn ,$sql_c);
+                            $row_c = mysqli_fetch_array($result_c);
+                            
+                            if ($row_c['get_deli'] == 0) { ?>
+                                <div class="col-6 d-flex justify-content-start">
+                                    <a class="btn btn-success" onclick="showAddress()" id="add_button_pay">ดูรายละเอียดของท่าน</a>
+                                    <a class="btn btn-danger" id="cancel_pay_button" style="display:none" onclick="showPayClose()">ยกเลิก</a>
+                                </div> <?php
+                                    } else { ?>
+                                <div class="col-6 d-flex justify-content-end">
+                                    <a class="btn btn-primary" id="non_add_button" onclick="showPay()">ดูรายละเอียดของท่าน</a>
+                                    <a class="btn btn-danger" id="cancel_add_button" style="display:none" onclick="showAddressClose()">ยกเลิก</a>
+                                </div>
+                            <?php
+                                    } ?>
+                            <!-- <div class="col-6 d-flex justify-content-end">
                                 <a class="btn btn-primary" id="non_add_button" onclick="showPay()">มารับที่ร้าน</a>
                                 <a class="btn btn-danger" id="cancel_add_button" style="display:none" onclick="showAddressClose()">ยกเลิก</a>
                             </div>
                             <div class="col-6 d-flex justify-content-start">
                                 <a class="btn btn-success" onclick="showAddress()" id="add_button_pay">จัดส่งผ่านไปรษณีย์</a>
                                 <a class="btn btn-danger" id="cancel_pay_button" style="display:none" onclick="showPayClose()">ยกเลิก</a>
-                            </div>
+                            </div> -->
                         </div>
 
                         <br>

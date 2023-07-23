@@ -154,7 +154,7 @@
      <br>
      <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
      <br>
-     <form id="offers_status_id" action="action/status/insert_new_part.php" method="POST" enctype="multipart/form-data">
+     <form id="offers_status_id" action="action/status/insert_new_part_non_del.php" method="POST" enctype="multipart/form-data">
          <div>
              <br>
              <label for="basic-url" class="form-label">กรุณาเลือกอุปกรณ์ที่ต้องการทำการซ่อม</label>

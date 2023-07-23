@@ -247,7 +247,7 @@ if (!isset($_SESSION['role_id'])) {
                                     if ($row['status_id'] == 6) {
                                         $get_r_id = $row['get_r_id'];
                                         $carry_out_id = $row['status_id'];
-                                        $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = '$get_r_id' AND status_id = 6 ORDER BY rs_date_time DESC;";
+                                        $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = '$get_r_id' AND status_id = 6 AND del_flg = 0 ORDER BY rs_date_time DESC;";
                                         $result_carry_out = mysqli_query($conn, $sql_cary_out);
                                         $row_carry_out = mysqli_fetch_array($result_carry_out);
 
@@ -300,10 +300,16 @@ if (!isset($_SESSION['role_id'])) {
                                 $count_get_no = 0;
 
                                 $sql_get = "SELECT * FROM get_detail 
+                                LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
                                                         LEFT JOIN repair ON repair.r_id = get_detail.r_id
                                                         WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
-                                $result_count = mysqli_query($conn, $sql_get);
+                                $sql_get_count_track = "SELECT * FROM get_detail 
+                                                         LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                                                 LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                                                 WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
+                                $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
                                 $result_get = mysqli_query($conn, $sql_get);
+                                $row_get_count_track = mysqli_fetch_array($result_get_count_track);
                                 while ($row_get = mysqli_fetch_array($result_get)) {
                                     $count_get_no++;
                                 ?>
@@ -311,6 +317,12 @@ if (!isset($_SESSION['role_id'])) {
                                     <h4 style="text-align:start" id="body_text"> <span class="btn btn-primary">รายการที่ <?= $count_get_no ?></span> : <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?> | Model : <?= $row_get['r_number_model'] ?> | Serial Number : <?= $row_get['r_serial_number'] ?> </h4>
                                     <hr>
                                     <div style="margin-left: 40px; ">
+                                        <?php if ($row_get['get_t_id'] != NULL) { ?><button class="btn btn-outline-primary">หมายเลขพัสดุ</button>
+                                            <br>
+                                            <?= $row_get['t_parcel'] ?>
+                                            <br>
+                                            <hr><?php  }
+                                                ?>
                                         <button class="btn btn-outline-primary">รายละเอียด</button>
                                         <br>
                                         <?= $row_get['get_d_detail'] ?>
@@ -462,18 +474,18 @@ if (!isset($_SESSION['role_id'])) {
                                 <br>
                             <?php
                             } else if ($row['rs_conf'] != NULL && $row['rs_conf'] == 0 && $row['status_id'] == 4) {
-                                ?>
-                                    <div class="alert alert-danger" role="alert">
-                                        <center>
-                                            <h4>ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
-                                        </center>
-                                    </div>
+                            ?>
+                                <div class="alert alert-danger" role="alert">
                                     <center>
-                                        <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะไปที่สมาชิก ***</p>
-                                    </center>ะเงินแล้ว
-                                    <br>
-                                <?php
-                                }else if (isset($row_s['rs_cancel_detail']) != NULL) {
+                                        <h4>ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
+                                    </center>
+                                </div>
+                                <center>
+                                    <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะไปที่สมาชิก ***</p>
+                                </center>ะเงินแล้ว
+                                <br>
+                            <?php
+                            } else if (isset($row_s['rs_cancel_detail']) != NULL) {
                             ?>
                                 <div class="alert alert-danger" role="alert">
                                     <center>
@@ -640,6 +652,10 @@ if (!isset($_SESSION['role_id'])) {
                                 <?php } else { ?>
                                     <span class="btn btn-info mb-4 ml-4">#จัดส่งโดยบริษัทขนส่ง</span>
                                 <?php } ?>
+                                <?php if ($row_get_count_track['get_t_id'] != NULL) { ?>
+                                    <a id="bounce-item" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="true" aria-controls="collapseOne">
+                                        <span class="btn btn-warning mb-4 ml-4"><i class="fa fa-check"></i>สมาชิกทำการส่งหมายเลขพัสดุ</span><?php  }
+                                                                                                                                            ?></a>
                             </p>
 
 
@@ -688,29 +704,29 @@ if (!isset($_SESSION['role_id'])) {
                                 <label for="inputPassword" class="col-sm-1 col-form-label">บริษัท</label>
                                 <div class="col-sm-4">
                                     <!-- <input type="text" class="form-control" id="inputPassword" placeholder="ไม่มีข้อมูล" value="<?php
-                                                                                                                                if ($row['com_id'] == NULL) {
-                                                                                                                                    echo "ไม่มีข้อมูล";
-                                                                                                                                } else {
-                                                                                                                                    $com_id = $row['com_id'];
-                                                                                                                                    $sql_com = "SELECT * FROM company WHERE com_id = '$com_id'";
-                                                                                                                                    $result_com = mysqli_query($conn, $sql_com);
-                                                                                                                                    $row_com = mysqli_fetch_array($result_com);
+                                                                                                                                        if ($row['com_id'] == NULL) {
+                                                                                                                                            echo "ไม่มีข้อมูล";
+                                                                                                                                        } else {
+                                                                                                                                            $com_id = $row['com_id'];
+                                                                                                                                            $sql_com = "SELECT * FROM company WHERE com_id = '$com_id'";
+                                                                                                                                            $result_com = mysqli_query($conn, $sql_com);
+                                                                                                                                            $row_com = mysqli_fetch_array($result_com);
 
-                                                                                                                                    echo $row_com['com_name'];
-                                                                                                                                }
-                                                                                                                                ?>" disabled="disabled"> -->
+                                                                                                                                            echo $row_com['com_name'];
+                                                                                                                                        }
+                                                                                                                                        ?>" disabled="disabled"> -->
                                     <p class="col-form-label"><?php
-                                                                                                                                if ($row['com_id'] == NULL) {
-                                                                                                                                    echo "ไม่มีข้อมูล";
-                                                                                                                                } else {
-                                                                                                                                    $com_id = $row['com_id'];
-                                                                                                                                    $sql_com = "SELECT * FROM company WHERE com_id = '$com_id'";
-                                                                                                                                    $result_com = mysqli_query($conn, $sql_com);
-                                                                                                                                    $row_com = mysqli_fetch_array($result_com);
+                                                                if ($row['com_id'] == NULL) {
+                                                                    echo "ไม่มีข้อมูล";
+                                                                } else {
+                                                                    $com_id = $row['com_id'];
+                                                                    $sql_com = "SELECT * FROM company WHERE com_id = '$com_id'";
+                                                                    $result_com = mysqli_query($conn, $sql_com);
+                                                                    $row_com = mysqli_fetch_array($result_com);
 
-                                                                                                                                    echo $row_com['com_name'];
-                                                                                                                                }
-                                                                                                                                ?></p>
+                                                                    echo $row_com['com_name'];
+                                                                }
+                                                                ?></p>
                                 </div>
                             </div>
                             <hr>
@@ -720,7 +736,7 @@ if (!isset($_SESSION['role_id'])) {
                                 <?php if ($row['get_add'] != NULL) {
                                 ?>
                                     <div class="row">
-                                    <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">จังหวัด :</label>
+                                        <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">จังหวัด :</label>
                                         <div class="col">
                                             <!-- <input type="text" class="form-control" value="<?= $row_p[0] ?>" readonly> -->
                                             <p class="col-form-label"><?= $row_p[0] ?></p>
@@ -738,22 +754,22 @@ if (!isset($_SESSION['role_id'])) {
                                     </div>
                                     <br>
                                     <!-- <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?php
-                                                                                                                                    if ($row['get_add'] == NULL) {
-                                                                                                                                        echo "ไม่มีข้อมูล";
-                                                                                                                                    } else {
+                                                                                                                                        if ($row['get_add'] == NULL) {
+                                                                                                                                            echo "ไม่มีข้อมูล";
+                                                                                                                                        } else {
 
-                                                                                                                                        echo $obj->description;
-                                                                                                                                    }
-                                                                                                                                    ?>
+                                                                                                                                            echo $obj->description;
+                                                                                                                                        }
+                                                                                                                                        ?>
                                 </textarea> -->
-                                <p class="col-form-label"><?php
-                                                                                                                                    if ($row['get_add'] == NULL) {
-                                                                                                                                        echo "ไม่มีข้อมูล";
-                                                                                                                                    } else {
+                                    <p class="col-form-label"><?php
+                                                                if ($row['get_add'] == NULL) {
+                                                                    echo "ไม่มีข้อมูล";
+                                                                } else {
 
-                                                                                                                                        echo $obj->description;
-                                                                                                                                    }
-                                                                                                                                    ?></p>
+                                                                    echo $obj->description;
+                                                                }
+                                                                ?></p>
                                 <?php
                                 } else {
                                 ?>
@@ -949,10 +965,11 @@ if (!isset($_SESSION['role_id'])) {
                                     <br>
                                     <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
                                     <br>
-                                    <form id="cancel_status_id" action="action/status/add_cencel_status.php" method="POST" enctype="multipart/form-data">
+                                    <form id="cancel_status_id" action="action/status/status_non_del_part.php" method="POST" enctype="multipart/form-data">
                                         <label for="cancelFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : red"> ปฏิเสธการซ่อม</p> :</label>
                                         <textarea class="form-control" name="rs_detail" id="cancelFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการปฏิเสธการซ่อม"></textarea>
                                         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
+                                        <input type="text" name="status_id" value="11" hidden>
                                         <br>
                                         <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
                                         <hr>
@@ -1083,7 +1100,7 @@ if (!isset($_SESSION['role_id'])) {
                                     <br>
                                     <h1 class="m-0 font-weight-bold text-secondary">รายละเอียด </h1>
                                     <br>
-                                    <form id="detail_status_id" action="action/status/insert_new_part.php" method="POST" enctype="multipart/form-data">
+                                    <form id="detail_status_id" action="action/status/insert_new_part_non_del.php" method="POST" enctype="multipart/form-data">
                                         <div>
                                             <br>
                                             <label for="basic-url" class="form-label">กรุณาเลือกอุปกรณ์ที่ต้องการทำการซ่อม</label>
@@ -1393,13 +1410,29 @@ if (!isset($_SESSION['role_id'])) {
                             } ?>
 
                             <?php
-                            $statusIds = array("4", "17", "5", "19", "6", "7", "8", "9", "13", "10", "24", "20", "25");
+                            $get_r_id;
+                            $sql_check_send = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' And del_flg = '0' And status_id = '19'";
+                            $result_check_send = mysqli_query($conn, $sql_check_send);
+                            $row_check_send = mysqli_fetch_array($result_check_send);
+
+                            $statusIds = array("4", "17", "5", "19", "6", "7", "8", "9", "13", "10", "24", "20", "25", "21");
 
                             if (in_array($row['status_id'], $statusIds)) {
                                 if ($row['rs_conf'] == NULL && !in_array($row['status_id'], ['5', '19', '6', '7', '8', '9', '13', '24', '10', '20', '25'])) {
                                     include('status_option/wait_respond.php');
                                 } elseif ($row['status_id'] == '25') {
                                     include('status_option/pay_check.php');
+                                } elseif ($row['status_id'] == '17' && $row_check_send[0] > 0) {
+                                    $sql_c_conf_send = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' And del_flg = '0' And status_id = '17' And rs_id = '$rs_id' And rs_conf = '1'";
+                                    $result_c_conf_send = mysqli_query($conn, $sql_c_conf_send);
+                                    $row_c_conf_send = mysqli_fetch_array($result_c_conf_send);
+                                    if($row_c_conf_send){
+                                        include('status_option/send_back_conf.php');
+                                    }else{
+                                        include('status_option/send_back.php');
+                                        // echo $rs_id;
+                                    }
+                                    
                                 } elseif ($row['status_id'] == '20') {
                                     include('status_option/refuse_member.php');
                                 } elseif ($row['status_id'] == '13') {

@@ -18,6 +18,7 @@ $get_r_id = $_POST['get_r_id'];
 $rs_detail = $_POST['rs_detail'];
 $status_id = $_POST['status_id'];
 $price_add = $_POST['price_add'];
+$price_check = $_POST['price_check'];
 $e_id = $_SESSION["id"];
 
 if (isset($_POST['get_r_id']) && isset($_POST['rs_detail']) && isset($_POST['status_id']) && isset($_POST['price_add']) && isset($_SESSION["id"])) {
@@ -34,7 +35,7 @@ if (isset($_POST['get_r_id']) && isset($_POST['rs_detail']) && isset($_POST['sta
         $_SESSION["add_data_alert"] = 1;
         header("Location: ../../detail_repair.php?id=$get_r_id");
     } else {
-        $sql_update_detail = "UPDATE get_repair SET get_add_price = '$price_add' WHERE get_r_id = '$get_r_id'";
+        $sql_update_detail = "UPDATE get_repair SET get_add_price = '$price_add' , get_check = '$price_check' WHERE get_r_id = '$get_r_id'";
         $result_update_detail = mysqli_query($conn, $sql_update_detail);
     }
 
@@ -47,8 +48,8 @@ if (isset($_POST['get_r_id']) && isset($_POST['rs_detail']) && isset($_POST['sta
 
     if ($rs_id > 0) {
         $sql_m = "SELECT repair.m_id FROM repair 
-              LEFT JOIN get_repair ON get_repair.r_id = repair.r_id
-              WHERE get_repair.get_r_id = '$get_r_id' AND get_repair.del_flg = '0'";
+                LEFT JOIN get_detail ON get_detail.r_id = repair.r_id
+              WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = '0'";
         $result_m = mysqli_query($conn, $sql_m);
         $row_m = mysqli_fetch_array($result_m);
         $m_id = $row_m['m_id'];
@@ -108,7 +109,7 @@ if (isset($_POST['get_r_id']) && isset($_POST['rs_detail']) && isset($_POST['sta
         $_SESSION["add_data_alert"] = 0;
         header("Location: ../../detail_repair.php?id=$get_r_id");
     }
-}else{
+} else {
     $_SESSION["add_data_alert"] = 1;
     header("Location: ../../detail_repair.php?id=$get_r_id");
 }

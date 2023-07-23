@@ -20,9 +20,11 @@
     cursor: pointer;
     z-index: 9999;
     /* Adjust the z-index value as needed */
+    opacity: 0;
   }
 
   #scrollToTop.visible {
+    display: block;
     opacity: 1;
   }
 </style>
@@ -46,9 +48,11 @@
       document.body.scrollTop > 20 ||
       document.documentElement.scrollTop > 20
     ) {
-      scrollToTopButton.style.display = "block";
+      scrollToTopButton.classList.add("visible");
+      scrollToTopButton.style.opacity = 1;
     } else {
-      scrollToTopButton.style.display = "none";
+      scrollToTopButton.classList.remove("visible");
+      scrollToTopButton.style.opacity = 0;
     }
   }
 
@@ -58,6 +62,7 @@
     document.documentElement.scrollTop = 0;
   }
 </script>
+
 <!-- navbar-->
 <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
   <div class="container">

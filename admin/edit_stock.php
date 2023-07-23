@@ -3,7 +3,7 @@ session_start();
 include('../database/condb.php');
 
 if (!isset($_SESSION['role_id'])) {
-    header('Location:../home.php');
+    header('Location:../index.php');
 }
 
 ?>
@@ -24,6 +24,7 @@ if (!isset($_SESSION['role_id'])) {
 
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Custom styles for this template -->
@@ -189,178 +190,335 @@ if (!isset($_SESSION['role_id'])) {
                                 </div>
 
                                 <?php
-
                                 $sql = "SELECT * FROM parts_type WHERE del_flg = '0' AND p_type_id = '$p_type_id'";
                                 $result = mysqli_query($conn, $sql);
                                 $row = mysqli_fetch_array($result);
                                 ?>
                                 <!-- <p style="color:red">*** ข้อมูลเดิม "<?= $row['p_type_name'] ?>" ***</p> -->
                                 <div class="mb-3 row">
-                                    <label for="staticEmail" class="col-sm-1 col-form-label">รหัสอะไหล่</label>
-
-                                    <div class="col-sm-4">
-                                        <!-- <label for="basic-url" class="form-label">รหัสสมาชิก</label> -->
-                                        <input type="text" name="p_brand" class="form-control" id="brandInput" onclick="openModal('brandInput')" placeholder="ค้นหาอะไหล่">
-                                        <input type="text" name="p_id" class="form-control" id="idInput" onclick="openModal('idInput')" placeholder="ค้นหาอะไหล่" style="display: none;">
-                                        <div id="myModal" class="modal">
-                                            <div class="modal-overlay" id="myModal">
-                                                <div class="modal-content">
-                                                    <button class="close-button" onclick="closeModal()">&times;</button>
-                                                    <label for="tel">รายการอะไหล่ <p style="color: red; display: inline;">*ส่งค่าเป็นรหัสอะไหล่</p></label>
-                                                    <input type="text" id="searchInput" oninput="searchFunction()" placeholder="Search...">
-                                                    <ul id="myList"></ul>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <?php
-                                        $sql1 = "SELECT * FROM parts WHERE del_flg = 0";
-                                        $result1 = mysqli_query($conn, $sql1);
-                                        $data = mysqli_fetch_all($result1, MYSQLI_ASSOC);
-                                        ?>
-
-                                        <script>
-                                            var brandInput = document.getElementById("brandInput");
-                                            var idInput = document.getElementById("idInput");
-                                            var modal = document.getElementById("myModal");
-                                            var searchInput = document.getElementById("searchInput");
-                                            var myList = document.getElementById("myList");
-                                            var data = <?php echo json_encode($data); ?>;
-
-                                            function openModal(inputId) {
-                                                modal.style.display = "block";
-                                                searchInput.value = "";
-                                                populateList(data);
-                                                searchInput.focus();
-                                                if (inputId === "brandInput") {
-                                                    searchInput.setAttribute("data-target", "brandInput");
-                                                } else if (inputId === "idInput") {
-                                                    searchInput.setAttribute("data-target", "idInput");
-                                                }
-                                            }
-
-                                            function closeModal() {
-                                                modal.style.display = "none";
-                                            }
-
-                                            function selectItem(event) {
-                                                var selectedValue = event.target.textContent;
-                                                var m_id = selectedValue.split(" - ")[0]; // Extract m_id from the selected value
-                                                var p_brand = selectedValue.split(" - ")[1]; // Extract p_brand from the selected value
-                                                var targetInput = searchInput.getAttribute("data-target");
-                                                if (targetInput === "brandInput") {
-                                                    brandInput.value = p_brand;
-                                                    brandInput.placeholder = p_brand;
-                                                    idInput.value = m_id;
-                                                } else if (targetInput === "idInput") {
-                                                    idInput.value = m_id;
-                                                    idInput.placeholder = p_brand;
-                                                    brandInput.value = p_brand;
-                                                }
-                                                closeModal();
-                                            }
-
-                                            function populateList(items) {
-                                                myList.innerHTML = "";
-
-                                                for (var i = 0; i < items.length; i++) {
-                                                    var li = document.createElement("li");
-                                                    li.textContent = items[i].p_id + " - " + items[i].p_brand + " " + items[i].p_model;
-                                                    li.addEventListener("click", selectItem);
-                                                    myList.appendChild(li);
-                                                }
-                                            }
-
-                                            function searchFunction() {
-                                                var searchTerm = searchInput.value.toLowerCase();
-                                                var filteredData = data.filter(function(item) {
-                                                    var fullName = item.p_brand.toLowerCase() + " " + item.p_model.toLowerCase();
-                                                    return (
-                                                        item.p_id.toString().includes(searchTerm) ||
-                                                        fullName.includes(searchTerm)
-                                                    );
-                                                });
-                                                populateList(filteredData);
-                                            }
-                                        </script>
-                                    </div>
-
-                                    <label for="staticEmail" class="col-sm-1 col-form-label">ชื่อประเภท</label>
-                                    <div class="col-sm-4">
-                                        <input type="number" class="form-control" name="unit" id="unitInput" placeholder="กรุณากรอกจำนวนที่ต้องการเพิ่ม">
-                                        <span id="errorSpan" style="color: red; display: none;">ค่าต้องไม่น้อยกว่า 0</span>
-
-                                        <script>
-                                            var unitInput = document.getElementById("unitInput");
-                                            var errorSpan = document.getElementById("errorSpan");
-                                            var form = document.querySelector("form"); // Replace "form" with the ID or class of your form
-
-                                            form.addEventListener("submit", function(event) {
-                                                var unitValue = unitInput.value;
-                                                if (unitValue < 0) {
-                                                    unitInput.classList.add("is-invalid");
-                                                    errorSpan.style.display = "block";
-                                                    event.preventDefault(); // Prevent form submission
-                                                }
-                                            });
-
-                                            unitInput.addEventListener("input", validateUnit);
-
-                                            function validateUnit() {
-                                                var unitValue = unitInput.value;
-                                                if (unitValue < 0) {
-                                                    unitInput.classList.add("is-invalid");
-                                                    errorSpan.style.display = "block";
+                                    <label for="st_id" class="col-sm-1 col-form-label">เลือกวิธีการเพิ่ม</label>
+                                    <div class="col-sm-3">
+                                        <?php if (isset($_SESSION['stock_type'])) {  ?>
+                                            <select class="form-select" name="st_id" id="stockType" aria-label="Default select example" onchange="ShowBillFunc(),EditSession(this,6)" required>
+                                                <?php if ($_SESSION['stock_type'] == NULL) {
+                                                ?>
+                                                    <option selected>เลือกวิธีการเพิ่มอะไหล่</option>
+                                                <?php
                                                 } else {
-                                                    unitInput.classList.remove("is-invalid");
-                                                    errorSpan.style.display = "none";
+                                                    $st_id = $_SESSION['stock_type'];
+                                                    $sql = "SELECT * FROM stock_type WHERE del_flg = '0' AND st_id = '$st_id'";
+                                                    $result = mysqli_query($conn, $sql);
+                                                    $row_st_session = mysqli_fetch_array($result);
+                                                ?>
+                                                    <option value="<?= $_SESSION['stock_type'] ?>"><?= $row_st_session['st_name'] ?></option>
+                                                <?php
+                                                } ?>
+
+
+                                                <?php
+                                                $st_id = $_SESSION['stock_type'];
+                                                $sql = "SELECT * FROM stock_type WHERE del_flg = '0' AND st_id <> '$st_id'";
+
+                                                $result = mysqli_query($conn, $sql);
+                                                while ($row_st = mysqli_fetch_array($result)) {
+                                                ?>
+                                                    <option value="<?= $row_st['st_id'] ?>"><?= $row_st['st_name'] ?></option>
+                                                <?php
                                                 }
-                                            }
-                                        </script>
 
-                                        <!-- <input type="text" class="form-control" name="p_type_id" id="staticEmail" value="<?= $row['p_type_id'] ?>" placeholder="กรุณากรอกข้อมูล" hidden> -->
-                                        <span id="part-type-error" style="color:red;display:none;">This Part Type is already exit.</span>
-                                        <script>
-                                            function checkPartType() {
-                                                var p_type = document.getElementById('inputPartType').value;
-                                                var xhttp = new XMLHttpRequest();
-                                                xhttp.onreadystatechange = function() {
-                                                    if (this.readyState == 4 && this.status == 200) {
-                                                        if (this.responseText == 'exists') {
-                                                            document.getElementById('part-type-error').style.display = 'block';
-                                                            document.getElementById('inputPartType').setCustomValidity('มีข้อมูลอยู่แล้ว');
-                                                            document.getElementById('submit-button').disabled = true; // disable the submit button
-                                                        } else {
-                                                            document.getElementById('part-type-error').style.display = 'none';
-                                                            document.getElementById('inputPartType').setCustomValidity('');
-                                                            document.getElementById('submit-button').disabled = false; // enable the submit button
-                                                        }
-                                                    }
-                                                };
-                                                xhttp.open('GET', 'action/check_type_part.php?p_type=' + p_type, true);
-                                                xhttp.send();
-                                            }
-                                        </script>
+                                                ?>
+                                            </select>
+                                        <?php
+                                        } else { ?>
+                                            <!-- <label for="st_id" class="col-sm-1 col-form-label">รหัสอะไหล่</label> -->
+                                            <select class="form-select" name="st_id" id="stockType" aria-label="Default select example" onchange="ShowBillFunc()" required>
+                                                <option selected>เลือกวิธีการเพิ่มอะไหล่</option>
+                                                <?php
+                                                $sql = "SELECT * FROM stock_type WHERE del_flg = '0'";
+                                                $result = mysqli_query($conn, $sql);
+                                                while ($row_st = mysqli_fetch_array($result)) {
+                                                ?>
+                                                    <option value="<?= $row_st['st_id'] ?>"><?= $row_st['st_name'] ?></option>
+                                                <?php
+                                                }
+
+                                                ?>
+                                            </select>
+                                        <?php } ?>
                                     </div>
-                                    <div class="col" id="width_pc">
-                                        <a href="edit_stock.php" class="btn btn-danger" onclick="return showCancellation()">ยกเลิก</a>
-
-                                        <!-- Example CDNs, use appropriate versions and sources -->
-                                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
-
-                                        <a class="btn btn-success" onclick="return showConfirmationSession()">ยืนยัน</a>
-                                    </div>
-
                                 </div>
 
-                            </div>
-                            <div class="text-center pt-4" id="width_pe">
-                                <a href="edit_stock.php" class="btn btn-danger" onclick="return showCancellation()">ยกเลิก</a>
-                                <a class="btn btn-success" onclick="return showConfirmationSession()">ยืนยัน</a>
-                            </div>
-                            <script>
+                                <div class="mb-3 row">
+                                    <?php if ($_SESSION['stock_type'] == 2) {
+                                    ?>
+                                        <div id="DivShowBill" style="display: block;background-color:#F2F2F2">
+                                        <?php
+                                    } else {
+                                        ?>
+                                            <div id="DivShowBill" style="display: none;background-color:#F2F2F2">
+                                            <?php
+                                        } ?>
+                                            <!-- <hr> -->
+                                            <br>
+                                            <p class="alert alert-primary">ที่มาของอุปกรณ์</p>
+                                            <br>
+                                            <!-- Content to display when option is selected -->
+                                            <div class="mb-3 row">
+                                                <label for="pl_bill_number" class="col-md-1 col-form-label">เลขที่ใบเสร็จ</label>
+                                                <div class="col-md-3">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input type="text" onchange="EditSession(this,1)" class="form-control" name="pl_bill_number" id="pl_bill_number" placeholder="กรุณากรอกเลขที่ใบเสร็จ *ไม่จำเป็น" value="<?= $_SESSION['pl_bill_number'] ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div id="billNumberError" style="display: none; color: red;">เลขที่ใบเสร็จนี้มีอยู่ในระบบแล้ว</div>
+                                                </div>
+                                                <label for="pl_tax_number" class="col-md-1 col-form-label">ใบกำกับภาษี</label>
+                                                <div class="col-md-3">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input type="text" onchange="EditSession(this,2)" class="form-control" name="pl_tax_number" id="pl_bill_number" placeholder="กรุณากรอกเลขที่ใบกำกับภาษี *ไม่จำเป็น" value="<?= $_SESSION['pl_tax_number'] ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <label for="pl_date_in" class="col-md-1 col-form-label">วันที่สั่งอุปกรณ์</label>
+
+                                                <div class="col-md-3">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input type="date" onchange="EditSession(this,3)" class="form-control" name="pl_date_in" id="pl_date_in" placeholder="กรุณากรอกวันที่สั่งอุปกรณ์ *ไม่จำเป็น" value="<?= $_SESSION['pl_date_in'] ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="pl_detail" class="col-sm-1 col-form-label">บริษัทที่สั่ง</label>
+                                                <div class="col-md">
+                                                    <?php if (isset($_SESSION['com_p_id']) && $_SESSION['com_p_id'] != NULL) {
+                                                    ?>
+                                                        <select class="form-select" name="com_p_id" aria-label="Default select example" onchange="EditSession(this,5)">
+                                                            <?php if ($_SESSION['stock_type'] == NULL) {
+                                                            ?>
+                                                                <option selected>เลือกวิธีการเพิ่มอะไหล่</option>
+                                                            <?php
+                                                            } else {
+                                                                $com_p_id = $_SESSION['com_p_id'];
+                                                                $sql = "SELECT * FROM company_parts WHERE del_flg = '0' AND com_p_id = '$com_p_id'";
+                                                                $result = mysqli_query($conn, $sql);
+                                                                $row_st_session = mysqli_fetch_array($result);
+                                                            ?>
+                                                                <option value="<?= $_SESSION['com_p_id'] ?>"><?= $row_st_session['com_p_name'] ?></option>
+                                                            <?php
+                                                            }
+                                                            $sql = "SELECT * FROM company_parts WHERE del_flg = '0' AND com_p_id <> '$com_p_id'";
+                                                            $result = mysqli_query($conn, $sql);
+                                                            while ($row_st = mysqli_fetch_array($result)) { ?>
+                                                                <option value="<?= $row_st['com_p_id'] ?>"><?= $row_st['com_p_name'] ?></option>
+                                                            <?php  } ?>
+                                                        </select>
+                                                    <?php
+                                                    } else {
+                                                    ?>
+                                                        <select class="form-select" name="com_p_id" aria-label="Default select example">
+                                                            <option selected>Open this select menu</option>
+                                                            <?php
+                                                            $sql = "SELECT * FROM company_parts WHERE del_flg = '0'";
+                                                            $result = mysqli_query($conn, $sql);
+                                                            while ($row_st = mysqli_fetch_array($result)) { ?>
+                                                                <option value="<?= $row_st['com_p_id'] ?>"><?= $row_st['com_p_name'] ?></option>
+                                                            <?php  } ?>
+                                                        </select>
+                                                    <?php
+                                                    } ?>
+
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="pl_detail" class="col-sm-1 col-form-label">รายละเอียด</label>
+
+                                                <div class="col-md">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <textarea type="text" onchange="EditSession(this,4)" class="form-control" name="pl_detail" id="pl_detail" placeholder="กรุณากรอกรายละเอียด *ไม่จำเป็น" value="<?= $_SESSION['pl_detail'] ?>"><?= $_SESSION['pl_detail'] ?></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <!-- <hr> -->
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 row">
+                                            <p class="alert alert-primary">จำนวนอะไหล่</p>
+                                            <label for="staticEmail" class="col-sm-1 col-form-label">รหัสอะไหล่</label>
+
+                                            <div class="col-sm-4">
+                                                <!-- <label for="basic-url" class="form-label">รหัสสมาชิก</label> -->
+                                                <input type="text" name="p_brand" class="form-control" id="brandInput" onclick="openModal('brandInput')" placeholder="ค้นหาอะไหล่">
+                                                <input type="text" name="p_id" class="form-control" id="idInput" onclick="openModal('idInput')" placeholder="ค้นหาอะไหล่" style="display: none;">
+                                                <div id="myModal" class="modal">
+                                                    <div class="modal-overlay" id="myModal">
+                                                        <div class="modal-content">
+                                                            <button class="close-button" onclick="closeModal()">&times;</button>
+                                                            <label for="tel">รายการอะไหล่ <p style="color: red; display: inline;">*ส่งค่าเป็นรหัสอะไหล่</p></label>
+                                                            <input type="text" id="searchInput" oninput="searchFunction()" placeholder="Search...">
+                                                            <ul id="myList"></ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <?php
+                                                $sql1 = "SELECT * FROM parts WHERE del_flg = 0";
+                                                $result1 = mysqli_query($conn, $sql1);
+                                                $data = mysqli_fetch_all($result1, MYSQLI_ASSOC);
+                                                ?>
+
+                                                <script>
+                                                    var brandInput = document.getElementById("brandInput");
+                                                    var idInput = document.getElementById("idInput");
+                                                    var modal = document.getElementById("myModal");
+                                                    var searchInput = document.getElementById("searchInput");
+                                                    var myList = document.getElementById("myList");
+                                                    var data = <?php echo json_encode($data); ?>;
+
+                                                    function openModal(inputId) {
+                                                        modal.style.display = "block";
+                                                        searchInput.value = "";
+                                                        populateList(data);
+                                                        searchInput.focus();
+                                                        if (inputId === "brandInput") {
+                                                            searchInput.setAttribute("data-target", "brandInput");
+                                                        } else if (inputId === "idInput") {
+                                                            searchInput.setAttribute("data-target", "idInput");
+                                                        }
+                                                    }
+
+                                                    function closeModal() {
+                                                        modal.style.display = "none";
+                                                    }
+
+                                                    function selectItem(event) {
+                                                        var selectedValue = event.target.textContent;
+                                                        var m_id = selectedValue.split(" - ")[0]; // Extract m_id from the selected value
+                                                        var p_brand = selectedValue.split(" - ")[1]; // Extract p_brand from the selected value
+                                                        var targetInput = searchInput.getAttribute("data-target");
+                                                        if (targetInput === "brandInput") {
+                                                            brandInput.value = p_brand;
+                                                            brandInput.placeholder = p_brand;
+                                                            idInput.value = m_id;
+                                                        } else if (targetInput === "idInput") {
+                                                            idInput.value = m_id;
+                                                            idInput.placeholder = p_brand;
+                                                            brandInput.value = p_brand;
+                                                        }
+                                                        closeModal();
+                                                    }
+
+                                                    function populateList(items) {
+                                                        myList.innerHTML = "";
+
+                                                        for (var i = 0; i < items.length; i++) {
+                                                            var li = document.createElement("li");
+                                                            li.textContent = items[i].p_id + " - " + items[i].p_brand + " " + items[i].p_model;
+                                                            li.addEventListener("click", selectItem);
+                                                            myList.appendChild(li);
+                                                        }
+                                                    }
+
+                                                    function searchFunction() {
+                                                        var searchTerm = searchInput.value.toLowerCase();
+                                                        var filteredData = data.filter(function(item) {
+                                                            var fullName = item.p_brand.toLowerCase() + " " + item.p_model.toLowerCase();
+                                                            return (
+                                                                item.p_id.toString().includes(searchTerm) ||
+                                                                fullName.includes(searchTerm)
+                                                            );
+                                                        });
+                                                        populateList(filteredData);
+                                                    }
+                                                </script>
+                                            </div>
+
+                                            <label for="staticEmail" class="col-sm-1 col-form-label">ชื่อประเภท</label>
+                                            <div class="col-sm-4">
+                                                <input type="number" class="form-control" name="unit" id="unitInput" placeholder="กรุณากรอกจำนวนที่ต้องการเพิ่ม">
+                                                <span id="errorSpan" style="color: red; display: none;">ค่าต้องไม่น้อยกว่า 0</span>
+
+                                                <script>
+                                                    var unitInput = document.getElementById("unitInput");
+                                                    var errorSpan = document.getElementById("errorSpan");
+                                                    var form = document.querySelector("form"); // Replace "form" with the ID or class of your form
+
+                                                    form.addEventListener("submit", function(event) {
+                                                        var unitValue = unitInput.value;
+                                                        if (unitValue < 0) {
+                                                            unitInput.classList.add("is-invalid");
+                                                            errorSpan.style.display = "block";
+                                                            event.preventDefault(); // Prevent form submission
+                                                        }
+                                                    });
+
+                                                    unitInput.addEventListener("input", validateUnit);
+
+                                                    function validateUnit() {
+                                                        var unitValue = unitInput.value;
+                                                        if (unitValue < 0) {
+                                                            unitInput.classList.add("is-invalid");
+                                                            errorSpan.style.display = "block";
+                                                        } else {
+                                                            unitInput.classList.remove("is-invalid");
+                                                            errorSpan.style.display = "none";
+                                                        }
+                                                    }
+                                                </script>
+
+                                                <!-- <input type="text" class="form-control" name="p_type_id" id="staticEmail" value="<?= $row['p_type_id'] ?>" placeholder="กรุณากรอกข้อมูล" hidden> -->
+                                                <span id="part-type-error" style="color:red;display:none;">This Part Type is already exit.</span>
+                                                <script>
+                                                    function checkPartType() {
+                                                        var p_type = document.getElementById('inputPartType').value;
+                                                        var xhttp = new XMLHttpRequest();
+                                                        xhttp.onreadystatechange = function() {
+                                                            if (this.readyState == 4 && this.status == 200) {
+                                                                if (this.responseText == 'exists') {
+                                                                    document.getElementById('part-type-error').style.display = 'block';
+                                                                    document.getElementById('inputPartType').setCustomValidity('มีข้อมูลอยู่แล้ว');
+                                                                    document.getElementById('submit-button').disabled = true; // disable the submit button
+                                                                } else {
+                                                                    document.getElementById('part-type-error').style.display = 'none';
+                                                                    document.getElementById('inputPartType').setCustomValidity('');
+                                                                    document.getElementById('submit-button').disabled = false; // enable the submit button
+                                                                }
+                                                            }
+                                                        };
+                                                        xhttp.open('GET', 'action/check_type_part.php?p_type=' + p_type, true);
+                                                        xhttp.send();
+                                                    }
+                                                </script>
+                                            </div>
+                                            <div class="col" id="width_pc">
+                                                <a href="edit_stock.php" class="btn btn-danger" onclick="return showCancellation()">ยกเลิก</a>
+
+                                                <!-- Example CDNs, use appropriate versions and sources -->
+                                                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                                                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+
+                                                <!-- <button class="btn btn-success" type="submit" 
+                                        onclick="return showConfirmationSession()"
+                                        >ยืนยัน</button> -->
+
+                                                <button class="btn btn-success" type="submit">ยืนยัน</button>
+                                            </div>
+
+                                        </div>
+
+                                </div>
+                                <div class="text-center pt-4" id="width_pe">
+                                    <a href="edit_stock.php" class="btn btn-danger" onclick="return showCancellation()">ยกเลิก</a>
+                                    <a class="btn btn-success" onclick="return showConfirmationSession()">ยืนยัน</a>
+                                </div>
+                                <!-- <script>
                                 function showConfirmationSession() {
                                     Swal.fire({
                                         title: "คุณแน่ใจหรือไม่?",
@@ -379,351 +537,388 @@ if (!isset($_SESSION['role_id'])) {
                                         }
                                     });
                                 }
-                            </script>
+                            </script> -->
 
-                    </div>
-                    </form>
-                    <br>
-                    <br>
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">ข้อมูลที่ท่านต้องการเพิ่ม</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
+                            </div>
+                        </form>
+                        <br>
+                        <br>
+                        <!-- DataTales Example -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">ข้อมูลที่ท่านต้องการเพิ่ม</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
 
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>ลำดับ</th>
-                                            <th>รหัสอะไหล่</th>
-                                            <th>รูปภาพ</th>
-                                            <th>Brand</th>
-                                            <th>Model</th>
-                                            <th>Model Number</th>
-                                            <th>ประเภท</th>
-                                            <th>ราคา</th>
-                                            <th>จำนวน</th>
-                                            <th>ปุ่มดำเนินการ</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                        <?php
-                                        $i = 1;
-                                        while (isset($_SESSION['part_p_id_' . $i])) {
-
-                                            $p_id = $_SESSION['part_p_id_' . $i];
-
-                                            $sql = "SELECT * FROM parts LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id WHERE parts.del_flg = '0' AND parts.p_id = ' $p_id' LIMIT 1";
-                                            $result = mysqli_query($conn, $sql);
-
-                                            $row = mysqli_fetch_array($result);
-                                        ?>
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
                                             <tr>
-                                                <td><?php
-                                                    if ($i == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $i;
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td><?php
-                                                    if ($row['p_id'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['p_id'];
-                                                    }
-                                                    ?>
-                                                </td>
-
-                                                <td><?php
-                                                    if ($row['p_pic'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                    ?>
-                                                        <img src="../<?= $row['p_pic'] ?>" width="50px" alt="Not Found">
-                                                    <?php
-                                                    }
-                                                    ?>
-                                                </td>
-
-
-                                                <td><?php
-                                                    if ($row['p_name'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['p_name'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td><?php
-                                                    if ($row['p_brand'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['p_brand'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td><?php
-                                                    if ($row['p_model'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['p_model'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td><?php
-                                                    if ($row['p_type_name'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['p_type_name'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td><?php
-                                                    if ($row['p_price'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo number_format($row['p_price']);
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td><?php
-                                                    if ($row['p_stock'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                    ?>
-                                                        <center>
-                                                            <form action="action/edit_part_stock.php" method="POST">
-                                                                <input type="text" name="session_value" class="form-control" value="<?= $i ?>" hidden>
-                                                                <div class="row">
-                                                                    <div class="col">
-                                                                        <input type="number" name="unit" class="form-control" value="<?= $_SESSION['part_p_stock_' . $i] ?>" onchange="saveValue(this, <?= $row['p_id'] ?>,<?= $i ?>)">
-                                                                    </div>
-                                                                </div>
-                                                            </form>
-
-                                                            <script>
-                                                                function saveValue(input, pId , SessionID) {
-                                                                    var newValue = input.value;
-                                                                    var xhr = new XMLHttpRequest();
-                                                                    xhr.open("POST", "action/edit_part_stock.php", true);
-                                                                    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                                                                    xhr.onreadystatechange = function() {
-                                                                        if (xhr.readyState === 4 && xhr.status === 200) {
-                                                                            console.log("Value saved successfully!");
-                                                                        }
-                                                                    };
-                                                                    xhr.send("session_value="+SessionID+"&unit=" + newValue + "&p_id=" + pId);
-                                                                }
-                                                            </script>
-                                                        </center>
-                                                    <?php
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <script>
-                                                        function confirmDelete(id) {
-                                                            Swal.fire({
-                                                                title: 'คุณแน่ใจหรือไม่?',
-                                                                text: 'คุณต้องการลบข้อมูลนี้หรือไม่',
-                                                                icon: 'warning',
-                                                                showCancelButton: true,
-                                                                confirmButtonColor: '#dc3545',
-                                                                cancelButtonColor: '#6c757d',
-                                                                confirmButtonText: 'Yes, delete it!'
-                                                            }).then((result) => {
-                                                                if (result.isConfirmed) {
-                                                                    // If confirmed, continue with the deletion process
-                                                                    window.location.href = "action/delete_part.php?id=" + id;
-                                                                }
-                                                            });
-                                                        }
-                                                    </script>
-
-                                                    <center>
-                                                        <button class="btn btn-danger" href="action/delete_part_stock.php?id=<?= $i ?>" onclick="deleteStock('action/delete_part_stock.php?id=<?= $i ?>')">ลบ</button>
-
-                                                    </center>
-                                                </td>
+                                                <th>ลำดับ</th>
+                                                <th>รหัสอะไหล่</th>
+                                                <th>รูปภาพ</th>
+                                                <th>Brand</th>
+                                                <th>Model</th>
+                                                <th>Model Number</th>
+                                                <th>ประเภท</th>
+                                                <th>ราคา</th>
+                                                <th>จำนวน</th>
+                                                <th>ปุ่มดำเนินการ</th>
                                             </tr>
-                                        <?php
-                                            $i++;
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+
+                                            <?php
+                                            $i = 1;
+                                            while (isset($_SESSION['part_p_id_' . $i])) {
+
+                                                $p_id = $_SESSION['part_p_id_' . $i];
+
+                                                $sql = "SELECT * FROM parts LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id WHERE parts.del_flg = '0' AND parts.p_id = ' $p_id' LIMIT 1";
+                                                $result = mysqli_query($conn, $sql);
+
+                                                $row = mysqli_fetch_array($result);
+                                            ?>
+                                                <tr>
+                                                    <td><?php
+                                                        if ($i == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo $i;
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td><?php
+                                                        if ($row['p_id'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo $row['p_id'];
+                                                        }
+                                                        ?>
+                                                    </td>
+
+                                                    <td><?php
+                                                        if ($row['p_pic'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                        ?>
+                                                            <img src="../<?= $row['p_pic'] ?>" width="50px" alt="Not Found">
+                                                        <?php
+                                                        }
+                                                        ?>
+                                                    </td>
+
+
+                                                    <td><?php
+                                                        if ($row['p_name'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo $row['p_name'];
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td><?php
+                                                        if ($row['p_brand'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo $row['p_brand'];
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td><?php
+                                                        if ($row['p_model'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo $row['p_model'];
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td><?php
+                                                        if ($row['p_type_name'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo $row['p_type_name'];
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td><?php
+                                                        if ($row['p_price'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo number_format($row['p_price']);
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td><?php
+                                                        if ($row['p_stock'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                        ?>
+                                                            <center>
+                                                                <form action="action/edit_part_stock.php" method="POST">
+                                                                    <input type="text" name="session_value" class="form-control" value="<?= $i ?>" hidden>
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <input type="number" name="unit" class="form-control" value="<?= $_SESSION['part_p_stock_' . $i] ?>" onchange="saveValue(this, <?= $row['p_id'] ?>,<?= $i ?>)">
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+
+                                                                <script>
+                                                                    function saveValue(input, pId, SessionID) {
+                                                                        var newValue = input.value;
+                                                                        var xhr = new XMLHttpRequest();
+                                                                        xhr.open("POST", "action/edit_part_stock.php", true);
+                                                                        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                                                                        xhr.onreadystatechange = function() {
+                                                                            if (xhr.readyState === 4 && xhr.status === 200) {
+                                                                                console.log("Value saved successfully!");
+                                                                            }
+                                                                        };
+                                                                        xhr.send("session_value=" + SessionID + "&unit=" + newValue + "&p_id=" + pId);
+                                                                    }
+                                                                </script>
+                                                            </center>
+                                                        <?php
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <script>
+                                                            function confirmDelete(id) {
+                                                                Swal.fire({
+                                                                    title: 'คุณแน่ใจหรือไม่?',
+                                                                    text: 'คุณต้องการลบข้อมูลนี้หรือไม่',
+                                                                    icon: 'warning',
+                                                                    showCancelButton: true,
+                                                                    confirmButtonColor: '#dc3545',
+                                                                    cancelButtonColor: '#6c757d',
+                                                                    confirmButtonText: 'Yes, delete it!'
+                                                                }).then((result) => {
+                                                                    if (result.isConfirmed) {
+                                                                        // If confirmed, continue with the deletion process
+                                                                        window.location.href = "action/delete_part.php?id=" + id;
+                                                                    }
+                                                                });
+                                                            }
+                                                        </script>
+
+                                                        <center>
+                                                            <button class="btn btn-danger" href="action/delete_part_stock.php?id=<?= $i ?>" onclick="deleteStock('action/delete_part_stock.php?id=<?= $i ?>')">ลบ</button>
+
+                                                        </center>
+                                                    </td>
+                                                </tr>
+                                            <?php
+                                                $i++;
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
+                        <center>
+                            <p style="color : red">*** โปรดตรวจสอบข้อมูลทั้งหมดให้ครบถ้วนก่อนทำการเพิ่มอะไหล่ ***</p>
+
+                            <button class="btn btn-danger" onclick="deleteStock('action/delete_part_stock.php?delete=1')">ทำการล้างทั้งหมด</button>
+
+                            <button href="action/add_stock_part_db.php" class="btn btn-success" onclick="return showConfirmation('action/add_stock_part_db.php')">เพิ่มจำนวนอะไหล่ไปสู่คลัง</button>
+
+                            <!-- Example CDNs, use appropriate versions and sources -->
+                            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+                            <script>
+                                function showConfirmation(action, message) {
+                                    return Swal.fire({
+                                        title: "คุณแน่ใจหรือไม่?",
+                                        text: message,
+                                        icon: "warning",
+                                        showCancelButton: true,
+                                        confirmButtonColor: "#3085d6",
+                                        cancelButtonColor: "#d33",
+                                        confirmButtonText: "ยืนยัน",
+                                        cancelButtonText: "ยกเลิก"
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            // User confirmed, proceed with the action
+                                            window.location.href = action;
+                                        } else {
+                                            // User canceled, do nothing
+                                            return false;
+                                        }
+                                    });
+                                }
+
+                                function deleteStock(deleteUrl) {
+                                    Swal.fire({
+                                        title: "คุณต้องการลบรายการนี้หรือไม่",
+                                        text: "โปรดตรวจสอบข้อมูล",
+                                        icon: "warning",
+                                        showCancelButton: true,
+                                        confirmButtonColor: "#3085d6",
+                                        cancelButtonColor: "#d33",
+                                        confirmButtonText: "ยืนยัน",
+                                        cancelButtonText: "ยกเลิก"
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            // User confirmed, proceed with the action
+                                            window.location.href = deleteUrl;
+                                        } else {
+                                            // User canceled, do nothing
+                                            return false;
+                                        }
+                                    });
+                                }
+                            </script>
+
+                        </center>
                     </div>
-                    <center>
-                        <p style="color : red">*** โปรดตรวจสอบข้อมูลทั้งหมดให้ครบถ้วนก่อนทำการเพิ่มอะไหล่ ***</p>
+                    <!-- /.container-fluid -->
 
-                        <button class="btn btn-danger" onclick="deleteStock('action/delete_part_stock.php?delete=1')">ทำการล้างทั้งหมด</button>
-
-                        <button href="action/add_stock_part_db.php" class="btn btn-success" onclick="return showConfirmation('action/add_stock_part_db.php')">เพิ่มจำนวนอะไหล่ไปสู่คลัง</button>
-
-                        <!-- Example CDNs, use appropriate versions and sources -->
-                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-                        <script>
-                            function showConfirmation(action, message) {
-                                return Swal.fire({
-                                    title: "คุณแน่ใจหรือไม่?",
-                                    text: message,
-                                    icon: "warning",
-                                    showCancelButton: true,
-                                    confirmButtonColor: "#3085d6",
-                                    cancelButtonColor: "#d33",
-                                    confirmButtonText: "ยืนยัน",
-                                    cancelButtonText: "ยกเลิก"
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        // User confirmed, proceed with the action
-                                        window.location.href = action;
-                                    } else {
-                                        // User canceled, do nothing
-                                        return false;
-                                    }
-                                });
-                            }
-
-                            function deleteStock(deleteUrl) {
-                                Swal.fire({
-                                    title: "คุณต้องการลบรายการนี้หรือไม่",
-                                    text: "โปรดตรวจสอบข้อมูล",
-                                    icon: "warning",
-                                    showCancelButton: true,
-                                    confirmButtonColor: "#3085d6",
-                                    cancelButtonColor: "#d33",
-                                    confirmButtonText: "ยืนยัน",
-                                    cancelButtonText: "ยกเลิก"
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        // User confirmed, proceed with the action
-                                        window.location.href = deleteUrl;
-                                    } else {
-                                        // User canceled, do nothing
-                                        return false;
-                                    }
-                                });
-                            }
-                        </script>
-
-                    </center>
                 </div>
-                <!-- /.container-fluid -->
+                <!-- End of Main Content -->
+
+                <!-- Footer -->
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span>Copyright &copy; Your Website 2020</span>
+                        </div>
+                    </div>
+                </footer>
+                <!-- End of Footer -->
 
             </div>
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2020</span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
+            <!-- End of Content Wrapper -->
 
         </div>
-        <!-- End of Content Wrapper -->
+        <!-- End of Page Wrapper -->
 
-    </div>
-    <!-- End of Page Wrapper -->
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+        <!-- Logout Modal-->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-primary" href="login.html">Logout</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- Bootstrap core JavaScript-->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+        <!-- Core plugin JavaScript-->
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
+        <!-- Custom scripts for all pages-->
+        <script src="js/sb-admin-2.min.js"></script>
 
-    <!-- Page level plugins -->
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+        <!-- Page level plugins -->
+        <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+        <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-    <!-- Page level custom scripts -->
-    <script src="js/demo/datatables-demo.js"></script>
-    <!-- Sweet Alert Show Start -->
-    <?php
-    if (isset($_SESSION['add_data_alert'])) {
-        if ($_SESSION['add_data_alert'] == 0) {
-            $id = 123; // Replace 123 with the actual ID you want to pass to the deletion action
-    ?>
-            <script>
+        <!-- Page level custom scripts -->
+        <script src="js/demo/datatables-demo.js"></script>
+        <!-- Sweet Alert Show Start -->
+        <?php
+        if (isset($_SESSION['add_data_alert'])) {
+            if ($_SESSION['add_data_alert'] == 0) {
+                $id = 123; // Replace 123 with the actual ID you want to pass to the deletion action
+        ?>
+                <!-- <script>
                 Swal.fire({
                     title: 'ข้อมูลของคุณได้ถูกบันทึกแล้ว',
                     text: 'กด Accept เพื่อออก',
                     icon: 'success',
                     confirmButtonText: 'Accept'
                 });
-            </script>
-        <?php
-            unset($_SESSION['add_data_alert']);
-        } else if ($_SESSION['add_data_alert'] == 1) {
-        ?>
-            <script>
-                Swal.fire({
-                    title: 'ข้อมูลของคุณไม่ได้ถูกบันทึก',
-                    text: 'กด Accept เพื่อออก',
-                    icon: 'error',
-                    confirmButtonText: 'Accept'
-                });
-            </script>
+            </script> -->
+            <?php
+                unset($_SESSION['add_data_alert']);
+            } else if ($_SESSION['add_data_alert'] == 1) {
+            ?>
+                <script>
+                    Swal.fire({
+                        title: 'ข้อมูลของคุณไม่ได้ถูกบันทึก',
+                        text: 'กด Accept เพื่อออก',
+                        icon: 'error',
+                        confirmButtonText: 'Accept'
+                    });
+                </script>
 
-        <?php
-            unset($_SESSION['add_data_alert']);
-        } else if ($_SESSION['add_data_alert'] == 2) {
-        ?>
-            <script>
-                Swal.fire({
-                    title: 'ข้อมูลของคุณได้ถูกลบแล้ว',
-                    text: 'กด Accept เพื่อออก',
-                    icon: 'success',
-                    confirmButtonText: 'Accept'
-                });
-            </script>
-    <?php unset($_SESSION['add_data_alert']);
+            <?php
+                unset($_SESSION['add_data_alert']);
+            } else if ($_SESSION['add_data_alert'] == 2) {
+            ?>
+                <script>
+                    Swal.fire({
+                        title: 'ข้อมูลของคุณได้ถูกลบแล้ว',
+                        text: 'กด Accept เพื่อออก',
+                        icon: 'success',
+                        confirmButtonText: 'Accept'
+                    });
+                </script>
+            <?php unset($_SESSION['add_data_alert']);
+            } else if ($_SESSION['add_data_alert'] == 3) {
+            ?>
+                <script>
+                    Swal.fire({
+                        title: 'มีเลขที่ใบเสร็จ/กำกับภาษีนี้อยู่แล้ว',
+                        text: 'กด Accept เพื่อออก เพื่อทำรายการใหม่',
+                        icon: 'warning',
+                        confirmButtonText: 'Accept'
+                    });
+                </script>
+        <?php unset($_SESSION['add_data_alert']);
+            }
         }
-    }
-    ?>
-    <!-- Sweet Alert Show End -->
+        ?>
+        <!-- Sweet Alert Show End -->
 
+        <script>
+            function ShowBillFunc() {
+                var stockType = document.getElementById("stockType");
+                var selectedOption = stockType.options[stockType.selectedIndex].value;
+                var DivShowBill = document.getElementById("DivShowBill");
 
+                if (selectedOption == 2) {
+                    DivShowBill.style.display = "block";
+                } else {
+                    DivShowBill.style.display = "none";
+                }
+            }
+
+            function EditSession(input, type) {
+                var newValue = input.value;
+                var xhr = new XMLHttpRequest();
+                var url = "action/edit_bill_number.php?type=" + encodeURIComponent(type);
+                xhr.open("POST", url, true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        console.log("Value saved successfully!");
+                    }
+                };
+                xhr.send("data=" + encodeURIComponent(newValue));
+            }
+        </script>
 </body>
 
 </html>

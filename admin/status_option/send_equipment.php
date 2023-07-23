@@ -1,16 +1,27 @@
 <center>
-    <?php
-    $sql = "SELECT * FROM status_type WHERE status_id = '12'";
-    $result = mysqli_query($conn, $sql);
-    $row_q = mysqli_fetch_array($result);
-    ?>
-    <button class="btn btn-danger" style="background-color:<?= $row_q['status_color'] ?>; border : <?= $row_q['status_color'] ?>" onclick="showCancelValue()"><?= $row_q['status_name'] ?></button>
+
+
+
+
 
     <?php
-    $sql = "SELECT * FROM status_type WHERE status_id = '10'";
-    $result = mysqli_query($conn, $sql);
-    $row_q = mysqli_fetch_array($result);
+    $sql_c = "SELECT * FROM get_repair WHERE get_r_id = '$get_r_id' AND del_flg = '0'";
+    $result_c = mysqli_query($conn, $sql_c);
+    $row_c = mysqli_fetch_array($result_c);
+
+    if ($row_c['get_deli'] == 0) {
+
+        $sql = "SELECT * FROM status_type WHERE status_id = '12'";
+        $result = mysqli_query($conn, $sql);
+        $row_q = mysqli_fetch_array($result);
     ?>
+        <button class="btn btn-danger" style="background-color:<?= $row_q['status_color'] ?>; border : <?= $row_q['status_color'] ?>" onclick="showCancelValue()"><?= $row_q['status_name'] ?></button>
+
+    <?php } else {
+        $sql = "SELECT * FROM status_type WHERE status_id = '10'";
+        $result = mysqli_query($conn, $sql);
+        $row_q = mysqli_fetch_array($result);
+    } ?>
     <button class="btn btn-danger" style="background-color:<?= $row_q['status_color'] ?>; border : <?= $row_q['status_color'] ?>" onclick="showCancelValue()"><?= $row_q['status_name'] ?></button>
 
     <?php
