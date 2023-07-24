@@ -46,7 +46,7 @@ if ($status_id == 17) {
                 $rd_id = $row_ch['rd_id'];
                 $p_id = $row_ch['p_id'];
                 $rd_value_parts = $row_ch['rd_value_parts'];
-                $pu_id ;
+                $pu_id;
 
                 // Update parts stock in the parts table
                 $sql_u = "UPDATE `parts` SET `p_stock` = `p_stock` + '$rd_value_parts', `p_date_update` = NOW() WHERE `p_id` = '$p_id'";
@@ -63,7 +63,7 @@ if ($status_id == 17) {
                         $result_check_pu = mysqli_query($conn, $sql_check_pu);
                         if (mysqli_num_rows($result_check_pu) == 0) {
                             // If it does not already have data, insert into parts_use table
-                            $sql_e = "INSERT INTO parts_use (rs_id, pu_date) VALUES ('$rs_id', NOW())";
+                            $sql_e = "INSERT INTO parts_use (rs_id, pu_date,st_id,e_id) VALUES ('$rs_id', NOW(),'4','$e_id')";
                             $result_e = mysqli_query($conn, $sql_e);
                             $pu_id = mysqli_insert_id($conn);
                         } else {
@@ -79,8 +79,6 @@ if ($status_id == 17) {
             }
         }
     }
-
-
 
     $sql_c = "SELECT * FROM repair_status 
                 LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
@@ -133,8 +131,6 @@ if ($status_id == 17) {
         }
     }
 
-
-
     //    ตัดของออกจาก Stock หลังจากยืนยัน
     $sql_check_p = "SELECT *
                     FROM repair_detail
@@ -156,10 +152,7 @@ if ($status_id == 17) {
         }
     }
     //    ตัดของออกจาก Stock 
-
-
 }
-
 
 $sql_1 = "SELECT * FROM get_detail  WHERE get_r_id = '$get_r_id' AND del_flg = 0";
 
@@ -203,13 +196,12 @@ if ($status_id != 17 && $status_id != 5) {
 }
 
 if ($row[0] > 0) {
+
     // if it already has data
     echo $row[0];
     $_SESSION["add_data_alert"] = 1;
     header("Location: ../../detail_repair.php?id=$get_r_id");
 } else {
-
-
 
     // if it does not already have data
     $sql_e = "INSERT INTO repair_status (get_r_id, rs_detail, rs_date_time, status_id, e_id)
