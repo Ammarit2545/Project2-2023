@@ -15,7 +15,7 @@ $e_id = $_SESSION["id"];
 
 $sql = "SELECT * FROM repair_status 
         LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
-        WHERE repair_status.get_r_id = '$get_r_id' AND repair_status.rs_detail = '$rs_detail' AND repair_status.status_id = '$status_id'";
+        WHERE repair_status.get_r_id = '$get_r_id' AND repair_status.rs_detail = '$rs_detail' AND repair_status.status_id = '$status_id' AND repair_status.del_flg = '0'";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
@@ -54,9 +54,9 @@ if ($row[0] > 0) {
                     $sql_update_part = "UPDATE parts SET p_stock = p_stock + $value_parts WHERE p_id = '$p_id'";
                     $result_update_part = mysqli_query($conn, $sql_update_part);
                 }
-            }else{
+            } else {
                 $sql_update_part = "UPDATE parts SET p_stock = p_stock + $value_parts WHERE p_id = '$p_id'";
-                    $result_update_part = mysqli_query($conn, $sql_update_part);
+                $result_update_part = mysqli_query($conn, $sql_update_part);
             }
         }
 
@@ -77,7 +77,8 @@ if ($row[0] > 0) {
 
     if ($rs_id > 0) {
         $sql_m = "SELECT repair.m_id FROM repair 
-                  LEFT JOIN get_repair ON get_repair.r_id = repair.r_id
+                  LEFT JOIN get_detail ON get_detail.r_id = repair.r_id
+                  LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
                   WHERE get_repair.get_r_id = '$get_r_id' AND get_repair.del_flg = '0'";
         $result_m = mysqli_query($conn, $sql_m);
         $row_m = mysqli_fetch_array($result_m);

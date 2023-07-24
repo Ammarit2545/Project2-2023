@@ -80,11 +80,11 @@ $result = mysqli_query($conn, $sql);
 if ($result) {
     if ($row_c['p_stock'] < $p_stock) {
         $p_stock_c = $p_stock - $row_c['p_stock'];
-        $sql = "INSERT INTO `parts_log` (`p_id`, `pl_value`, `pl_date`, `e_id`, `pl_type`) VALUES ('$p_id', '$p_stock_c', NOW(), '$id', 'plus')";
+        $sql = "INSERT INTO `parts_log` (`p_id`, `pl_value`, `pl_date`, `e_id`, `st_id`) VALUES ('$p_id', '$p_stock_c', NOW(), '$id', 'plus')";
         $result = mysqli_query($conn, $sql);
     } elseif ($row_c['p_stock'] > $p_stock) {
         $p_stock_c = $row_c['p_stock'] -  $p_stock;
-        $sql = "INSERT INTO `parts_log` (`p_id`, `pl_value`, `pl_date`, `e_id`, `pl_type`) VALUES ('$p_id', '$p_stock_c', NOW(), '$id', 'minus')";
+        $sql = "INSERT INTO `parts_log` (`p_id`, `pl_value`, `pl_date`, `e_id`, `st_id`) VALUES ('$p_id', '$p_stock_c', NOW(), '$id', 'minus')";
         $result = mysqli_query($conn, $sql);
     }
 }

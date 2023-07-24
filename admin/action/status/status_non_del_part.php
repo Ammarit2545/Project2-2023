@@ -28,6 +28,17 @@ if (isset($_POST['get_add_price']) && isset($_POST['get_wages'])) {
     $result = mysqli_query($conn, $sql);
 }
 
+
+
+// if($status_id==19 ){
+//     $sql_c_date = "SELECT get_date_conf FROM `get_repair` WHERE get_r_id = '$get_r_id'";
+//     $result_c_date = mysqli_query($conn, $sql_c_date);
+//     $row_c_date = mysqli_fetch_array($result_c_date);
+//     if($row_c_date['get_date_conf'] == NULL){
+
+//     }
+// }
+
 $sql = "SELECT * FROM repair_status 
         LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
         WHERE repair_status.get_r_id = '$get_r_id' AND repair_status.rs_detail = '$rs_detail' AND repair_status.status_id = '$status_id'";
