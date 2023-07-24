@@ -196,7 +196,7 @@ if (isset($_GET['st_id'])) {
                                                             echo 'คืน';
                                                         }
                                                         else {
-                                                            echo 'ลบ';
+                                                            echo 'ใช้';
                                                         }
                                                     }
                                                     ?>
