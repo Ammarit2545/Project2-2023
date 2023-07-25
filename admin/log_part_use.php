@@ -258,7 +258,7 @@ if (isset($_GET['st_id'])) {
                                                     ?>
                                                 </td>
                                                 <td>
-                                                    <a href="parts_log_detail.php?pl_id=<?= $pl_id ?>" class="btn btn-info">รายละเอียด</a>
+                                                    <a href="log_part_use_detail.php?pu_id=<?= $pu_id ?>" class="btn btn-info">รายละเอียด</a>
                                                 </td>
 
                                                 <!-- <td>
