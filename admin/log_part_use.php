@@ -90,10 +90,12 @@ if (isset($_GET['st_id'])) {
                                     <thead>
                                         <tr>
                                             <th>ลำดับ</th>
+                                            
                                             <th>รหัสการใช้อะไหล่</th>
+                                            <th>วันที่ทำรายการ</th>
                                             <th>หมายเลขการซ่อม</th>
                                             <th>รหัสสถานะ</th>
-                                            <th>วันที่ทำรายการ</th>
+                                          
                                             <th>ประเภทที่ทำรายการ</th>
                                             <th>เพิ่ม / ลบ</th>
                                             <th>จำนวนที่ทำรายการ</th>
@@ -147,6 +149,15 @@ if (isset($_GET['st_id'])) {
                                                     }
                                                     ?>
                                                 </td>
+                                                <td>
+                                                    <?php
+                                                    if ($row['pu_date'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $formattedDate = date("Y-m-d H:i:s", strtotime($row['pu_date']));
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <td><?php
                                                     if ($row['pu_id'] == NULL) {
                                                         echo "-";
@@ -168,15 +179,6 @@ if (isset($_GET['st_id'])) {
                                                         echo "-";
                                                     } else {
                                                         echo $row['rs_id'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    if ($row['pu_date'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $formattedDate = date("Y-m-d H:i:s", strtotime($row['pu_date']));
                                                     }
                                                     ?>
                                                 </td>

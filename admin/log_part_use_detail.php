@@ -88,9 +88,16 @@ $row_pu = mysqli_fetch_array($result);
                                         <br>
                                         <?php
                                         // if else of word Not NULL 
-                                        if ($row_pu['st_name'] != NULL) { ?>
-                                            <p><span class="badge badge-secondary">ประเภท</span> : <?= $row_pu['st_name'] ?></p>
+                                        if ($row_pu['st_name'] != NULL) { 
+                                            if($row_pu['st_type'] == 0){
+                                                ?>
+                                                <p><span class="badge badge-secondary">ประเภท</span> : <span class="btn btn-danger"><?= $row_pu['st_name'] ?></span></p>
+                                            <?php 
+                                            }elseif($row_pu['st_type'] == 2){
+                                                ?>
+                                            <p><span class="badge badge-secondary">ประเภท</span> : <span class="btn btn-primary"><?= $row_pu['st_name'] ?></span></p>
                                         <?php  }
+                                        }
                                         if ($row_pu['rs_id'] != NULL) { ?>
                                             <p><span class="badge badge-secondary">รหัสสถานะที่</span> : <?= $row_pu['rs_id'] ?></p>
                                         <?php  }
@@ -98,7 +105,7 @@ $row_pu = mysqli_fetch_array($result);
                                             <p><span class="badge badge-secondary">วันที่ทำรายการ</span> : <?= date('Y-m-d -- H:i:s', strtotime($row_pu['pu_date'])) ?></p>
                                         <?php  }
                                         if ($row_pu['e_id'] != NULL) { ?>
-                                            <p><span class="badge badge-secondary">บุคลากร</span> : <?= '('.$row_pu['e_id'].') '. $row_pu['e_fname'].' '. $row_pu['e_lname'] ?></p>
+                                            <p><span class="badge badge-secondary">บุคลากร</span> : <?= '(' . $row_pu['e_id'] . ') ' . $row_pu['e_fname'] . ' ' . $row_pu['e_lname'] ?></p>
                                         <?php  } ?>
                                     </font>
                                 </div>
