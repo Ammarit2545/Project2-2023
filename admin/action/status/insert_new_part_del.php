@@ -79,6 +79,136 @@ if ($status_id == 17) {
             }
         }
     }
+    
+
+    $sql_c = "SELECT * FROM repair_status 
+                LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
+                WHERE get_repair.get_r_id = '$get_r_id' AND repair_status.del_flg = '0' AND repair_status.status_id = '5' AND get_repair.del_flg = '0';";
+    $result_c = mysqli_query($conn, $sql_c);
+
+    if (mysqli_num_rows($result_c) > 0) {
+
+        // เอาคืนสต๊อก เอาค่าจาก $get_r_id
+        $sql_ch = "SELECT * FROM repair_detail 
+                LEFT JOIN get_detail ON get_detail.get_d_id = repair_detail.get_d_id
+                LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                WHERE get_detail.get_r_id = '$get_r_id' AND repair_detail.del_flg = '0' AND get_repair.del_flg = '0';";
+        $result_ch = mysqli_query($conn, $sql_ch);
+        while ($row_ch = mysqli_fetch_array($result_ch)) {
+            $rd_id = $row_ch['rd_id'];
+            $p_id = $row_ch['p_id'];
+            $rd_value_parts = $row_ch['rd_value_parts'];
+
+            // Update parts stock in the parts table
+            $sql_u = "UPDATE `parts` SET `p_stock` = `p_stock` + '$rd_value_parts', `p_date_update` = NOW() WHERE `p_id` = '$p_id'";
+            $result_u = mysqli_query($conn, $sql_u);
+
+            // Update parts stock in the parts table
+            $sql_u_rd = "UPDATE `repair_detail` SET `del_flg` = `1` WHERE `rd_id` = '$rd_id'";
+            $result_u_rd = mysqli_query($conn, $sql_u_rd);
+        }
+    }
+
+    $sql_c = "SELECT * FROM repair_status 
+    LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
+    WHERE get_repair.get_r_id = '$get_r_id' AND repair_status.del_flg = '0' AND repair_status.status_id = '19' AND get_repair.del_flg = '0';";
+    $result_c = mysqli_query($conn, $sql_c);
+    $row_c_status = mysqli_fetch_array($result_c);
+
+    if ($row_c_status[0] < 0) {
+        // เอาคืนสต๊อก เอาค่าจาก $get_r_id
+        $sql_c = "SELECT * FROM repair_detail 
+            LEFT JOIN get_detail ON get_detail.get_d_id = repair_detail.get_d_id
+            LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+            WHERE get_detail.get_r_id = '$get_r_id' AND repair_detail.del_flg = '0' AND get_repair.del_flg = '0';";
+        $result_c = mysqli_query($conn, $sql_c);
+        while ($row_c = mysqli_fetch_array($result_c)) {
+            $p_id = $row_c['p_id'];
+            $rd_value_parts = $row_c['rd_value_parts'];
+
+            // Update parts stock in the parts table
+            $sql_u = "UPDATE `parts` SET `p_stock` = `p_stock` + '$rd_value_parts', `p_date_update` = NOW() WHERE `p_id` = '$p_id'";
+            $result_u = mysqli_query($conn, $sql_u);
+        }
+    }
+
+    //    ตัดของออกจาก Stock หลังจากยืนยัน
+    $sql_check_p = "SELECT *
+                    FROM repair_detail
+                    LEFT JOIN get_repair ON get_repair.get_r_id = repair_detail.get_r_id
+                    LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
+                    WHERE repair_status.get_r_id = '$get_r_id' AND repair_detail.del_flg = '0';";
+    $result_check_p = mysqli_query($conn, $sql_check_p);
+
+    while ($row_check_part = mysqli_fetch_array($result_check_p)) {
+
+        $rd_id = $row_check_part['rd_id'];
+        $p_id = $row_check_part['p_id'];
+        $value_parts = $row_check_part['rd_value_parts'];
+
+        $sql_update_detail = "UPDATE repair_detail SET del_flg = '1' , rd_update = NOW() WHERE rd_id = '$rd_id'";
+        $result_update_detail = mysqli_query($conn, $sql_update_detail);
+        if ($result_update_detail) {
+            echo $row_check_part['rd_id'];
+        }
+    }
+    //    ตัดของออกจาก Stock 
+}
+if ($status_id == 19) {
+    $sql_c = "SELECT * FROM repair_status 
+    LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
+    WHERE get_repair.get_r_id = '$get_r_id' AND repair_status.del_flg = '0' AND repair_status.status_id = '17' AND get_repair.del_flg = '0';";
+    $result_c = mysqli_query($conn, $sql_c);
+
+    if (mysqli_num_rows($result_c) > 0) {
+        while ($row_c = mysqli_fetch_array($result_c)) {
+            $get_r_id = $row_c['get_r_id'];
+
+            // เอาคืนสต๊อก เอาค่าจาก $get_r_id
+            $sql_ch = "SELECT * FROM repair_detail 
+                    LEFT JOIN get_detail ON get_detail.get_d_id = repair_detail.get_d_id
+                    LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                    WHERE get_detail.get_r_id = '$get_r_id' AND repair_detail.del_flg = '0' AND get_repair.del_flg = '0';";
+            $result_ch = mysqli_query($conn, $sql_ch);
+            while ($row_ch = mysqli_fetch_array($result_ch)) {
+                $rs_id = $row_ch['rs_id'];
+                $rd_id = $row_ch['rd_id'];
+                $p_id = $row_ch['p_id'];
+                $rd_value_parts = $row_ch['rd_value_parts'];
+                $pu_id;
+
+                // Update parts stock in the parts table
+                $sql_u = "UPDATE `parts` SET `p_stock` = `p_stock` + '$rd_value_parts', `p_date_update` = NOW() WHERE `p_id` = '$p_id'";
+                $result_u = mysqli_query($conn, $sql_u);
+
+                if ($result_u) {
+                    // Update the repair_detail table to indicate that the part has been used
+                    $sql_u_rd = "UPDATE `repair_detail` SET `del_flg` = '1' WHERE `rd_id` = '$rd_id'";
+                    $result_u_rd = mysqli_query($conn, $sql_u_rd);
+
+                    if ($result_u_rd) {
+                        // Check if parts_use entry already exists for this repair
+                        $sql_check_pu = "SELECT * FROM parts_use WHERE rs_id = '$rs_id'";
+                        $result_check_pu = mysqli_query($conn, $sql_check_pu);
+                        if (mysqli_num_rows($result_check_pu) == 0) {
+                            // If it does not already have data, insert into parts_use table
+                            $sql_e = "INSERT INTO parts_use (rs_id, pu_date,st_id,e_id) VALUES ('$rs_id', NOW(),'4','$e_id')";
+                            $result_e = mysqli_query($conn, $sql_e);
+                            $pu_id = mysqli_insert_id($conn);
+                        } else {
+                            $row_pu = mysqli_fetch_array($result_check_pu);
+                            $pu_id = $row_pu['pu_id'];
+                        }
+
+                        // Insert data into parts_use table
+                        $sql_e = "INSERT INTO parts_use_detail (pu_id, p_id, pu_value, pu_date) VALUES ('$pu_id', '$p_id', '$rd_value_parts', NOW())";
+                        $result_e = mysqli_query($conn, $sql_e);
+                    }
+                }
+            }
+        }
+    }
+    
 
     $sql_c = "SELECT * FROM repair_status 
                 LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
@@ -154,7 +284,7 @@ if ($status_id == 17) {
     //    ตัดของออกจาก Stock 
 }
 
-$sql_1 = "SELECT * FROM get_detail  WHERE get_r_id = '$get_r_id' AND del_flg = 0";
+$sql_1 = "SELECT * FROM get_detail WHERE get_r_id = '$get_r_id' AND del_flg = 0";
 
 $result_1 = mysqli_query($conn, $sql_1);
 
