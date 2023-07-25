@@ -46,29 +46,75 @@ if ($status_id == 17) {
             // Update parts stock in the parts table
             $sql_u = "UPDATE `parts` SET `p_stock` = `p_stock` + '$rd_value_parts', `p_date_update` = NOW() WHERE `p_id` = '$p_id'";
             $result_u = mysqli_query($conn, $sql_u);
+
+
+            if ($result_u) {
+                // Check if parts_use entry already exists for this repair
+                $sql_check_pu = "SELECT * FROM parts_use WHERE rs_id = '$rs_id'";
+                $result_check_pu = mysqli_query($conn, $sql_check_pu);
+                if (mysqli_num_rows($result_check_pu) == 0) {
+                    // If it does not already have data, insert into parts_use table
+                    $sql_e = "INSERT INTO parts_use (rs_id, pu_date,st_id,e_id) VALUES ('$rs_id', NOW(),'4','$e_id')";
+                    $result_e = mysqli_query($conn, $sql_e);
+                    $pu_id = mysqli_insert_id($conn);
+                } else {
+                    $row_pu = mysqli_fetch_array($result_check_pu);
+                    $pu_id = $row_pu['pu_id'];
+                }
+
+                // Insert data into parts_use table
+                $sql_e = "INSERT INTO parts_use_detail (pu_id, p_id, pu_value, pu_date) VALUES ('$pu_id', '$p_id', '$rd_value_parts', NOW())";
+                $result_e = mysqli_query($conn, $sql_e);
+            }
         }
     }
 
     $sql_c = "SELECT * FROM repair_status 
-    LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
-    WHERE get_repair.get_r_id = '$get_r_id' AND repair_status.del_flg = '0' AND repair_status.status_id = '19' AND get_repair.del_flg = '0';";
+            LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
+            WHERE get_repair.get_r_id = '$get_r_id' AND repair_status.del_flg = '0' AND repair_status.status_id = '19' AND get_repair.del_flg = '0';";
     $result_c = mysqli_query($conn, $sql_c);
     $row_c_status = mysqli_fetch_array($result_c);
 
     if ($row_c_status[0] < 0) {
         // เอาคืนสต๊อก เอาค่าจาก $get_r_id
         $sql_c = "SELECT * FROM repair_detail 
-    LEFT JOIN get_detail ON get_detail.get_d_id = repair_detail.get_d_id
-    LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
-    WHERE get_detail.get_r_id = '$get_r_id' AND repair_detail.del_flg = '0' AND get_repair.del_flg = '0';";
+                LEFT JOIN get_detail ON get_detail.get_d_id = repair_detail.get_d_id
+                LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                WHERE get_detail.get_r_id = '$get_r_id' AND repair_detail.del_flg = '0' AND get_repair.del_flg = '0';";
         $result_c = mysqli_query($conn, $sql_c);
         while ($row_c = mysqli_fetch_array($result_c)) {
+            $rs_id = $row_c['rs_id'];
             $p_id = $row_c['p_id'];
             $rd_value_parts = $row_c['rd_value_parts'];
 
             // Update parts stock in the parts table
             $sql_u = "UPDATE `parts` SET `p_stock` = `p_stock` + '$rd_value_parts', `p_date_update` = NOW() WHERE `p_id` = '$p_id'";
             $result_u = mysqli_query($conn, $sql_u);
+
+            if ($result_u) {
+                // Update the repair_detail table to indicate that the part has been used
+                $sql_u_rd = "UPDATE `repair_detail` SET `del_flg` = '1' WHERE `rd_id` = '$rd_id'";
+                $result_u_rd = mysqli_query($conn, $sql_u_rd);
+
+                if ($result_u_rd) {
+                    // Check if parts_use entry already exists for this repair
+                    $sql_check_pu = "SELECT * FROM parts_use WHERE rs_id = '$rs_id'";
+                    $result_check_pu = mysqli_query($conn, $sql_check_pu);
+                    if (mysqli_num_rows($result_check_pu) == 0) {
+                        // If it does not already have data, insert into parts_use table
+                        $sql_e = "INSERT INTO parts_use (rs_id, pu_date,st_id,e_id) VALUES ('$rs_id', NOW(),'4','$e_id')";
+                        $result_e = mysqli_query($conn, $sql_e);
+                        $pu_id = mysqli_insert_id($conn);
+                    } else {
+                        $row_pu = mysqli_fetch_array($result_check_pu);
+                        $pu_id = $row_pu['pu_id'];
+                    }
+
+                    // Insert data into parts_use table
+                    $sql_e = "INSERT INTO parts_use_detail (pu_id, p_id, pu_value, pu_date) VALUES ('$pu_id', '$p_id', '$rd_value_parts', NOW())";
+                    $result_e = mysqli_query($conn, $sql_e);
+                }
+            }
         }
     }
 
@@ -231,6 +277,7 @@ if ($row[0] > 0) {
 
                 if ($result_s && mysqli_num_rows($result_s) > 0) {
                     $row_s = mysqli_fetch_array($result_s);
+                    
                     $p_stock = $row_s['p_stock'] - $quantity;
                     $total_s = $row_s['p_price'] * $quantity;
 
@@ -241,9 +288,22 @@ if ($row[0] > 0) {
                     $result3 = mysqli_query($conn, $sql3);
 
                     if ($result3) {
-                        // Update parts stock in the parts table
-                        // $sql_u = "UPDATE `parts` SET `p_stock` = `p_stock` - '$quantity', `p_date_update` = NOW() WHERE `p_id` = '$partId'";
-                        // $result_u = mysqli_query($conn, $sql_u);
+                        // Check if parts_use entry already exists for this repair
+                        $sql_check_pu = "SELECT * FROM parts_use WHERE rs_id = '$rs_id'";
+                        $result_check_pu = mysqli_query($conn, $sql_check_pu);
+                        if (mysqli_num_rows($result_check_pu) == 0) {
+                            // If it does not already have data, insert into parts_use table
+                            $sql_e = "INSERT INTO parts_use (rs_id, pu_date,st_id,e_id) VALUES ('$rs_id', NOW(),'3','$e_id')";
+                            $result_e = mysqli_query($conn, $sql_e);
+                            $pu_id = mysqli_insert_id($conn);
+                        } else {
+                            $row_pu = mysqli_fetch_array($result_check_pu);
+                            $pu_id = $row_pu['pu_id'];
+                        }
+
+                        // Insert data into parts_use table
+                        $sql_e = "INSERT INTO parts_use_detail (pu_id, p_id, pu_value, pu_date) VALUES ('$pu_id', '$partId', '$quantity', NOW())";
+                        $result_e = mysqli_query($conn, $sql_e);
 
                         if (!$result_u) {
                             // Handle the case when the update query fails

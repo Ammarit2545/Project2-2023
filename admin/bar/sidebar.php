@@ -92,10 +92,14 @@
                 <h6 class="collapse-header">รายละเอียด :</h6>
                 <a class="collapse-item" href="listview_parts.php">ข้อมูลอะไหล่</a>
                 <a class="collapse-item" href="add_parts.php">เพิ่มข้อมูลอะไหล่</a>
-                <a class="collapse-item" href="log_part.php">ประวัติการ เพิ่ม-ลด อะไหล่</a>
+               
                 <hr>
                 <h6 class="collapse-header">ประเภทอะไหล่ :</h6>
                 <a class="collapse-item" href="add_parts_type.php">ประเภทอะไหล่</a>
+                <hr>
+                <h6 class="collapse-header">ประวัติการใช้อะไหล่ :</h6>
+                <a class="collapse-item" href="log_part.php">ประวัติการเพิ่ม</a>
+                <a class="collapse-item" href="log_part_use.php">ประวัติการใช้</a>
             </div>
         </div>
     </li>

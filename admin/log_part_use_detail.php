@@ -2,17 +2,17 @@
 session_start();
 include('../database/condb.php');
 
-if (!isset($_SESSION['role_id']) || !isset($_GET['pl_id'])) {
+if (!isset($_SESSION['role_id']) || !isset($_GET['pu_id'])) {
     header('Location:../home.php');
 }
-$pl_id = $_GET['pl_id'];
+$pu_id = $_GET['pu_id'];
 
-$sql = "SELECT * FROM `parts_log`
-        LEFT JOIN stock_type ON stock_type.st_id = parts_log.st_id
-        LEFT JOIN company_parts ON company_parts.com_p_id = parts_log.com_p_id
-        WHERE parts_log.pl_id = '$pl_id'";
+$sql = "SELECT * FROM `parts_use`
+        LEFT JOIN stock_type ON stock_type.st_id = parts_use.st_id
+        LEFT JOIN employee ON employee.e_id = parts_use.e_id
+        WHERE parts_use.pu_id = '$pu_id'";
 $result = mysqli_query($conn, $sql);
-$row_pl = mysqli_fetch_array($result);
+$row_pu = mysqli_fetch_array($result);
 ?>
 
 <!DOCTYPE html>
@@ -72,7 +72,7 @@ $row_pl = mysqli_fetch_array($result);
 
                     <!-- Page Heading -->
                     <br>
-                    <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ประวัติการจัดการ <span style="color:#ffff" class="badge badge-primary">#<?= $pl_id ?></span></h1>
+                    <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ประวัติการจัดการ <span style="color:#ffff" class="badge badge-primary">#<?= $pu_id ?></span></h1>
                     <br>
                     <hr>
                     <div class="accordion mt-4" id="accordionExample">
@@ -88,23 +88,24 @@ $row_pl = mysqli_fetch_array($result);
                                         <br>
                                         <?php
                                         // if else of word Not NULL 
-                                        if ($row_pl['st_name'] != NULL) { ?>
-                                            <p><span class="badge badge-secondary">ประเภท</span> : <?= $row_pl['st_name'] ?></p>
+                                        if ($row_pu['st_name'] != NULL) { 
+                                            if($row_pu['st_type'] == 0){
+                                                ?>
+                                                <p><span class="badge badge-secondary">ประเภท</span> : <span class="btn btn-danger"><?= $row_pu['st_name'] ?></span></p>
+                                            <?php 
+                                            }elseif($row_pu['st_type'] == 2){
+                                                ?>
+                                            <p><span class="badge badge-secondary">ประเภท</span> : <span class="btn btn-primary"><?= $row_pu['st_name'] ?></span></p>
                                         <?php  }
-                                        if ($row_pl['pl_bill_number'] != NULL) { ?>
-                                            <p><span class="badge badge-secondary">เลขที่ใบเสร็จ</span> : <?= $row_pl['pl_bill_number'] ?></p>
+                                        }
+                                        if ($row_pu['rs_id'] != NULL) { ?>
+                                            <p><span class="badge badge-secondary">รหัสสถานะที่</span> : <?= $row_pu['rs_id'] ?></p>
                                         <?php  }
-                                        if ($row_pl['pl_tax_number'] != NULL) { ?>
-                                            <p><span class="badge badge-secondary">เลขที่กำกับภาษี</span> : <?= $row_pl['pl_tax_number']  ?></p>
+                                        if ($row_pu['pu_date'] != NULL) { ?>
+                                            <p><span class="badge badge-secondary">วันที่ทำรายการ</span> : <?= date('Y-m-d -- H:i:s', strtotime($row_pu['pu_date'])) ?></p>
                                         <?php  }
-                                        if ($row_pl['com_p_name'] != NULL) { ?>
-                                            <p><span class="badge badge-secondary">บริษัท</span> : <?= $row_pl['com_p_name'] ?></p>
-                                        <?php  }
-                                        if ($row_pl['pl_date'] != NULL) { ?>
-                                            <p><span class="badge badge-secondary">วันที่ทำรายการ</span> : <?= date('Y-m-d -- H:i:s', strtotime($row_pl['pl_date'])) ?></p>
-                                        <?php  }
-                                        if ($row_pl['pl_detail'] != NULL) { ?>
-                                            <p><span class="badge badge-secondary">รายละเอียด</span> : <?= $row_pl['pl_detail'] ?></p>
+                                        if ($row_pu['e_id'] != NULL) { ?>
+                                            <p><span class="badge badge-secondary">บุคลากร</span> : <?= '(' . $row_pu['e_id'] . ') ' . $row_pu['e_fname'] . ' ' . $row_pu['e_lname'] ?></p>
                                         <?php  } ?>
                                     </font>
                                 </div>
@@ -149,9 +150,9 @@ $row_pl = mysqli_fetch_array($result);
                                                     </thead>
                                                     <tbody>
                                                         <?php
-                                                        $sql = "SELECT * FROM `parts_log_detail` 
-                                                LEFT JOIN parts ON parts_log_detail.p_id = parts.p_id
-                                                WHERE parts_log_detail.pl_id = '$pl_id' ORDER BY pl_id  DESC";
+                                                        $sql = "SELECT * FROM `parts_use_detail` 
+                                                LEFT JOIN parts ON parts_use_detail.p_id = parts.p_id
+                                                WHERE parts_use_detail.pu_id = '$pu_id' ORDER BY pu_id  DESC";
                                                         $result = mysqli_query($conn, $sql);
                                                         $i = 0;
                                                         while ($row = mysqli_fetch_array($result)) {
@@ -233,11 +234,11 @@ $row_pl = mysqli_fetch_array($result);
                                                                 </td>
                                                                 <td>
                                                                     <?php
-                                                                    if ($row['pl_d_value'] == NULL) {
+                                                                    if ($row['pu_value'] == NULL) {
                                                                         echo "-";
                                                                     } else {
-                                                                        if ($row['pl_d_value'] > 0) {
-                                                                            echo $row['pl_d_value'];
+                                                                        if ($row['pu_value'] > 0) {
+                                                                            echo $row['pu_value'];
                                                                         } else {
                                                                             echo '0';
                                                                         }
