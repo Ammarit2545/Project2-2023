@@ -29,7 +29,7 @@
             cancelButtonText: 'No'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = 'action/status/add_conf_status.php?id=' + <?= $row['get_r_id'] ?>;
+                window.location.href = 'action/status/add_conf_status.php?id=' + <?= $row['get_r_id'] ?> + '&status_id=5';
             }
         });
     }

@@ -71,9 +71,10 @@ if (isset($_GET['st_id'])) {
                     <hr>
                     <p>ค้นหาเพิ่มเติมด้วยประเภท</p>
                     <!-- <a href="log_part.php?st_id=2" class="btn btn-primary">มีใบเสร็จ</a> -->
+                    <a href="log_part_use.php" class="btn btn-success">ทั้งหมด</a>
                     <a href="log_part_use.php?st_id=1" class="btn btn-primary">รายการใช้อะไหล่</a>
                     <a href="log_part_use.php?st_id=0" class="btn btn-danger">รายการคืนสู่สต๊อก</a>
-                    <a href="log_part_use.php" class="btn btn-success">ทั้งหมด</a>
+                    
                     <br>
                     <br>
                     <br>
@@ -104,23 +105,24 @@ if (isset($_GET['st_id'])) {
                                     <tbody>
                                         <?php
                                         if ($st_id == 0) {
-                                            $sql = "SELECT * FROM `parts_log` 
-    LEFT JOIN stock_type ON stock_type.st_id = parts_log.st_id 
-    WHERE stock_type.st_type = 0
-    ORDER BY parts_log.pl_id  DESC";
+                                            $sql = "SELECT * FROM `parts_use` 
+                                            LEFT JOIN stock_type ON stock_type.st_id = parts_use.st_id 
+                                            WHERE parts_use.st_id = 4 AND parts_use.del_flg = 0
+                                            ORDER BY parts_use.pu_id  DESC";
                                         } elseif ($st_id == 1) {
                                             $sql = "SELECT * FROM `parts_use` 
                                             LEFT JOIN stock_type ON stock_type.st_id = parts_use.st_id 
-                                            WHERE stock_type.st_source = 0
+                                            WHERE parts_use.st_id = 3 AND parts_use.del_flg = 0
                                             ORDER BY parts_use.pu_id  DESC";
                                         } elseif ($st_id == 2) {
                                             $sql = "SELECT * FROM `parts_use` 
-    LEFT JOIN stock_type ON stock_type.st_id = parts_use.st_id 
-    WHERE stock_type.st_source = 0
-    ORDER BY parts_use.pu_id  DESC";
+                                                    LEFT JOIN stock_type ON stock_type.st_id = parts_use.st_id 
+                                                    WHERE parts_use.st_id = 4 AND parts_use.del_flg = 0
+                                                    ORDER BY parts_use.pu_id  DESC";
                                         } else {
                                             $sql = "SELECT * FROM `parts_use` 
                                             LEFT JOIN stock_type ON stock_type.st_id = parts_use.st_id 
+                                            WHERE parts_use.del_flg = 0
                                             ORDER BY parts_use.pu_id  DESC";
                                         }
 
