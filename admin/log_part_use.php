@@ -70,10 +70,11 @@ if (isset($_GET['st_id'])) {
                     <!-- <a href="add_employee.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มรายชื่อพนักงานหรือไม่?</a> -->
                     <hr>
                     <p>ค้นหาเพิ่มเติมด้วยประเภท</p>
-                    <a href="log_part.php" class="btn btn-success">ทั้งหมด</a>
-                    <a href="log_part.php?st_id=2" class="btn btn-primary">มีใบเสร็จ</a>
-                    <a href="log_part.php?st_id=1" class="btn btn-warning">เพิ่มด้วตัวเอง</a>
-                    <!-- <a href="log_part.php?st_id=0" class="btn btn-danger">รายการที่ลด</a> -->
+                    <!-- <a href="log_part.php?st_id=2" class="btn btn-primary">มีใบเสร็จ</a> -->
+                    <a href="log_part_use.php" class="btn btn-success">ทั้งหมด</a>
+                    <a href="log_part_use.php?st_id=1" class="btn btn-danger">รายการใช้อะไหล่</a>
+                    <a href="log_part_use.php?st_id=0" class="btn btn-primary">รายการคืนสู่สต๊อก</a>
+
                     <br>
                     <br>
                     <br>
@@ -89,13 +90,16 @@ if (isset($_GET['st_id'])) {
                                     <thead>
                                         <tr>
                                             <th>ลำดับ</th>
+                                            
+                                            <th>รหัสการใช้อะไหล่</th>
                                             <th>วันที่ทำรายการ</th>
+                                            <th>หมายเลขการซ่อม</th>
+                                            <th>รหัสสถานะ</th>
+                                          
                                             <th>ประเภทที่ทำรายการ</th>
-                                            <!-- <th>เพิ่ม / ลบ</th> -->
-                                            <th>หมายเลขใบเสร็จ</th>
-                                            <th>เลขกำกับภาษี</th>
+                                            <th>เพิ่ม / ลบ</th>
                                             <th>จำนวนที่ทำรายการ</th>
-                                            <th>บริษัท</th>
+                                            <th>รหัสพนักงาน</th>
                                             <th>เพิ่มเติม</th>
 
                                             <!-- <th>ลบ</th> -->
@@ -104,31 +108,36 @@ if (isset($_GET['st_id'])) {
                                     <tbody>
                                         <?php
                                         if ($st_id == 0) {
-                                            $sql = "SELECT * FROM `parts_log` 
-    LEFT JOIN stock_type ON stock_type.st_id = parts_log.st_id 
-    WHERE stock_type.st_type = 0
-    ORDER BY parts_log.pl_id  DESC";
+                                            $sql = "SELECT * FROM `parts_use` 
+                                            LEFT JOIN stock_type ON stock_type.st_id = parts_use.st_id 
+                                            LEFT JOIN repair_status ON repair_status.rs_id = parts_use.rs_id 
+                                            WHERE parts_use.st_id = 4 AND parts_use.del_flg = 0 AND get_r_id <> ''
+                                            ORDER BY parts_use.pu_id  DESC";
                                         } elseif ($st_id == 1) {
-                                            $sql = "SELECT * FROM `parts_log` 
-    LEFT JOIN stock_type ON stock_type.st_id = parts_log.st_id 
-    WHERE stock_type.st_id = 1
-    ORDER BY parts_log.pl_id  DESC";
+                                            $sql = "SELECT * FROM `parts_use` 
+                                            LEFT JOIN stock_type ON stock_type.st_id = parts_use.st_id 
+                                            LEFT JOIN repair_status ON repair_status.rs_id = parts_use.rs_id 
+                                            WHERE parts_use.st_id = 3 AND parts_use.del_flg = 0 AND get_r_id <> ''
+                                            ORDER BY parts_use.pu_id  DESC";
                                         } elseif ($st_id == 2) {
-                                            $sql = "SELECT * FROM `parts_log` 
-    LEFT JOIN stock_type ON stock_type.st_id = parts_log.st_id 
-    WHERE stock_type.st_source = 1
-    ORDER BY parts_log.pl_id  DESC";
+                                            $sql = "SELECT * FROM `parts_use` 
+                                                    LEFT JOIN stock_type ON stock_type.st_id = parts_use.st_id 
+                                                    LEFT JOIN repair_status ON repair_status.rs_id = parts_use.rs_id 
+                                                    WHERE parts_use.st_id = 4 AND parts_use.del_flg = 0 AND get_r_id <> ''
+                                                    ORDER BY parts_use.pu_id  DESC";
                                         } else {
-                                            $sql = "SELECT * FROM `parts_log` 
-    LEFT JOIN stock_type ON stock_type.st_id = parts_log.st_id 
-    ORDER BY parts_log.pl_id  DESC";
+                                            $sql = "SELECT * FROM `parts_use` 
+                                            LEFT JOIN stock_type ON stock_type.st_id = parts_use.st_id 
+                                            LEFT JOIN repair_status ON repair_status.rs_id = parts_use.rs_id 
+                                            WHERE parts_use.del_flg = 0 AND get_r_id <> ''
+                                            ORDER BY parts_use.pu_id  DESC";
                                         }
 
 
                                         $result = mysqli_query($conn, $sql);
                                         $i = 0;
                                         while ($row = mysqli_fetch_array($result)) {
-                                            $pl_id = $row['pl_id'];
+                                            $pu_id = $row['pu_id'];
                                             $i++;
                                         ?>
                                             <tr>
@@ -142,18 +151,42 @@ if (isset($_GET['st_id'])) {
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if ($row['pl_date'] == NULL) {
+                                                    if ($row['pu_date'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $formattedDate = date("Y-m-d H:i:s", strtotime($row['pl_date']));
+                                                        echo $formattedDate = date("Y-m-d H:i:s", strtotime($row['pu_date']));
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['pu_id'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['pu_id'];
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['get_r_id'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['get_r_id'];
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['rs_id'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['rs_id'];
                                                     }
                                                     ?>
                                                 </td>
                                                 <td>
                                                     <?php
                                                     $sql_type = "SELECT * FROM `stock_type` 
-                                                                LEFT JOIN parts_log ON parts_log.st_id = stock_type.st_id
-                                                                WHERE parts_log.pl_id = '$pl_id' AND stock_type.del_flg = 0";
+                                                                LEFT JOIN parts_use ON parts_use.st_id = stock_type.st_id
+                                                                WHERE parts_use.pu_id = '$pu_id' AND stock_type.del_flg = 0";
                                                     $result_type = mysqli_query($conn, $sql_type);
                                                     $row_type = mysqli_fetch_array($result_type);
                                                     if ($row_type['st_name'] == NULL) {
@@ -161,64 +194,45 @@ if (isset($_GET['st_id'])) {
                                                     } else {
                                                         if ($row_type['st_source'] == 1) {
                                                     ?>
-                                                            <p style="color:white" class="btn btn-primary"><?= $row_type['st_name'] ?></p>
+                                                            <u style="color:blue"><?= $row_type['st_name'] ?></u>
                                                     <?php
                                                         } else {
-                                                            // echo $row_type['st_name'];
-                                                            ?>
-                                                            <p style="color:white" class="btn btn-warning"><?= $row_type['st_name'] ?></p>
-                                                    <?php
+                                                            echo $row_type['st_name'];
                                                         }
                                                     }
                                                     ?>
                                                 </td>
-                                                <!-- <td>
+                                                <td>
                                                     <?php
                                                     if ($row_type['st_type'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        if ($row_type['st_type'] > 0) {
-                                                            echo 'เพิ่ม';
+                                                        if ($row_type['st_type'] == 1) {
+                                                    ?>
+                                                            <center>
+                                                                <p class="btn-primary">เพิ่ม</p>
+                                                            </center>
+                                                        <?php
+                                                        } elseif ($row_type['st_type'] == 2) {
+                                                        ?>
+                                                            <center>
+                                                                <p class="btn-primary">คืน</p>
+                                                            </center>
+                                                        <?php
                                                         } else {
-                                                            echo 'ลบ';
+                                                        ?>
+                                                            <center>
+                                                                <p class="btn-danger">ใช้</p>
+                                                            </center>
+                                                    <?php
                                                         }
                                                     }
                                                     ?>
-                                                </td> -->
-                                                <td><?php
-                                                    if ($row['pl_bill_number'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['pl_bill_number'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <!-- <?php
-
-                                                            $sql_c = "SELECT * FROM `parts`WHERE p_id = '$p_id'";
-                                                            $result_c = mysqli_query($conn, $sql_c);
-                                                            $rows = mysqli_fetch_array($result_c);
-
-                                                            if ($row['p_id'] == NULL) {
-                                                                echo "-";
-                                                            } else {
-                                                                echo $rows['p_brand'] . ' ';
-                                                            }
-                                                            ?> -->
-
-                                                    <?php
-                                                    if ($row['pl_tax_number'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['pl_tax_number'];
-                                                    }
-                                                    ?>
                                                 </td>
                                                 <td>
                                                     <?php
 
-                                                    $sql_c = "SELECT COUNT(pl_id) FROM `parts_log_detail` WHERE pl_id = '$pl_id' AND del_flg = 0";
+                                                    $sql_c = "SELECT COUNT(pu_id) FROM `parts_use_detail` WHERE pu_id = '$pu_id' AND del_flg = 0";
                                                     $result_c = mysqli_query($conn, $sql_c);
                                                     $rows = mysqli_fetch_array($result_c);
 
@@ -233,20 +247,20 @@ if (isset($_GET['st_id'])) {
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    $sql_com = "SELECT * FROM `company_parts` 
-                                                                LEFT JOIN parts_log ON parts_log.com_p_id = company_parts.com_p_id
-                                                                WHERE parts_log.pl_id = '$pl_id' AND company_parts.del_flg = 0";
+                                                    $e_id =  $row['e_id'];
+                                                    $sql_com = "SELECT * FROM `employee` 
+                                                                WHERE e_id = '$e_id' AND del_flg= 0";
                                                     $result_com = mysqli_query($conn, $sql_com);
                                                     $row_com = mysqli_fetch_array($result_com);
-                                                    if ($row_com['com_p_name'] == NULL) {
+                                                    if ($row_com['e_fname'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $row_com['com_p_name'];
+                                                        echo '(' . $row_com['e_id'] . ') ' . $row_com['e_fname'] . ' ' . $row_com['e_lname'];
                                                     }
                                                     ?>
                                                 </td>
                                                 <td>
-                                                    <a href="parts_log_detail.php?pl_id=<?= $pl_id ?>" class="btn btn-info">รายละเอียด</a>
+                                                    <a href="log_part_use_detail.php?pu_id=<?= $pu_id ?>" class="btn btn-info">รายละเอียด</a>
                                                 </td>
 
                                                 <!-- <td>

@@ -431,7 +431,7 @@ if (isset($_GET["status_id"])) {
 
                         $sql_s = "SELECT status_type.status_name,status_type.status_color,repair_status.status_id FROM repair_status 
                                     LEFT JOIN status_type ON status_type.status_id = repair_status.status_id 
-                                    WHERE get_r_id = '$id_r' ORDER BY rs_date_time DESC LIMIT 1;";
+                                    WHERE get_r_id = '$id_r' AND repair_status.del_flg = '0' ORDER BY rs_date_time DESC LIMIT 1;";
                         $result_s = mysqli_query($conn, $sql_s);
                         $row_status = mysqli_fetch_array($result_s);
 
