@@ -91,6 +91,7 @@ if (isset($_GET['st_id'])) {
                                         <tr>
                                             <th>ลำดับ</th>
                                             <th>รหัสการใช้อะไหล่</th>
+                                            <th>หมายเลขการซ่อม</th>
                                             <th>รหัสสถานะ</th>
                                             <th>วันที่ทำรายการ</th>
                                             <th>ประเภทที่ทำรายการ</th>
@@ -107,22 +108,26 @@ if (isset($_GET['st_id'])) {
                                         if ($st_id == 0) {
                                             $sql = "SELECT * FROM `parts_use` 
                                             LEFT JOIN stock_type ON stock_type.st_id = parts_use.st_id 
-                                            WHERE parts_use.st_id = 4 AND parts_use.del_flg = 0
+                                            LEFT JOIN repair_status ON repair_status.rs_id = parts_use.rs_id 
+                                            WHERE parts_use.st_id = 4 AND parts_use.del_flg = 0 AND get_r_id <> ''
                                             ORDER BY parts_use.pu_id  DESC";
                                         } elseif ($st_id == 1) {
                                             $sql = "SELECT * FROM `parts_use` 
                                             LEFT JOIN stock_type ON stock_type.st_id = parts_use.st_id 
-                                            WHERE parts_use.st_id = 3 AND parts_use.del_flg = 0
+                                            LEFT JOIN repair_status ON repair_status.rs_id = parts_use.rs_id 
+                                            WHERE parts_use.st_id = 3 AND parts_use.del_flg = 0 AND get_r_id <> ''
                                             ORDER BY parts_use.pu_id  DESC";
                                         } elseif ($st_id == 2) {
                                             $sql = "SELECT * FROM `parts_use` 
                                                     LEFT JOIN stock_type ON stock_type.st_id = parts_use.st_id 
-                                                    WHERE parts_use.st_id = 4 AND parts_use.del_flg = 0
+                                                    LEFT JOIN repair_status ON repair_status.rs_id = parts_use.rs_id 
+                                                    WHERE parts_use.st_id = 4 AND parts_use.del_flg = 0 AND get_r_id <> ''
                                                     ORDER BY parts_use.pu_id  DESC";
                                         } else {
                                             $sql = "SELECT * FROM `parts_use` 
                                             LEFT JOIN stock_type ON stock_type.st_id = parts_use.st_id 
-                                            WHERE parts_use.del_flg = 0
+                                            LEFT JOIN repair_status ON repair_status.rs_id = parts_use.rs_id 
+                                            WHERE parts_use.del_flg = 0 AND get_r_id <> ''
                                             ORDER BY parts_use.pu_id  DESC";
                                         }
 
@@ -147,6 +152,14 @@ if (isset($_GET['st_id'])) {
                                                         echo "-";
                                                     } else {
                                                         echo $row['pu_id'];
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['get_r_id'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['get_r_id'];
                                                     }
                                                     ?>
                                                 </td>
