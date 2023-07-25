@@ -91,7 +91,7 @@ if (isset($_GET['st_id'])) {
                                             <th>ลำดับ</th>
                                             <th>วันที่ทำรายการ</th>
                                             <th>ประเภทที่ทำรายการ</th>
-                                            <th>เพิ่ม / ลบ</th>
+                                            <!-- <th>เพิ่ม / ลบ</th> -->
                                             <th>หมายเลขใบเสร็จ</th>
                                             <th>เลขกำกับภาษี</th>
                                             <th>จำนวนที่ทำรายการ</th>
@@ -161,15 +161,18 @@ if (isset($_GET['st_id'])) {
                                                     } else {
                                                         if ($row_type['st_source'] == 1) {
                                                     ?>
-                                                            <u style="color:blue"><?= $row_type['st_name'] ?></u>
+                                                            <p style="color:white" class="btn btn-primary"><?= $row_type['st_name'] ?></p>
                                                     <?php
                                                         } else {
-                                                            echo $row_type['st_name'];
+                                                            // echo $row_type['st_name'];
+                                                            ?>
+                                                            <p style="color:white" class="btn btn-warning"><?= $row_type['st_name'] ?></p>
+                                                    <?php
                                                         }
                                                     }
                                                     ?>
                                                 </td>
-                                                <td>
+                                                <!-- <td>
                                                     <?php
                                                     if ($row_type['st_type'] == NULL) {
                                                         echo "-";
@@ -181,7 +184,7 @@ if (isset($_GET['st_id'])) {
                                                         }
                                                     }
                                                     ?>
-                                                </td>
+                                                </td> -->
                                                 <td><?php
                                                     if ($row['pl_bill_number'] == NULL) {
                                                         echo "-";

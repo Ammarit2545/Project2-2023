@@ -72,9 +72,9 @@ if (isset($_GET['st_id'])) {
                     <p>ค้นหาเพิ่มเติมด้วยประเภท</p>
                     <!-- <a href="log_part.php?st_id=2" class="btn btn-primary">มีใบเสร็จ</a> -->
                     <a href="log_part_use.php" class="btn btn-success">ทั้งหมด</a>
-                    <a href="log_part_use.php?st_id=1" class="btn btn-primary">รายการใช้อะไหล่</a>
-                    <a href="log_part_use.php?st_id=0" class="btn btn-danger">รายการคืนสู่สต๊อก</a>
-                    
+                    <a href="log_part_use.php?st_id=1" class="btn btn-danger">รายการใช้อะไหล่</a>
+                    <a href="log_part_use.php?st_id=0" class="btn btn-primary">รายการคืนสู่สต๊อก</a>
+
                     <br>
                     <br>
                     <br>
@@ -193,12 +193,23 @@ if (isset($_GET['st_id'])) {
                                                         echo "-";
                                                     } else {
                                                         if ($row_type['st_type'] == 1) {
-                                                            echo 'เพิ่ม';
+                                                    ?>
+                                                            <center>
+                                                                <p class="btn-primary">เพิ่ม</p>
+                                                            </center>
+                                                        <?php
                                                         } elseif ($row_type['st_type'] == 2) {
-                                                            echo 'คืน';
-                                                        }
-                                                        else {
-                                                            echo 'ใช้';
+                                                        ?>
+                                                            <center>
+                                                                <p class="btn-primary">คืน</p>
+                                                            </center>
+                                                        <?php
+                                                        } else {
+                                                        ?>
+                                                            <center>
+                                                                <p class="btn-danger">ใช้</p>
+                                                            </center>
+                                                    <?php
                                                         }
                                                     }
                                                     ?>
@@ -221,7 +232,7 @@ if (isset($_GET['st_id'])) {
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    $e_id=  $row['e_id'];
+                                                    $e_id =  $row['e_id'];
                                                     $sql_com = "SELECT * FROM `employee` 
                                                                 WHERE e_id = '$e_id' AND del_flg= 0";
                                                     $result_com = mysqli_query($conn, $sql_com);
@@ -229,7 +240,7 @@ if (isset($_GET['st_id'])) {
                                                     if ($row_com['e_fname'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo '('.$row_com['e_id'].') '.$row_com['e_fname'] .' '.$row_com['e_lname'];
+                                                        echo '(' . $row_com['e_id'] . ') ' . $row_com['e_fname'] . ' ' . $row_com['e_lname'];
                                                     }
                                                     ?>
                                                 </td>

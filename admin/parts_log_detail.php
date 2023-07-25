@@ -86,22 +86,24 @@ $row_pl = mysqli_fetch_array($result);
                                 <div class="accordion-body">
                                     <font>
                                         <br>
-                                        <?php if ($row_pl['st_source'] == 1) {
-                                        ?>
-                                            <p><span class="badge badge-secondary">ประเภท</span> : <?= $row_pl['st_name'] ?></p>
-                                            <p><span class="badge badge-secondary">เลขที่ใบเสร็จ</span> : <?= $row_pl['pl_bill_number'] ?></p>
-                                            <p><span class="badge badge-secondary">เลขที่กำกับภาษี</span> : <?= $row_pl['pl_tax_number'] ?></p>
-                                            <p><span class="badge badge-secondary">บริษัท</span> : <?= $row_pl['com_p_name'] ?></p>
-                                            <p><span class="badge badge-secondary">วันที่ทำรายการ</span> : <?= date('Y-m-d -- H:i:s', strtotime($row_pl['pl_date'])) ?></p>
-                                            <p><span class="badge badge-secondary">รายละเอียด</span> : <?= $row_pl['pl_detail'] ?></p>
-                                        <?php
-                                        } else {
-                                        ?>
-                                            <p>ประเภท : <?= $row_pl['st_name'] ?></p>
-                                            <p>วันที่ทำรายการ : <?= date('Y-m-d -- H:i:s', strtotime($row_pl['pl_date'])) ?></p>
-                                            <!-- <p>รายละเอียด : <?= $row_pl['pl_detail'] ?></p> -->
-                                        <?php
-                                        } ?>
+                                            if ($row_pl['st_name'] != NULL) { ?>
+                                                <p><span class="badge badge-secondary">ประเภท</span> : <?= $row_pl['st_name'] ?></p>
+                                            <?php  }
+                                            if ($row_pl['pl_bill_number'] != NULL) { ?>
+                                                <p><span class="badge badge-secondary">เลขที่ใบเสร็จ</span> : <?= $row_pl['pl_bill_number'] ?></p>
+                                            <?php  }
+                                            if ($row_pl['pl_tax_number'] != NULL) { ?>
+                                                <p><span class="badge badge-secondary">เลขที่กำกับภาษี</span> : <?= $row_pl['pl_tax_number']  ?></p>
+                                            <?php  }
+                                            if ($row_pl['com_p_name'] != NULL) { ?>
+                                                <p><span class="badge badge-secondary">บริษัท</span> : <?= $row_pl['com_p_name'] ?></p>
+                                            <?php  }
+                                            if ($row_pl['pl_date'] != NULL) { ?>
+                                                <p><span class="badge badge-secondary">วันที่ทำรายการ</span> : <?= date('Y-m-d -- H:i:s', strtotime($row_pl['pl_date'])) ?></p>
+                                            <?php  }
+                                            if ($row_pl['pl_detail'] != NULL) { ?>
+                                                <p><span class="badge badge-secondary">รายละเอียด</span> : <?= $row_pl['pl_detail'] ?></p>
+                                            <?php  } ?>
                                     </font>
                                 </div>
                             </div>
@@ -114,8 +116,10 @@ $row_pl = mysqli_fetch_array($result);
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="uniqueHeadingOne">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#uniqueCollapseOne" aria-expanded="true" aria-controls="uniqueCollapseOne">
-                                    <!-- ข้อมูลการการจัดการอะไหล่ -->
+                                    
+                                <!-- ข้อมูลการการจัดการอะไหล่ -->
                                     <h4>ข้อมูลการการจัดการอะไหล่</h4>
+                                    
                                 </button>
                             </h2>
                             <div id="uniqueCollapseOne" class="accordion-collapse collapse show" aria-labelledby="uniqueHeadingOne" data-bs-parent="#uniqueAccordionExample">
