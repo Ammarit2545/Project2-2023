@@ -66,7 +66,7 @@ $check_order = 0;
     $sql2 = "SELECT * FROM get_repair
         LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id 
         LEFT JOIN status_type ON repair_status.status_id  = status_type.status_id 
-        WHERE get_repair.get_r_id = $id_get_r AND repair_status.del_flg = '0' ORDER BY repair_status.rs_date_time DESC;";
+        WHERE get_repair.get_r_id = $id_get_r AND repair_status.del_flg = '0' ORDER BY repair_status.rs_date_time DESC LIMIT 1;";
     $result2 = mysqli_query($conn, $sql2);
     $row_2 = mysqli_fetch_array($result2);
 
@@ -89,7 +89,6 @@ $check_order = 0;
     parts_type.p_type_name,
     repair_status.rs_id,
     parts.p_pic
-    
 FROM
     `repair_detail`
     LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
@@ -101,7 +100,9 @@ FROM
 WHERE
     get_repair.del_flg = 0 AND repair_detail.del_flg = 0
     AND get_repair.get_r_id = '$id_get_r'
-    GROUP BY rd_id ";
+GROUP BY
+    rd_id, get_detail.get_d_id; -- Include the additional column in GROUP BY
+ ";
     $result_c_part = mysqli_query($conn, $sql_c_part);
     while ($row_c_part = mysqli_fetch_array($result_c_part)) {
         $total_part_price +=  $row_c_part['rd_parts_price'];
@@ -674,9 +675,9 @@ WHERE
                                                     <br>
                                                     <?php
                                                     $sql_com_m = "SELECT * FROM get_detail
-            LEFT JOIN get_repair ON get_detail.get_r_id = get_repair.get_r_id 
-            LEFT JOIN tracking ON get_detail.get_t_id = tracking.t_id 
-            LEFT JOIN repair ON repair.r_id = get_detail.r_id WHERE get_repair.get_r_id = '$id_get_r' AND repair.del_flg = '0'";
+                                                                    LEFT JOIN get_repair ON get_detail.get_r_id = get_repair.get_r_id 
+                                                                    LEFT JOIN tracking ON get_detail.get_t_id = tracking.t_id 
+                                                                    LEFT JOIN repair ON repair.r_id = get_detail.r_id WHERE get_repair.get_r_id = '$id_get_r' AND repair.del_flg = '0'";
                                                     $result_com_m = mysqli_query($conn, $sql_com_m);
 
                                                     $count_com = 0;
@@ -867,7 +868,6 @@ WHERE
                                                                                                     parts_type.p_type_name,
                                                                                                     repair_status.rs_id,
                                                                                                     parts.p_pic
-                                                                                                    
                                                                                                 FROM
                                                                                                     `repair_detail`
                                                                                                     LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
@@ -879,14 +879,18 @@ WHERE
                                                                                                 WHERE
                                                                                                     get_repair.del_flg = 0 AND repair_detail.del_flg = 0
                                                                                                     AND get_repair.get_r_id = '$get_id'
-                                                                                                    GROUP BY rd_id
+                                                                                                GROUP BY
+                                                                                                    rd_id, get_detail.get_d_id
                                                                                                     ;";
                                                                                                     $result_op = mysqli_query($conn, $sql_op);
                                                                                                     $count_part = 0;
                                                                                                     while ($row_op = mysqli_fetch_array($result_op)) {
                                                                                                         $count_part++;
-                                                                                                        $p_id = $row['p_id'];
-                                                                                                        $rs_id = $row['rs_id'];
+                                                                                                        $p_id = $row_op['p_id'];
+                                                                                                        $rs_id = $row_op['rs_id'];
+                                                                                                        ?>
+                                                                                                        <h1><?=  $p_id .' '. $rs_id ?></h1>
+                                                                                                        <?php
 
                                                                                                         $sql_count = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id' AND p_id = '$p_id'";
                                                                                                         $result_count = mysqli_query($conn, $sql_count);
@@ -1158,7 +1162,6 @@ WHERE
                                         } else {
                                             ShowMiniStatus()
                                         }
-
                                     }
 
                                     function ShowStatus() {
@@ -1254,9 +1257,6 @@ WHERE
                                                                             // $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = 155 AND status_id = 6 ORDER BY rs_date_time DESC;";
                                                                             // $result_carry_out = mysqli_query($conn, $sql_cary_out);
                                                                             // $row_carry_out = mysqli_fetch_array($result_carry_out);
-
-
-
 
                                                                             if ($row_carry_out[0] > 1) { ?>
                                                                                 #ครั้งที่<?= $row_carry_out[0] - $count_carry_out ?>

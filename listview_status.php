@@ -385,7 +385,6 @@ if (isset($_GET["status_id"])) {
                         FROM get_detail
                         LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
                         LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                  
                         WHERE repair.m_id = '$id' 
                         ORDER BY get_repair.get_r_date_in DESC;";
                     } elseif ($status_id > 0) {
@@ -403,7 +402,7 @@ if (isset($_GET["status_id"])) {
                         ORDER BY get_repair.get_r_date_in DESC;
                                 ";
                     } else {
-                        $sql = "SELECT  get_repair.*, repair.* FROM get_repair 
+                        $sql = "SELECT * FROM get_repair 
                         LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id 
                         LEFT JOIN repair ON get_detail.r_id = repair.r_id 
                         WHERE m_id = '$id' AND (repair.r_brand LIKE '%$search%' 
