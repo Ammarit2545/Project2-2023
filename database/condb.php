@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = "123456";
+$password = "root";
 $dbname = "ane_electronic";
 
 // Create connection
@@ -12,4 +12,4 @@ if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 // echo "Connected successfully";
-?>
+?>  
