@@ -98,17 +98,24 @@ if (!isset($_SESSION['id'])) {
                                         parts_type.p_type_name,
                                         repair_status.rs_id,
                                         parts.p_pic
-                                      FROM
+                                    FROM
                                         `repair_detail`
-                                        LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
-                                        LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
-                                        JOIN parts ON parts.p_id = repair_detail.p_id
-                                        LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
-                                      WHERE
+                                    LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
+                                    LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
+                                    JOIN parts ON parts.p_id = repair_detail.p_id
+                                    LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
+                                    WHERE
                                         get_repair.del_flg = 0 AND repair_detail.del_flg = 0
                                         AND get_repair.get_r_id = '$get_id'
-                                      GROUP BY
-                                        p_id;
+                                    GROUP BY
+                                        repair_detail.p_id,
+                                        parts.p_brand,
+                                        parts.p_model,
+                                        parts.p_price,
+                                        parts_type.p_type_name,
+                                        repair_status.rs_id, -- Include repair_status.rs_id in GROUP BY
+                                        parts.p_pic;
+                                    
                                         ";
                                         $result = mysqli_query($conn, $sql);
                                         while ($row = mysqli_fetch_array($result)) {

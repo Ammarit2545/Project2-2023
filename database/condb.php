@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = "root";
+$password = "mysql";
 $dbname = "ane_electronic";
 
 // Create connection
@@ -13,3 +13,10 @@ if ($conn->connect_error) {
 }
 // echo "Connected successfully";
 ?>  
+
+<!-- CLose E_NOTICE -->
+
+<?php
+error_reporting(E_ALL & ~E_NOTICE);
+ini_set('display_errors', 0);
+?>
