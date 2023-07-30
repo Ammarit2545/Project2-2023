@@ -223,12 +223,13 @@ if (isset($_GET["status_id"])) {
                 <div class="grid">
                     <?php
                     if (!isset($search) && !isset($status_id)) {
-                        $sql = "SELECT * FROM get_repair 
-                                LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id 
-                                LEFT JOIN repair ON get_detail.r_id = repair.r_id 
-                                LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id 
-                                WHERE m_id = '$id' AND get_repair.del_flg='0' AND repair_status.status_id = 3
-                                GROUP BY get_repair.get_r_id ORDER BY get_repair.get_r_date_in DESC;";
+                        $sql = "SELECT get_repair.*, repair.*
+                        FROM get_detail
+                        LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                        LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
+                        WHERE repair.m_id = '$id' AND repair_status.status_id = '3'
+                        ORDER BY get_repair.get_r_date_in DESC;";
                     } elseif ($status_id > 0) {
                         $sql = "SELECT get_repair.*, repair.*, rs.status_id
                                 FROM get_repair

@@ -381,12 +381,15 @@ if (isset($_GET["status_id"])) {
                 <div class="grid">
                     <?php
                     if (!isset($search) && !isset($status_id)) {
-                        $sql = "SELECT get_repair.*, repair.*
-                        FROM get_detail
-                        LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
-                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                        WHERE repair.m_id = '$id' 
-                        ORDER BY get_repair.get_r_date_in DESC;";
+                        $sql = "SELECT
+                        get_repair.*,
+                        MAX(repair.m_id) AS m_id -- Assuming n_id is a column in the repair table
+                     FROM get_repair
+                     LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
+                     LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                     WHERE repair.m_id = '$id'
+                     GROUP BY get_repair.get_r_id
+                     ORDER BY MAX(get_repair.get_r_date_in) DESC;";
                     } elseif ($status_id > 0) {
                         $sql = "SELECT get_repair.*, repair.*, rs.status_id
                         FROM get_detail
@@ -399,21 +402,27 @@ if (isset($_GET["status_id"])) {
                         ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
                         LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
                         WHERE repair.m_id = '$id' AND rs.status_id = '$status_id' AND rs.rs_date_time = subquery.max_date
+                        
                         ORDER BY get_repair.get_r_date_in DESC;
                                 ";
                     } else {
-                        $sql = "SELECT * FROM get_repair 
-                        LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id 
-                        LEFT JOIN repair ON get_detail.r_id = repair.r_id 
-                        WHERE m_id = '$id' AND (repair.r_brand LIKE '%$search%' 
-                        OR repair.r_model LIKE '%$search%' 
-                        OR repair.r_serial_number LIKE '%$search%' 
-                        OR repair.r_number_model LIKE '%$search%' 
-                        OR get_repair.get_r_id LIKE '%$search%' 
-                        OR CONCAT(repair.r_brand, ' ', repair.r_model) LIKE '%$search%' 
-                        OR CONCAT(repair.r_brand, '', repair.r_model) LIKE '%$search%') 
-                        GROUP BY get_repair.get_r_id
+                        $sql = "SELECT *
+                        FROM get_repair
+                        LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
+                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                        WHERE
+                            get_repair.m_id = '$id'
+                            AND (
+                                repair.r_brand LIKE '%$search%'
+                                OR repair.r_model LIKE '%$search%'
+                                OR repair.r_serial_number LIKE '%$search%'
+                                OR repair.r_number_model LIKE '%$search%'
+                                OR get_repair.get_r_id LIKE '%$search%'
+                                OR CONCAT(repair.r_brand, ' ', repair.r_model) LIKE '%$search%'
+                                OR CONCAT(repair.r_brand, '', repair.r_model) LIKE '%$search%'
+                            )
                         ORDER BY get_repair.get_r_date_in DESC;
+                        ;
                         ";
                     }
                     $result = mysqli_query($conn, $sql);
@@ -465,19 +474,41 @@ if (isset($_GET["status_id"])) {
                                             <?php } ?>
                                         </h3>
                                     </div>
-                                    <?php if ($row_c[0] == 1) { ?>
+                                    <?php
+
+                                    // Check Repair Count 
+                                    $sql_count_p = "SELECT COUNT(get_d_id)
+                                    FROM get_detail
+                                    LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                                    LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                                    WHERE repair.m_id = '$id' AND get_repair.get_r_id = '$id_r '
+                                    ORDER BY get_repair.get_r_date_in DESC;";
+                                    $result_count_p = mysqli_query($conn, $sql_count_p);
+                                    $row_count_p = mysqli_fetch_array($result_count_p);
+
+                                    // Data In Get_repair Select r_id From Repair
+                                    $sql_detail = "SELECT get_repair.*, repair.*
+                                    FROM get_detail
+                                    LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                                    LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                                    WHERE repair.m_id = '$id' 
+                                    ORDER BY get_repair.get_r_date_in DESC;";
+                                    $result_detail = mysqli_query($conn, $sql_detail);
+                                    $row_detail = mysqli_fetch_array($result_detail);
+
+                                    if ($row_count_p[0] == 1) { ?>
                                         <ul class="list-group list-group-flush">
                                             <li class="list-group-item">
-                                                <h5 style="color: blue" id="head_text"><?= $row1['r_brand'] ?> <?= $row1['r_model'] ?></h5>
+                                                <h5 style="color: blue" id="head_text"><?= $row_detail['r_brand'] ?> <?= $row_detail['r_model'] ?></h5>
                                                 <br>
-                                                <p style="text-align: start" id="body_text">Serial Number: <?= $row1['r_serial_number'] ?></p>
-                                                <p style="text-align: start" id="body_text">Model: <?= $row1['r_number_model'] ?></p>
+                                                <p style="text-align: start" id="body_text">Serial Number: <?= $row_detail['r_serial_number'] ?></p>
+                                                <p style="text-align: start" id="body_text">Model: <?= $row_detail['r_number_model'] ?></p>
                                             </li>
                                             <?php if ($row_c['get_r_detail'] != NULL) {
                                                 $text = $row_c['get_r_detail'];
                                                 $summary = strlen($text) > 100 ? substr($text, 0, 200) . "..." : $text;
 
-                                                $dateString = date('d-m-Y', strtotime($row1['get_r_date_in']));
+                                                $dateString = date('d-m-Y', strtotime($row_detail['get_r_date_in']));
                                                 $date = DateTime::createFromFormat('d-m-Y', $dateString);
                                                 $formattedDate = $date->format('d F Y');
                                             ?>
