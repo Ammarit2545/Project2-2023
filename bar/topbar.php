@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!-- navbar-->
 <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
   <div class="container">
@@ -16,8 +19,26 @@
       </div>
     </div>
     <div class="col-md-3 text-end">
+      <?php
+      if (!isset($_SESSION['profile'])) {
+        $line = new LineLogin();
+        $link = $line->getLink();
+      ?>
+        <!-- <a href="<?php echo $link; ?>" class="btn btn-success">Line Login</a> -->
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Login</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Register">Sign-up</button>
+      <?php
+      } else {
+      ?>
+        <!-- <li><a class="dropdown-item" onclick="logout()">Log out</a></li> -->
+        <a href="action/logout.php" class="btn btn-outline-primary">Log out</a>
+      <?php
+      }
+      ?>
+
+      <!-- 
       <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Login</button>
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Register">Sign-up</button>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Register">Sign-up</button> -->
     </div>
   </div>
 </nav>

@@ -2,8 +2,6 @@
     session_start();
     include '../database/condb.php';
 
-
-
     $email = $_POST['email'];
     $password = $_POST['password'];
     
@@ -72,6 +70,7 @@
         $_SESSION["log_id"] = $row_log['e_log_id'];
 
         // Redirect to the user's dashboard or home page
+        $_SESSION['add_data_alert'] = 0;
         header("location: ../admin");
         // exit(); // Terminate the current script
         }else{
@@ -79,7 +78,7 @@
             $_SESSION["Error"] = "<p>Your username or password is invalid.</p>";
             $_SESSION['add_data_alert'] = 1;
         echo "false";
-        header("location: ../home.php");
+        header("location: ../index.php");
         }
 
         // exit(); // Terminate the current script
