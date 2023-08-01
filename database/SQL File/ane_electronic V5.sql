@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Jun 18, 2023 at 03:56 PM
--- Server version: 10.9.2-MariaDB-log
--- PHP Version: 8.1.10
+-- Host: localhost
+-- Generation Time: Aug 01, 2023 at 07:15 PM
+-- Server version: 8.0.31
+-- PHP Version: 7.4.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,11 +28,11 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `amphures` (
-  `id` int(5) NOT NULL,
-  `code` varchar(4) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `name_th` varchar(150) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `name_en` varchar(150) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `province_id` int(5) NOT NULL DEFAULT 0
+  `id` int NOT NULL,
+  `code` varchar(4) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `name_th` varchar(150) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `name_en` varchar(150) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `province_id` int NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
@@ -1046,13 +1046,13 @@ INSERT INTO `amphures` (`id`, `code`, `name_th`, `name_en`, `province_id`) VALUE
 --
 
 CREATE TABLE `company` (
-  `com_id` int(6) NOT NULL,
+  `com_id` int NOT NULL,
   `com_name` varchar(255) DEFAULT NULL,
   `com_add` varchar(255) DEFAULT NULL,
   `com_tel` varchar(20) DEFAULT NULL,
   `com_fax` varchar(20) DEFAULT NULL,
-  `del_flg` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `del_flg` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `company`
@@ -1063,12 +1063,33 @@ INSERT INTO `company` (`com_id`, `com_name`, `com_add`, `com_tel`, `com_fax`, `d
 (2, 'NPE', NULL, NULL, NULL, 0),
 (3, 'Pro Plus', NULL, NULL, NULL, 0),
 (4, 'Sound Best', NULL, NULL, NULL, 0),
-(5, 'K.Power', NULL, NULL, NULL, 0),
+(5, 'K.Power', NULL, '085478556', '085478556', 0),
 (6, 'WARTECH', NULL, NULL, NULL, 0),
-(7, 'JXL', NULL, NULL, NULL, 0),
+(7, 'JXL', NULL, '0859585965', '0859585965', 0),
 (8, 'NANOVA', NULL, NULL, NULL, 0),
 (9, 'GIP', NULL, NULL, NULL, 1),
 (10, 'Pioneers', '719 à¸Šà¸±à¹‰à¸™ 17 à¸­à¸²à¸„à¸²à¸£à¹€à¸„à¸žà¸µà¹€à¸­à¹‡à¸™ à¸—à¸²à¸§à¹€à¸§à¸­à¸£à¹Œ 719 Rama IX Rd, Bang Kapi, Huai Khwang, Bangkok 10310', '0859585965', '0859585965', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `company_parts`
+--
+
+CREATE TABLE `company_parts` (
+  `com_p_id` int NOT NULL COMMENT 'ไอดีบริษัทที่สั่งซื้อ',
+  `com_p_name` varchar(50) DEFAULT NULL COMMENT 'ชื่อบริษัทที่สั่งซื้อ',
+  `com_p_tel` varchar(20) DEFAULT NULL COMMENT 'เบอร์โทรติดต่อบริษัทที่สั่งซื้อ',
+  `del_flg` int DEFAULT '0' COMMENT 'ลบ = 1'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `company_parts`
+--
+
+INSERT INTO `company_parts` (`com_p_id`, `com_p_name`, `com_p_tel`, `del_flg`) VALUES
+(1, 'Anan Elecrtonic', '0854859663', 0),
+(2, 'Turo', '025485996', 0);
 
 -- --------------------------------------------------------
 
@@ -1077,11 +1098,11 @@ INSERT INTO `company` (`com_id`, `com_name`, `com_add`, `com_tel`, `com_fax`, `d
 --
 
 CREATE TABLE `company_transport` (
-  `com_t_id` int(6) NOT NULL COMMENT 'ไอดีบริษัทขนส่ง',
+  `com_t_id` int NOT NULL COMMENT 'ไอดีบริษัทขนส่ง',
   `com_t_name` varchar(50) DEFAULT NULL COMMENT 'ชื่อบริษัทขนส่ง',
   `com_t_pic` varchar(255) DEFAULT NULL COMMENT 'รูปบริษัทขนส่ง',
   `del_flg` tinyint(1) DEFAULT NULL COMMENT 'ลบ = 1'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `company_transport`
@@ -1097,11 +1118,11 @@ INSERT INTO `company_transport` (`com_t_id`, `com_t_name`, `com_t_pic`, `del_flg
 --
 
 CREATE TABLE `districts` (
-  `id` varchar(6) COLLATE utf8mb3_bin NOT NULL,
-  `zip_code` int(11) NOT NULL,
-  `name_th` varchar(150) COLLATE utf8mb3_bin NOT NULL,
-  `name_en` varchar(150) COLLATE utf8mb3_bin NOT NULL,
-  `amphure_id` int(11) NOT NULL DEFAULT 0
+  `id` varchar(6) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
+  `zip_code` int NOT NULL,
+  `name_th` varchar(150) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
+  `name_en` varchar(150) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
+  `amphure_id` int NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin COMMENT='InnoDB free: 8192 kB';
 
 --
@@ -9974,19 +9995,19 @@ INSERT INTO `districts` (`id`, `zip_code`, `name_th`, `name_en`, `amphure_id`) V
 --
 
 CREATE TABLE `employee` (
-  `e_id` int(6) NOT NULL,
+  `e_id` int NOT NULL,
   `e_email` varchar(255) DEFAULT NULL,
   `e_password` varchar(128) DEFAULT NULL,
   `e_fname` varchar(255) DEFAULT NULL,
   `e_lname` varchar(255) DEFAULT NULL,
   `e_add` varchar(255) DEFAULT NULL,
   `e_tel` varchar(20) DEFAULT NULL,
-  `role_id` int(3) DEFAULT NULL,
-  `del_flg` tinyint(1) DEFAULT 0 COMMENT 'ลบ = 1',
+  `role_id` int DEFAULT NULL,
+  `del_flg` tinyint(1) DEFAULT '0' COMMENT 'ลบ = 1',
   `e_date_in` datetime DEFAULT NULL COMMENT 'วันที่เข้าสู่ระบบครั้งแรก',
-  `e_salary` int(11) DEFAULT NULL,
+  `e_salary` int DEFAULT NULL,
   `e_date_update` datetime DEFAULT NULL COMMENT 'วันที่อัพเดตข้อมูลล่าสุด'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `employee`
@@ -10007,8 +10028,8 @@ INSERT INTO `employee` (`e_id`, `e_email`, `e_password`, `e_fname`, `e_lname`, `
 --
 
 CREATE TABLE `geographies` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb3_bin NOT NULL
+  `id` int NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin COMMENT='InnoDB free: 8192 kB';
 
 --
@@ -10030,16 +10051,16 @@ INSERT INTO `geographies` (`id`, `name`) VALUES
 --
 
 CREATE TABLE `get_detail` (
-  `get_d_id` int(6) NOT NULL COMMENT 'ไอดีรายละเอียดรับการซ่อม',
+  `get_d_id` int NOT NULL COMMENT 'ไอดีรายละเอียดรับการซ่อม',
   `get_r_id` varchar(6) DEFAULT NULL COMMENT 'รหัสรับการซ่อม',
   `r_id` varchar(6) DEFAULT NULL COMMENT 'รหัสข้อมูลอุปกรณ์',
   `get_d_record` varchar(6) DEFAULT NULL COMMENT 'ครั้งของการซ่อม',
   `get_d_detail` varchar(255) DEFAULT NULL COMMENT 'รายละเอียดการซ่อม',
   `t_id` varchar(50) DEFAULT NULL COMMENT 'ไอดีรหัสไปรยษณีย์',
   `del_flg` varchar(1) NOT NULL DEFAULT '0' COMMENT 'ลบ = 1',
-  `get_d_conf` int(1) DEFAULT NULL COMMENT '0 = ใช้,1 = ไม่ใช้ ',
+  `get_d_conf` int DEFAULT NULL COMMENT '0 = ใช้,1 = ไม่ใช้ ',
   `get_t_id` varchar(6) DEFAULT NULL COMMENT 'ไอดีรหัสไปรษณีย์ของสมาชิก'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COMMENT='ตารางรายละเอียดอุปกรณ์ซ่อมในแต่ละอุปกรณ์';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='ตารางรายละเอียดอุปกรณ์ซ่อมในแต่ละอุปกรณ์';
 
 --
 -- Dumping data for table `get_detail`
@@ -10067,9 +10088,27 @@ INSERT INTO `get_detail` (`get_d_id`, `get_r_id`, `r_id`, `get_d_record`, `get_d
 (32, '157', '140', '1', 'à¹€à¸›à¹‡à¸™à¸¥à¸³à¹‚à¸žà¸‡ 2.1 à¸¡à¸±à¸™à¸ˆà¸°à¸¡à¸µ subwoodfer à¸•à¸±à¸§à¸™à¸¶à¸‡ à¹à¸¥à¸°à¸¥à¸³à¹‚à¸žà¸‡à¹€à¸¥à¹‡à¸à¸­à¸µà¸ 2 à¸•à¸±à¸§ à¹à¸•à¹ˆà¸—à¸µà¹ˆà¸¡à¸±à¸™à¸žà¸±à¸‡à¸„à¸·à¸­à¹„à¸­à¸¥à¸³à¹‚à¸žà¸‡à¸•à¸±à¸§à¹€à¸¥à¹‡à¸à¸¡à¸±à¸™à¸žà¸±à¸‡à¹à¸•à¹', NULL, '1', 1, NULL),
 (33, '158', '141', '1', 'hkjhoiuhuguk', '3', '0', 0, NULL),
 (34, '158', '142', '1', 'asdasdasd', '3', '0', 0, NULL),
-(35, '160', '144', '1', 'asdasdasd', NULL, '0', NULL, NULL),
-(36, '160', '145', '1', 'sadasdasdsad', NULL, '0', NULL, NULL),
-(37, '160', '146', '1', 'sfdsfdsf', NULL, '0', NULL, NULL);
+(35, '160', '144', '1', 'asdasdasd', NULL, '0', 0, NULL),
+(36, '160', '145', '1', 'sadasdasdsad', NULL, '0', 0, NULL),
+(37, '160', '146', '1', 'sfdsfdsf', NULL, '1', 1, NULL),
+(38, '162', '152', '1', 'dfesfgdfghgdhgdh', '4', '0', 0, NULL),
+(39, '162', '153', '1', 'vdfgdfdthretrth', NULL, '1', 1, NULL),
+(40, '163', '154', '1', 'sdnlkfsiofsogl', NULL, '0', 0, NULL),
+(41, '164', '155', '1', 'AudioTechAudioTechAudioTechAudioTechAudioTech', '1', '0', 0, NULL),
+(42, '164', '156', '1', 'sdfsdfsdf', '1', '0', 0, NULL),
+(43, '164', '157', '1', 'sdfdsfsdfsdf', NULL, '1', 1, NULL),
+(44, '165', '158', '1', 'asdasdasdasd', NULL, '0', 0, NULL),
+(45, '165', '159', '1', 'sadasdasdasdasdsadasdasd15115151541541', NULL, '0', 0, NULL),
+(46, '166', '160', '1', 'sdfsdfsdfsddfsddfsdsfd', '4', '0', 0, NULL),
+(47, '167', '161', '1', 'asdasdasdasdasdasd', NULL, '0', 0, '10'),
+(48, '168', '162', '1', 'sdfsdfsdf', NULL, '0', 0, '8'),
+(49, '168', '163', '1', 'sdffsdf', NULL, '0', 0, '9'),
+(50, '169', '164', '1', 'à¹€à¸›à¹‡à¸™à¸¥à¸³à¹‚à¸žà¸‡ 2.1 à¸¡à¸±à¸™à¸ˆà¸°à¸¡à¸µ subwoodfer à¸•à¸±à¸§à¸™à¸¶à¸‡ à¹à¸¥à¸°à¸¥à¸³à¹‚à¸žà¸‡à¹€à¸¥à¹‡à¸à¸­à¸µà¸ 2 à¸•à¸±à¸§ à¹à¸•à¹ˆà¸—à¸µà¹ˆà¸¡à¸±à¸™à¸žà¸±à¸‡à¸„à¸·à¸­à¹„à¸­à¸¥à¸³à¹‚à¸žà¸‡à¸•à¸±à¸§à¹€à¸¥à¹‡à¸à¸¡à¸±à¸™à¸žà¸±à¸‡à¹à¸•à¹', NULL, '0', 0, '11'),
+(51, '170', '165', '1', 'à¹€à¸›à¹‡à¸™à¸¥à¸³à¹‚à¸žà¸‡ 2.1 à¸¡à¸±à¸™à¸ˆà¸°à¸¡à¸µ subwoodfer à¸•à¸±à¸§à¸™à¸¶à¸‡ à¹à¸¥à¸°à¸¥à¸³à¹‚à¸žà¸‡à¹€à¸¥à¹‡à¸à¸­à¸µà¸ 2 à¸•à¸±à¸§ à¹à¸•à¹ˆà¸—à¸µà¹ˆà¸¡à¸±à¸™à¸žà¸±à¸‡à¸„à¸·à¸­à¹„à¸­à¸¥à¸³à¹‚à¸žà¸‡à¸•à¸±à¸§à¹€à¸¥à¹‡à¸à¸¡à¸±à¸™à¸žà¸±à¸‡à¹à¸•à¹', '13', '0', 0, NULL),
+(52, '170', '166', '1', 'à¹€à¸›à¹‡à¸™à¸¥à¸³à¹‚à¸žà¸‡ 2.1 à¸¡à¸±à¸™à¸ˆà¸°à¸¡à¸µ subwoodfer à¸•à¸±à¸§à¸™à¸¶à¸‡ à¹à¸¥à¸°à¸¥à¸³à¹‚à¸žà¸‡à¹€à¸¥à¹‡à¸à¸­à¸µà¸ 2 à¸•à¸±à¸§ à¹à¸•à¹ˆà¸—à¸µà¹ˆà¸¡à¸±à¸™à¸žà¸±à¸‡à¸„à¸·à¸­à¹„à¸­à¸¥à¸³à¹‚à¸žà¸‡à¸•à¸±à¸§à¹€à¸¥à¹‡à¸à¸¡à¸±à¸™à¸žà¸±à¸‡à¹à¸•à¹', '13', '0', 0, NULL),
+(53, '171', '167', '1', 'à¸žà¸±à¸‡à¸ˆà¸²à¸à¹„à¸­à¹ˆà¹‚à¸­à¸¡ à¹€à¸žà¸£à¸²à¸°à¸¡à¸±à¸™à¹‚à¸¢à¸™à¹€à¸‰à¸¢ à¹„à¸­à¹ˆà¸ªà¸±à¸ª', NULL, '0', 0, '8'),
+(54, '172', '168', '1', 'à¹€à¸›à¹‡à¸™à¸¥à¸³à¹‚à¸žà¸‡ 2.1 à¸¡à¸±à¸™à¸ˆà¸°à¸¡à¸µ subwoodfer à¸•à¸±à¸§à¸™à¸¶à¸‡ à¹à¸¥à¸°à¸¥à¸³à¹‚à¸žà¸‡à¹€à¸¥à¹‡à¸à¸­à¸µà¸ 2 à¸•à¸±à¸§ à¹à¸•à¹ˆà¸—à¸µà¹ˆà¸¡à¸±à¸™à¸žà¸±à¸‡à¸„à¸·à¸­à¹„à¸­à¸¥à¸³à¹‚à¸žà¸‡à¸•à¸±à¸§à¹€à¸¥à¹‡à¸à¸¡à¸±à¸™à¸žà¸±à¸‡à¹à¸•à¹', NULL, '0', 0, '8'),
+(55, '173', '169', '1', 'TestStatus', NULL, '0', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -10078,171 +10117,185 @@ INSERT INTO `get_detail` (`get_d_id`, `get_r_id`, `r_id`, `get_d_record`, `get_d
 --
 
 CREATE TABLE `get_repair` (
-  `get_r_id` int(6) NOT NULL,
+  `get_r_id` int NOT NULL,
   `get_r_date_in` datetime(6) DEFAULT NULL,
   `get_r _date_out` datetime(6) DEFAULT NULL,
-  `e_id` int(6) DEFAULT NULL,
-  `del_flg` tinyint(1) NOT NULL DEFAULT 0,
+  `e_id` int DEFAULT NULL,
+  `del_flg` tinyint(1) NOT NULL DEFAULT '0',
   `get_tel` varchar(20) DEFAULT NULL,
   `get_add` varchar(255) DEFAULT NULL,
-  `get_wages` int(10) DEFAULT NULL COMMENT 'ค่าแรงช่าง',
-  `get_add_price` int(6) DEFAULT NULL COMMENT 'ราคาค่าส่ง',
-  `get_pay` int(1) DEFAULT 0 COMMENT 'ชำระแล้ว = 1',
-  `get_deli` tinyint(1) DEFAULT 0 COMMENT '0 = รับหน้าร้าน , 1 = ทำการจัดส่ง',
-  `get_date_conf` int(6) DEFAULT NULL COMMENT '(กี่วัน) วันที่คาดการการซ่อมเสร็จ'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `get_wages` int DEFAULT NULL COMMENT 'ค่าแรงช่าง',
+  `get_add_price` int DEFAULT NULL COMMENT 'ราคาค่าส่ง',
+  `get_pay` int DEFAULT '0' COMMENT 'ชำระแล้ว = 1',
+  `get_deli` tinyint(1) DEFAULT '0' COMMENT '0 = รับหน้าร้าน , 1 = ทำการจัดส่ง',
+  `get_date_conf` int DEFAULT NULL COMMENT '(กี่วัน) วันที่คาดการการซ่อมเสร็จ',
+  `get_check` int DEFAULT NULL COMMENT 'ค่าตรวจเช็คอุปกรณ์'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `get_repair`
 --
 
-INSERT INTO `get_repair` (`get_r_id`, `get_r_date_in`, `get_r _date_out`, `e_id`, `del_flg`, `get_tel`, `get_add`, `get_wages`, `get_add_price`, `get_pay`, `get_deli`, `get_date_conf`) VALUES
-(1, '2023-04-19 21:38:06.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(2, '2023-05-01 16:05:02.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(3, '2023-05-01 16:07:38.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(4, '2023-05-01 16:08:19.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(5, '2023-05-01 16:09:58.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(6, '2023-05-01 16:30:43.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(7, '2023-05-01 16:32:17.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(8, '2023-05-01 16:49:06.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(9, '2023-05-01 16:50:42.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(10, '2023-05-01 21:03:07.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(11, '2023-05-01 22:04:36.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(12, '2023-05-02 15:49:35.000000', NULL, NULL, 0, '09576555647', NULL, NULL, NULL, 0, 0, NULL),
-(13, '2023-05-07 17:41:52.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(14, '2023-05-07 17:44:22.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(15, '2023-05-07 17:45:57.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(16, '2023-05-07 17:47:49.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(17, '2023-05-07 17:48:59.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(18, '2023-05-07 17:52:41.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(19, '2023-05-07 17:56:18.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(20, '2023-05-07 17:58:35.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(21, '2023-05-07 18:02:22.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(22, '2023-05-07 18:05:24.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(23, '2023-05-07 18:06:01.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(24, '2023-05-07 18:09:28.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(25, '2023-05-07 18:09:58.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(26, '2023-05-07 18:11:10.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(27, '2023-05-07 18:15:12.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(28, '2023-05-07 19:18:07.000000', NULL, NULL, 0, NULL, NULL, 1000, NULL, 0, 0, NULL),
-(29, '2023-05-07 19:19:16.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL),
-(30, '2023-05-07 19:46:27.000000', NULL, NULL, 0, '0958965896', NULL, NULL, NULL, 0, 0, NULL),
-(31, '2023-05-07 21:33:09.000000', NULL, NULL, 0, '0958965896', NULL, NULL, NULL, 0, 0, NULL),
-(32, '2023-05-07 21:34:45.000000', NULL, NULL, 0, '0958965896', NULL, NULL, NULL, 0, 0, NULL),
-(33, '2023-05-07 22:12:25.000000', NULL, NULL, 0, '0957650000', NULL, NULL, NULL, 0, 0, NULL),
-(34, '2023-05-07 22:16:04.000000', NULL, NULL, 0, '0957650000', NULL, NULL, NULL, 0, 0, NULL),
-(35, '2023-05-11 14:01:06.000000', NULL, NULL, 0, '09576556547', NULL, 300, NULL, 0, 0, NULL),
-(36, '2023-05-11 14:02:30.000000', NULL, NULL, 0, '09576556544', NULL, 500, NULL, 0, 0, NULL),
-(37, '2023-05-11 14:57:58.000000', NULL, NULL, 0, '09576556547', NULL, 500, NULL, 0, 0, NULL),
-(38, '2023-05-11 14:58:54.000000', NULL, NULL, 0, '09576556547', NULL, 500, NULL, 0, 0, NULL),
-(39, '2023-05-11 15:09:07.000000', NULL, NULL, 0, '09576556547', NULL, 500, NULL, 0, 0, NULL),
-(40, '2023-05-11 15:10:42.000000', NULL, NULL, 0, '09576556547', NULL, 300, NULL, 0, 0, NULL),
-(41, '2023-05-11 15:12:42.000000', NULL, NULL, 0, '09576556547', NULL, 300, NULL, 0, 0, NULL),
-(42, '2023-05-11 15:13:14.000000', NULL, NULL, 0, '09576556547', NULL, 300, NULL, 0, 0, NULL),
-(43, '2023-05-11 15:15:42.000000', NULL, NULL, 0, '09576556547', NULL, 300, NULL, 0, 0, NULL),
-(44, '2023-05-11 16:34:15.000000', NULL, NULL, 0, '09576556547', NULL, 300, NULL, 0, 0, NULL),
-(45, '2023-05-11 16:37:21.000000', NULL, NULL, 0, '09576556547', NULL, 300, NULL, 0, 0, NULL),
-(46, '2023-05-11 16:39:45.000000', NULL, NULL, 0, '09576556547', NULL, 300, NULL, 0, 0, NULL),
-(47, '2023-05-11 16:47:41.000000', NULL, NULL, 0, '09576556547', NULL, 1000, NULL, 0, 0, NULL),
-(48, '2023-05-11 18:42:27.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL),
-(49, '2023-05-11 19:23:04.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL),
-(50, '2023-05-11 19:24:18.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL),
-(51, '2023-05-11 19:24:20.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL),
-(52, '2023-05-11 19:28:18.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL),
-(53, '2023-05-11 19:28:21.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL),
-(54, '2023-05-11 19:30:58.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL),
-(55, '2023-05-11 19:32:20.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL),
-(56, '2023-05-11 19:33:26.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL),
-(57, '2023-05-11 19:41:17.000000', NULL, NULL, 0, '09576556547', NULL, 500, NULL, 0, 0, NULL),
-(58, '2023-05-11 19:42:50.000000', NULL, NULL, 0, '09576556547', NULL, 2000, NULL, 0, 0, NULL),
-(59, '2023-05-11 19:45:13.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL),
-(60, '2023-05-11 20:09:23.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL),
-(61, '2023-05-12 17:13:21.000000', NULL, NULL, 0, '09576556547', NULL, 1000, NULL, 0, 0, NULL),
-(62, '2023-05-12 17:34:57.000000', NULL, NULL, 0, '0958965896', NULL, 1000, NULL, 0, 0, NULL),
-(63, '2023-05-19 02:56:30.000000', NULL, NULL, 0, '09576556547', NULL, 0, NULL, 0, 0, NULL),
-(64, '2023-05-19 02:58:37.000000', NULL, NULL, 0, '09576556547', NULL, 0, NULL, 0, 0, NULL),
-(65, '2023-05-19 02:58:51.000000', NULL, NULL, 0, '09576556547', NULL, 0, NULL, 0, 0, NULL),
-(66, '2023-05-19 03:00:44.000000', NULL, NULL, 0, '09576556547', NULL, 0, NULL, 0, 0, NULL),
-(67, '2023-05-19 03:01:36.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL),
-(68, '2023-05-19 18:12:30.000000', NULL, NULL, 0, '09576556547', NULL, 200, NULL, 0, 0, NULL),
-(69, '2023-05-23 13:45:50.000000', NULL, NULL, 0, '09576556547', NULL, 0, NULL, 0, 0, NULL),
-(70, '2023-05-23 14:06:36.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL),
-(71, '2023-05-23 14:50:58.000000', NULL, NULL, 0, '09576556547', NULL, 2000, NULL, 0, 0, NULL),
-(72, '2023-05-27 21:33:03.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(73, '2023-05-27 21:37:09.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(74, '2023-05-27 21:51:09.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(75, '2023-05-27 21:56:45.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(76, '2023-05-27 21:58:21.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(77, '2023-06-02 03:41:18.000000', NULL, NULL, 0, '09576556547', NULL, 300, NULL, 0, 0, NULL),
-(78, '2023-06-02 12:43:22.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(79, '2023-06-02 13:29:31.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(80, '2023-06-02 13:32:17.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(81, '2023-06-02 13:32:26.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(82, '2023-06-02 13:33:08.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(83, '2023-06-02 13:37:34.000000', NULL, NULL, 0, '', NULL, 300, NULL, 0, 0, NULL),
-(84, '2023-06-02 14:30:09.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(85, '2023-06-02 14:40:43.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(86, '2023-06-02 14:43:53.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(87, '2023-06-02 14:45:04.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(88, '2023-06-02 14:45:46.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(89, '2023-06-02 14:46:15.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(90, '2023-06-02 14:46:30.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(91, '2023-06-02 14:47:42.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(92, '2023-06-02 14:48:23.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(93, '2023-06-02 14:59:41.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(94, '2023-06-02 15:04:36.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(95, '2023-06-02 15:05:51.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(96, '2023-06-02 15:09:08.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(97, '2023-06-02 15:11:22.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(98, '2023-06-02 15:13:22.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(99, '2023-06-02 15:19:39.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(100, '2023-06-02 15:20:33.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(101, '2023-06-02 15:22:57.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(102, '2023-06-02 15:25:22.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(103, '2023-06-02 15:27:15.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(104, '2023-06-02 15:30:41.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(105, '2023-06-02 15:32:50.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(106, '2023-06-02 15:34:10.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(107, '2023-06-02 15:35:19.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(108, '2023-06-02 15:38:56.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(109, '2023-06-02 15:39:55.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(110, '2023-06-02 15:40:22.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(111, '2023-06-02 15:41:05.000000', NULL, 1, 0, '', NULL, 500, NULL, 0, 0, NULL),
-(112, '2023-06-02 15:41:52.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(113, '2023-06-02 15:42:35.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(114, '2023-06-02 15:43:18.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(115, '2023-06-02 15:43:35.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(116, '2023-06-02 15:43:49.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(117, '2023-06-02 15:44:29.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(118, '2023-06-02 15:44:46.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(119, '2023-06-02 15:45:44.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(120, '2023-06-02 15:47:02.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(121, '2023-06-02 15:47:58.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(122, '2023-06-02 15:48:51.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(123, '2023-06-02 15:51:02.000000', NULL, 1, 1, '', NULL, NULL, NULL, 0, 0, NULL),
-(124, '2023-06-02 15:51:39.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(125, '2023-06-02 15:52:57.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(126, '2023-06-02 15:53:54.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(127, '2023-06-02 16:09:54.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(128, '2023-06-02 16:11:55.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(129, '2023-06-02 19:04:57.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(130, '2023-06-05 13:40:15.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL),
-(131, '2023-06-05 13:40:59.000000', NULL, NULL, 0, '09576556547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 500, NULL, 0, 0, NULL),
-(146, '2023-06-06 17:46:23.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 800, 500, 0, 0, NULL),
-(147, '2023-06-06 19:03:17.000000', NULL, NULL, 0, '', '{\"province\":\"2\",\"district\":\"53\",\"sub_district\":\"110201\",\"zip_code\":\"10560\",\"description\":\"ddassadasdasdasdds\"}', 500, NULL, 0, 0, NULL),
-(148, '2023-06-08 21:18:54.000000', NULL, NULL, 0, '', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', NULL, NULL, 0, 0, 10),
-(149, '2023-06-08 21:24:33.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"1\",\"district\":\"1\",\"sub_district\":\"100101\",\"zip_code\":\"10200\",\"description\":\"gdfgdfgdfgdfg\"}', NULL, NULL, 0, 0, NULL),
-(150, '2023-06-08 21:25:34.000000', NULL, NULL, 0, '0957655647', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', NULL, NULL, 0, 0, NULL),
-(151, '2023-06-09 00:22:29.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 500, NULL, 0, 0, NULL),
-(152, '2023-06-09 00:35:30.000000', NULL, NULL, 1, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', NULL, NULL, 0, 0, NULL),
-(153, '2023-06-09 01:06:15.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 850, 1000, 0, 1, NULL),
-(154, '2023-06-09 14:08:10.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', NULL, NULL, 0, 1, NULL),
-(155, '2023-06-09 14:38:06.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 500, 1000, 0, 1, 9),
-(156, '2023-06-09 18:09:14.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 500, NULL, 0, 0, 5),
-(157, '2023-06-12 15:50:37.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 780, 1000, 0, 1, 10),
-(158, '2023-06-13 14:39:04.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 500, 1000, 0, 1, 10),
-(159, '2023-06-13 15:37:30.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL),
-(160, '2023-06-16 00:50:17.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', NULL, NULL, 0, 1, NULL);
+INSERT INTO `get_repair` (`get_r_id`, `get_r_date_in`, `get_r _date_out`, `e_id`, `del_flg`, `get_tel`, `get_add`, `get_wages`, `get_add_price`, `get_pay`, `get_deli`, `get_date_conf`, `get_check`) VALUES
+(1, '2023-04-19 21:38:06.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(2, '2023-05-01 16:05:02.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(3, '2023-05-01 16:07:38.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(4, '2023-05-01 16:08:19.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(5, '2023-05-01 16:09:58.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(6, '2023-05-01 16:30:43.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(7, '2023-05-01 16:32:17.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(8, '2023-05-01 16:49:06.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(9, '2023-05-01 16:50:42.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(10, '2023-05-01 21:03:07.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(11, '2023-05-01 22:04:36.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(12, '2023-05-02 15:49:35.000000', NULL, NULL, 0, '09576555647', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(13, '2023-05-07 17:41:52.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(14, '2023-05-07 17:44:22.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(15, '2023-05-07 17:45:57.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(16, '2023-05-07 17:47:49.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(17, '2023-05-07 17:48:59.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(18, '2023-05-07 17:52:41.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(19, '2023-05-07 17:56:18.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(20, '2023-05-07 17:58:35.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(21, '2023-05-07 18:02:22.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(22, '2023-05-07 18:05:24.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(23, '2023-05-07 18:06:01.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(24, '2023-05-07 18:09:28.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(25, '2023-05-07 18:09:58.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(26, '2023-05-07 18:11:10.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(27, '2023-05-07 18:15:12.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(28, '2023-05-07 19:18:07.000000', NULL, NULL, 0, NULL, NULL, 1000, NULL, 0, 0, NULL, NULL),
+(29, '2023-05-07 19:19:16.000000', NULL, NULL, 0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL),
+(30, '2023-05-07 19:46:27.000000', NULL, NULL, 0, '0958965896', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(31, '2023-05-07 21:33:09.000000', NULL, NULL, 0, '0958965896', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(32, '2023-05-07 21:34:45.000000', NULL, NULL, 0, '0958965896', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(33, '2023-05-07 22:12:25.000000', NULL, NULL, 0, '0957650000', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(34, '2023-05-07 22:16:04.000000', NULL, NULL, 0, '0957650000', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(35, '2023-05-11 14:01:06.000000', NULL, NULL, 0, '09576556547', NULL, 300, NULL, 0, 0, NULL, NULL),
+(36, '2023-05-11 14:02:30.000000', NULL, NULL, 0, '09576556544', NULL, 500, NULL, 0, 0, NULL, NULL),
+(37, '2023-05-11 14:57:58.000000', NULL, NULL, 0, '09576556547', NULL, 500, NULL, 0, 0, NULL, NULL),
+(38, '2023-05-11 14:58:54.000000', NULL, NULL, 0, '09576556547', NULL, 500, NULL, 0, 0, NULL, NULL),
+(39, '2023-05-11 15:09:07.000000', NULL, NULL, 0, '09576556547', NULL, 500, NULL, 0, 0, NULL, NULL),
+(40, '2023-05-11 15:10:42.000000', NULL, NULL, 0, '09576556547', NULL, 300, NULL, 0, 0, NULL, NULL),
+(41, '2023-05-11 15:12:42.000000', NULL, NULL, 0, '09576556547', NULL, 300, NULL, 0, 0, NULL, NULL),
+(42, '2023-05-11 15:13:14.000000', NULL, NULL, 0, '09576556547', NULL, 300, NULL, 0, 0, NULL, NULL),
+(43, '2023-05-11 15:15:42.000000', NULL, NULL, 0, '09576556547', NULL, 300, NULL, 0, 0, NULL, NULL),
+(44, '2023-05-11 16:34:15.000000', NULL, NULL, 0, '09576556547', NULL, 300, NULL, 0, 0, NULL, NULL),
+(45, '2023-05-11 16:37:21.000000', NULL, NULL, 0, '09576556547', NULL, 300, NULL, 0, 0, NULL, NULL),
+(46, '2023-05-11 16:39:45.000000', NULL, NULL, 0, '09576556547', NULL, 300, NULL, 0, 0, NULL, NULL),
+(47, '2023-05-11 16:47:41.000000', NULL, NULL, 0, '09576556547', NULL, 1000, NULL, 0, 0, NULL, NULL),
+(48, '2023-05-11 18:42:27.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(49, '2023-05-11 19:23:04.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(50, '2023-05-11 19:24:18.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(51, '2023-05-11 19:24:20.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(52, '2023-05-11 19:28:18.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(53, '2023-05-11 19:28:21.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(54, '2023-05-11 19:30:58.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(55, '2023-05-11 19:32:20.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(56, '2023-05-11 19:33:26.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(57, '2023-05-11 19:41:17.000000', NULL, NULL, 0, '09576556547', NULL, 500, NULL, 0, 0, NULL, NULL),
+(58, '2023-05-11 19:42:50.000000', NULL, NULL, 0, '09576556547', NULL, 2000, NULL, 0, 0, NULL, NULL),
+(59, '2023-05-11 19:45:13.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(60, '2023-05-11 20:09:23.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(61, '2023-05-12 17:13:21.000000', NULL, NULL, 0, '09576556547', NULL, 1000, NULL, 0, 0, NULL, NULL),
+(62, '2023-05-12 17:34:57.000000', NULL, NULL, 0, '0958965896', NULL, 1000, NULL, 0, 0, NULL, NULL),
+(63, '2023-05-19 02:56:30.000000', NULL, NULL, 0, '09576556547', NULL, 0, NULL, 0, 0, NULL, NULL),
+(64, '2023-05-19 02:58:37.000000', NULL, NULL, 0, '09576556547', NULL, 0, NULL, 0, 0, NULL, NULL),
+(65, '2023-05-19 02:58:51.000000', NULL, NULL, 0, '09576556547', NULL, 0, NULL, 0, 0, NULL, NULL),
+(66, '2023-05-19 03:00:44.000000', NULL, NULL, 0, '09576556547', NULL, 0, NULL, 0, 0, NULL, NULL),
+(67, '2023-05-19 03:01:36.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(68, '2023-05-19 18:12:30.000000', NULL, NULL, 0, '09576556547', NULL, 200, NULL, 0, 0, NULL, NULL),
+(69, '2023-05-23 13:45:50.000000', NULL, NULL, 0, '09576556547', NULL, 0, NULL, 0, 0, NULL, NULL),
+(70, '2023-05-23 14:06:36.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(71, '2023-05-23 14:50:58.000000', NULL, NULL, 0, '09576556547', NULL, 2000, NULL, 0, 0, NULL, NULL),
+(72, '2023-05-27 21:33:03.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(73, '2023-05-27 21:37:09.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(74, '2023-05-27 21:51:09.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(75, '2023-05-27 21:56:45.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(76, '2023-05-27 21:58:21.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(77, '2023-06-02 03:41:18.000000', NULL, NULL, 0, '09576556547', NULL, 300, NULL, 0, 0, NULL, NULL),
+(78, '2023-06-02 12:43:22.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(79, '2023-06-02 13:29:31.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(80, '2023-06-02 13:32:17.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(81, '2023-06-02 13:32:26.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(82, '2023-06-02 13:33:08.000000', NULL, NULL, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(83, '2023-06-02 13:37:34.000000', NULL, NULL, 0, '', NULL, 300, NULL, 0, 0, NULL, NULL),
+(84, '2023-06-02 14:30:09.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(85, '2023-06-02 14:40:43.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(86, '2023-06-02 14:43:53.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(87, '2023-06-02 14:45:04.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(88, '2023-06-02 14:45:46.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(89, '2023-06-02 14:46:15.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(90, '2023-06-02 14:46:30.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(91, '2023-06-02 14:47:42.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(92, '2023-06-02 14:48:23.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(93, '2023-06-02 14:59:41.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(94, '2023-06-02 15:04:36.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(95, '2023-06-02 15:05:51.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(96, '2023-06-02 15:09:08.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(97, '2023-06-02 15:11:22.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(98, '2023-06-02 15:13:22.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(99, '2023-06-02 15:19:39.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(100, '2023-06-02 15:20:33.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(101, '2023-06-02 15:22:57.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(102, '2023-06-02 15:25:22.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(103, '2023-06-02 15:27:15.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(104, '2023-06-02 15:30:41.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(105, '2023-06-02 15:32:50.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(106, '2023-06-02 15:34:10.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(107, '2023-06-02 15:35:19.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(108, '2023-06-02 15:38:56.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(109, '2023-06-02 15:39:55.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(110, '2023-06-02 15:40:22.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(111, '2023-06-02 15:41:05.000000', NULL, 1, 0, '', NULL, 500, NULL, 0, 0, NULL, NULL),
+(112, '2023-06-02 15:41:52.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(113, '2023-06-02 15:42:35.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(114, '2023-06-02 15:43:18.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(115, '2023-06-02 15:43:35.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(116, '2023-06-02 15:43:49.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(117, '2023-06-02 15:44:29.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(118, '2023-06-02 15:44:46.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(119, '2023-06-02 15:45:44.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(120, '2023-06-02 15:47:02.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(121, '2023-06-02 15:47:58.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(122, '2023-06-02 15:48:51.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(123, '2023-06-02 15:51:02.000000', NULL, 1, 1, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(124, '2023-06-02 15:51:39.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(125, '2023-06-02 15:52:57.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(126, '2023-06-02 15:53:54.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(127, '2023-06-02 16:09:54.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(128, '2023-06-02 16:11:55.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(129, '2023-06-02 19:04:57.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(130, '2023-06-05 13:40:15.000000', NULL, NULL, 0, '09576556547', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(131, '2023-06-05 13:40:59.000000', NULL, NULL, 0, '09576556547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 500, NULL, 0, 0, NULL, NULL),
+(146, '2023-06-06 17:46:23.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 800, 500, 0, 0, NULL, NULL),
+(147, '2023-06-06 19:03:17.000000', NULL, NULL, 0, '', '{\"province\":\"2\",\"district\":\"53\",\"sub_district\":\"110201\",\"zip_code\":\"10560\",\"description\":\"ddassadasdasdasdds\"}', 500, NULL, 0, 0, NULL, NULL),
+(148, '2023-06-08 21:18:54.000000', NULL, NULL, 0, '', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', NULL, NULL, 0, 0, 10, NULL),
+(149, '2023-06-08 21:24:33.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"1\",\"district\":\"1\",\"sub_district\":\"100101\",\"zip_code\":\"10200\",\"description\":\"gdfgdfgdfgdfg\"}', NULL, NULL, 0, 0, NULL, NULL),
+(150, '2023-06-08 21:25:34.000000', NULL, NULL, 0, '0957655647', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', NULL, NULL, 0, 0, NULL, NULL),
+(151, '2023-06-09 00:22:29.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 500, NULL, 0, 0, NULL, NULL),
+(152, '2023-06-09 00:35:30.000000', NULL, NULL, 1, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', NULL, NULL, 0, 0, NULL, NULL),
+(153, '2023-06-09 01:06:15.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 850, 1000, 0, 1, NULL, NULL),
+(154, '2023-06-09 14:08:10.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', NULL, NULL, 0, 1, NULL, NULL),
+(155, '2023-06-09 14:38:06.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 500, 1000, 0, 1, 9, NULL),
+(156, '2023-06-09 18:09:14.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 500, NULL, 0, 0, 5, NULL),
+(157, '2023-06-12 15:50:37.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 780, 1000, 0, 1, 10, NULL),
+(158, '2023-06-13 14:39:04.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 500, 1000, 0, 1, 10, NULL),
+(159, '2023-06-13 15:37:30.000000', NULL, 1, 0, '', NULL, NULL, NULL, 0, 0, NULL, NULL),
+(160, '2023-06-16 00:50:17.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 250, 500, 0, 1, 10, NULL),
+(161, '2023-06-21 14:14:32.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', NULL, NULL, 0, 1, NULL, NULL),
+(162, '2023-06-21 14:24:23.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 400, 200, 0, 1, 9, NULL),
+(163, '2023-06-21 14:32:02.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 500, 0, 0, 0, 10, NULL),
+(164, '2023-06-21 15:24:11.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 300, 500, 0, 1, 9, 100),
+(165, '2023-06-25 15:59:09.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 500, 0, 0, 0, 8, NULL),
+(166, '2023-06-25 16:00:54.000000', NULL, NULL, 0, '0957655685', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', 1000, 200, 0, 1, 8, NULL),
+(167, '2023-07-10 01:04:48.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"3\",\"district\":\"59\",\"sub_district\":\"120203\",\"zip_code\":\"11130\",\"description\":\"dcbdgffgdfgdgfdfg\"}', 500, 200, 0, 1, 9, NULL),
+(168, '2023-07-10 03:31:03.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"3\",\"district\":\"59\",\"sub_district\":\"120203\",\"zip_code\":\"11130\",\"description\":\"dcbdgffgdfgdgfdfg\"}', 899, 0, 0, 0, 10, NULL),
+(169, '2023-07-11 15:31:51.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"3\",\"district\":\"59\",\"sub_district\":\"120203\",\"zip_code\":\"11130\",\"description\":\"dcbdgffgdfgdgfdfg\"}', 500, 200, 0, 1, 13, NULL),
+(170, '2023-07-11 16:41:45.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"3\",\"district\":\"59\",\"sub_district\":\"120203\",\"zip_code\":\"11130\",\"description\":\"dcbdgffgdfgdgfdfg\"}', 500, 200, 0, 1, 8, NULL),
+(171, '2023-07-14 15:00:31.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"18\",\"district\":\"206\",\"sub_district\":\"270101\",\"zip_code\":\"27000\",\"description\":\"u0e48u0e01u0e22u0e2bu0e01u0e48u0e14u0e19u0e2bu0e14u0e48u0e40u0e19u0e1au0e14u0e48u0e01u0e1au0e19u0e48u0e01u0e22u0e25u0e23u0e49\"}', 300, 200, 0, 1, 11, NULL),
+(172, '2023-07-16 22:52:33.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"1\",\"district\":\"1\",\"sub_district\":\"100104\",\"zip_code\":\"10200\",\"description\":\"458 Mo.3 Soi.4\"}', 500, 250, 0, 1, 9, NULL),
+(173, '2023-07-25 00:51:31.000000', NULL, NULL, 0, '0879586547', '{\"province\":\"3\",\"district\":\"59\",\"sub_district\":\"120203\",\"zip_code\":\"11130\",\"description\":\"dcbdgffgdfgdgfdfg\"}', 700, 0, 0, 0, 7, NULL);
 
 -- --------------------------------------------------------
 
@@ -10251,11 +10304,11 @@ INSERT INTO `get_repair` (`get_r_id`, `get_r_date_in`, `get_r _date_out`, `e_id`
 --
 
 CREATE TABLE `log_employee` (
-  `e_log_id` int(6) NOT NULL,
-  `e_id` int(6) DEFAULT NULL,
+  `e_log_id` int NOT NULL,
+  `e_id` int DEFAULT NULL,
   `date_in` datetime(6) DEFAULT NULL,
   `date_out` datetime(6) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `log_employee`
@@ -10304,7 +10357,15 @@ INSERT INTO `log_employee` (`e_log_id`, `e_id`, `date_in`, `date_out`) VALUES
 (40, 1, '2023-05-23 17:42:19.000000', '2023-06-05 19:32:51.000000'),
 (41, 1, '2023-05-23 20:59:25.000000', NULL),
 (42, 1, '2023-06-07 13:28:03.000000', '2023-06-15 15:33:14.000000'),
-(43, 1, '2023-06-15 15:36:47.000000', NULL);
+(43, 1, '2023-06-15 15:36:47.000000', '2023-06-18 23:14:16.000000'),
+(44, 1, '2023-06-18 23:27:21.000000', '2023-06-18 23:28:56.000000'),
+(45, 1, '2023-06-18 23:29:14.000000', '2023-06-18 23:29:38.000000'),
+(46, 1, '2023-06-18 23:29:42.000000', '2023-06-20 00:15:19.000000'),
+(47, 1, '2023-06-18 23:30:38.000000', NULL),
+(48, 1, '2023-06-20 00:15:23.000000', '2023-06-20 00:26:59.000000'),
+(49, 1, '2023-06-20 00:27:01.000000', '2023-06-20 22:41:23.000000'),
+(50, 1, '2023-06-20 22:41:25.000000', NULL),
+(51, 1, '2023-07-30 14:01:31.000000', NULL);
 
 -- --------------------------------------------------------
 
@@ -10313,123 +10374,207 @@ INSERT INTO `log_employee` (`e_log_id`, `e_id`, `date_in`, `date_out`) VALUES
 --
 
 CREATE TABLE `log_member` (
-  `m_log_id` int(6) NOT NULL,
-  `m_id` int(6) DEFAULT NULL,
+  `m_log_id` int NOT NULL,
+  `m_id` int DEFAULT NULL,
   `date_in` datetime(6) DEFAULT NULL,
-  `date_out` datetime(6) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `date_out` datetime(6) DEFAULT NULL,
+  `ml_id` varchar(6) DEFAULT NULL COMMENT 'ไอดีผู้ใช้ไลน์'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `log_member`
 --
 
-INSERT INTO `log_member` (`m_log_id`, `m_id`, `date_in`, `date_out`) VALUES
-(1, 1, '2023-05-11 22:44:34.000000', '2023-05-11 23:29:27.000000'),
-(2, 1, '2023-05-11 22:52:41.000000', '2023-05-11 23:14:18.000000'),
-(3, 1, '2023-05-11 23:42:08.000000', '2023-05-11 23:43:51.000000'),
-(4, 1, '2023-05-12 03:25:03.000000', '2023-05-12 03:25:06.000000'),
-(5, 1, '2023-05-12 03:25:11.000000', '2023-05-12 03:26:59.000000'),
-(6, 1, '2023-05-12 16:19:29.000000', '2023-05-12 16:19:39.000000'),
-(7, 1, '2023-05-12 17:09:21.000000', NULL),
-(8, 1, '2023-05-12 17:11:23.000000', '2023-05-12 17:18:19.000000'),
-(9, 1, '2023-05-12 17:24:10.000000', '2023-05-12 17:25:12.000000'),
-(10, 1, '2023-05-12 17:31:51.000000', '2023-05-12 17:42:11.000000'),
-(11, 1, '2023-05-13 16:07:36.000000', '2023-05-13 16:07:52.000000'),
-(12, 1, '2023-05-13 16:08:14.000000', '2023-05-13 16:44:01.000000'),
-(13, 1, '2023-05-13 22:04:23.000000', '2023-05-13 22:04:35.000000'),
-(14, 4, '2023-05-13 22:04:39.000000', '2023-05-13 22:19:57.000000'),
-(15, 1, '2023-05-13 22:20:02.000000', '2023-05-13 22:25:14.000000'),
-(16, 1, '2023-05-13 22:48:02.000000', '2023-05-13 23:01:12.000000'),
-(17, 1, '2023-05-13 23:05:03.000000', '2023-05-13 23:05:04.000000'),
-(18, 1, '2023-05-13 23:06:21.000000', '2023-05-14 18:50:47.000000'),
-(19, 1, '2023-05-15 23:02:57.000000', '2023-05-15 23:08:36.000000'),
-(20, 1, '2023-05-16 01:54:15.000000', '2023-05-16 02:10:05.000000'),
-(21, 1, '2023-05-17 02:08:20.000000', '2023-05-17 02:11:18.000000'),
-(22, 1, '2023-05-19 02:55:52.000000', '2023-05-19 03:10:41.000000'),
-(23, 1, '2023-05-19 03:24:18.000000', '2023-05-19 03:24:39.000000'),
-(24, 1, '2023-05-19 18:09:07.000000', '2023-05-19 18:13:01.000000'),
-(25, 1, '2023-05-19 18:34:40.000000', '2023-05-20 15:21:54.000000'),
-(26, 7, '2023-05-20 20:12:38.000000', '2023-05-20 20:12:48.000000'),
-(27, 1, '2023-05-20 20:12:52.000000', '2023-05-20 20:17:13.000000'),
-(28, 1, '2023-05-20 21:27:48.000000', '2023-05-20 21:32:55.000000'),
-(29, 1, '2023-05-21 14:01:37.000000', NULL),
-(30, 1, '2023-05-23 13:25:28.000000', '2023-05-23 14:07:34.000000'),
-(31, 1, '2023-05-23 13:34:42.000000', '2023-05-23 13:37:17.000000'),
-(32, 1, '2023-05-23 13:37:34.000000', '2023-05-23 13:38:01.000000'),
-(33, 1, '2023-05-23 14:07:39.000000', '2023-05-23 20:47:12.000000'),
-(34, 4, '2023-05-23 20:47:19.000000', '2023-05-23 20:47:31.000000'),
-(35, 1, '2023-05-23 20:47:36.000000', '2023-05-23 20:59:16.000000'),
-(36, 1, '2023-05-24 01:24:14.000000', NULL),
-(37, 1, '2023-05-24 13:45:38.000000', '2023-05-24 14:41:15.000000'),
-(38, 1, '2023-05-24 14:41:18.000000', '2023-05-24 14:41:38.000000'),
-(39, 1, '2023-05-24 14:41:40.000000', '2023-05-24 14:44:57.000000'),
-(40, 1, '2023-05-24 14:45:00.000000', '2023-05-24 14:46:38.000000'),
-(41, 1, '2023-05-24 14:46:40.000000', '2023-05-24 14:48:06.000000'),
-(42, 1, '2023-05-24 14:48:09.000000', '2023-05-24 14:48:11.000000'),
-(43, 1, '2023-05-24 14:51:11.000000', '2023-05-24 14:51:13.000000'),
-(44, 1, '2023-05-24 14:52:05.000000', '2023-05-24 14:52:08.000000'),
-(45, 1, '2023-05-24 14:53:59.000000', '2023-05-24 14:54:01.000000'),
-(46, 1, '2023-05-24 14:54:22.000000', '2023-05-24 14:54:39.000000'),
-(47, 1, '2023-05-24 14:54:43.000000', '2023-05-24 14:54:46.000000'),
-(48, 1, '2023-05-24 14:55:24.000000', '2023-05-24 14:55:26.000000'),
-(49, 1, '2023-05-24 14:55:54.000000', '2023-05-24 14:55:56.000000'),
-(50, 1, '2023-05-24 14:55:59.000000', '2023-05-24 20:15:54.000000'),
-(51, 1, '2023-05-24 20:24:29.000000', '2023-05-24 22:53:14.000000'),
-(52, 1, '2023-05-24 22:53:25.000000', NULL),
-(53, 1, '2023-05-25 01:58:40.000000', '2023-05-25 04:03:04.000000'),
-(54, 1, '2023-05-25 04:03:13.000000', '2023-05-25 04:03:30.000000'),
-(55, 1, '2023-05-25 04:03:32.000000', NULL),
-(56, 1, '2023-05-25 14:22:22.000000', NULL),
-(57, 1, '2023-05-26 00:59:12.000000', NULL),
-(58, 1, '2023-05-26 12:39:51.000000', NULL),
-(59, 1, '2023-05-27 17:59:12.000000', '2023-05-27 22:24:06.000000'),
-(60, 1, '2023-05-27 22:24:10.000000', '2023-05-27 22:27:18.000000'),
-(61, 4, '2023-05-27 22:27:27.000000', '2023-05-27 22:29:39.000000'),
-(62, 1, '2023-05-27 22:29:45.000000', NULL),
-(63, 1, '2023-05-28 14:59:38.000000', NULL),
-(64, 1, '2023-05-29 13:50:31.000000', NULL),
-(65, 1, '2023-05-30 14:42:43.000000', NULL),
-(66, 1, '2023-05-31 14:16:49.000000', NULL),
-(67, 1, '2023-05-31 19:49:49.000000', NULL),
-(68, 1, '2023-06-01 14:00:28.000000', NULL),
-(69, 1, '2023-06-01 23:10:55.000000', NULL),
-(70, 1, '2023-06-02 01:54:33.000000', NULL),
-(71, 1, '2023-06-02 16:31:37.000000', NULL),
-(72, 1, '2023-06-02 18:39:41.000000', NULL),
-(73, 1, '2023-06-05 13:39:17.000000', NULL),
-(74, 1, '2023-06-05 18:53:48.000000', NULL),
-(75, 1, '2023-06-05 19:32:56.000000', '2023-06-06 00:04:23.000000'),
-(76, 1, '2023-06-06 00:04:26.000000', '2023-06-06 00:22:46.000000'),
-(77, 1, '2023-06-06 00:22:49.000000', '2023-06-06 00:31:29.000000'),
-(78, 1, '2023-06-06 00:31:32.000000', '2023-06-06 01:33:47.000000'),
-(79, 1, '2023-06-06 01:33:50.000000', '2023-06-06 01:43:49.000000'),
-(80, 1, '2023-06-06 01:43:51.000000', '2023-06-06 02:00:42.000000'),
-(81, 1, '2023-06-06 02:00:43.000000', '2023-06-06 02:20:11.000000'),
-(82, 1, '2023-06-06 02:20:14.000000', '2023-06-06 02:21:43.000000'),
-(83, 1, '2023-06-06 02:21:45.000000', '2023-06-06 03:57:55.000000'),
-(84, 1, '2023-06-06 03:57:58.000000', '2023-06-06 14:03:18.000000'),
-(85, 1, '2023-06-06 14:03:22.000000', '2023-06-06 14:32:04.000000'),
-(86, 11, '2023-06-06 14:37:46.000000', '2023-06-06 17:24:07.000000'),
-(87, 11, '2023-06-06 17:24:10.000000', '2023-06-06 17:29:51.000000'),
-(88, 11, '2023-06-06 17:29:54.000000', '2023-06-06 17:33:25.000000'),
-(89, 11, '2023-06-06 17:33:38.000000', '2023-06-06 17:33:42.000000'),
-(90, 11, '2023-06-06 17:34:06.000000', '2023-06-06 18:34:50.000000'),
-(91, 11, '2023-06-06 18:34:55.000000', '2023-06-06 18:35:22.000000'),
-(92, 11, '2023-06-06 18:35:24.000000', '2023-06-06 18:36:15.000000'),
-(93, 11, '2023-06-06 18:36:40.000000', '2023-06-07 13:27:41.000000'),
-(94, 11, '2023-06-07 13:28:50.000000', NULL),
-(95, 11, '2023-06-08 13:11:46.000000', NULL),
-(96, 11, '2023-06-09 03:08:34.000000', NULL),
-(97, 11, '2023-06-09 14:00:03.000000', NULL),
-(98, 11, '2023-06-09 18:01:18.000000', NULL),
-(99, 11, '2023-06-12 15:44:39.000000', NULL),
-(100, 11, '2023-06-13 14:27:32.000000', NULL),
-(101, 11, '2023-06-14 13:19:01.000000', NULL),
-(102, 11, '2023-06-14 14:36:34.000000', NULL),
-(103, 11, '2023-06-14 19:14:18.000000', NULL),
-(104, 11, '2023-06-15 15:33:22.000000', '2023-06-15 15:36:32.000000'),
-(105, 11, '2023-06-15 15:34:18.000000', NULL),
-(106, 11, '2023-06-16 13:55:59.000000', NULL);
+INSERT INTO `log_member` (`m_log_id`, `m_id`, `date_in`, `date_out`, `ml_id`) VALUES
+(1, 1, '2023-05-11 22:44:34.000000', '2023-05-11 23:29:27.000000', NULL),
+(2, 1, '2023-05-11 22:52:41.000000', '2023-05-11 23:14:18.000000', NULL),
+(3, 1, '2023-05-11 23:42:08.000000', '2023-05-11 23:43:51.000000', NULL),
+(4, 1, '2023-05-12 03:25:03.000000', '2023-05-12 03:25:06.000000', NULL),
+(5, 1, '2023-05-12 03:25:11.000000', '2023-05-12 03:26:59.000000', NULL),
+(6, 1, '2023-05-12 16:19:29.000000', '2023-05-12 16:19:39.000000', NULL),
+(7, 1, '2023-05-12 17:09:21.000000', NULL, NULL),
+(8, 1, '2023-05-12 17:11:23.000000', '2023-05-12 17:18:19.000000', NULL),
+(9, 1, '2023-05-12 17:24:10.000000', '2023-05-12 17:25:12.000000', NULL),
+(10, 1, '2023-05-12 17:31:51.000000', '2023-05-12 17:42:11.000000', NULL),
+(11, 1, '2023-05-13 16:07:36.000000', '2023-05-13 16:07:52.000000', NULL),
+(12, 1, '2023-05-13 16:08:14.000000', '2023-05-13 16:44:01.000000', NULL),
+(13, 1, '2023-05-13 22:04:23.000000', '2023-05-13 22:04:35.000000', NULL),
+(14, 4, '2023-05-13 22:04:39.000000', '2023-05-13 22:19:57.000000', NULL),
+(15, 1, '2023-05-13 22:20:02.000000', '2023-05-13 22:25:14.000000', NULL),
+(16, 1, '2023-05-13 22:48:02.000000', '2023-05-13 23:01:12.000000', NULL),
+(17, 1, '2023-05-13 23:05:03.000000', '2023-05-13 23:05:04.000000', NULL),
+(18, 1, '2023-05-13 23:06:21.000000', '2023-05-14 18:50:47.000000', NULL),
+(19, 1, '2023-05-15 23:02:57.000000', '2023-05-15 23:08:36.000000', NULL),
+(20, 1, '2023-05-16 01:54:15.000000', '2023-05-16 02:10:05.000000', NULL),
+(21, 1, '2023-05-17 02:08:20.000000', '2023-05-17 02:11:18.000000', NULL),
+(22, 1, '2023-05-19 02:55:52.000000', '2023-05-19 03:10:41.000000', NULL),
+(23, 1, '2023-05-19 03:24:18.000000', '2023-05-19 03:24:39.000000', NULL),
+(24, 1, '2023-05-19 18:09:07.000000', '2023-05-19 18:13:01.000000', NULL),
+(25, 1, '2023-05-19 18:34:40.000000', '2023-05-20 15:21:54.000000', NULL),
+(26, 7, '2023-05-20 20:12:38.000000', '2023-05-20 20:12:48.000000', NULL),
+(27, 1, '2023-05-20 20:12:52.000000', '2023-05-20 20:17:13.000000', NULL),
+(28, 1, '2023-05-20 21:27:48.000000', '2023-05-20 21:32:55.000000', NULL),
+(29, 1, '2023-05-21 14:01:37.000000', NULL, NULL),
+(30, 1, '2023-05-23 13:25:28.000000', '2023-05-23 14:07:34.000000', NULL),
+(31, 1, '2023-05-23 13:34:42.000000', '2023-05-23 13:37:17.000000', NULL),
+(32, 1, '2023-05-23 13:37:34.000000', '2023-05-23 13:38:01.000000', NULL),
+(33, 1, '2023-05-23 14:07:39.000000', '2023-05-23 20:47:12.000000', NULL),
+(34, 4, '2023-05-23 20:47:19.000000', '2023-05-23 20:47:31.000000', NULL),
+(35, 1, '2023-05-23 20:47:36.000000', '2023-05-23 20:59:16.000000', NULL),
+(36, 1, '2023-05-24 01:24:14.000000', NULL, NULL),
+(37, 1, '2023-05-24 13:45:38.000000', '2023-05-24 14:41:15.000000', NULL),
+(38, 1, '2023-05-24 14:41:18.000000', '2023-05-24 14:41:38.000000', NULL),
+(39, 1, '2023-05-24 14:41:40.000000', '2023-05-24 14:44:57.000000', NULL),
+(40, 1, '2023-05-24 14:45:00.000000', '2023-05-24 14:46:38.000000', NULL),
+(41, 1, '2023-05-24 14:46:40.000000', '2023-05-24 14:48:06.000000', NULL),
+(42, 1, '2023-05-24 14:48:09.000000', '2023-05-24 14:48:11.000000', NULL),
+(43, 1, '2023-05-24 14:51:11.000000', '2023-05-24 14:51:13.000000', NULL),
+(44, 1, '2023-05-24 14:52:05.000000', '2023-05-24 14:52:08.000000', NULL),
+(45, 1, '2023-05-24 14:53:59.000000', '2023-05-24 14:54:01.000000', NULL),
+(46, 1, '2023-05-24 14:54:22.000000', '2023-05-24 14:54:39.000000', NULL),
+(47, 1, '2023-05-24 14:54:43.000000', '2023-05-24 14:54:46.000000', NULL),
+(48, 1, '2023-05-24 14:55:24.000000', '2023-05-24 14:55:26.000000', NULL),
+(49, 1, '2023-05-24 14:55:54.000000', '2023-05-24 14:55:56.000000', NULL),
+(50, 1, '2023-05-24 14:55:59.000000', '2023-05-24 20:15:54.000000', NULL),
+(51, 1, '2023-05-24 20:24:29.000000', '2023-05-24 22:53:14.000000', NULL),
+(52, 1, '2023-05-24 22:53:25.000000', NULL, NULL),
+(53, 1, '2023-05-25 01:58:40.000000', '2023-05-25 04:03:04.000000', NULL),
+(54, 1, '2023-05-25 04:03:13.000000', '2023-05-25 04:03:30.000000', NULL),
+(55, 1, '2023-05-25 04:03:32.000000', NULL, NULL),
+(56, 1, '2023-05-25 14:22:22.000000', NULL, NULL),
+(57, 1, '2023-05-26 00:59:12.000000', NULL, NULL),
+(58, 1, '2023-05-26 12:39:51.000000', NULL, NULL),
+(59, 1, '2023-05-27 17:59:12.000000', '2023-05-27 22:24:06.000000', NULL),
+(60, 1, '2023-05-27 22:24:10.000000', '2023-05-27 22:27:18.000000', NULL),
+(61, 4, '2023-05-27 22:27:27.000000', '2023-05-27 22:29:39.000000', NULL),
+(62, 1, '2023-05-27 22:29:45.000000', NULL, NULL),
+(63, 1, '2023-05-28 14:59:38.000000', NULL, NULL),
+(64, 1, '2023-05-29 13:50:31.000000', NULL, NULL),
+(65, 1, '2023-05-30 14:42:43.000000', NULL, NULL),
+(66, 1, '2023-05-31 14:16:49.000000', NULL, NULL),
+(67, 1, '2023-05-31 19:49:49.000000', NULL, NULL),
+(68, 1, '2023-06-01 14:00:28.000000', NULL, NULL),
+(69, 1, '2023-06-01 23:10:55.000000', NULL, NULL),
+(70, 1, '2023-06-02 01:54:33.000000', NULL, NULL),
+(71, 1, '2023-06-02 16:31:37.000000', NULL, NULL),
+(72, 1, '2023-06-02 18:39:41.000000', NULL, NULL),
+(73, 1, '2023-06-05 13:39:17.000000', NULL, NULL),
+(74, 1, '2023-06-05 18:53:48.000000', NULL, NULL),
+(75, 1, '2023-06-05 19:32:56.000000', '2023-06-06 00:04:23.000000', NULL),
+(76, 1, '2023-06-06 00:04:26.000000', '2023-06-06 00:22:46.000000', NULL),
+(77, 1, '2023-06-06 00:22:49.000000', '2023-06-06 00:31:29.000000', NULL),
+(78, 1, '2023-06-06 00:31:32.000000', '2023-06-06 01:33:47.000000', NULL),
+(79, 1, '2023-06-06 01:33:50.000000', '2023-06-06 01:43:49.000000', NULL),
+(80, 1, '2023-06-06 01:43:51.000000', '2023-06-06 02:00:42.000000', NULL),
+(81, 1, '2023-06-06 02:00:43.000000', '2023-06-06 02:20:11.000000', NULL),
+(82, 1, '2023-06-06 02:20:14.000000', '2023-06-06 02:21:43.000000', NULL),
+(83, 1, '2023-06-06 02:21:45.000000', '2023-06-06 03:57:55.000000', NULL),
+(84, 1, '2023-06-06 03:57:58.000000', '2023-06-06 14:03:18.000000', NULL),
+(85, 1, '2023-06-06 14:03:22.000000', '2023-06-06 14:32:04.000000', NULL),
+(86, 11, '2023-06-06 14:37:46.000000', '2023-06-06 17:24:07.000000', NULL),
+(87, 11, '2023-06-06 17:24:10.000000', '2023-06-06 17:29:51.000000', NULL),
+(88, 11, '2023-06-06 17:29:54.000000', '2023-06-06 17:33:25.000000', NULL),
+(89, 11, '2023-06-06 17:33:38.000000', '2023-06-06 17:33:42.000000', NULL),
+(90, 11, '2023-06-06 17:34:06.000000', '2023-06-06 18:34:50.000000', NULL),
+(91, 11, '2023-06-06 18:34:55.000000', '2023-06-06 18:35:22.000000', NULL),
+(92, 11, '2023-06-06 18:35:24.000000', '2023-06-06 18:36:15.000000', NULL),
+(93, 11, '2023-06-06 18:36:40.000000', '2023-06-07 13:27:41.000000', NULL),
+(94, 11, '2023-06-07 13:28:50.000000', NULL, NULL),
+(95, 11, '2023-06-08 13:11:46.000000', NULL, NULL),
+(96, 11, '2023-06-09 03:08:34.000000', NULL, NULL),
+(97, 11, '2023-06-09 14:00:03.000000', NULL, NULL),
+(98, 11, '2023-06-09 18:01:18.000000', NULL, NULL),
+(99, 11, '2023-06-12 15:44:39.000000', NULL, NULL),
+(100, 11, '2023-06-13 14:27:32.000000', NULL, NULL),
+(101, 11, '2023-06-14 13:19:01.000000', NULL, NULL),
+(102, 11, '2023-06-14 14:36:34.000000', NULL, NULL),
+(103, 11, '2023-06-14 19:14:18.000000', NULL, NULL),
+(104, 11, '2023-06-15 15:33:22.000000', '2023-06-15 15:36:32.000000', NULL),
+(105, 11, '2023-06-15 15:34:18.000000', NULL, NULL),
+(106, 11, '2023-06-16 13:55:59.000000', NULL, NULL),
+(107, 11, '2023-06-19 16:47:24.000000', NULL, NULL),
+(108, 11, '2023-06-19 21:08:12.000000', NULL, NULL),
+(109, 11, '2023-06-21 03:26:57.000000', '2023-06-21 04:04:31.000000', NULL),
+(110, 11, '2023-06-21 04:04:35.000000', NULL, NULL),
+(111, 11, '2023-06-21 14:09:57.000000', NULL, NULL),
+(112, 11, '2023-06-21 14:23:07.000000', NULL, NULL),
+(113, 11, '2023-06-24 15:15:55.000000', NULL, NULL),
+(114, 11, '2023-06-25 02:15:17.000000', NULL, NULL),
+(115, 11, '2023-06-25 15:14:05.000000', NULL, NULL),
+(116, 11, '2023-06-25 23:23:29.000000', NULL, NULL),
+(117, 11, '2023-06-26 01:17:50.000000', NULL, NULL),
+(118, 11, '2023-06-26 03:17:00.000000', NULL, NULL),
+(119, 11, '2023-06-26 23:03:16.000000', NULL, NULL),
+(120, 11, '2023-06-28 12:32:32.000000', NULL, NULL),
+(121, 11, '2023-06-28 13:40:35.000000', NULL, NULL),
+(122, 11, '2023-06-28 13:49:38.000000', NULL, NULL),
+(123, 11, '2023-06-30 13:24:45.000000', NULL, NULL),
+(124, 11, '2023-06-30 15:04:50.000000', NULL, NULL),
+(125, 11, '2023-07-03 13:34:09.000000', NULL, NULL),
+(126, 11, '2023-07-03 15:07:57.000000', NULL, NULL),
+(127, 11, '2023-07-03 15:08:55.000000', NULL, NULL),
+(128, 11, '2023-07-03 15:11:53.000000', NULL, NULL),
+(129, 11, '2023-07-03 23:13:21.000000', NULL, NULL),
+(130, 11, '2023-07-04 22:56:41.000000', NULL, NULL),
+(131, 11, '2023-07-05 17:04:33.000000', NULL, NULL),
+(132, 11, '2023-07-08 14:29:21.000000', NULL, NULL),
+(133, 11, '2023-07-09 14:23:43.000000', NULL, NULL),
+(134, 11, '2023-07-10 14:33:14.000000', NULL, NULL),
+(135, 11, '2023-07-10 19:00:49.000000', NULL, NULL),
+(136, 11, '2023-07-11 15:03:26.000000', NULL, NULL),
+(137, 11, '2023-07-12 10:14:40.000000', NULL, NULL),
+(138, 11, '2023-07-12 13:46:23.000000', NULL, NULL),
+(139, 11, '2023-07-14 14:58:10.000000', NULL, NULL),
+(140, 11, '2023-07-17 00:00:22.000000', NULL, NULL),
+(141, 11, '2023-07-17 15:49:07.000000', NULL, NULL),
+(142, 11, '2023-07-17 22:47:46.000000', NULL, NULL),
+(143, 11, '2023-07-17 23:14:09.000000', NULL, NULL),
+(144, 11, '2023-07-18 00:17:46.000000', NULL, NULL),
+(145, 11, '2023-07-18 18:57:53.000000', NULL, NULL),
+(146, 11, '2023-07-19 12:27:27.000000', NULL, NULL),
+(147, 11, '2023-07-23 21:47:55.000000', NULL, NULL),
+(148, 11, '2023-07-24 14:59:09.000000', NULL, NULL),
+(149, 11, '2023-07-24 23:07:31.000000', NULL, NULL),
+(150, 11, '2023-07-25 23:25:42.000000', NULL, NULL),
+(151, 11, '2023-07-26 13:43:31.000000', NULL, NULL),
+(152, 11, '2023-07-30 12:49:26.000000', NULL, NULL),
+(153, 11, '2023-07-30 13:43:37.000000', NULL, NULL),
+(154, 11, '2023-07-30 15:22:11.000000', NULL, NULL),
+(155, 11, '2023-08-01 13:27:40.000000', '2023-08-01 14:15:25.000000', NULL),
+(156, 11, '2023-08-01 15:52:08.000000', '2023-08-01 15:52:12.000000', NULL),
+(157, NULL, '2023-08-01 16:01:59.000000', NULL, '1'),
+(158, NULL, '2023-08-01 16:07:04.000000', NULL, '2'),
+(159, NULL, '2023-08-01 16:07:32.000000', NULL, '2'),
+(160, 1, '2023-08-01 16:30:23.000000', NULL, NULL),
+(161, 1, '2023-08-01 16:35:23.000000', NULL, NULL),
+(162, 11, '2023-08-01 17:07:31.000000', '2023-08-01 17:07:45.000000', NULL),
+(163, 1, '2023-08-01 17:07:51.000000', NULL, NULL),
+(164, 1, '2023-08-01 17:28:33.000000', NULL, NULL),
+(165, 1, '2023-08-01 17:37:56.000000', NULL, NULL),
+(166, 1, '2023-08-01 17:38:13.000000', NULL, NULL),
+(167, 1, '2023-08-01 17:39:45.000000', NULL, NULL),
+(168, 1, '2023-08-01 17:39:56.000000', NULL, NULL),
+(169, 1, '2023-08-01 17:40:25.000000', NULL, NULL),
+(170, 1, '2023-08-01 17:40:40.000000', NULL, NULL),
+(171, 1, '2023-08-01 17:41:35.000000', NULL, NULL),
+(172, 1, '2023-08-01 17:42:00.000000', NULL, NULL),
+(173, 1, '2023-08-01 17:42:44.000000', NULL, NULL),
+(174, 1, '2023-08-01 17:42:57.000000', NULL, NULL),
+(175, 1, '2023-08-01 17:43:23.000000', NULL, NULL),
+(176, 1, '2023-08-01 17:43:43.000000', NULL, NULL),
+(177, 1, '2023-08-01 23:54:33.000000', NULL, NULL),
+(178, 1, '2023-08-02 00:25:36.000000', NULL, NULL),
+(179, 1, '2023-08-02 00:29:12.000000', NULL, NULL),
+(180, NULL, '2023-08-02 00:30:34.000000', NULL, NULL),
+(181, 13, '2023-08-02 00:30:45.000000', NULL, NULL),
+(182, 14, '2023-08-02 00:36:32.000000', NULL, NULL),
+(183, 14, '2023-08-02 01:16:17.000000', NULL, NULL),
+(184, 14, '2023-08-02 01:16:48.000000', NULL, NULL),
+(185, 15, '2023-08-02 01:21:17.000000', NULL, NULL),
+(186, 11, '2023-08-02 01:21:36.000000', '2023-08-02 01:22:18.000000', NULL),
+(187, 15, '2023-08-02 01:22:25.000000', NULL, NULL),
+(188, 15, '2023-08-02 02:06:21.000000', NULL, NULL),
+(189, 15, '2023-08-02 02:14:17.000000', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -10438,33 +10583,36 @@ INSERT INTO `log_member` (`m_log_id`, `m_id`, `date_in`, `date_out`) VALUES
 --
 
 CREATE TABLE `member` (
-  `m_id` int(6) NOT NULL,
+  `m_id` int NOT NULL,
   `m_email` varchar(255) DEFAULT NULL,
   `m_password` varchar(128) DEFAULT NULL,
-  `m_fname` varchar(255) CHARACTER SET utf8mb3 DEFAULT NULL,
+  `m_fname` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `m_lname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `m_add` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `m_tel` varchar(20) DEFAULT NULL,
-  `del_flg` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'ลบ = 1',
-  `m_date_in` datetime DEFAULT NULL COMMENT 'วันที่เข้าสู่ระบบวันแรก'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `del_flg` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'ลบ = 1',
+  `m_date_in` datetime DEFAULT NULL COMMENT 'วันที่เข้าสู่ระบบวันแรก',
+  `m_line_id` varchar(50) DEFAULT NULL COMMENT 'ไอดีไลน์'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `member`
 --
 
-INSERT INTO `member` (`m_id`, `m_email`, `m_password`, `m_fname`, `m_lname`, `m_add`, `m_tel`, `del_flg`, `m_date_in`) VALUES
-(1, 'armm4sonic@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'à¸­à¸¡à¸¤à¸•', 'à¹‚à¸Šà¸•à¸´à¸—à¸´à¸™à¸§à¸±à¸’à¸™à¹Œ', '359 Mo.7 35910', '09576556547', 0, '2023-05-01 15:51:01'),
-(2, 'blackblue2545@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'à¸™à¸²à¸•à¸²à¸Šà¸²', 'à¹‚à¸£à¸¡à¸²à¸™à¸­à¸Ÿ', '346 à¸¡.6 à¸–à¸™à¸™458 à¸à¸£à¸¸à¸‡à¹€à¸—à¸ž', '0895674856', 0, '2023-05-01 00:00:00'),
-(3, 'weareone@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'à¸­à¸¡à¸¤à¸•', 'à¹‚à¸Šà¸•à¸´à¸—à¸´à¸™à¸§à¸±à¸’à¸™à¹Œ', NULL, '09576556547', 0, '2023-05-01 15:51:01'),
-(4, 'rangsima@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'à¸£à¸±à¸‡à¸ªà¸´à¸¡à¸²', 'à¸™à¸²à¸§à¸²à¸œà¸¥', NULL, '09576556547', 0, '2023-05-01 15:51:01'),
-(5, 'rangsima2545@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'à¸­à¸¡à¸¤à¸•', 'à¹‚à¸Šà¸•à¸´à¸—à¸´à¸™à¸§à¸±à¸’à¸™à¹Œ', NULL, '09576556546', 0, '2023-05-01 15:51:01'),
-(6, 'ammarit@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'à¸­à¸¡à¸¤à¸•', 'à¹‚à¸Šà¸•à¸´à¸—à¸´à¸™à¸§à¸±à¸’à¸™à¹Œ', NULL, '0875963256', 0, '2023-05-01 15:51:01'),
-(7, 'armm5sonic@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'à¸­à¸¡à¸¤à¸•', 'à¹‚à¸Šà¸•à¸´à¸—à¸´à¸™à¸§à¸±à¸’à¸™à¹Œ', '359 à¸«à¸¡à¸¹à¹ˆ 7 ', '0899996969', 0, '2023-05-01 15:51:01'),
-(8, 'warisara@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'à¸§à¸£à¸´à¸¨à¸£à¸²', 'à¸„à¸³à¹€à¸žà¸£à¸²à¸°', NULL, '0957655647', 0, '2023-05-01 15:51:01'),
-(9, 'arm_bas@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'Ammarit', 'Chottinnawat', NULL, '0879382569', 0, '2023-05-01 15:51:01'),
-(10, 'beam2545@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'à¸Šà¸¸', 'à¸šà¸µà¸¡', '39 à¸—à¸™.7\r\n', '0957650000', 0, '2023-05-01 15:51:01'),
-(11, 'zemisttk@gmail.com', '62670d1e1eea06b6c975e12bc8a16131b278f6d7bcbe017b65f854c58476baba86c2082b259fd0c1310935b365dc40f609971b6810b065e528b0b60119e69f61', 'à¸­à¸¡à¸¤à¸•', 'à¹‚à¸Šà¸•à¸´à¸—à¸´à¸™à¸§à¸±à¸’à¸™à¹Œ', '{\"province\":\"11\",\"district\":\"139\",\"sub_district\":\"200402\",\"zip_code\":\"20150\",\"description\":\"359 Mo.7 35910\"}', '0879586547', 0, '2023-06-01 16:58:13');
+INSERT INTO `member` (`m_id`, `m_email`, `m_password`, `m_fname`, `m_lname`, `m_add`, `m_tel`, `del_flg`, `m_date_in`, `m_line_id`) VALUES
+(1, 'armm2sonic@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'อมฤต', 'โชติทินวัฒน์', '359 Mo.7 35910', '09576556547', 0, '2023-05-01 15:51:01', 'U5677cf3b87c1575b0b8bb2183f3285ac'),
+(2, 'blackblue2545@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'à¸™à¸²à¸•à¸²à¸Šà¸²', 'à¹‚à¸£à¸¡à¸²à¸™à¸­à¸Ÿ', '346 à¸¡.6 à¸–à¸™à¸™458 à¸à¸£à¸¸à¸‡à¹€à¸—à¸ž', '0895674856', 0, '2023-05-01 00:00:00', NULL),
+(3, 'weareone@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'à¸­à¸¡à¸¤à¸•', 'à¹‚à¸Šà¸•à¸´à¸—à¸´à¸™à¸§à¸±à¸’à¸™à¹Œ', NULL, '09576556547', 0, '2023-05-01 15:51:01', NULL),
+(4, 'rangsima@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'à¸£à¸±à¸‡à¸ªà¸´à¸¡à¸²', 'à¸™à¸²à¸§à¸²à¸œà¸¥', NULL, '09576556547', 0, '2023-05-01 15:51:01', NULL),
+(5, 'rangsima2545@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'à¸­à¸¡à¸¤à¸•', 'à¹‚à¸Šà¸•à¸´à¸—à¸´à¸™à¸§à¸±à¸’à¸™à¹Œ', NULL, '09576556546', 0, '2023-05-01 15:51:01', NULL),
+(6, 'ammarit@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'à¸­à¸¡à¸¤à¸•', 'à¹‚à¸Šà¸•à¸´à¸—à¸´à¸™à¸§à¸±à¸’à¸™à¹Œ', NULL, '0875963256', 0, '2023-05-01 15:51:01', NULL),
+(7, 'armm5sonic@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'à¸­à¸¡à¸¤à¸•', 'à¹‚à¸Šà¸•à¸´à¸—à¸´à¸™à¸§à¸±à¸’à¸™à¹Œ', '359 à¸«à¸¡à¸¹à¹ˆ 7 ', '0899996969', 0, '2023-05-01 15:51:01', NULL),
+(8, 'warisara@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'à¸§à¸£à¸´à¸¨à¸£à¸²', 'à¸„à¸³à¹€à¸žà¸£à¸²à¸°', NULL, '0957655647', 0, '2023-05-01 15:51:01', NULL),
+(9, 'arm_bas@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'Ammarit', 'Chottinnawat', NULL, '0879382569', 0, '2023-05-01 15:51:01', NULL),
+(10, 'beam2545@gmail.com', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'à¸Šà¸¸', 'à¸šà¸µà¸¡', '39 à¸—à¸™.7\r\n', '0957650000', 0, '2023-05-01 15:51:01', NULL),
+(11, 'zemisttk@gmail.com', '62670d1e1eea06b6c975e12bc8a16131b278f6d7bcbe017b65f854c58476baba86c2082b259fd0c1310935b365dc40f609971b6810b065e528b0b60119e69f61', 'อมฤต', 'โชติทินวัฒน์', '{\"province\":\"3\",\"district\":\"59\",\"sub_district\":\"120203\",\"zip_code\":\"11130\",\"description\":\"dcbdgffgdfgdgfdfg\"}', '0879586547', 0, '2023-07-09 00:48:00', NULL),
+(14, 'armm4sjghjonic@gmail.com', NULL, 'Ammarit', 'Chottinnawat', NULL, NULL, 0, '2023-08-02 00:36:32', NULL),
+(15, 'armm4sonic@gmail.com', NULL, 'Ammarit', 'Chottinnawat', NULL, NULL, 0, '2023-08-02 01:21:17', 'U5677cf3b87c1575b0b8bb2183f3285ac');
 
 -- --------------------------------------------------------
 
@@ -10473,33 +10621,34 @@ INSERT INTO `member` (`m_id`, `m_email`, `m_password`, `m_fname`, `m_lname`, `m_
 --
 
 CREATE TABLE `parts` (
-  `p_id` int(6) NOT NULL,
-  `p_type_id` int(6) DEFAULT NULL,
+  `p_id` int NOT NULL,
+  `p_type_id` int DEFAULT NULL,
   `p_brand` varchar(255) DEFAULT NULL,
   `p_model` varchar(255) DEFAULT NULL,
   `p_name` varchar(255) DEFAULT NULL,
-  `p_detail` text DEFAULT NULL,
-  `p_stock` int(10) DEFAULT NULL,
-  `p_price` int(10) DEFAULT NULL,
+  `p_detail` text,
+  `p_stock` int DEFAULT NULL,
+  `p_price` int DEFAULT NULL,
   `p_pic` varchar(255) DEFAULT NULL,
-  `del_flg` tinyint(1) DEFAULT 0 COMMENT 'ลบข้อมูลเป็น 1',
+  `del_flg` tinyint(1) DEFAULT '0' COMMENT 'ลบข้อมูลเป็น 1',
   `p_date_in` datetime DEFAULT NULL COMMENT 'วันที่เพิ่มอะไหล่',
   `p_date_update` datetime DEFAULT NULL COMMENT 'วันที่อัพเดต'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `parts`
 --
 
 INSERT INTO `parts` (`p_id`, `p_type_id`, `p_brand`, `p_model`, `p_name`, `p_detail`, `p_stock`, `p_price`, `p_pic`, `del_flg`, `p_date_in`, `p_date_update`) VALUES
-(1, 1, 'K.Power', 'K-1295', 'K.power K1295', 'SPECIFICATION	\r\nMaximum Power Input	500W\r\nImpedance    	8 Ohm\r\nit have gua\r\nFrequency Response 	46Hz-5KHz\r\nVoice Coil Diameter	\"45 MM \r\n(à¸¥à¸§à¸”à¸—à¸­à¸‡à¹à¸”à¸‡CCAW)\"\r\nSensitivity 	 95dB\r\nMagnet	145 MM', 34, 950, 'parts/1/K-1295.PNG ', 0, '2023-05-01 20:47:15', '2023-06-14 13:18:25'),
-(2, 1, 'A.S. Power TECH', 'à¸™à¸´à¸¥à¸”à¸³', 'à¸™à¸´à¸¥à¸”à¸³', 'Power Rating  500 W  Impedance     6 Ohm  Magnet Size   120 x 20 mm.     Speaker 10 INCH ME-1033 K.Power', 18, 540, 'parts/1/nindum.jpg ', 0, '2023-05-01 20:47:15', '2023-06-13 15:08:25'),
-(3, 1, 'K.Power', 'LE1033', 'LE1033', 'Power Rating  500 W  Impedance     6 Ohm  Magnet Size   120 x 20 mm.     Speaker 10 INCH ME-1033 K.Power', 24, 410, 'parts/1/l_1497066629.png ', 0, '2023-05-01 20:47:15', '2023-06-02 15:05:51'),
-(4, 1, 'DE Acoustic', 'AS 312L', 'AS 312L', '', 19, 34000, 'parts/1/l_1497066629.png ', 0, '2023-05-01 20:47:15', '2023-06-12 16:03:28'),
-(5, 1, 'Nanova', 'NV-1811', 'NV-1811', 'NANOVA NV-1811 à¸”à¸­à¸à¸¥à¸³à¹‚à¸žà¸‡ 18 à¸™à¸´à¹‰à¸§ à¹‚à¸„à¸£à¸‡à¸«à¸¥à¹ˆà¸­\r\nMax Power : 1200 Watt\r\nImpedance : 8 Ohm.\r\nVoice Coil Diameter : 100 mm.(4)\r\nMagnet Size : 220x30 mm\r\nNet Weight : 14 Kgs.', 49, 3250, 'parts/1/image_2023-05-14_205406511.png ', 0, '2023-05-01 20:47:15', '2023-06-01 21:34:43'),
-(6, 2, 'Deccon', 'DC-C460', 'DC-C460', 'à¸‚à¸™à¸²à¸” 6.5\"\n- Max power 120W \n6.6â€  Rubber edge PP cone\n: Impedance: 4-8 OHMS\n: Frequency Range: 82-10KHz\n: S.P. L:90dB  Magnet: 9.9Oz\n: Voice Coil: 1.3â€ ASV', 40, 300, 'parts/1/image_2023-05-14_210351650.png ', 0, '2023-05-01 20:47:15', '2023-06-12 16:04:01'),
-(7, 4, 'K.Power', 'F-04', 'F-04', 'à¹à¸ˆà¹‡à¸„ K.Power XLR F-04 (à¹€à¸¡à¸µà¸¢)\r\nà¹à¸ˆà¹Šà¸„ XLR à¸•à¸±à¸§à¹€à¸¡à¸µà¸¢ 3 à¸‚à¸² à¸—à¹‰à¸²à¸¢à¸¢à¸²à¸‡ à¸ªà¸³à¸«à¸£à¸±à¸šà¹€à¸‚à¹‰à¸²à¸ªà¸²à¸¢\r\n- à¸§à¸±à¸ªà¸”à¸¸à¸„à¸¸à¸“à¸ à¸²à¸žà¸”à¸µà¸„à¸±à¸”à¹€à¸à¸£à¸”dfdf\r\n- à¸—à¸™à¸—à¸²à¸™\r\n- à¸ªà¸§à¸¢à¸‡à¸²à¸¡ à¸šà¸±à¸”à¸à¸£à¸µà¸•à¸´à¸”à¸‡à¹ˆà¸²à¸¢', -4, 45, 'parts/2/image_2023-05-14_215341998.png ', 0, '2023-05-01 20:47:15', '2023-06-13 15:11:43'),
-(8, 8, 'A.S. Power TECH', 'AS 352L', 'AS 352L', 'jack3.5', 227, 250, 'parts/8/DC-C460.PNG ', 0, '2023-05-01 20:47:15', '2023-06-02 15:53:54');
+(1, 1, 'K.Power', 'K-1295', 'K.power K1295', 'SPECIFICATION	\r\nMaximum Power Input	500W\r\nImpedance    	8 Ohm\r\nit have gua\r\nFrequency Response 	46Hz-5KHz\r\nVoice Coil Diameter	\"45 MM \r\n(à¸¥à¸§à¸”à¸—à¸­à¸‡à¹à¸”à¸‡CCAW)\"\r\nSensitivity 	 95dB\r\nMagnet	145 MM', 207, 950, 'parts/1/K-1295.PNG ', 0, '2023-05-01 20:47:15', '2023-07-26 00:20:22'),
+(2, 1, 'A.S. Power TECH', 'à¸™à¸´à¸¥à¸”à¸³', 'à¸™à¸´à¸¥à¸”à¸³', 'Power Rating  500 W  Impedance     6 Ohm  Magnet Size   120 x 20 mm.     Speaker 10 INCH ME-1033 K.Power', 68, 540, 'parts/1/nindum.jpg ', 0, '2023-05-01 20:47:15', '2023-07-26 00:20:22'),
+(3, 1, 'K.Power', 'LE1033', 'LE1033', 'Power Rating  500 W  Impedance     6 Ohm  Magnet Size   120 x 20 mm.     Speaker 10 INCH ME-1033 K.Power', 23, 410, 'parts/1/l_1497066629.png ', 0, '2023-05-01 20:47:15', '2023-07-26 00:20:22'),
+(4, 1, 'DE Acoustic', 'AS 312L', 'AS 312L', '', 18, 34000, 'parts/1/l_1497066629.png ', 0, '2023-05-01 20:47:15', '2023-06-12 16:03:28'),
+(5, 1, 'Nanova', 'NV-1811', 'NV-1811', 'NANOVA NV-1811 à¸”à¸­à¸à¸¥à¸³à¹‚à¸žà¸‡ 18 à¸™à¸´à¹‰à¸§ à¹‚à¸„à¸£à¸‡à¸«à¸¥à¹ˆà¸­\r\nMax Power : 1200 Watt\r\nImpedance : 8 Ohm.\r\nVoice Coil Diameter : 100 mm.(4)\r\nMagnet Size : 220x30 mm\r\nNet Weight : 14 Kgs.', 40, 3250, 'parts/1/image_2023-05-14_205406511.png ', 0, '2023-05-01 20:47:15', '2023-07-17 23:02:22'),
+(6, 2, 'Deccon', 'DC-C460', 'DC-C460', 'à¸‚à¸™à¸²à¸” 6.5\"\n- Max power 120W \n6.6â€  Rubber edge PP cone\n: Impedance: 4-8 OHMS\n: Frequency Range: 82-10KHz\n: S.P. L:90dB  Magnet: 9.9Oz\n: Voice Coil: 1.3â€ ASV', 56, 300, 'parts/1/image_2023-05-14_210351650.png ', 0, '2023-05-01 20:47:15', '2023-07-17 23:29:10'),
+(7, 4, 'K.Power', 'F-04', 'F-04', 'à¹à¸ˆà¹‡à¸„ K.Power XLR F-04 (à¹€à¸¡à¸µà¸¢)\r\nà¹à¸ˆà¹Šà¸„ XLR à¸•à¸±à¸§à¹€à¸¡à¸µà¸¢ 3 à¸‚à¸² à¸—à¹‰à¸²à¸¢à¸¢à¸²à¸‡ à¸ªà¸³à¸«à¸£à¸±à¸šà¹€à¸‚à¹‰à¸²à¸ªà¸²à¸¢\r\n- à¸§à¸±à¸ªà¸”à¸¸à¸„à¸¸à¸“à¸ à¸²à¸žà¸”à¸µà¸„à¸±à¸”à¹€à¸à¸£à¸”dfdf\r\n- à¸—à¸™à¸—à¸²à¸™\r\n- à¸ªà¸§à¸¢à¸‡à¸²à¸¡ à¸šà¸±à¸”à¸à¸£à¸µà¸•à¸´à¸”à¸‡à¹ˆà¸²à¸¢', 7, 45, 'parts/2/image_2023-05-14_215341998.png ', 0, '2023-05-01 20:47:15', '2023-07-17 23:24:44'),
+(8, 8, 'A.S. Power TECH', 'AS 352L', 'AS 352L', 'jack3.5', 218, 250, 'parts/8/DC-C460.PNG ', 0, '2023-05-01 20:47:15', '2023-07-25 00:13:00'),
+(9, 1, 'sennheiser', 'LSP 500 Pro', 'LSP 500 Pro', 'The LSP 500 PRO is a wireless two-way audio system for professional use. It has been designed to address audiences at indoor and outdoor events without the need of any power or audio cables. The LSP 500 PRO allows you to install up to three receivers for wireless microphones. You can also play music wirelessly via a Bluetooth connection. Alternatively, you can use the integrated media player to play music from your USB storage device. For larger events you can send the sum signal of one LSP 500 PRO via a wireless transmitter to other LSP 500 PRO devices. The LSP 500 PRO is remote controllable via iPad App or Windows Remote Control Software, which serves as a mixing console and permits the control of up to 20 LSP 500 PRO simultaneously.', 43, 3600, 'parts/1/x1_desktop_LSP_500_PRO_web.webp ', 0, '2023-06-21 02:16:42', '2023-07-11 17:26:26');
 
 -- --------------------------------------------------------
 
@@ -10508,19 +10657,79 @@ INSERT INTO `parts` (`p_id`, `p_type_id`, `p_brand`, `p_model`, `p_name`, `p_det
 --
 
 CREATE TABLE `parts_log` (
-  `pl_id` int(6) NOT NULL,
+  `pl_id` int NOT NULL,
   `p_id` varchar(10) DEFAULT NULL,
-  `pl_value` int(255) DEFAULT NULL,
+  `pl_value` int DEFAULT NULL,
   `pl_date` datetime(6) DEFAULT NULL,
-  `e_id` int(6) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `e_id` int DEFAULT NULL,
+  `st_id` int DEFAULT '1' COMMENT 'ไอดีประเภทการเพิ่ม',
+  `pl_bill_number` varchar(100) DEFAULT NULL COMMENT 'หมายเลข bill',
+  `pl_tax_number` varchar(100) DEFAULT NULL COMMENT 'หมายเลขกำกับภาษี',
+  `pl_detail` varchar(255) DEFAULT NULL COMMENT 'รายละเอียด หมายเหตุ',
+  `pl_date_in` datetime(6) DEFAULT NULL COMMENT 'วันที่สั่งเข้ามา',
+  `com_p_id` varchar(6) DEFAULT NULL COMMENT 'รหัสบริษัทที่ทำการสั่งอุปกรณ์'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `parts_log`
 --
 
-INSERT INTO `parts_log` (`pl_id`, `p_id`, `pl_value`, `pl_date`, `e_id`) VALUES
-(1, '1', 50, '2023-05-11 23:09:52.000000', 1);
+INSERT INTO `parts_log` (`pl_id`, `p_id`, `pl_value`, `pl_date`, `e_id`, `st_id`, `pl_bill_number`, `pl_tax_number`, `pl_detail`, `pl_date_in`, `com_p_id`) VALUES
+(1, '1', 50, '2023-05-11 23:09:52.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(2, '1', 11, '2023-06-21 00:13:32.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(3, '5', 2, '2023-06-21 00:13:32.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(4, '6', 10, '2023-06-21 00:13:32.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(5, '8', 7, '2023-06-21 00:13:32.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(6, '1', 1, '2023-06-21 00:21:46.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(7, '1', 2, '2023-06-21 00:22:21.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(8, '1', 17, '2023-06-21 02:03:07.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(9, '9', 2, '2023-06-21 02:17:37.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(10, '9', 2, '2023-06-21 02:18:58.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(11, '9', 2, '2023-06-21 02:19:14.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(12, '9', 1, '2023-06-21 02:20:33.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(13, '9', 5, '2023-06-21 02:20:52.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(14, '1', 4, '2023-06-21 14:18:09.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(15, '1', 1, '2023-06-21 14:18:33.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(16, '1', 2, '2023-06-21 14:19:00.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(17, '1', 1, '2023-06-21 15:47:55.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(18, '1', 8, '2023-06-21 15:52:14.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(24, NULL, NULL, '2023-07-18 22:26:08.000000', 1, 2, 'BILL465454', 'TAX4459', 'à¸—à¸³à¸à¸²à¸£à¸ªà¸±à¹ˆà¸‡à¹à¸šà¸šà¸™à¸µà¹‰à¹†à¹†à¹†à¹†', '2023-07-19 00:00:00.000000', NULL),
+(25, NULL, NULL, '2023-07-18 22:55:43.000000', 1, 2, 'BILL465454', 'TAX4457', 'à¸—à¸³à¸à¸²à¸£à¸ªà¸±à¹ˆà¸‡à¹à¸šà¸šà¸™à¸µà¹‰à¹†à¹†à¹†à¹†', '2023-07-19 00:00:00.000000', '2'),
+(26, NULL, NULL, '2023-07-18 23:23:54.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(27, NULL, NULL, '2023-07-19 01:19:15.000000', 1, 2, 'BIL01', 'TAX01', '01', '2023-07-01 00:00:00.000000', '1'),
+(28, NULL, NULL, '2023-07-19 01:22:22.000000', 1, 1, NULL, NULL, NULL, NULL, NULL),
+(29, NULL, NULL, '2023-07-19 12:29:14.000000', 1, 2, NULL, NULL, NULL, NULL, NULL),
+(30, NULL, NULL, '2023-07-19 15:27:45.000000', 1, 2, NULL, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `parts_log_detail`
+--
+
+CREATE TABLE `parts_log_detail` (
+  `pl_d_id` int NOT NULL COMMENT 'ไอดีรายละเอียดอะไหล่',
+  `p_id` varchar(6) DEFAULT NULL COMMENT 'ไอดีอะไหล่',
+  `pl_d_value` varchar(10) DEFAULT NULL COMMENT 'จำนวนอะไหล่',
+  `del_flg` int DEFAULT '0' COMMENT 'ลบ = 1',
+  `pl_id` varchar(6) DEFAULT NULL COMMENT 'ไอดีประวัติ	'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `parts_log_detail`
+--
+
+INSERT INTO `parts_log_detail` (`pl_d_id`, `p_id`, `pl_d_value`, `del_flg`, `pl_id`) VALUES
+(1, '1', '2', 0, '24'),
+(2, '2', '2', 0, '24'),
+(3, '3', '2', 0, '24'),
+(4, '7', '1', 0, '25'),
+(5, '6', '10', 0, '26'),
+(6, '1', '11', 0, '26'),
+(7, '2', '1', 0, '27'),
+(8, '5', '2', 0, '28'),
+(9, '3', '1', 0, '29'),
+(10, '1', '15', 0, '30');
 
 -- --------------------------------------------------------
 
@@ -10529,12 +10738,12 @@ INSERT INTO `parts_log` (`pl_id`, `p_id`, `pl_value`, `pl_date`, `e_id`) VALUES
 --
 
 CREATE TABLE `parts_type` (
-  `p_type_id` int(6) NOT NULL,
+  `p_type_id` int NOT NULL,
   `p_type_name` varchar(255) DEFAULT NULL,
   `p_type_date_in` datetime DEFAULT NULL,
-  `del_flg` tinyint(1) DEFAULT 0,
+  `del_flg` tinyint(1) DEFAULT '0',
   `pt_update` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `parts_type`
@@ -10553,15 +10762,80 @@ INSERT INTO `parts_type` (`p_type_id`, `p_type_name`, `p_type_date_in`, `del_flg
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `parts_use`
+--
+
+CREATE TABLE `parts_use` (
+  `pu_id` int NOT NULL COMMENT 'ไอดีการใช้อะไหล่',
+  `rs_id` int DEFAULT NULL COMMENT 'ไอดีสถานะ',
+  `pu_date` datetime DEFAULT NULL COMMENT 'วันที่บันทึก',
+  `del_flg` int NOT NULL DEFAULT '0' COMMENT 'ลบ = 1',
+  `st_id` int NOT NULL COMMENT 'ไอดีประเภท',
+  `e_id` int DEFAULT NULL COMMENT 'ไอดีพนักงาน'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `parts_use`
+--
+
+INSERT INTO `parts_use` (`pu_id`, `rs_id`, `pu_date`, `del_flg`, `st_id`, `e_id`) VALUES
+(1, 814, '2023-07-25 00:09:42', 0, 4, 1),
+(2, 777, '2023-07-25 00:13:00', 0, 4, 1),
+(3, 787, '2023-07-25 00:13:00', 0, 4, 1),
+(4, 5, '2023-07-25 23:42:58', 1, 4, 1),
+(5, 834, '2023-07-25 23:48:18', 0, 3, 1),
+(6, 827, '2023-07-25 23:53:50', 0, 4, 1),
+(7, 830, '2023-07-25 23:53:50', 0, 4, 1),
+(8, 844, '2023-07-26 00:16:35', 0, 3, 1),
+(9, 846, '2023-07-26 00:18:35', 0, 3, 1),
+(10, 848, '2023-07-26 00:20:04', 0, 3, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `parts_use_detail`
+--
+
+CREATE TABLE `parts_use_detail` (
+  `pu_d_id` int NOT NULL COMMENT 'ไอดีรายละเอียดการลดอะไหล่',
+  `pu_id` int DEFAULT NULL COMMENT 'ไอดีของอะไหล่ที่ใช้	',
+  `p_id` int DEFAULT NULL COMMENT 'ไอดีอะไหล่',
+  `pu_value` int DEFAULT NULL COMMENT 'จำนวนที่ใช้',
+  `pu_date` datetime DEFAULT NULL COMMENT 'เวลาที่ใส่ข้อมูล',
+  `del_flg` int DEFAULT '0' COMMENT 'ลบ = 1'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `parts_use_detail`
+--
+
+INSERT INTO `parts_use_detail` (`pu_d_id`, `pu_id`, `p_id`, `pu_value`, `pu_date`, `del_flg`) VALUES
+(1, 1, 2, 1, '2023-07-25 00:09:42', 0),
+(2, 2, 1, 1, '2023-07-25 00:13:00', 0),
+(3, 3, 8, 1, '2023-07-25 00:13:00', 0),
+(4, 4, 2, 2, '2023-07-25 23:42:58', 0),
+(5, 5, 2, 2, '2023-07-25 23:48:18', 0),
+(6, 6, 1, 1, '2023-07-25 23:53:50', 0),
+(7, 7, 2, 2, '2023-07-25 23:53:50', 0),
+(8, 7, 2, 2, '2023-07-26 00:03:51', 0),
+(9, 8, 2, 0, '2023-07-26 00:16:35', 0),
+(10, 9, 2, 2, '2023-07-26 00:18:35', 0),
+(11, 10, 1, 2, '2023-07-26 00:20:04', 0),
+(12, 10, 2, 2, '2023-07-26 00:20:04', 0),
+(13, 10, 3, 2, '2023-07-26 00:20:04', 0);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `provinces`
 --
 
 CREATE TABLE `provinces` (
-  `id` int(5) NOT NULL,
-  `code` varchar(2) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `name_th` varchar(150) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `name_en` varchar(150) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `geography_id` int(5) NOT NULL DEFAULT 0
+  `id` int NOT NULL,
+  `code` varchar(2) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `name_th` varchar(150) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `name_en` varchar(150) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `geography_id` int NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
@@ -10654,160 +10928,180 @@ INSERT INTO `provinces` (`id`, `code`, `name_th`, `name_en`, `geography_id`) VAL
 --
 
 CREATE TABLE `repair` (
-  `r_id` int(6) NOT NULL,
+  `r_id` int NOT NULL,
   `m_id` varchar(255) DEFAULT NULL,
   `r_brand` varchar(255) DEFAULT NULL,
   `r_model` varchar(255) DEFAULT NULL,
   `r_number_model` varchar(255) DEFAULT NULL,
   `r_serial_number` varchar(255) DEFAULT NULL,
-  `r_add` varchar(255) DEFAULT NULL,
   `com_id` varchar(50) DEFAULT NULL,
-  `r_guarantee` int(2) DEFAULT NULL COMMENT 'ระยะประกัน',
+  `r_guarantee` int DEFAULT NULL COMMENT 'ระยะประกัน',
   `r_date_buy` datetime DEFAULT NULL COMMENT 'วันที่ซื้อวันแรก',
-  `del_flg` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'ลบ = 1',
+  `del_flg` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'ลบ = 1',
   `e_id` varchar(6) DEFAULT NULL COMMENT 'ไอดีพนักงานที่ใส่ข้อมูล'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `repair`
 --
 
-INSERT INTO `repair` (`r_id`, `m_id`, `r_brand`, `r_model`, `r_number_model`, `r_serial_number`, `r_add`, `com_id`, `r_guarantee`, `r_date_buy`, `del_flg`, `e_id`) VALUES
-(1, '1', 'Yamaha', 'Errit', 'ER85963', 'MH056985478', NULL, NULL, NULL, NULL, 0, NULL),
-(2, '1', 'Yamaha', 'Errit', 'ER85963', 'MH056985475', NULL, NULL, NULL, NULL, 0, NULL),
-(3, '1', 'Yamaha', 'Errit', 'ER85963', 'MH056985477', NULL, NULL, NULL, NULL, 0, NULL),
-(4, '1', 'Denon', 'Weloca', 'WE3655889', 'DENX59874', NULL, NULL, NULL, NULL, 0, NULL),
-(5, '1', 'Yamaha', 'Errit', 'WE3655889', 'MH056985555', NULL, NULL, NULL, NULL, 0, NULL),
-(6, '1', 'Yamaha', 'Errit', 'WE3655889', 'MH056985578', NULL, NULL, NULL, NULL, 0, NULL),
-(7, '1', 'Yamaha', 'Errit', 'WE3655889', 'MH056985522', NULL, NULL, NULL, NULL, 0, NULL),
-(8, '1', 'Yamaha', 'Errit', 'ER85963', 'MH056985488', NULL, NULL, NULL, NULL, 0, NULL),
-(9, '1', 'Pioneer', 'PU784', 'PU784', 'P056985478', NULL, NULL, NULL, NULL, 0, NULL),
-(10, '1', 'Audio Texhnica', 'M20X', 'M20X', 'MD59874589', NULL, NULL, NULL, NULL, 0, NULL),
-(11, '1', 'B&O', 'ER789', 'ER789', 'BO0211545131', NULL, NULL, NULL, NULL, 0, NULL),
-(12, '4', 'Yamaha', 'Errit', 'ER85963', 'MH056985478', NULL, NULL, NULL, NULL, 0, NULL),
-(13, '1', 'NPC', 'NPX', 'NPX8859', 'NP89587458', NULL, NULL, NULL, NULL, 0, NULL),
-(14, '1', 'sdaasd', 'sadasdas', 'dsad', 'MH0569854785', NULL, NULL, NULL, NULL, 0, NULL),
-(15, '1', 'asdsad', 'asdasdsa', 'dsad', 'asdadasd', NULL, NULL, NULL, NULL, 0, NULL),
-(16, '1', 'Test 1', 'Test 1', 'Test 1.0.0', 'Test 1.0', NULL, NULL, NULL, NULL, 0, NULL),
-(17, '1', 'Test 1', 'Test 1', 'Test 1.0.0', 'Test 2.0', NULL, NULL, NULL, NULL, 0, NULL),
-(18, '1', 'Test 3', 'Test 3', 'Test 1.0.0', 'Test 3.0', NULL, NULL, NULL, NULL, 0, NULL),
-(19, '1', 'Test 4', 'Test 4', 'Test 4.0.0', 'Test 4.0', NULL, NULL, NULL, NULL, 0, NULL),
-(20, '1', 'Test 5', 'Test 5', 'Test 5.0.0', 'Test 5.0', NULL, NULL, NULL, NULL, 0, NULL),
-(21, '1', 'Test 6', 'Test 6', 'Test 6.0.0', 'Test 6.0', NULL, NULL, NULL, NULL, 0, NULL),
-(22, '4', 'Denon 2', 'ERTGH', 'ERTGH235', 'EF99885695', NULL, NULL, NULL, NULL, 0, NULL),
-(23, '4', 'test 33', 'test 33', 'test 33', 'test 33', NULL, NULL, NULL, NULL, 0, NULL),
-(24, '4', 'sss', 'sss', 'sss', 'sss', NULL, NULL, NULL, NULL, 0, NULL),
-(25, '1', 'sss', 'sss', 'sss', 'sss', NULL, NULL, NULL, NULL, 0, NULL),
-(26, '4', 'TEST 858', 'TEST 858', 'TEST 858', 'sdaasTEST 858d', NULL, NULL, NULL, NULL, 0, NULL),
-(27, '4', 'sssa', 'sssa', 'sssa', 'sssa', NULL, NULL, NULL, NULL, 0, NULL),
-(28, '8', 'dsfsdf', 'dsfsdf', 'sdfsdfsd', 'sdfsdf', NULL, NULL, NULL, NULL, 0, NULL),
-(29, '9', 'Test', 'Test', 'Test', 'Test', NULL, NULL, NULL, NULL, 0, NULL),
-(30, '1', 'sadsad', 'asd', 'dasdssd', 'asdas', NULL, '3', NULL, NULL, 0, NULL),
-(31, '1', 'Pakun 1', 'Pakun 1', 'Pakun 1', 'Pakun 1', NULL, '2', NULL, NULL, 0, NULL),
-(32, '1', 'Pioneer', 'RF558965', 'RF558965', 'PO895478', NULL, '5', NULL, NULL, 0, NULL),
-(33, '10', 'Yamaha', 'Errit', 'ER85964', 'MH056985478', NULL, '2', NULL, NULL, 0, NULL),
-(34, '1', 'Yamaha', 'Errit', 'ER85963', 'MH056914242', NULL, '', NULL, NULL, 0, NULL),
-(35, '1', 'Yamaha', 'Strick', 'ER85963', 'MH056944445', NULL, '', NULL, NULL, 0, NULL),
-(36, '1', 'sdasdad', 'asda', 'asd', 'asdasd', NULL, '', NULL, NULL, 0, NULL),
-(37, '1', 'sdasdad', 'asda', 'asd', 'asdasd45', NULL, '', NULL, NULL, 0, NULL),
-(38, '1', 'sdasdad', 'asda', 'asd', 'asdasd50', NULL, '', NULL, NULL, 0, NULL),
-(39, '1', 'WEGA', 'WEFA', 'WE988956', 'WE98245343453', NULL, '', NULL, NULL, 0, NULL),
-(40, '1', 'WEGA', 'WEFA', 'WE988956', 'WE98245343452', NULL, '', NULL, NULL, 0, NULL),
-(41, '1', 'WEGA', 'WEFA', 'WE988956', 'WE9824534342', NULL, '', NULL, NULL, 0, NULL),
-(42, '1', 'ERT', 'ERT50', 'ERT50', 'ERT508745888', NULL, '', NULL, NULL, 0, NULL),
-(43, '1', 'Yamaha', 'Errit', 'ER85963', 'MH0957655647', NULL, '2', NULL, NULL, 0, NULL),
-(44, '1', 'Yamaha', 'Errit', 'ER85963', 'MH095765647', NULL, '2', NULL, NULL, 0, NULL),
-(45, '1', 'Yamaha', 'Errit', 'ER85963', 'MH0569854755698', NULL, '', NULL, NULL, 0, NULL),
-(46, '1', 'Yamaha', 'Errit', 'ER85963', 'MH05698547811454', NULL, '', NULL, NULL, 0, NULL),
-(47, '1', 'Pioneer', 'P2545', 'P2545', 'Pioneer874589652', NULL, '', NULL, NULL, 0, NULL),
-(48, '1', 'rr', 'rr', 'rr', 'r459495615616', NULL, '2', NULL, NULL, 0, NULL),
-(49, NULL, 'NPE', 'NPE01', 'NPE01', 'NPE123456', '458 Mo.7', '2', 3, '2020-05-29 00:00:00', 0, NULL),
-(50, '', 'Yamaha', 'Errit', 'ER85963', 'NPE123456', NULL, '', NULL, NULL, 0, NULL),
-(51, '0', 'Yamaha', 'Errit', 'ER85963', 'NPE123456sss', NULL, '', NULL, NULL, 0, NULL),
-(52, '0', 'Yamaha', 'Errit', 'ER85963', 'NPE123456s', NULL, '', NULL, NULL, 0, NULL),
-(53, '0', 'Yamaha', 'Errit', 'ER85963', 'NPE123456ss', NULL, '', NULL, NULL, 0, NULL),
-(54, '0', 'Yamaha', 'Errit', 'ER85963', 'NPE123456', NULL, '', NULL, NULL, 0, NULL),
-(55, '1', 'AudioTech', '01Tech', 'TH1516135145434354', 'THXDR77884844', NULL, '', NULL, NULL, 0, NULL),
-(56, '0', 'dasd', 'asdasdasdasd', 'sadasd', 'NPE123456', NULL, '', NULL, NULL, 0, NULL),
-(57, '0', 'Yamaha', 'Errit', 'ER85963', 'NPE1234565', NULL, '', NULL, NULL, 0, NULL),
-(58, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE12345655', NULL, '', NULL, NULL, 0, NULL),
-(59, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE12345655', NULL, '', NULL, NULL, 0, NULL),
-(60, '1', 'Yamaha', 'Errit', 'ER85963', 'YA123456', NULL, '', NULL, NULL, 0, NULL),
-(61, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456', NULL, '', NULL, NULL, 0, NULL),
-(62, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456ddd', NULL, '', NULL, NULL, 0, NULL),
-(63, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE1234561', NULL, '', NULL, NULL, 0, NULL),
-(64, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456', NULL, '', NULL, NULL, 0, NULL),
-(65, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456d', NULL, '', NULL, NULL, 0, NULL),
-(66, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456d', NULL, '', NULL, NULL, 0, NULL),
-(67, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE1234564', NULL, '', NULL, NULL, 0, NULL),
-(68, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE1234564', NULL, '', NULL, NULL, 0, NULL),
-(69, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456sddd', NULL, '', NULL, NULL, 0, NULL),
-(70, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE12345644', NULL, '', NULL, NULL, 0, NULL),
-(71, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE1234564444', NULL, '', NULL, NULL, 0, NULL),
-(72, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123457777', NULL, '', NULL, NULL, 0, NULL),
-(73, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123457777asdas', NULL, '', NULL, NULL, 0, NULL),
-(74, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456asd', NULL, '', NULL, NULL, 0, NULL),
-(75, '1', 'Yamaha', 'Errit', 'ER85963', 'S65mVziaor', NULL, '', NULL, NULL, 0, NULL),
-(76, '1', 'Yamaha', 'Errit', 'ER85963', 'S65mVziaors', NULL, '', NULL, NULL, 0, NULL),
-(77, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456dasdasd', NULL, '', NULL, NULL, 0, NULL),
-(78, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456a', NULL, '', NULL, NULL, 0, NULL),
-(79, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE12345699', NULL, '', NULL, NULL, 0, NULL),
-(80, '1', 'Yamaha', 'Errit', 'ER85963', 'pio2564785', NULL, '', NULL, NULL, 0, NULL),
-(81, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456ssa', NULL, '', NULL, NULL, 0, NULL),
-(82, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456asaaaa', NULL, '', NULL, NULL, 0, NULL),
-(83, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456aaaa', NULL, '', NULL, NULL, 0, NULL),
-(84, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456aaaaaaaa', NULL, '', NULL, NULL, 0, NULL),
-(85, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456asaaaasasa', NULL, '', NULL, NULL, 0, NULL),
-(86, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456aaaaaaaas', NULL, '', NULL, NULL, 0, NULL),
-(87, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456asdasdasdasdasd', NULL, '', NULL, NULL, 0, NULL),
-(88, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456asdasdasdasdasda', NULL, '', NULL, NULL, 0, NULL),
-(89, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456q', NULL, '', NULL, NULL, 0, NULL),
-(90, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456sadsadasdasdas', NULL, '', NULL, NULL, 0, NULL),
-(91, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456e', NULL, '', NULL, NULL, 0, NULL),
-(92, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456ssssaasdasdasdaxc', NULL, '', NULL, NULL, 0, NULL),
-(93, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456ssssaasdasdasdaxcfgergf', NULL, '', NULL, NULL, 0, NULL),
-(94, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456syy', NULL, '', NULL, NULL, 0, NULL),
-(95, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456sssaa', NULL, '', NULL, NULL, 0, NULL),
-(96, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456sssaaa', NULL, '', NULL, NULL, 0, NULL),
-(97, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456er', NULL, '', NULL, NULL, 0, NULL),
-(98, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456as', NULL, '', NULL, NULL, 0, NULL),
-(99, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456asa', NULL, '', NULL, NULL, 0, NULL),
-(100, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456asaa', NULL, '', NULL, NULL, 0, NULL),
-(101, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456saa', NULL, '', NULL, NULL, 0, NULL),
-(102, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456saasq', NULL, '', NULL, NULL, 0, NULL),
-(103, '1', 'Yamaha', 'Errit', 'ER85963', 'EX8787', NULL, '', NULL, NULL, 0, NULL),
-(104, '1', 'Pioneer', 'P2545', 'ER85963', 'PO885858', NULL, '', NULL, NULL, 0, NULL),
-(105, '', 'NPE', 'NPE01', 'ER85963', 'NPE123456NPE', NULL, '', NULL, NULL, 0, NULL),
-(106, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456assdc', NULL, '', NULL, NULL, 0, NULL),
-(107, '', 'Yamaha', 'Errit', 'ER85963', 'YAMA16519165165', NULL, '', NULL, NULL, 0, NULL),
-(108, '1', 'Pioneer', 'ER4585', 'ER4585', 'PI496125616516', NULL, '', NULL, NULL, 0, NULL),
-(122, '11', 'Yamaha', 'Errit', 'ER85963', 'Y1', NULL, '', NULL, NULL, 0, NULL),
-(123, '11', 'Yamaha', 'Errit', 'ER85963', 'Y2', NULL, '', NULL, NULL, 0, NULL),
-(124, '11', 'Yamaha', 'Errit', 'ER85963', 'Y3', NULL, '', NULL, NULL, 0, NULL),
-(125, '11', 'Yamaha', 'Errit', 'ER85963', 'Y4', NULL, '', NULL, NULL, 0, NULL),
-(126, '11', 'tt', 'tt', 'tt', 't45545', NULL, '', NULL, NULL, 0, NULL),
-(127, '11', 'AudioTech', 'Audiotech', 'AU02564', 'AT885599663235', NULL, '', NULL, NULL, 0, NULL),
-(128, '11', 'B&O', 'B44458', 'B44458', 'B44458457546846', NULL, '', NULL, NULL, 0, NULL),
-(129, '11', 'asdasd', 'asdasd', 'dasdasdasd', 'asdasdassssds', NULL, '', NULL, NULL, 0, NULL),
-(130, '11', 'sss', 'ssss', 'sssss', 'ssssssssssssss', NULL, '', NULL, NULL, 0, NULL),
-(131, '11', 'asdasd', 'assads', 'asdasdsssd', 'ssssdadasd', NULL, '', NULL, NULL, 0, NULL),
-(132, '11', 'Sony', 'SH88559658', 'SH88559658', 'SSR88745892236', NULL, '', NULL, NULL, 0, NULL),
-(133, '11', 'Beats', 'Beats Pure', 'BP889', 'B25415615', NULL, '', NULL, NULL, 0, NULL),
-(134, '11', 'Beats', 'Solo', 'SOLO1456', 'SO1564454564654', NULL, '', NULL, NULL, 0, NULL),
-(135, '11', 'B&O', 'B445', 'B445', 'BO646545648564', NULL, '', NULL, NULL, 0, NULL),
-(136, '11', 'AudioTech', 'M20X', 'M20X', 'MX558978848', NULL, '', NULL, NULL, 0, NULL),
-(137, '11', 'NPE', 'NPE1', 'NPE1', 'NPE154456543', NULL, '', NULL, NULL, 0, NULL),
-(138, '11', 'sdaadssad', 'sadasdasdasdasd', 'sadasdasd', 'asdsddsdsdds', NULL, '', NULL, NULL, 0, NULL),
-(139, '11', 'Sennheiser', 'LSP 500 Pro', 'LSP 500 Pro', 'SH55849566151', NULL, '', NULL, NULL, 0, NULL),
-(140, '11', 'Sennheiser', 'LSP 500 Pro', 'LSP 500 Pro', 'SH165611561651', NULL, '', 4, '2020-06-03 17:02:11', 0, NULL),
-(141, '11', 'bkjgku', 'uiguigh', 'jhljghukg', 'guguguig', NULL, '', NULL, NULL, 0, NULL),
-(142, '11', 'Ammarit Codtinnawat', 'dadds', 'asdasd', 'asdasd', NULL, '', NULL, NULL, 0, NULL),
-(143, '11', 'Yamaha', 'Errit', '1561561561651', 'à¸—à¸·à¸à¹ˆà¸²à¸·à¸”à¸™à¸«à¸à¸”à¸™à¸·à¸«à¸™à¸”à¸à¸·à¸™à¸«à¸à¸”à¸·à¸', NULL, '', NULL, NULL, 0, NULL),
-(144, '11', 'sad', 'sdasd', 'asdasdsad', 'asdasdasd', NULL, '1', NULL, NULL, 0, NULL),
-(145, '11', 'asdasd', 'sadasdsa', 'sadsadasd', 'dasdasd', NULL, '2', NULL, NULL, 0, NULL),
-(146, '11', 'sdfds', 'fdsfsd', 'dsfd', 'fdsf', NULL, '', NULL, NULL, 0, NULL),
-(147, '', '', '', '', '', NULL, '', NULL, NULL, 0, NULL),
-(148, '6', 'sdf', 'sdfdsfsf', 'sdfsdf', 'sfdsdfsdfsdf', NULL, '0', 3, '2023-06-16 14:59:14', 0, NULL);
+INSERT INTO `repair` (`r_id`, `m_id`, `r_brand`, `r_model`, `r_number_model`, `r_serial_number`, `com_id`, `r_guarantee`, `r_date_buy`, `del_flg`, `e_id`) VALUES
+(1, '1', 'Yamaha', 'Errit', 'ER85963', 'MH056985478', NULL, NULL, NULL, 0, NULL),
+(2, '1', 'Yamaha', 'Errit', 'ER85963', 'MH056985475', NULL, NULL, NULL, 0, NULL),
+(3, '1', 'Yamaha', 'Errit', 'ER85963', 'MH056985477', NULL, NULL, NULL, 0, NULL),
+(4, '1', 'Denon', 'Weloca', 'WE3655889', 'DENX59874', NULL, NULL, NULL, 0, NULL),
+(5, '1', 'Yamaha', 'Errit', 'WE3655889', 'MH056985555', NULL, NULL, NULL, 0, NULL),
+(6, '1', 'Yamaha', 'Errit', 'WE3655889', 'MH056985578', NULL, NULL, NULL, 0, NULL),
+(7, '1', 'Yamaha', 'Errit', 'WE3655889', 'MH056985522', NULL, NULL, NULL, 0, NULL),
+(8, '1', 'Yamaha', 'Errit', 'ER85963', 'MH056985488', NULL, NULL, NULL, 0, NULL),
+(9, '1', 'Pioneer', 'PU784', 'PU784', 'P056985478', NULL, NULL, NULL, 0, NULL),
+(10, '1', 'Audio Texhnica', 'M20X', 'M20X', 'MD59874589', NULL, NULL, NULL, 0, NULL),
+(11, '1', 'B&O', 'ER789', 'ER789', 'BO0211545131', NULL, NULL, NULL, 0, NULL),
+(12, '4', 'Yamaha', 'Errit', 'ER85963', 'MH056985478', NULL, NULL, NULL, 0, NULL),
+(13, '1', 'NPC', 'NPX', 'NPX8859', 'NP89587458', NULL, NULL, NULL, 0, NULL),
+(14, '1', 'sdaasd', 'sadasdas', 'dsad', 'MH0569854785', NULL, NULL, NULL, 0, NULL),
+(15, '1', 'asdsad', 'asdasdsa', 'dsad', 'asdadasd', NULL, NULL, NULL, 0, NULL),
+(16, '1', 'Test 1', 'Test 1', 'Test 1.0.0', 'Test 1.0', NULL, NULL, NULL, 0, NULL),
+(17, '1', 'Test 1', 'Test 1', 'Test 1.0.0', 'Test 2.0', NULL, NULL, NULL, 0, NULL),
+(18, '1', 'Test 3', 'Test 3', 'Test 1.0.0', 'Test 3.0', NULL, NULL, NULL, 0, NULL),
+(19, '1', 'Test 4', 'Test 4', 'Test 4.0.0', 'Test 4.0', NULL, NULL, NULL, 0, NULL),
+(20, '1', 'Test 5', 'Test 5', 'Test 5.0.0', 'Test 5.0', NULL, NULL, NULL, 0, NULL),
+(21, '1', 'Test 6', 'Test 6', 'Test 6.0.0', 'Test 6.0', NULL, NULL, NULL, 0, NULL),
+(22, '4', 'Denon 2', 'ERTGH', 'ERTGH235', 'EF99885695', NULL, NULL, NULL, 0, NULL),
+(23, '4', 'test 33', 'test 33', 'test 33', 'test 33', NULL, NULL, NULL, 0, NULL),
+(24, '4', 'sss', 'sss', 'sss', 'sss', NULL, NULL, NULL, 0, NULL),
+(25, '1', 'sss', 'sss', 'sss', 'sss', NULL, NULL, NULL, 0, NULL),
+(26, '4', 'TEST 858', 'TEST 858', 'TEST 858', 'sdaasTEST 858d', NULL, NULL, NULL, 0, NULL),
+(27, '4', 'sssa', 'sssa', 'sssa', 'sssa', NULL, NULL, NULL, 0, NULL),
+(28, '8', 'dsfsdf', 'dsfsdf', 'sdfsdfsd', 'sdfsdf', NULL, NULL, NULL, 0, NULL),
+(29, '9', 'Test', 'Test', 'Test', 'Test', NULL, NULL, NULL, 0, NULL),
+(30, '1', 'sadsad', 'asd', 'dasdssd', 'asdas', '3', NULL, NULL, 0, NULL),
+(31, '1', 'Pakun 1', 'Pakun 1', 'Pakun 1', 'Pakun 1', '2', NULL, NULL, 0, NULL),
+(32, '1', 'Pioneer', 'RF558965', 'RF558965', 'PO895478', '5', NULL, NULL, 0, NULL),
+(33, '10', 'Yamaha', 'Errit', 'ER85964', 'MH056985478', '2', NULL, NULL, 0, NULL),
+(34, '1', 'Yamaha', 'Errit', 'ER85963', 'MH056914242', '', NULL, NULL, 0, NULL),
+(35, '1', 'Yamaha', 'Strick', 'ER85963', 'MH056944445', '', NULL, NULL, 0, NULL),
+(36, '1', 'sdasdad', 'asda', 'asd', 'asdasd', '', NULL, NULL, 0, NULL),
+(37, '1', 'sdasdad', 'asda', 'asd', 'asdasd45', '', NULL, NULL, 0, NULL),
+(38, '1', 'sdasdad', 'asda', 'asd', 'asdasd50', '', NULL, NULL, 0, NULL),
+(39, '1', 'WEGA', 'WEFA', 'WE988956', 'WE98245343453', '', NULL, NULL, 0, NULL),
+(40, '1', 'WEGA', 'WEFA', 'WE988956', 'WE98245343452', '', NULL, NULL, 0, NULL),
+(41, '1', 'WEGA', 'WEFA', 'WE988956', 'WE9824534342', '', NULL, NULL, 0, NULL),
+(42, '1', 'ERT', 'ERT50', 'ERT50', 'ERT508745888', '', NULL, NULL, 0, NULL),
+(43, '1', 'Yamaha', 'Errit', 'ER85963', 'MH0957655647', '2', NULL, NULL, 0, NULL),
+(44, '1', 'Yamaha', 'Errit', 'ER85963', 'MH095765647', '2', NULL, NULL, 0, NULL),
+(45, '1', 'Yamaha', 'Errit', 'ER85963', 'MH0569854755698', '', NULL, NULL, 0, NULL),
+(46, '1', 'Yamaha', 'Errit', 'ER85963', 'MH05698547811454', '', NULL, NULL, 0, NULL),
+(47, '1', 'Pioneer', 'P2545', 'P2545', 'Pioneer874589652', '', NULL, NULL, 0, NULL),
+(48, '1', 'rr', 'rr', 'rr', 'r459495615616', '2', NULL, NULL, 0, NULL),
+(49, NULL, 'NPE', 'NPE01', 'NPE01', 'NPE123456', '2', 3, '2020-05-29 00:00:00', 0, NULL),
+(50, '', 'Yamaha', 'Errit', 'ER85963', 'NPE123456', '', NULL, NULL, 0, NULL),
+(51, '0', 'Yamaha', 'Errit', 'ER85963', 'NPE123456sss', '', NULL, NULL, 0, NULL),
+(52, '0', 'Yamaha', 'Errit', 'ER85963', 'NPE123456s', '', NULL, NULL, 0, NULL),
+(53, '0', 'Yamaha', 'Errit', 'ER85963', 'NPE123456ss', '', NULL, NULL, 0, NULL),
+(54, '0', 'Yamaha', 'Errit', 'ER85963', 'NPE123456', '', NULL, NULL, 0, NULL),
+(55, '1', 'AudioTech', '01Tech', 'TH1516135145434354', 'THXDR77884844', '', NULL, NULL, 0, NULL),
+(56, '0', 'dasd', 'asdasdasdasd', 'sadasd', 'NPE123456', '', NULL, NULL, 0, NULL),
+(57, '0', 'Yamaha', 'Errit', 'ER85963', 'NPE1234565', '', NULL, NULL, 0, NULL),
+(58, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE12345655', '', NULL, NULL, 0, NULL),
+(59, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE12345655', '', NULL, NULL, 0, NULL),
+(60, '1', 'Yamaha', 'Errit', 'ER85963', 'YA123456', '', NULL, NULL, 0, NULL),
+(61, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456', '', NULL, NULL, 0, NULL),
+(62, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456ddd', '', NULL, NULL, 0, NULL),
+(63, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE1234561', '', NULL, NULL, 0, NULL),
+(64, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456', '', NULL, NULL, 0, NULL),
+(65, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456d', '', NULL, NULL, 0, NULL),
+(66, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456d', '', NULL, NULL, 0, NULL),
+(67, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE1234564', '', NULL, NULL, 0, NULL),
+(68, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE1234564', '', NULL, NULL, 0, NULL),
+(69, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456sddd', '', NULL, NULL, 0, NULL),
+(70, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE12345644', '', NULL, NULL, 0, NULL),
+(71, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE1234564444', '', NULL, NULL, 0, NULL),
+(72, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123457777', '', NULL, NULL, 0, NULL),
+(73, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123457777asdas', '', NULL, NULL, 0, NULL),
+(74, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456asd', '', NULL, NULL, 0, NULL),
+(75, '1', 'Yamaha', 'Errit', 'ER85963', 'S65mVziaor', '', NULL, NULL, 0, NULL),
+(76, '1', 'Yamaha', 'Errit', 'ER85963', 'S65mVziaors', '', NULL, NULL, 0, NULL),
+(77, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456dasdasd', '', NULL, NULL, 0, NULL),
+(78, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456a', '', NULL, NULL, 0, NULL),
+(79, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE12345699', '', NULL, NULL, 0, NULL),
+(80, '1', 'Yamaha', 'Errit', 'ER85963', 'pio2564785', '', NULL, NULL, 0, NULL),
+(81, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456ssa', '', NULL, NULL, 0, NULL),
+(82, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456asaaaa', '', NULL, NULL, 0, NULL),
+(83, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456aaaa', '', NULL, NULL, 0, NULL),
+(84, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456aaaaaaaa', '', NULL, NULL, 0, NULL),
+(85, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456asaaaasasa', '', NULL, NULL, 0, NULL),
+(86, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456aaaaaaaas', '', NULL, NULL, 0, NULL),
+(87, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456asdasdasdasdasd', '', NULL, NULL, 0, NULL),
+(88, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456asdasdasdasdasda', '', NULL, NULL, 0, NULL),
+(89, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456q', '', NULL, NULL, 0, NULL),
+(90, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456sadsadasdasdas', '', NULL, NULL, 0, NULL),
+(91, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456e', '', NULL, NULL, 0, NULL),
+(92, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456ssssaasdasdasdaxc', '', NULL, NULL, 0, NULL),
+(93, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456ssssaasdasdasdaxcfgergf', '', NULL, NULL, 0, NULL),
+(94, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456syy', '', NULL, NULL, 0, NULL),
+(95, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456sssaa', '', NULL, NULL, 0, NULL),
+(96, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456sssaaa', '', NULL, NULL, 0, NULL),
+(97, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456er', '', NULL, NULL, 0, NULL),
+(98, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456as', '', NULL, NULL, 0, NULL),
+(99, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456asa', '', NULL, NULL, 0, NULL),
+(100, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456asaa', '', NULL, NULL, 0, NULL),
+(101, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456saa', '', NULL, NULL, 0, NULL),
+(102, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456saasq', '', NULL, NULL, 0, NULL),
+(103, '1', 'Yamaha', 'Errit', 'ER85963', 'EX8787', '', NULL, NULL, 0, NULL),
+(104, '1', 'Pioneer', 'P2545', 'ER85963', 'PO885858', '', NULL, NULL, 0, NULL),
+(105, '', 'NPE', 'NPE01', 'ER85963', 'NPE123456NPE', '', NULL, NULL, 0, NULL),
+(106, '1', 'Yamaha', 'Errit', 'ER85963', 'NPE123456assdc', '', NULL, NULL, 0, NULL),
+(107, '', 'Yamaha', 'Errit', 'ER85963', 'YAMA16519165165', '', NULL, NULL, 0, NULL),
+(108, '1', 'Pioneer', 'ER4585', 'ER4585', 'PI496125616516', '', NULL, NULL, 0, NULL),
+(122, '11', 'Yamaha', 'Errit', 'ER85963', 'Y1', '', NULL, NULL, 0, NULL),
+(123, '11', 'Yamaha', 'Errit', 'ER85963', 'Y2', '', NULL, NULL, 0, NULL),
+(124, '11', 'Yamaha', 'Errit', 'ER85963', 'Y3', '', NULL, NULL, 0, NULL),
+(125, '11', 'Yamaha', 'Errit', 'ER85963', 'Y4', '', NULL, NULL, 0, NULL),
+(126, '11', 'tt', 'tt', 'tt', 't45545', '', NULL, NULL, 0, NULL),
+(127, '11', 'AudioTech', 'Audiotech', 'AU02564', 'AT885599663235', '', NULL, NULL, 0, NULL),
+(128, '11', 'B&O', 'B44458', 'B44458', 'B44458457546846', '', NULL, NULL, 0, NULL),
+(129, '11', 'asdasd', 'asdasd', 'dasdasdasd', 'asdasdassssds', '', NULL, NULL, 0, NULL),
+(130, '11', 'sss', 'ssss', 'sssss', 'ssssssssssssss', '', NULL, NULL, 0, NULL),
+(131, '11', 'asdasd', 'assads', 'asdasdsssd', 'ssssdadasd', '', NULL, NULL, 0, NULL),
+(132, '11', 'Sony', 'SH88559658', 'SH88559658', 'SSR88745892236', '', NULL, NULL, 0, NULL),
+(133, '11', 'Beats', 'Beats Pure', 'BP889', 'B25415615', '', NULL, NULL, 0, NULL),
+(134, '11', 'Beats', 'Solo', 'SOLO1456', 'SO1564454564654', '', NULL, NULL, 0, NULL),
+(135, '11', 'B&O', 'B445', 'B445', 'BO646545648564', '', NULL, NULL, 0, NULL),
+(136, '11', 'AudioTech', 'M20X', 'M20X', 'MX558978848', '', NULL, NULL, 0, NULL),
+(137, '11', 'NPE', 'NPE1', 'NPE1', 'NPE154456543', '', NULL, NULL, 0, NULL),
+(138, '11', 'sdaadssad', 'sadasdasdasdasd', 'sadasdasd', 'asdsddsdsdds', '', NULL, NULL, 0, NULL),
+(139, '11', 'Sennheiser', 'LSP 500 Pro', 'LSP 500 Pro', 'SH55849566151', '', NULL, NULL, 0, NULL),
+(140, '11', 'Sennheiser', 'LSP 500 Pro', 'LSP 500 Pro', 'SH165611561651', '', 4, '2020-06-03 17:02:11', 0, NULL),
+(141, '11', 'bkjgku', 'uiguigh', 'jhljghukg', 'guguguig', '', NULL, NULL, 0, NULL),
+(142, '11', 'Ammarit Codtinnawat', 'dadds', 'asdasd', 'asdasd', '', NULL, NULL, 0, NULL),
+(143, '11', 'Yamaha', 'Errit', '1561561561651', 'à¸—à¸·à¸à¹ˆà¸²à¸·à¸”à¸™à¸«à¸à¸”à¸™à¸·à¸«à¸™à¸”à¸à¸·à¸™à¸«à¸à¸”à¸·à¸', '', NULL, NULL, 0, NULL),
+(144, '11', 'sad', 'sdasd', 'asdasdsad', 'asdasdasd', '1', NULL, NULL, 0, NULL),
+(145, '11', 'asdasd', 'sadasdsa', 'sadsadasd', 'dasdasd', '2', NULL, NULL, 0, NULL),
+(146, '11', 'sdfds', 'fdsfsd', 'dsfd', 'fdsf', '', NULL, NULL, 0, NULL),
+(147, '', '', '', '', '', '', NULL, NULL, 0, NULL),
+(148, '6', 'sdf', 'sdfdsfsf', 'sdfsdf', 'sfdsdfsdfsdf', '0', 3, '2023-06-16 14:59:14', 0, NULL),
+(149, '1', 'Yamaha', 'Errit', 'ER85963', 'MH056985478à¸', '', NULL, NULL, 0, NULL),
+(150, '11', 'Yamaha', 'Errit', 'ER85963', 'ANE522179', '1', 3, '2023-06-19 20:55:58', 0, '1'),
+(151, '11', 'AudioTech', 'M20X', 'M20X', 'M20454654486464', '1', NULL, NULL, 0, NULL),
+(152, '11', 'Audiotech', 'M20x', 'M20x', 'M205454647567', '2', NULL, NULL, 0, NULL),
+(153, '11', 'Audiotech', 'M40x', 'M40x', 'M405534684684', '1', NULL, NULL, 0, NULL),
+(154, '11', 'B&O', 'B20x', 'B20x', 'B204454', '7', NULL, NULL, 0, NULL),
+(155, '11', 'AudioTech', 'AudioTech1', 'AudioTech1.0', 'AudioTech1212', '1', NULL, NULL, 0, NULL),
+(156, '11', 'Ammarit Chottinnawat', 'dsf', 'sdfsdf', 'dsfsdfsdf', '5', NULL, NULL, 0, NULL),
+(157, '11', 'sdf', 'sdfsdf', 'dsfsdfsdf', 'sdfsdf45', '', NULL, NULL, 0, NULL),
+(158, '11', 'sadasd', 'asdasd', 'sdasdasdasdasd', 'asdasda', '1', NULL, NULL, 0, NULL),
+(159, '11', 'dsaasda', 'asdasdasd', 'asdasdasdsad', 'asdsdasdsssssdsdsdsdsd', '10', NULL, NULL, 0, NULL),
+(160, '11', 'dsfds', 'fsdfsdfd', 'dfdfdsfdfsfddddfd', 'sfdddddf', '4', NULL, NULL, 0, NULL),
+(161, '11', 'Toru', 'Toru154145614', 'Toru154145614', 'Toru154145614adasdasd', '10', NULL, NULL, 0, NULL),
+(162, '11', 'Yamaha', 'ER874', 'ER874', 'ER87412658418864', '10', NULL, NULL, 0, NULL),
+(163, '11', 'Yamaha', 'ER874', 'ER874', 'ER87412658418547', '2', NULL, NULL, 0, NULL),
+(164, '11', 'Sony', 'SN4584', 'SN4584', 'SN45844449849', '3', NULL, NULL, 0, NULL),
+(165, '11', 'Harman', 'HM541225', 'HM541225', 'HM541225325445', '', NULL, NULL, 0, NULL),
+(166, '11', 'Sony', 'VE4545', 'VE4545', 'VE454544245', '2', NULL, NULL, 0, NULL),
+(167, '11', 'Apple', 'iPhoneX', 'X54564', 'MH454534586464', '4', NULL, NULL, 0, NULL),
+(168, '11', 'Divoom', 'Divoombox Party', 'Divoombox Party', 'DIV1541156161', '2', NULL, NULL, 0, NULL),
+(169, '11', 'TestStatus', 'TestStatus1', 'TestStatus1', 'TestStatus01', '1', NULL, NULL, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -10816,156 +11110,302 @@ INSERT INTO `repair` (`r_id`, `m_id`, `r_brand`, `r_model`, `r_number_model`, `r
 --
 
 CREATE TABLE `repair_detail` (
-  `p_id` int(6) DEFAULT NULL,
-  `rd_value_parts` int(10) DEFAULT NULL,
-  `rd_parts_price` int(10) DEFAULT NULL,
-  `rd_id` int(6) NOT NULL,
-  `get_r_id` int(6) DEFAULT NULL,
-  `rs_id` int(6) DEFAULT NULL,
+  `p_id` int DEFAULT NULL,
+  `rd_value_parts` int DEFAULT NULL,
+  `rd_parts_price` int DEFAULT NULL,
+  `rd_id` int NOT NULL,
+  `get_r_id` int DEFAULT NULL,
+  `rs_id` int DEFAULT NULL,
   `rd_date_in` datetime DEFAULT NULL COMMENT 'เวลาที่เพิ่มอะไหล่',
-  `del_flg` int(1) NOT NULL DEFAULT 0 COMMENT '1 = ลบ',
-  `rd_update` datetime DEFAULT NULL COMMENT 'วันที่อัพเดตสถานะ del_flg'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `del_flg` int NOT NULL DEFAULT '0' COMMENT '1 = ลบ',
+  `rd_update` datetime DEFAULT NULL COMMENT 'วันที่อัพเดตสถานะ del_flg',
+  `get_d_id` varchar(6) DEFAULT NULL COMMENT 'หมายเลขรายละเอียดการซ่อม'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `repair_detail`
 --
 
-INSERT INTO `repair_detail` (`p_id`, `rd_value_parts`, `rd_parts_price`, `rd_id`, `get_r_id`, `rs_id`, `rd_date_in`, `del_flg`, `rd_update`) VALUES
-(1, 4, 0, 1, NULL, 68, '2023-05-20 15:59:07', 0, NULL),
-(2, 3, 0, 2, NULL, 68, '2023-05-20 15:59:07', 0, NULL),
-(1, 3, 2850, 3, NULL, 69, '2023-05-20 16:02:02', 0, NULL),
-(3, 2, 820, 4, NULL, 69, '2023-05-20 16:02:02', 0, NULL),
-(1, 3, 2850, 5, NULL, 70, '2023-05-20 16:05:49', 0, NULL),
-(2, 2, 1080, 6, NULL, 70, '2023-05-20 16:05:49', 0, NULL),
-(1, 1, 950, 7, NULL, 71, '2023-05-20 16:10:26', 0, NULL),
-(1, 1, 950, 8, NULL, 71, '2023-05-20 16:10:26', 0, NULL),
-(1, 1, 950, 9, NULL, 72, '2023-05-20 16:10:53', 0, NULL),
-(1, 1, 950, 10, NULL, 72, '2023-05-20 16:10:53', 0, NULL),
-(1, 1, 950, 11, NULL, 73, '2023-05-20 16:13:04', 0, NULL),
-(1, 1, 950, 12, NULL, 73, '2023-05-20 16:13:04', 0, NULL),
-(1, 1, 950, 13, NULL, 77, '2023-05-20 16:16:55', 0, NULL),
-(1, 1, 950, 14, NULL, 78, '2023-05-20 16:17:55', 0, NULL),
-(1, 2, 1900, 15, NULL, 0, '2023-05-21 20:12:58', 0, NULL),
-(1, 3, 2850, 16, NULL, 0, '2023-05-21 20:13:51', 0, NULL),
-(2, 4, 2160, 17, NULL, 0, '2023-05-21 20:15:31', 0, NULL),
-(1, 2, 1900, 18, NULL, 111, '2023-05-21 20:16:18', 0, NULL),
-(1, 3, 2850, 19, NULL, 112, '2023-05-23 12:37:02', 0, NULL),
-(2, 2, 1620, 20, NULL, 113, '2023-05-23 12:42:47', 0, NULL),
-(1, 2, 1900, 21, NULL, 116, '2023-05-23 13:49:02', 0, NULL),
-(2, 2, 1080, 22, NULL, 116, '2023-05-23 13:49:02', 0, NULL),
-(3, 3, 1230, 23, NULL, 116, '2023-05-23 13:49:02', 0, NULL),
-(2, 1, 540, 24, NULL, 119, '2023-05-23 17:58:50', 0, NULL),
-(1, 2, 1900, 25, NULL, 120, '2023-05-23 17:59:23', 0, NULL),
-(1, 1, 950, 26, NULL, 127, '2023-05-25 01:40:31', 1, '2023-05-26 14:09:20'),
-(1, 1, 950, 27, NULL, 130, '2023-05-25 03:25:24', 0, NULL),
-(1, 2, 1900, 28, NULL, 131, '2023-05-25 14:37:46', 0, NULL),
-(2, 3, 1620, 29, NULL, 131, '2023-05-25 14:37:46', 0, NULL),
-(1, 2, 1900, 30, NULL, 132, '2023-05-25 14:41:48', 0, NULL),
-(8, 2, 500, 31, NULL, 132, '2023-05-25 14:41:48', 0, NULL),
-(1, 2, 1900, 32, NULL, 138, '2023-05-25 19:15:31', 0, NULL),
-(1, 1, 950, 33, NULL, 139, '2023-05-25 21:09:22', 0, NULL),
-(7, 1, 45, 34, NULL, 139, '2023-05-25 21:09:22', 0, NULL),
-(2, 1, 540, 35, NULL, 142, '2023-05-25 22:02:56', 1, '2023-05-26 14:09:20'),
-(1, 1, 950, 36, NULL, 144, '2023-05-25 22:37:17', 1, '2023-05-26 01:00:36'),
-(3, 1, 410, 37, NULL, 145, '2023-05-25 22:41:06', 1, '2023-05-26 01:00:36'),
-(1, 1, 950, 38, NULL, 146, '2023-05-25 23:17:25', 1, '2023-05-26 01:00:36'),
-(7, 1, 45, 39, NULL, 147, '2023-05-26 01:00:36', 0, NULL),
-(1, 1, 950, 40, NULL, 152, '2023-05-26 02:30:02', 0, NULL),
-(1, 2, 1900, 41, NULL, 153, '2023-05-26 02:33:07', 0, NULL),
-(3, 1, 410, 42, NULL, 156, '2023-05-26 12:41:06', 1, '2023-05-26 12:45:23'),
-(8, 1, 250, 43, NULL, 157, '2023-05-26 12:44:36', 1, '2023-05-26 12:45:23'),
-(3, 1, 410, 44, NULL, 158, '2023-05-26 12:45:23', 0, NULL),
-(5, 1, 3250, 45, NULL, 162, '2023-05-26 13:06:26', 1, '2023-05-26 13:07:07'),
-(7, 1, 45, 46, NULL, 163, '2023-05-26 13:07:07', 0, NULL),
-(1, 1, 950, 47, NULL, 167, '2023-05-26 13:14:46', 1, '2023-05-26 13:17:08'),
-(2, 1, 540, 48, NULL, 168, '2023-05-26 13:17:08', 0, NULL),
-(2, 1, 540, 49, NULL, 171, '2023-05-26 13:45:52', 1, '2023-05-26 13:46:36'),
-(7, 1, 45, 50, NULL, 172, '2023-05-26 13:46:36', 1, NULL),
-(7, 1, 45, 51, NULL, 178, '2023-05-26 14:04:59', 1, '2023-05-26 14:09:20'),
-(2, 1, 540, 52, NULL, 179, '2023-05-26 14:07:58', 1, '2023-05-26 14:09:20'),
-(1, 1, 950, 53, NULL, 180, '2023-05-26 14:09:20', 1, NULL),
-(3, 1, 0, 54, NULL, 186, '2023-05-26 14:21:50', 1, '2023-05-26 14:26:52'),
-(7, 1, 45, 55, NULL, 187, '2023-05-26 14:23:07', 0, NULL),
-(1, 1, 950, 57, NULL, 189, '2023-05-26 14:37:07', 1, '2023-05-26 14:37:35'),
-(1, 1, 950, 58, NULL, 190, '2023-05-26 14:37:35', 1, NULL),
-(1, 1, 950, 59, NULL, 194, '2023-05-26 14:47:21', 1, '2023-05-26 14:49:33'),
-(1, 2, 1900, 60, NULL, 195, '2023-05-26 14:49:33', 0, NULL),
-(1, 1, 950, 61, NULL, 209, '2023-05-28 15:39:43', 1, NULL),
-(1, 1, 950, 62, NULL, 218, '2023-05-28 16:38:45', 1, NULL),
-(7, 1, 45, 65, NULL, 239, '2023-05-30 15:05:49', 1, '2023-06-01 20:46:35'),
-(7, 1, 45, 66, NULL, 240, '2023-05-30 15:06:18', 0, NULL),
-(1, 0, 0, 67, NULL, 241, '2023-05-30 15:07:59', 1, '2023-06-01 20:46:35'),
-(7, 1, 45, 68, NULL, 242, '2023-05-30 15:09:29', 1, '2023-06-01 20:46:35'),
-(6, 0, 0, 69, NULL, 243, '2023-05-30 15:12:13', 1, '2023-06-01 20:46:35'),
-(6, 1, 0, 70, NULL, 244, '2023-05-30 15:13:18', 1, '2023-06-01 20:46:35'),
-(1, 1, 950, 71, NULL, 251, '2023-05-31 14:24:35', 1, '2023-06-01 20:46:35'),
-(7, 1, 45, 72, NULL, 251, '2023-05-31 14:24:35', 1, '2023-06-01 20:46:35'),
-(8, 1, 250, 73, NULL, 251, '2023-05-31 14:24:35', 1, '2023-06-01 20:46:35'),
-(3, 0, 0, 74, NULL, 286, '2023-06-01 20:45:18', 1, '2023-06-01 20:46:35'),
-(2, 0, 0, 75, NULL, 287, '2023-06-01 20:46:35', 0, NULL),
-(7, 0, 0, 76, NULL, 287, '2023-06-01 20:46:35', 0, NULL),
-(5, 1, 3250, 77, NULL, 291, '2023-06-01 21:34:43', 1, '2023-06-01 21:43:11'),
-(8, 1, 250, 78, NULL, 292, '2023-06-01 21:36:57', 0, NULL),
-(7, 4, 1000, 79, NULL, 323, '2023-06-02 05:34:32', 0, NULL),
-(7, 1, 0, 80, NULL, 294, '2023-06-01 21:43:11', 0, NULL),
-(7, 1, 45, 81, NULL, 310, '2023-06-01 23:31:03', 0, NULL),
-(8, 1, 250, 82, NULL, 312, '2023-06-01 23:45:25', 0, NULL),
-(8, 4, 1000, 83, NULL, 323, '2023-06-02 05:34:32', 0, NULL),
-(7, 1, 45, 84, NULL, 337, '2023-06-02 14:45:46', 0, NULL),
-(2, 1, 540, 85, NULL, 337, '2023-06-02 14:45:46', 0, NULL),
-(2, 1, 540, 86, NULL, 339, '2023-06-02 14:47:42', 0, NULL),
-(7, 1, 45, 87, NULL, 341, '2023-06-02 15:00:02', 0, NULL),
-(1, 1, 950, 88, NULL, 342, '2023-06-02 15:04:36', 0, NULL),
-(3, 1, 410, 89, NULL, 343, '2023-06-02 15:05:51', 0, NULL),
-(8, 1, 250, 90, NULL, 344, '2023-06-02 15:09:08', 0, NULL),
-(1, 1, 950, 91, NULL, 345, '2023-06-02 15:11:22', 0, NULL),
-(1, 1, 950, 92, NULL, 346, '2023-06-02 15:13:22', 0, NULL),
-(7, 1, 45, 93, NULL, 347, '2023-06-02 15:19:39', 0, NULL),
-(8, 1, 250, 94, NULL, 348, '2023-06-02 15:20:33', 0, NULL),
-(8, 1, 250, 95, NULL, 350, '2023-06-02 15:27:15', 0, NULL),
-(7, 1, 45, 96, NULL, 351, '2023-06-02 15:30:41', 0, NULL),
-(8, 1, 250, 97, NULL, 352, '2023-06-02 15:32:50', 0, NULL),
-(7, 1, 45, 98, NULL, 354, '2023-06-02 15:35:19', 0, NULL),
-(8, 1, 250, 99, NULL, 355, '2023-06-02 15:38:56', 0, NULL),
-(8, 1, 250, 100, NULL, 356, '2023-06-02 15:39:55', 0, NULL),
-(7, 1, 45, 101, NULL, 358, '2023-06-02 15:41:05', 1, '2023-06-02 16:31:27'),
-(7, 1, 45, 102, NULL, 366, '2023-06-02 15:45:44', 0, NULL),
-(7, 1, 45, 103, NULL, 368, '2023-06-02 15:51:39', 0, NULL),
-(8, 1, 250, 104, NULL, 369, '2023-06-02 15:53:54', 0, NULL),
-(7, 1, 45, 105, NULL, 371, '2023-06-02 19:07:54', 0, NULL),
-(7, 1, 45, 106, NULL, 374, '2023-06-02 16:31:27', 1, NULL),
-(7, 1, 45, 107, NULL, 381, '2023-06-02 18:42:18', 1, '2023-06-02 18:45:42'),
-(2, 1, 540, 108, NULL, 382, '2023-06-02 18:45:42', 1, NULL),
-(1, 1, 950, 109, NULL, 398, '2023-06-05 13:55:35', 0, NULL),
-(7, 1, 45, 110, NULL, 398, '2023-06-05 13:55:35', 0, NULL),
-(6, 1, 300, 111, NULL, 422, '2023-06-07 13:29:15', 1, '2023-06-07 14:17:06'),
-(7, 1, 45, 112, NULL, 423, '2023-06-07 13:30:38', 1, '2023-06-07 14:17:06'),
-(7, 1, 45, 113, NULL, 424, '2023-06-07 13:32:53', 1, '2023-06-07 14:17:06'),
-(7, 2, 90, 114, NULL, 426, '2023-06-07 14:10:42', 1, '2023-06-07 14:17:06'),
-(6, 2, 600, 115, NULL, 440, '2023-06-07 14:17:06', 1, '2023-06-07 14:18:43'),
-(7, 1, 45, 116, NULL, 442, '2023-06-07 14:18:57', 0, NULL),
-(7, 1, 45, 117, NULL, 446, '2023-06-07 14:37:22', 0, NULL),
-(2, 1, 540, 118, NULL, 447, '2023-06-07 14:37:50', 0, NULL),
-(6, 1, 300, 119, NULL, 465, '2023-06-08 18:00:04', 0, NULL),
-(1, 2, 1900, 120, NULL, 481, '2023-06-09 00:23:46', 0, NULL),
-(7, 1, 45, 121, NULL, 488, '2023-06-09 01:48:41', 1, '2023-06-09 03:51:20'),
-(7, 1, 45, 122, NULL, 517, '2023-06-09 14:55:34', 1, '2023-06-09 15:47:26'),
-(1, 1, 950, 123, NULL, 518, '2023-06-09 15:40:51', 0, NULL),
-(2, 1, 540, 124, NULL, 519, '2023-06-09 15:41:50', 0, NULL),
-(2, 1, 540, 125, NULL, 520, '2023-06-09 15:44:57', 0, NULL),
-(7, 1, 45, 126, NULL, 521, '2023-06-09 15:47:40', 0, NULL),
-(2, 1, 540, 127, NULL, 527, '2023-06-09 18:11:23', 1, '2023-06-09 18:13:57'),
-(6, 1, 300, 128, NULL, 528, '2023-06-09 18:13:57', 0, NULL),
-(7, 2, 90, 129, NULL, 550, '2023-06-12 16:02:44', 1, '2023-06-12 16:03:28'),
-(4, 1, 34000, 130, NULL, 551, '2023-06-12 16:03:28', 1, '2023-06-12 16:04:01'),
-(6, 2, 600, 131, NULL, 552, '2023-06-14 13:27:18', 0, NULL),
-(2, 2, 1080, 132, NULL, 560, '2023-06-13 15:08:25', 1, '2023-06-13 15:11:43'),
-(7, 2, 90, 133, NULL, 560, '2023-06-13 15:08:25', 1, '2023-06-13 15:11:43'),
-(1, 3, 2850, 134, NULL, 561, '2023-06-13 15:13:01', 1, '2023-06-13 15:26:36'),
-(1, 3, 2850, 135, NULL, 561, '2023-06-13 15:13:01', 1, '2023-06-13 15:26:36'),
-(1, 1, 950, 136, NULL, 575, '2023-06-13 15:37:30', 0, NULL),
-(1, 1, 950, 137, NULL, 578, '2023-06-14 13:18:25', 0, NULL);
+INSERT INTO `repair_detail` (`p_id`, `rd_value_parts`, `rd_parts_price`, `rd_id`, `get_r_id`, `rs_id`, `rd_date_in`, `del_flg`, `rd_update`, `get_d_id`) VALUES
+(1, 4, 0, 1, NULL, 68, '2023-05-20 15:59:07', 0, NULL, NULL),
+(2, 3, 0, 2, NULL, 68, '2023-05-20 15:59:07', 0, NULL, NULL),
+(1, 3, 2850, 3, NULL, 69, '2023-05-20 16:02:02', 0, NULL, NULL),
+(3, 2, 820, 4, NULL, 69, '2023-05-20 16:02:02', 0, NULL, NULL),
+(1, 3, 2850, 5, NULL, 70, '2023-05-20 16:05:49', 0, NULL, NULL),
+(2, 2, 1080, 6, NULL, 70, '2023-05-20 16:05:49', 0, NULL, NULL),
+(1, 1, 950, 7, NULL, 71, '2023-05-20 16:10:26', 0, NULL, NULL),
+(1, 1, 950, 8, NULL, 71, '2023-05-20 16:10:26', 0, NULL, NULL),
+(1, 1, 950, 9, NULL, 72, '2023-05-20 16:10:53', 0, NULL, NULL),
+(1, 1, 950, 10, NULL, 72, '2023-05-20 16:10:53', 0, NULL, NULL),
+(1, 1, 950, 11, NULL, 73, '2023-05-20 16:13:04', 0, NULL, NULL),
+(1, 1, 950, 12, NULL, 73, '2023-05-20 16:13:04', 0, NULL, NULL),
+(1, 1, 950, 13, NULL, 77, '2023-05-20 16:16:55', 0, NULL, NULL),
+(1, 1, 950, 14, NULL, 78, '2023-05-20 16:17:55', 0, NULL, NULL),
+(1, 2, 1900, 15, NULL, 0, '2023-05-21 20:12:58', 0, NULL, NULL),
+(1, 3, 2850, 16, NULL, 0, '2023-05-21 20:13:51', 0, NULL, NULL),
+(2, 4, 2160, 17, NULL, 0, '2023-05-21 20:15:31', 0, NULL, NULL),
+(1, 2, 1900, 18, NULL, 111, '2023-05-21 20:16:18', 0, NULL, NULL),
+(1, 3, 2850, 19, NULL, 112, '2023-05-23 12:37:02', 0, NULL, NULL),
+(2, 2, 1620, 20, NULL, 113, '2023-05-23 12:42:47', 0, NULL, NULL),
+(1, 2, 1900, 21, NULL, 116, '2023-05-23 13:49:02', 0, NULL, NULL),
+(2, 2, 1080, 22, NULL, 116, '2023-05-23 13:49:02', 0, NULL, NULL),
+(3, 3, 1230, 23, NULL, 116, '2023-05-23 13:49:02', 0, NULL, NULL),
+(2, 1, 540, 24, NULL, 119, '2023-05-23 17:58:50', 0, NULL, NULL),
+(1, 2, 1900, 25, NULL, 120, '2023-05-23 17:59:23', 0, NULL, NULL),
+(1, 1, 950, 26, NULL, 127, '2023-05-25 01:40:31', 1, '2023-05-26 14:09:20', NULL),
+(1, 1, 950, 27, NULL, 130, '2023-05-25 03:25:24', 0, NULL, NULL),
+(1, 2, 1900, 28, NULL, 131, '2023-05-25 14:37:46', 0, NULL, NULL),
+(2, 3, 1620, 29, NULL, 131, '2023-05-25 14:37:46', 0, NULL, NULL),
+(1, 2, 1900, 30, NULL, 132, '2023-05-25 14:41:48', 0, NULL, NULL),
+(8, 2, 500, 31, NULL, 132, '2023-05-25 14:41:48', 0, NULL, NULL),
+(1, 2, 1900, 32, NULL, 138, '2023-05-25 19:15:31', 0, NULL, NULL),
+(1, 1, 950, 33, NULL, 139, '2023-05-25 21:09:22', 0, NULL, NULL),
+(7, 1, 45, 34, NULL, 139, '2023-05-25 21:09:22', 0, NULL, NULL),
+(2, 1, 540, 35, NULL, 142, '2023-05-25 22:02:56', 1, '2023-05-26 14:09:20', NULL),
+(1, 1, 950, 36, NULL, 144, '2023-05-25 22:37:17', 1, '2023-05-26 01:00:36', NULL),
+(3, 1, 410, 37, NULL, 145, '2023-05-25 22:41:06', 1, '2023-05-26 01:00:36', NULL),
+(1, 1, 950, 38, NULL, 146, '2023-05-25 23:17:25', 1, '2023-05-26 01:00:36', NULL),
+(7, 1, 45, 39, NULL, 147, '2023-05-26 01:00:36', 0, NULL, NULL),
+(1, 1, 950, 40, NULL, 152, '2023-05-26 02:30:02', 0, NULL, NULL),
+(1, 2, 1900, 41, NULL, 153, '2023-05-26 02:33:07', 0, NULL, NULL),
+(3, 1, 410, 42, NULL, 156, '2023-05-26 12:41:06', 1, '2023-05-26 12:45:23', NULL),
+(8, 1, 250, 43, NULL, 157, '2023-05-26 12:44:36', 1, '2023-05-26 12:45:23', NULL),
+(3, 1, 410, 44, NULL, 158, '2023-05-26 12:45:23', 0, NULL, NULL),
+(5, 1, 3250, 45, NULL, 162, '2023-05-26 13:06:26', 1, '2023-05-26 13:07:07', NULL),
+(7, 1, 45, 46, NULL, 163, '2023-05-26 13:07:07', 0, NULL, NULL),
+(1, 1, 950, 47, NULL, 167, '2023-05-26 13:14:46', 1, '2023-05-26 13:17:08', NULL),
+(2, 1, 540, 48, NULL, 168, '2023-05-26 13:17:08', 0, NULL, NULL),
+(2, 1, 540, 49, NULL, 171, '2023-05-26 13:45:52', 1, '2023-05-26 13:46:36', NULL),
+(7, 1, 45, 50, NULL, 172, '2023-05-26 13:46:36', 1, NULL, NULL),
+(7, 1, 45, 51, NULL, 178, '2023-05-26 14:04:59', 1, '2023-05-26 14:09:20', NULL),
+(2, 1, 540, 52, NULL, 179, '2023-05-26 14:07:58', 1, '2023-05-26 14:09:20', NULL),
+(1, 1, 950, 53, NULL, 180, '2023-05-26 14:09:20', 1, NULL, NULL),
+(3, 1, 0, 54, NULL, 186, '2023-05-26 14:21:50', 1, '2023-05-26 14:26:52', NULL),
+(7, 1, 45, 55, NULL, 187, '2023-05-26 14:23:07', 0, NULL, NULL),
+(1, 1, 950, 57, NULL, 189, '2023-05-26 14:37:07', 1, '2023-05-26 14:37:35', NULL),
+(1, 1, 950, 58, NULL, 190, '2023-05-26 14:37:35', 1, NULL, NULL),
+(1, 1, 950, 59, NULL, 194, '2023-05-26 14:47:21', 1, '2023-05-26 14:49:33', NULL),
+(1, 2, 1900, 60, NULL, 195, '2023-05-26 14:49:33', 0, NULL, NULL),
+(1, 1, 950, 61, NULL, 209, '2023-05-28 15:39:43', 1, NULL, NULL),
+(1, 1, 950, 62, NULL, 218, '2023-05-28 16:38:45', 1, NULL, NULL),
+(7, 1, 45, 65, NULL, 239, '2023-05-30 15:05:49', 1, '2023-06-01 20:46:35', NULL),
+(7, 1, 45, 66, NULL, 240, '2023-05-30 15:06:18', 0, NULL, NULL),
+(1, 0, 0, 67, NULL, 241, '2023-05-30 15:07:59', 1, '2023-06-01 20:46:35', NULL),
+(7, 1, 45, 68, NULL, 242, '2023-05-30 15:09:29', 1, '2023-06-01 20:46:35', NULL),
+(6, 0, 0, 69, NULL, 243, '2023-05-30 15:12:13', 1, '2023-06-01 20:46:35', NULL),
+(6, 1, 0, 70, NULL, 244, '2023-05-30 15:13:18', 1, '2023-06-01 20:46:35', NULL),
+(1, 1, 950, 71, NULL, 251, '2023-05-31 14:24:35', 1, '2023-06-01 20:46:35', NULL),
+(7, 1, 45, 72, NULL, 251, '2023-05-31 14:24:35', 1, '2023-06-01 20:46:35', NULL),
+(8, 1, 250, 73, NULL, 251, '2023-05-31 14:24:35', 1, '2023-06-01 20:46:35', NULL),
+(3, 0, 0, 74, NULL, 286, '2023-06-01 20:45:18', 1, '2023-06-01 20:46:35', NULL),
+(2, 0, 0, 75, NULL, 287, '2023-06-01 20:46:35', 0, NULL, NULL),
+(7, 0, 0, 76, NULL, 287, '2023-06-01 20:46:35', 0, NULL, NULL),
+(5, 1, 3250, 77, NULL, 291, '2023-06-01 21:34:43', 1, '2023-06-01 21:43:11', NULL),
+(8, 1, 250, 78, NULL, 292, '2023-06-01 21:36:57', 0, NULL, NULL),
+(7, 4, 1000, 79, NULL, 323, '2023-06-02 05:34:32', 0, NULL, NULL),
+(7, 1, 0, 80, NULL, 294, '2023-06-01 21:43:11', 0, NULL, NULL),
+(7, 1, 45, 81, NULL, 310, '2023-06-01 23:31:03', 0, NULL, NULL),
+(8, 1, 250, 82, NULL, 312, '2023-06-01 23:45:25', 0, NULL, NULL),
+(8, 4, 1000, 83, NULL, 323, '2023-06-02 05:34:32', 0, NULL, NULL),
+(7, 1, 45, 84, NULL, 337, '2023-06-02 14:45:46', 0, NULL, NULL),
+(2, 1, 540, 85, NULL, 337, '2023-06-02 14:45:46', 0, NULL, NULL),
+(2, 1, 540, 86, NULL, 339, '2023-06-02 14:47:42', 0, NULL, NULL),
+(7, 1, 45, 87, NULL, 341, '2023-06-02 15:00:02', 0, NULL, NULL),
+(1, 1, 950, 88, NULL, 342, '2023-06-02 15:04:36', 0, NULL, NULL),
+(3, 1, 410, 89, NULL, 343, '2023-06-02 15:05:51', 0, NULL, NULL),
+(8, 1, 250, 90, NULL, 344, '2023-06-02 15:09:08', 0, NULL, NULL),
+(1, 1, 950, 91, NULL, 345, '2023-06-02 15:11:22', 0, NULL, NULL),
+(1, 1, 950, 92, NULL, 346, '2023-06-02 15:13:22', 0, NULL, NULL),
+(7, 1, 45, 93, NULL, 347, '2023-06-02 15:19:39', 0, NULL, NULL),
+(8, 1, 250, 94, NULL, 348, '2023-06-02 15:20:33', 0, NULL, NULL),
+(8, 1, 250, 95, NULL, 350, '2023-06-02 15:27:15', 0, NULL, NULL),
+(7, 1, 45, 96, NULL, 351, '2023-06-02 15:30:41', 0, NULL, NULL),
+(8, 1, 250, 97, NULL, 352, '2023-06-02 15:32:50', 0, NULL, NULL),
+(7, 1, 45, 98, NULL, 354, '2023-06-02 15:35:19', 0, NULL, NULL),
+(8, 1, 250, 99, NULL, 355, '2023-06-02 15:38:56', 0, NULL, NULL),
+(8, 1, 250, 100, NULL, 356, '2023-06-02 15:39:55', 0, NULL, NULL),
+(7, 1, 45, 101, NULL, 358, '2023-06-02 15:41:05', 1, '2023-06-02 16:31:27', NULL),
+(7, 1, 45, 102, NULL, 366, '2023-06-02 15:45:44', 0, NULL, NULL),
+(7, 1, 45, 103, NULL, 368, '2023-06-02 15:51:39', 0, NULL, NULL),
+(8, 1, 250, 104, NULL, 369, '2023-06-02 15:53:54', 0, NULL, NULL),
+(7, 1, 45, 105, NULL, 371, '2023-06-02 19:07:54', 0, NULL, NULL),
+(7, 1, 45, 106, NULL, 374, '2023-06-02 16:31:27', 1, NULL, NULL),
+(7, 1, 45, 107, NULL, 381, '2023-06-02 18:42:18', 1, '2023-06-02 18:45:42', NULL),
+(2, 1, 540, 108, NULL, 382, '2023-06-02 18:45:42', 1, NULL, NULL),
+(1, 1, 950, 109, NULL, 398, '2023-06-05 13:55:35', 0, NULL, NULL),
+(7, 1, 45, 110, NULL, 398, '2023-06-05 13:55:35', 0, NULL, NULL),
+(6, 1, 300, 111, NULL, 422, '2023-06-07 13:29:15', 1, '2023-06-07 14:17:06', NULL),
+(7, 1, 45, 112, NULL, 423, '2023-06-07 13:30:38', 1, '2023-06-07 14:17:06', NULL),
+(7, 1, 45, 113, NULL, 424, '2023-06-07 13:32:53', 1, '2023-06-07 14:17:06', NULL),
+(7, 2, 90, 114, NULL, 426, '2023-06-07 14:10:42', 1, '2023-06-07 14:17:06', NULL),
+(6, 2, 600, 115, NULL, 440, '2023-06-07 14:17:06', 1, '2023-06-07 14:18:43', NULL),
+(7, 1, 45, 116, NULL, 442, '2023-06-07 14:18:57', 0, NULL, NULL),
+(7, 1, 45, 117, NULL, 446, '2023-06-07 14:37:22', 0, NULL, NULL),
+(2, 1, 540, 118, NULL, 447, '2023-06-07 14:37:50', 0, NULL, NULL),
+(6, 1, 300, 119, NULL, 465, '2023-06-08 18:00:04', 0, NULL, NULL),
+(1, 2, 1900, 120, NULL, 481, '2023-06-09 00:23:46', 0, NULL, NULL),
+(7, 1, 45, 121, NULL, 488, '2023-06-09 01:48:41', 1, '2023-06-09 03:51:20', NULL),
+(7, 1, 45, 122, NULL, 517, '2023-06-09 14:55:34', 1, '2023-06-09 15:47:26', NULL),
+(1, 1, 950, 123, NULL, 518, '2023-06-09 15:40:51', 0, NULL, NULL),
+(2, 1, 540, 124, NULL, 519, '2023-06-09 15:41:50', 0, NULL, NULL),
+(2, 1, 540, 125, NULL, 520, '2023-06-09 15:44:57', 0, NULL, NULL),
+(7, 1, 45, 126, NULL, 521, '2023-06-09 15:47:40', 0, NULL, NULL),
+(2, 1, 540, 127, NULL, 527, '2023-06-09 18:11:23', 1, '2023-06-09 18:13:57', NULL),
+(6, 1, 300, 128, NULL, 528, '2023-06-09 18:13:57', 0, NULL, NULL),
+(7, 2, 90, 129, NULL, 550, '2023-06-12 16:02:44', 1, '2023-06-12 16:03:28', NULL),
+(4, 1, 34000, 130, NULL, 551, '2023-06-12 16:03:28', 1, '2023-06-12 16:04:01', NULL),
+(6, 2, 600, 131, NULL, 552, '2023-06-14 13:27:18', 0, NULL, NULL),
+(2, 2, 1080, 132, NULL, 560, '2023-06-13 15:08:25', 1, '2023-06-13 15:11:43', NULL),
+(7, 2, 90, 133, NULL, 560, '2023-06-13 15:08:25', 1, '2023-06-13 15:11:43', NULL),
+(1, 3, 2850, 134, NULL, 561, '2023-06-13 15:13:01', 1, '2023-06-13 15:26:36', NULL),
+(1, 3, 2850, 135, NULL, 561, '2023-06-13 15:13:01', 1, '2023-06-13 15:26:36', NULL),
+(1, 1, 950, 136, NULL, 575, '2023-06-13 15:37:30', 0, NULL, NULL),
+(1, 1, 950, 137, NULL, 578, '2023-06-14 13:18:25', 0, NULL, NULL),
+(1, 1, 950, 138, NULL, 584, '2023-06-21 05:02:17', 1, '2023-06-21 05:04:08', '35'),
+(9, 1, 3600, 139, NULL, 584, '2023-06-21 05:02:17', 1, '2023-06-21 05:04:08', '36'),
+(1, 1, 950, 140, NULL, 585, '2023-06-21 05:04:08', 1, '2023-06-21 05:09:00', '35'),
+(9, 1, 3600, 141, NULL, 585, '2023-06-21 05:04:08', 1, '2023-06-21 05:09:00', '36'),
+(9, 2, 3600, 142, NULL, 585, '2023-06-21 05:04:08', 1, '2023-06-21 05:09:00', '37'),
+(1, 1, 950, 143, NULL, 586, '2023-06-21 05:11:31', 0, NULL, '35'),
+(8, 1, 250, 144, NULL, 586, '2023-06-21 05:11:31', 0, NULL, '36'),
+(1, 1, 950, 145, NULL, 592, '2023-06-21 14:40:49', 1, '2023-06-21 14:43:22', '38'),
+(9, 1, 3600, 146, NULL, 592, '2023-06-21 14:40:49', 1, '2023-06-21 14:43:22', '38'),
+(1, 1, 950, 147, NULL, 593, '2023-06-21 14:43:22', 0, NULL, '38'),
+(9, 1, 3600, 148, NULL, 593, '2023-06-21 14:43:22', 0, NULL, '38'),
+(1, 1, 950, 149, NULL, 610, '2023-06-21 15:30:07', 1, '2023-06-21 15:36:34', '41'),
+(2, 1, 540, 150, NULL, 610, '2023-06-21 15:30:07', 1, '2023-06-21 15:36:34', '41'),
+(9, 1, 3600, 151, NULL, 610, '2023-06-21 15:30:07', 1, '2023-06-21 15:36:34', '42'),
+(7, 1, 45, 152, NULL, 610, '2023-06-21 15:30:07', 1, '2023-06-21 15:36:34', '42'),
+(8, 1, 250, 153, NULL, 610, '2023-06-21 15:30:07', 1, '2023-06-21 15:36:34', '42'),
+(1, 1, 950, 154, NULL, 611, '2023-06-21 15:36:34', 1, '2023-07-17 16:20:20', '41'),
+(7, 1, 45, 155, NULL, 611, '2023-06-21 15:36:34', 1, '2023-07-17 16:20:20', '42'),
+(1, 1, 950, 156, NULL, 616, '2023-06-30 15:23:41', 0, NULL, '46'),
+(1, 1, 950, 157, NULL, 647, '2023-07-10 01:00:38', 0, NULL, '44'),
+(2, 1, 540, 158, NULL, 647, '2023-07-10 01:00:38', 0, NULL, '45'),
+(1, 1, 950, 159, NULL, 650, '2023-07-10 01:05:45', 1, '2023-07-10 02:13:40', '47'),
+(9, 1, 3600, 160, NULL, 650, '2023-07-10 01:05:45', 1, '2023-07-10 02:13:40', '47'),
+(9, 1, 3600, 161, NULL, 653, '2023-07-10 02:13:40', 1, '2023-07-10 02:45:51', '47'),
+(8, 2, 500, 162, NULL, 655, '2023-07-10 02:50:42', 1, '2023-07-10 02:51:21', '47'),
+(8, 5, 1250, 163, NULL, 656, '2023-07-10 02:51:21', 1, '2023-07-10 02:59:25', '47'),
+(5, 4, 13000, 164, NULL, 657, '2023-07-10 02:59:25', 0, NULL, '47'),
+(1, 1, 950, 165, NULL, 661, '2023-07-10 03:31:48', 1, '2023-07-10 03:47:37', '48'),
+(9, 1, 3600, 166, NULL, 661, '2023-07-10 03:31:48', 1, '2023-07-10 03:47:37', '49'),
+(8, 1, 250, 167, NULL, 662, '2023-07-10 03:47:37', 1, '2023-07-10 03:48:08', '48'),
+(6, 1, 300, 168, NULL, 662, '2023-07-10 03:47:37', 1, '2023-07-10 03:48:08', '49'),
+(1, 1, 950, 169, NULL, 663, '2023-07-10 03:48:08', 1, NULL, '49'),
+(2, 1, 540, 170, NULL, 663, '2023-07-10 03:48:08', 1, NULL, '48'),
+(8, 1, 250, 171, NULL, 665, '2023-07-10 03:51:58', 1, '2023-07-10 03:53:17', '48'),
+(2, 1, 540, 172, NULL, 665, '2023-07-10 03:51:58', 1, '2023-07-10 03:53:17', '49'),
+(1, 1, 950, 173, NULL, 666, '2023-07-10 03:53:17', 1, NULL, '48'),
+(8, 1, 250, 174, NULL, 666, '2023-07-10 03:53:17', 1, NULL, '49'),
+(1, 1, 950, 175, NULL, 667, '2023-07-10 03:55:02', 1, NULL, '48'),
+(9, 1, 3600, 176, NULL, 667, '2023-07-10 03:55:02', 1, NULL, '49'),
+(1, 1, 950, 177, NULL, 668, '2023-07-10 03:57:24', 1, '2023-07-10 04:09:37', '48'),
+(8, 1, 250, 178, NULL, 668, '2023-07-10 03:57:24', 1, '2023-07-10 04:09:37', '49'),
+(1, 2, 1900, 179, NULL, 669, '2023-07-10 04:09:37', 1, '2023-07-10 16:28:14', '48'),
+(9, 3, 10800, 180, NULL, 669, '2023-07-10 04:09:37', 1, '2023-07-10 16:28:14', '49'),
+(1, 1, 950, 181, NULL, 673, '2023-07-10 16:28:14', 1, '2023-07-10 16:44:58', '48'),
+(2, 1, 540, 182, NULL, 673, '2023-07-10 16:28:14', 1, '2023-07-10 16:44:58', '48'),
+(9, 1, 3600, 183, NULL, 673, '2023-07-10 16:28:14', 1, '2023-07-10 16:44:58', '49'),
+(8, 1, 250, 184, NULL, 673, '2023-07-10 16:28:14', 1, '2023-07-10 16:44:58', '49'),
+(1, 2, 1900, 185, NULL, 674, '2023-07-10 16:44:58', 1, '2023-07-10 16:58:37', '48'),
+(2, 1, 540, 186, NULL, 674, '2023-07-10 16:44:58', 1, '2023-07-10 16:58:37', '49'),
+(7, 1, 45, 187, NULL, 678, '2023-07-10 16:58:37', 1, '2023-07-10 16:59:13', '48'),
+(9, 1, 3600, 188, NULL, 678, '2023-07-10 16:58:37', 1, '2023-07-10 16:59:13', '49'),
+(1, 1, 950, 189, NULL, 679, '2023-07-10 16:59:13', 1, '2023-07-11 15:06:51', '48'),
+(9, 1, 3600, 190, NULL, 679, '2023-07-10 16:59:13', 1, '2023-07-11 15:06:51', '49'),
+(8, 1, 250, 191, NULL, 694, '2023-07-11 15:40:37', 1, '2023-07-11 15:41:11', '50'),
+(7, 1, 45, 192, NULL, 694, '2023-07-11 15:40:37', 1, '2023-07-11 15:41:11', '50'),
+(7, 1, 45, 193, NULL, 696, '2023-07-11 15:41:58', 1, '2023-07-11 15:43:06', '50'),
+(7, 1, 45, 194, NULL, 698, '2023-07-11 15:43:06', 1, '2023-07-11 16:05:18', '50'),
+(7, 1, 45, 195, NULL, 701, '2023-07-11 16:05:18', 1, NULL, '50'),
+(7, 1, 45, 196, NULL, 701, '2023-07-11 16:05:18', 1, NULL, '50'),
+(7, 1, 45, 197, NULL, 703, '2023-07-11 16:20:09', 1, '2023-07-11 16:21:02', '50'),
+(7, 1, 45, 198, NULL, 704, '2023-07-11 16:21:02', 1, '2023-07-11 16:22:44', '50'),
+(1, 1, 950, 199, NULL, 705, '2023-07-11 16:22:44', 1, '2023-07-11 16:23:43', '50'),
+(1, 1, 950, 200, NULL, 706, '2023-07-11 16:23:43', 1, '2023-07-11 16:26:09', 'à¸à¸£'),
+(1, 1, 950, 201, NULL, 707, '2023-07-11 16:26:09', 1, '2023-07-11 16:27:46', '50'),
+(1, 1, 950, 202, NULL, 708, '2023-07-11 16:27:46', 1, '2023-07-11 16:35:56', '50'),
+(2, 1, 540, 203, NULL, 711, '2023-07-11 16:35:56', 1, '2023-07-11 16:37:58', '50'),
+(1, 1, 950, 204, NULL, 713, '2023-07-11 16:37:58', 1, NULL, '50'),
+(1, 1, 950, 205, NULL, 717, '2023-07-11 16:46:16', 1, NULL, '51'),
+(1, 1, 950, 206, NULL, 718, '2023-07-11 16:50:14', 1, NULL, '51'),
+(2, 1, 540, 207, NULL, 718, '2023-07-11 16:50:14', 1, NULL, '52'),
+(1, 1, 950, 208, NULL, 719, '2023-07-11 16:52:43', 1, '2023-07-11 16:53:38', '51'),
+(2, 1, 540, 209, NULL, 719, '2023-07-11 16:52:43', 1, '2023-07-11 16:53:38', '52'),
+(1, 1, 950, 210, NULL, 720, '2023-07-11 16:53:38', 1, '2023-07-11 16:55:17', '51'),
+(1, 1, 950, 211, NULL, 720, '2023-07-11 16:53:38', 1, '2023-07-11 16:55:17', '51'),
+(1, 2, 1900, 212, NULL, 721, '2023-07-11 16:55:17', 1, '2023-07-11 16:56:28', '51'),
+(1, 2, 1900, 213, NULL, 721, '2023-07-11 16:55:17', 1, '2023-07-11 16:56:28', '52'),
+(1, 2, 1900, 214, NULL, 722, '2023-07-11 16:56:28', 1, '2023-07-11 16:58:37', '51'),
+(1, 2, 1900, 215, NULL, 722, '2023-07-11 16:56:28', 1, '2023-07-11 16:58:37', '52'),
+(1, 1, 950, 216, NULL, 723, '2023-07-11 16:58:37', 1, '2023-07-11 17:00:42', '51'),
+(1, 1, 950, 217, NULL, 723, '2023-07-11 16:58:37', 1, '2023-07-11 17:00:42', '51'),
+(1, 1, 950, 218, NULL, 724, '2023-07-11 17:00:42', 1, '2023-07-11 17:05:39', '51'),
+(1, 1, 950, 219, NULL, 724, '2023-07-11 17:00:42', 1, '2023-07-11 17:05:39', '51'),
+(1, 1, 950, 220, NULL, 725, '2023-07-11 17:05:39', 1, '2023-07-11 17:06:47', '51'),
+(1, 1, 950, 221, NULL, 725, '2023-07-11 17:05:39', 1, '2023-07-11 17:06:47', '51'),
+(1, 1, 950, 222, NULL, 726, '2023-07-11 17:06:47', 1, '2023-07-11 17:08:01', '51'),
+(1, 1, 950, 223, NULL, 726, '2023-07-11 17:06:47', 1, '2023-07-11 17:08:01', '52'),
+(1, 1, 950, 224, NULL, 727, '2023-07-11 17:08:01', 1, '2023-07-11 17:16:07', '51'),
+(1, 1, 950, 225, NULL, 727, '2023-07-11 17:08:01', 1, '2023-07-11 17:16:07', '52'),
+(9, 1, 3600, 226, NULL, 730, '2023-07-11 17:16:07', 1, '2023-07-11 17:23:32', '51'),
+(7, 1, 45, 227, NULL, 730, '2023-07-11 17:16:07', 1, '2023-07-11 17:23:32', '52'),
+(1, 1, 950, 228, NULL, 731, '2023-07-11 17:23:32', 1, '2023-07-11 17:26:08', '51'),
+(2, 1, 540, 229, NULL, 731, '2023-07-11 17:23:32', 1, '2023-07-11 17:26:08', '52'),
+(7, 1, 45, 230, NULL, 732, '2023-07-11 17:26:08', 1, '2023-07-11 17:27:34', '51'),
+(9, 1, 3600, 231, NULL, 732, '2023-07-11 17:26:08', 1, '2023-07-11 17:27:34', '51'),
+(1, 1, 950, 232, NULL, 734, '2023-07-11 17:27:34', 1, '2023-07-11 17:34:39', '51'),
+(2, 1, 540, 233, NULL, 734, '2023-07-11 17:27:34', 1, '2023-07-11 17:34:39', '52'),
+(7, 1, 45, 234, NULL, 736, '2023-07-11 17:34:39', 1, '2023-07-11 17:39:12', '51'),
+(7, 1, 45, 235, NULL, 736, '2023-07-11 17:34:39', 1, '2023-07-11 17:39:12', '52'),
+(5, 1, 3250, 236, NULL, 737, '2023-07-11 17:39:12', 1, '2023-07-12 10:16:51', '51'),
+(5, 1, 3250, 237, NULL, 737, '2023-07-11 17:39:12', 1, '2023-07-12 10:16:51', '52'),
+(1, 1, 950, 238, NULL, 739, '2023-07-12 10:16:51', 0, NULL, '51'),
+(1, 1, 950, 239, NULL, 739, '2023-07-12 10:16:51', 0, NULL, '52'),
+(1, 1, 950, 240, NULL, 761, '2023-07-17 16:20:20', 0, NULL, '41'),
+(1, 1, 950, 241, NULL, 773, '2023-07-17 17:14:37', 1, '2023-07-17 17:15:38', '53'),
+(1, 1, 950, 242, NULL, 774, '2023-07-17 17:15:38', 1, '2023-07-17 22:39:53', '53'),
+(1, 1, 950, 243, NULL, 777, '2023-07-17 22:39:53', 1, NULL, '53'),
+(1, 1, 950, 244, NULL, 778, '2023-07-17 22:47:05', 1, '2023-07-17 22:49:42', '53'),
+(2, 1, 540, 245, NULL, 780, '2023-07-17 22:49:42', 1, '2023-07-17 23:01:37', '53'),
+(5, 1, 3250, 246, NULL, 784, '2023-07-17 23:01:37', 1, '2023-07-17 23:15:37', '53'),
+(7, 1, 45, 247, NULL, 786, '2023-07-17 23:03:07', 1, '2023-07-17 23:19:34', '50'),
+(8, 1, 250, 248, NULL, 787, '2023-07-17 23:15:37', 1, NULL, '53'),
+(1, 1, 950, 249, NULL, 790, '2023-07-17 23:16:51', 1, '2023-07-17 23:19:34', '54'),
+(8, 1, 250, 250, NULL, 791, '2023-07-17 23:19:34', 1, '2023-07-17 23:20:02', '54'),
+(9, 1, 3600, 251, NULL, 792, '2023-07-17 23:20:02', 1, '2023-07-17 23:24:32', '54'),
+(7, 1, 45, 252, NULL, 795, '2023-07-17 23:24:32', 1, '2023-07-17 23:29:02', '54'),
+(6, 1, 300, 253, NULL, 797, '2023-07-17 23:29:02', 0, NULL, '54'),
+(1, 1, 950, 254, NULL, 802, '2023-07-24 23:11:12', 1, '2023-07-24 23:13:44', '44'),
+(1, 1, 950, 255, NULL, 802, '2023-07-24 23:11:12', 1, '2023-07-24 23:13:44', '45'),
+(2, 1, 540, 256, NULL, 805, '2023-07-24 23:13:44', 1, '2023-07-24 23:14:26', '44'),
+(2, 1, 540, 257, NULL, 805, '2023-07-24 23:13:44', 1, '2023-07-24 23:14:26', '45'),
+(3, 1, 410, 258, NULL, 806, '2023-07-24 23:14:26', 0, NULL, '44'),
+(3, 1, 410, 259, NULL, 806, '2023-07-24 23:14:26', 0, NULL, '45'),
+(1, 1, 950, 260, NULL, 808, '2023-07-24 23:17:37', 1, '2023-07-24 23:18:13', '40'),
+(2, 1, 540, 261, NULL, 809, '2023-07-24 23:18:13', 1, '2023-07-24 23:28:55', '40'),
+(1, 1, 950, 262, NULL, 812, '2023-07-24 23:28:55', 1, NULL, '40'),
+(1, 1, 950, 263, NULL, 813, '2023-07-24 23:42:43', 1, '2023-07-24 23:43:51', '40'),
+(2, 1, 540, 264, NULL, 814, '2023-07-24 23:43:51', 1, NULL, '40'),
+(4, 1, 34000, 266, NULL, 817, '2023-07-25 00:09:42', 0, NULL, '40'),
+(9, 1, 3600, 267, NULL, 818, '2023-07-25 00:13:00', 0, NULL, '53'),
+(1, 1, 950, 268, NULL, 821, '2023-07-25 00:59:44', 1, '2023-07-25 01:00:26', '55'),
+(4, 1, 34000, 269, NULL, 822, '2023-07-25 01:00:26', 1, '2023-07-25 01:03:16', '55'),
+(2, 1, 540, 270, NULL, 825, '2023-07-25 01:03:16', 1, '2023-07-25 01:05:56', '55'),
+(3, 1, 410, 271, NULL, 826, '2023-07-25 01:05:56', 1, '2023-07-25 01:06:15', '55'),
+(1, 1, 950, 272, NULL, 827, '2023-07-25 01:06:15', 1, NULL, '55'),
+(1, 2, 1900, 273, NULL, 829, '2023-07-25 23:30:20', 1, '2023-07-25 23:31:13', '55'),
+(2, 2, 1080, 274, NULL, 830, '2023-07-25 23:31:13', 1, NULL, '55'),
+(1, 1, 950, 276, NULL, 837, '2023-07-26 00:03:51', 1, '2023-07-26 00:04:39', '55'),
+(2, 1, 540, 277, NULL, 838, '2023-07-26 00:04:39', 1, '2023-07-26 00:10:18', '55'),
+(2, 2, 1080, 278, NULL, 840, '2023-07-26 00:10:18', 1, '2023-07-26 00:13:00', '55'),
+(2, 2, 1080, 279, NULL, 842, '2023-07-26 00:13:00', 1, '2023-07-26 00:16:35', '55'),
+(2, 2, 1080, 280, NULL, 844, '2023-07-26 00:16:35', 1, '2023-07-26 00:18:35', '55'),
+(2, 2, 1080, 281, NULL, 846, '2023-07-26 00:18:35', 1, '2023-07-26 00:20:04', '55'),
+(1, 2, 1900, 282, NULL, 848, '2023-07-26 00:20:04', 0, NULL, '55'),
+(2, 2, 1080, 283, NULL, 848, '2023-07-26 00:20:04', 0, NULL, '55'),
+(3, 2, 820, 284, NULL, 848, '2023-07-26 00:20:04', 0, NULL, '55');
 
 -- --------------------------------------------------------
 
@@ -10974,15 +11414,15 @@ INSERT INTO `repair_detail` (`p_id`, `rd_value_parts`, `rd_parts_price`, `rd_id`
 --
 
 CREATE TABLE `repair_pic` (
-  `rp_id` int(6) NOT NULL COMMENT 'ไอดี Repair Picture',
-  `get_r_id` int(6) DEFAULT NULL COMMENT 'ไอดี Get Picture',
+  `rp_id` int NOT NULL COMMENT 'ไอดี Repair Picture',
+  `get_r_id` int DEFAULT NULL COMMENT 'ไอดี Get Picture',
   `rp_pic` varchar(255) DEFAULT NULL COMMENT 'ชื่อรูป + สกุล',
   `rp_date` datetime DEFAULT NULL COMMENT 'วันที่ลง',
-  `status_id` int(6) DEFAULT NULL,
-  `rs_id` int(6) DEFAULT NULL COMMENT 'ไอดีสถานะของ get_r_id',
-  `del_flg` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'ลบ = 1',
+  `status_id` int DEFAULT NULL,
+  `rs_id` int DEFAULT NULL COMMENT 'ไอดีสถานะของ get_r_id',
+  `del_flg` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'ลบ = 1',
   `get_d_id` varchar(6) DEFAULT NULL COMMENT 'ไอดีรายละเอียดการซ่อม'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `repair_pic`
@@ -11397,7 +11837,79 @@ INSERT INTO `repair_pic` (`rp_id`, `get_r_id`, `rp_pic`, `rp_date`, `status_id`,
 (421, NULL, 'uploads//148/578/kbank-icon.png', '2023-06-14 13:18:25', NULL, 578, 0, NULL),
 (422, NULL, 'uploads/11/160/35/978c4de341daaa016476ad1de337fd44.jpg', '2023-06-16 00:50:17', NULL, NULL, 0, '35'),
 (423, NULL, 'uploads/11/160/36/978c4de341daaa016476ad1de337fd44.jpg', '2023-06-16 00:50:18', NULL, NULL, 0, '36'),
-(424, NULL, 'uploads/11/160/37/EpMhjs2UcAA0j_3.jpg', '2023-06-16 00:50:18', NULL, NULL, 0, '37');
+(424, NULL, 'uploads/11/160/37/EpMhjs2UcAA0j_3.jpg', '2023-06-16 00:50:18', NULL, NULL, 0, '37'),
+(425, NULL, 'uploads/11/160/583/avicii-dj-cu-2880x1800.jpg', '2023-06-21 04:59:52', NULL, 583, 0, NULL),
+(426, NULL, 'uploads/11/160/584/659595.jpg', '2023-06-21 05:02:17', NULL, 584, 0, NULL),
+(427, NULL, 'uploads/11/162/38/maxresdefault.jpg', '2023-06-21 14:24:23', NULL, NULL, 0, '38'),
+(428, NULL, 'uploads/11/162/39/EpMhjs2UcAA0j_3.jpg', '2023-06-21 14:24:24', NULL, NULL, 0, '39'),
+(429, NULL, 'uploads/11/163/40/s-l300.jpg', '2023-06-21 14:32:02', NULL, NULL, 0, '40'),
+(430, NULL, 'uploads/11/163/40/speakersruinedpair.jpg', '2023-06-21 14:32:02', NULL, NULL, 0, '40'),
+(431, NULL, 'uploads/11/162/592/avicii-dj-cu-2880x1800.jpg', '2023-06-21 14:40:49', NULL, 592, 0, NULL),
+(432, NULL, 'uploads/11/162/592/black-damascus-5k-p0.jpg', '2023-06-21 14:40:49', NULL, 592, 0, NULL),
+(433, NULL, 'uploads/11/162/598/659595.jpg', '2023-06-21 14:49:56', NULL, 598, 0, NULL),
+(434, NULL, 'uploads/11/162/599/Batman 1.jpg', '2023-06-21 14:50:16', NULL, 599, 0, NULL),
+(435, NULL, 'uploads/11/162/599/Spidervers 1.jpg', '2023-06-21 14:50:16', NULL, 599, 0, NULL),
+(436, NULL, 'uploads/11/162/600/avicii-dj-cu-2880x1800.jpg', '2023-06-21 14:50:34', NULL, 600, 0, NULL),
+(437, NULL, 'uploads/11/162/601/avicii-dj-cu-2880x1800.jpg', '2023-06-21 14:52:11', NULL, 601, 0, NULL),
+(438, NULL, 'uploads/11/162/payment_evidence/EpMhjs2UcAA0j_3.jpg', '2023-06-21 14:55:13', NULL, 602, 0, NULL),
+(439, NULL, 'uploads/11/162/603/Batman 1.jpg', '2023-06-21 14:55:41', NULL, 603, 0, NULL),
+(440, NULL, 'uploads/11/162/606/Nirvana 2.jpg', '2023-06-21 15:00:39', NULL, 606, 0, NULL),
+(441, NULL, 'uploads/11/164/41/978c4de341daaa016476ad1de337fd44.jpg', '2023-06-21 15:24:11', NULL, NULL, 0, '41'),
+(442, NULL, 'uploads/11/164/42/busted-speaker-2.jpg', '2023-06-21 15:24:12', NULL, NULL, 0, '42'),
+(443, NULL, 'uploads/11/164/42/s-l300.jpg', '2023-06-21 15:24:12', NULL, NULL, 0, '42'),
+(444, NULL, 'uploads/11/164/42/speakersruinedpair.jpg', '2023-06-21 15:24:12', NULL, NULL, 0, '42'),
+(445, NULL, 'uploads/11/164/43/busted-speaker-2.jpg', '2023-06-21 15:24:13', NULL, NULL, 0, '43'),
+(446, NULL, 'uploads/11/164/610/Batman.jpg', '2023-06-21 15:30:07', NULL, 610, 0, NULL),
+(447, NULL, 'uploads/11/165/44/busted-speaker-2.jpg', '2023-06-25 15:59:09', NULL, NULL, 0, '44'),
+(448, NULL, 'uploads/11/165/45/1.jpg', '2023-06-25 15:59:10', NULL, NULL, 0, '45'),
+(449, NULL, 'uploads/11/165/45/2.jpg', '2023-06-25 15:59:10', NULL, NULL, 0, '45'),
+(450, NULL, 'uploads/11/165/45/3.jpg', '2023-06-25 15:59:10', NULL, NULL, 0, '45'),
+(451, NULL, 'uploads/11/165/45/4.jpg', '2023-06-25 15:59:10', NULL, NULL, 0, '45'),
+(452, NULL, 'uploads/11/166/46/1.jpg', '2023-06-25 16:00:54', NULL, NULL, 0, '46'),
+(453, NULL, 'uploads/11/166/46/2.jpg', '2023-06-25 16:00:54', NULL, NULL, 0, '46'),
+(454, NULL, 'uploads/11/166/46/3.jpg', '2023-06-25 16:00:54', NULL, NULL, 0, '46'),
+(455, NULL, 'uploads/11/166/616/Nirvana 1.jpg', '2023-06-30 15:23:41', NULL, 616, 0, NULL),
+(456, NULL, 'uploads/11/166/618/Nirvana.jpg', '2023-06-30 15:24:29', NULL, 618, 0, NULL),
+(457, NULL, 'uploads/11/166/620/Batman 1.jpg', '2023-06-30 15:25:26', NULL, 620, 0, NULL),
+(458, NULL, 'uploads/11/166/622/Nirvana 2.jpg', '2023-06-30 15:26:11', NULL, 622, 0, NULL),
+(459, NULL, 'uploads/11/166/payment_evidence/logo.png', '2023-06-30 15:27:28', NULL, 623, 0, NULL),
+(460, NULL, 'uploads/11/166/626/Nirvana.jpg', '2023-06-30 15:28:14', NULL, 626, 0, NULL),
+(461, NULL, 'uploads/11/165/647/2N61tyyncFaFVtpM8rCsJzDgecVMtkz4jpzBsszXjhqan9iPdkWujg4GTsTL2QfwUSuyTqFujn9XdQWudJGh4ZbvuHFvWD2V2j3uj6B5ZrVdfAdz9mCMp5MxLbPCtgNe9jxnB9Yowxut.jpg', '2023-07-10 01:00:38', NULL, 647, 0, NULL),
+(462, NULL, 'uploads/11/167/47/1_Toru154145614adasdasd.jpg', '2023-07-10 01:04:48', NULL, NULL, 0, '47'),
+(463, NULL, 'uploads/11/167/650/102.jpg', '2023-07-10 01:05:45', NULL, 650, 0, NULL),
+(464, NULL, 'uploads/11/168/49/1_fsdfsdfsdfsdf.jpg', '2023-07-10 03:31:03', NULL, NULL, 0, '49'),
+(465, NULL, 'uploads/11/168/661/330907604_2402031206628320_5309238468738248449_n.jpg', '2023-07-10 03:31:48', NULL, 661, 0, NULL),
+(466, NULL, 'uploads/11/168/668/330907604_2402031206628320_5309238468738248449_n.jpg', '2023-07-10 03:57:24', NULL, 668, 0, NULL),
+(467, NULL, 'uploads/11/168/682/busted-speaker-2.jpg', '2023-07-10 16:59:58', NULL, 682, 0, NULL),
+(468, NULL, 'uploads/11/168/683/s-l300.jpg', '2023-07-10 17:00:21', NULL, 683, 0, NULL),
+(469, NULL, 'uploads/11/168/684/busted-speaker-2.jpg', '2023-07-10 17:05:59', NULL, 684, 0, NULL),
+(470, NULL, 'uploads/11/168/payment_evidence/356610295_238515268959687_5931089389118393465_n.jpg', '2023-07-10 17:10:18', NULL, 686, 0, NULL),
+(471, NULL, 'uploads/11/168/688/busted-speaker-2.jpg', '2023-07-10 17:14:41', NULL, 688, 0, NULL),
+(472, NULL, 'uploads/11/168/690/speakersruinedpair.jpg', '2023-07-11 15:10:41', NULL, 690, 0, NULL),
+(473, NULL, 'uploads/11/169/50/1_SN45844449849.jpg', '2023-07-11 15:31:51', NULL, NULL, 0, '50'),
+(474, NULL, 'uploads/11/169/694/EpMhjs2UcAA0j_3.jpg', '2023-07-11 15:40:37', NULL, 694, 0, NULL),
+(475, NULL, 'uploads/11/169/695/EpMhjs2UcAA0j_3.jpg', '2023-07-11 15:41:11', NULL, 695, 0, NULL),
+(476, NULL, 'uploads/11/169/700/busted-speaker-2.jpg', '2023-07-11 15:44:34', NULL, 700, 0, NULL),
+(477, NULL, 'uploads/11/170/51/1_HM541225325445.jpg', '2023-07-11 16:41:45', NULL, NULL, 0, '51'),
+(478, NULL, 'uploads/11/170/52/1_VE454544245.jpg', '2023-07-11 16:41:46', NULL, NULL, 0, '52'),
+(479, NULL, 'uploads/11/170/742/istockphoto-481016517-612x612.jpg', '2023-07-12 10:18:35', NULL, 742, 0, NULL),
+(480, NULL, 'uploads/11/170/743/DigiShop.mp4', '2023-07-12 10:28:55', NULL, 743, 0, NULL),
+(481, NULL, 'uploads/11/170/payment_evidence/s-l300.jpg', '2023-07-12 10:36:21', NULL, 745, 0, NULL),
+(482, NULL, 'uploads/11/170/payment_evidence/istockphoto-481016517-612x612.jpg', '2023-07-12 10:47:34', NULL, 748, 0, NULL),
+(483, NULL, 'uploads/11/170/751/DigiShop.mp4', '2023-07-12 10:54:42', NULL, 751, 0, NULL),
+(484, NULL, 'uploads/11/170/payment_evidence/maxresdefault.jpg', '2023-07-12 11:08:13', NULL, 753, 0, NULL),
+(485, NULL, 'uploads/11/170/755/659595.jpg', '2023-07-12 11:09:04', NULL, 755, 0, NULL),
+(486, NULL, 'uploads/11/170/756/Nirvana 2.jpg', '2023-07-12 11:11:24', NULL, 756, 0, NULL),
+(487, NULL, 'uploads/11/171/53/1_MH454534586464.jpg', '2023-07-14 15:00:31', NULL, NULL, 0, '53'),
+(488, NULL, 'uploads/11/171/53/2_MH454534586464.jpg', '2023-07-14 15:00:31', NULL, NULL, 0, '53'),
+(489, NULL, 'uploads/11/164/763/Spidervers 1.jpg', '2023-07-17 16:52:34', NULL, 763, 0, NULL),
+(490, NULL, 'uploads/11/164/payment_evidence/EpMhjs2UcAA0j_3.jpg', '2023-07-17 17:00:58', NULL, 764, 0, NULL),
+(491, NULL, 'uploads/11/164/payment_evidence/maxresdefault.jpg', '2023-07-17 17:01:24', NULL, 766, 0, NULL),
+(492, NULL, 'uploads/11/164/770/maxresdefault.jpg', '2023-07-17 17:05:25', NULL, 770, 0, NULL),
+(493, NULL, 'uploads/11/171/773/1.png', '2023-07-17 17:14:37', NULL, 773, 0, NULL),
+(494, NULL, 'uploads/11/172/54/1_DIV1541156161.jpg', '2023-07-17 22:52:33', NULL, NULL, 0, '54'),
+(495, NULL, 'uploads/11/172/54/2_DIV1541156161.jpg', '2023-07-17 22:52:33', NULL, NULL, 0, '54'),
+(496, NULL, 'uploads/11/173/55/1_TestStatus01.jpg', '2023-07-25 00:51:31', NULL, NULL, 0, '55');
 
 -- --------------------------------------------------------
 
@@ -11406,18 +11918,18 @@ INSERT INTO `repair_pic` (`rp_id`, `get_r_id`, `rp_pic`, `rp_date`, `status_id`,
 --
 
 CREATE TABLE `repair_status` (
-  `rs_id` int(6) NOT NULL,
-  `get_r_id` int(6) DEFAULT NULL,
+  `rs_id` int NOT NULL,
+  `get_r_id` int DEFAULT NULL,
   `rs_date_time` datetime(6) DEFAULT NULL,
   `rs_detail` varchar(255) DEFAULT NULL,
-  `status_id` int(6) DEFAULT NULL,
-  `del_flg` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'ลบ = 1',
+  `status_id` int DEFAULT NULL,
+  `del_flg` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'ลบ = 1',
   `e_id` varchar(6) NOT NULL COMMENT 'ไอดีพนักงาน',
-  `rs_conf` int(1) DEFAULT NULL COMMENT 'NULL - ทั่วไป\r\n0 - รอการดำเนอนการ\r\n1 - ยืนยัน\r\n2 - ยกเลิก',
+  `rs_conf` int DEFAULT NULL COMMENT 'NULL - ทั่วไป\r\n0 - รอการดำเนอนการ\r\n1 - ยืนยัน\r\n2 - ยกเลิก\r\n3 - หน้าร้าน\r\n4 - ไปรษณีย์',
   `rs_conf_date` datetime DEFAULT NULL,
   `rs_cancel_detail` varchar(255) DEFAULT NULL,
   `get_d_id` varchar(6) DEFAULT NULL COMMENT 'ไอดีรายละเอียดการซ่อม'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `repair_status`
@@ -11639,7 +12151,7 @@ INSERT INTO `repair_status` (`rs_id`, `get_r_id`, `rs_date_time`, `rs_detail`, `
 (261, 37, '2023-06-01 14:33:51.000000', 'à¸«à¸¥à¸±à¸à¸à¸²à¸™à¸à¸²à¸£à¹‚à¸­à¸™à¹€à¸‡à¸´à¸™à¸–à¸¹à¸à¸•à¹‰à¸­à¸‡ à¸à¸£à¸¸à¸“à¸²à¸¡à¸²à¸£à¸±à¸šà¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸—à¸µà¹ˆà¸£à¹‰à¸²à¸™à¸žà¸£à¹‰à¸­à¸¡à¸à¸±à¸šà¹à¸ªà¸”à¸‡à¸«à¸™à¹‰à¸²à¹à¸ˆà¹‰à¸‡à¸‹à¹ˆà¸­à¸¡à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸•à¸£à¸', 9, 1, '1', NULL, NULL, NULL, NULL),
 (262, 37, '2023-06-01 14:56:36.000000', 'à¸«à¸¥à¸±à¸à¸à¸²à¸™à¸à¸²à¸£à¹‚à¸­à¸™à¹€à¸‡à¸´à¸™à¸–à¸¹à¸à¸•à¹‰à¸­à¸‡ à¸à¸£à¸¸à¸“à¸²à¸¡à¸²à¸£à¸±à¸šà¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸—à¸µà¹ˆà¸£à¹‰à¸²à¸™à¸žà¸£à¹‰à¸­à¸¡à¸à¸±à¸šà¹à¸ªà¸”à¸‡à¸«à¸™à¹‰à¸²à¹à¸ˆà¹‰à¸‡à¸‹à¹ˆà¸­à¸¡à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸•à¸£à¸', 9, 0, '1', NULL, NULL, NULL, NULL),
 (264, 37, '2023-06-01 15:08:54.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸', 10, 0, '1', NULL, NULL, NULL, NULL),
-(267, 37, '2023-06-01 15:57:50.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-06-13 15:30:53', 'sdfsdfsdfsdfsdf', NULL),
+(267, 37, '2023-06-01 15:57:50.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-07-17 17:08:01', 'sdfsdfsdfsdfsdf', NULL),
 (268, 0, '2023-06-01 19:11:54.000000', 'à¹„à¸¡à¹ˆà¹„à¸”à¹‰à¸£à¸±à¸šà¸à¸²à¸£à¸¢à¸·à¸™à¸¢à¸±à¸™à¸ˆà¸²à¸à¸ªà¸¡à¸²à¸Šà¸´à¸', 25, 0, '', NULL, NULL, NULL, NULL),
 (276, 37, '2023-06-01 19:40:16.000000', 'dasdasdasdasdasd', 20, 1, '', NULL, NULL, NULL, NULL),
 (285, 37, '2023-06-01 20:37:49.000000', 'sdfsdfsdfsdfsdf', 20, 0, '', NULL, NULL, NULL, NULL),
@@ -11655,7 +12167,7 @@ INSERT INTO `repair_status` (`rs_id`, `get_r_id`, `rs_date_time`, `rs_detail`, `
 (305, 35, '2023-06-01 22:04:29.000000', 'à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™ à¸£à¸­à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™', 8, 0, '1', 1, '2023-06-01 22:06:50', NULL, NULL),
 (306, 35, '2023-06-01 22:07:38.000000', 'à¸«à¸¥à¸±à¸à¸à¸²à¸™à¸à¸²à¸£à¹‚à¸­à¸™à¹€à¸‡à¸´à¸™à¸–à¸¹à¸à¸•à¹‰à¸­à¸‡ à¸à¸£à¸¸à¸“à¸²à¸¡à¸²à¸£à¸±à¸šà¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸—à¸µà¹ˆà¸£à¹‰à¸²à¸™à¸žà¸£à¹‰à¸­à¸¡à¸à¸±à¸šà¹à¸ªà¸”à¸‡à¸«à¸™à¹‰à¸²à¹à¸ˆà¹‰à¸‡à¸‹à¹ˆà¸­à¸¡à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸•à¸£à¸', 9, 0, '1', NULL, NULL, NULL, NULL),
 (307, 35, '2023-06-01 22:07:47.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸', 10, 0, '1', NULL, NULL, NULL, NULL),
-(308, 35, '2023-06-01 22:08:02.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-06-13 15:30:53', NULL, NULL),
+(308, 35, '2023-06-01 22:08:02.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-07-17 17:08:01', NULL, NULL),
 (309, 36, '2023-06-01 23:27:11.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 0, '1', NULL, NULL, NULL, NULL),
 (310, 36, '2023-06-01 23:31:03.000000', 'à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸”à¸±à¸‡à¸™à¸µà¹‰', 4, 0, '1', 1, '2023-06-02 02:21:14', NULL, NULL),
 (313, 36, '2023-06-02 02:24:21.000000', 'à¸à¸£à¸¸à¸“à¸²à¸—à¸³à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹à¸¥à¸°à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸•à¹ˆà¸­à¸žà¹ˆà¸§à¸‡à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸¡à¸²à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸—à¸³à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡', 5, 0, '', NULL, NULL, NULL, NULL),
@@ -11665,7 +12177,7 @@ INSERT INTO `repair_status` (`rs_id`, `get_r_id`, `rs_date_time`, `rs_detail`, `
 (317, 36, '2023-06-02 02:34:52.000000', 'à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™ à¸£à¸­à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™', 8, 0, '1', 1, '2023-06-02 02:51:05', NULL, NULL),
 (318, 36, '2023-06-02 02:55:50.000000', 'à¸«à¸¥à¸±à¸à¸à¸²à¸™à¸à¸²à¸£à¹‚à¸­à¸™à¹€à¸‡à¸´à¸™à¸–à¸¹à¸à¸•à¹‰à¸­à¸‡ à¸à¸£à¸¸à¸“à¸²à¸¡à¸²à¸£à¸±à¸šà¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸—à¸µà¹ˆà¸£à¹‰à¸²à¸™à¸žà¸£à¹‰à¸­à¸¡à¸à¸±à¸šà¹à¸ªà¸”à¸‡à¸«à¸™à¹‰à¸²à¹à¸ˆà¹‰à¸‡à¸‹à¹ˆà¸­à¸¡à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸•à¸£à¸', 9, 0, '1', NULL, NULL, NULL, NULL),
 (319, 36, '2023-06-02 02:59:30.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸', 10, 0, '1', NULL, NULL, NULL, NULL),
-(320, 36, '2023-06-02 03:00:26.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-06-13 15:30:53', NULL, NULL),
+(320, 36, '2023-06-02 03:00:26.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-07-17 17:08:01', NULL, NULL),
 (321, 77, '2023-06-02 03:41:18.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 1, 0, '', NULL, NULL, NULL, NULL),
 (322, 77, '2023-06-02 03:42:31.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 0, '1', NULL, NULL, NULL, NULL),
 (323, 77, '2023-06-02 03:44:04.000000', 'à¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸”à¸±à¸‡à¸™à¸µà¹‰', 4, 0, '1', 1, '2023-06-02 04:00:10', NULL, NULL),
@@ -11736,7 +12248,7 @@ INSERT INTO `repair_status` (`rs_id`, `get_r_id`, `rs_date_time`, `rs_detail`, `
 (387, 83, '2023-06-02 18:51:44.000000', 'à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™ à¸£à¸­à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™', 8, 0, '1', 1, '2023-06-02 18:52:59', NULL, NULL),
 (388, 83, '2023-06-02 18:53:21.000000', 'à¸«à¸¥à¸±à¸à¸à¸²à¸™à¸à¸²à¸£à¹‚à¸­à¸™à¹€à¸‡à¸´à¸™à¸–à¸¹à¸à¸•à¹‰à¸­à¸‡ à¸à¸£à¸¸à¸“à¸²à¸¡à¸²à¸£à¸±à¸šà¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸—à¸µà¹ˆà¸£à¹‰à¸²à¸™à¸žà¸£à¹‰à¸­à¸¡à¸à¸±à¸šà¹à¸ªà¸”à¸‡à¸«à¸™à¹‰à¸²à¹à¸ˆà¹‰à¸‡à¸‹à¹ˆà¸­à¸¡à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸•à¸£à¸', 9, 0, '1', NULL, NULL, NULL, NULL),
 (390, 83, '2023-06-02 18:54:57.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸', 10, 0, '1', NULL, NULL, NULL, NULL),
-(392, 83, '2023-06-02 18:59:19.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-06-13 15:30:53', 'à¸«à¸·à¸³à¸”à¸™à¸«à¹‰à¸ªà¸à¸”à¹‰à¸à¸«à¸™à¹€à¸·', NULL),
+(392, 83, '2023-06-02 18:59:19.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-07-17 17:08:01', 'à¸«à¸·à¸³à¸”à¸™à¸«à¹‰à¸ªà¸à¸”à¹‰à¸à¸«à¸™à¹€à¸·', NULL),
 (393, 83, '2023-06-02 19:00:39.000000', 'à¸«à¸·à¸³à¸”à¸™à¸«à¹‰à¸ªà¸à¸”à¹‰à¸à¸«à¸™à¹€à¸·', 20, 0, '', NULL, NULL, NULL, NULL),
 (394, 129, '2023-06-02 19:04:57.000000', 'à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¹„à¸”à¹‰à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¹€à¸žà¸´à¹ˆà¸¡à¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸”à¹‰à¸§à¸¢à¸•à¸±à¸§à¹€à¸­à¸‡', 3, 0, '', NULL, NULL, NULL, NULL),
 (395, 130, '2023-06-05 13:40:15.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 1, 0, '', NULL, NULL, NULL, NULL),
@@ -11802,7 +12314,7 @@ INSERT INTO `repair_status` (`rs_id`, `get_r_id`, `rs_date_time`, `rs_detail`, `
 (504, 153, '2023-06-09 03:51:56.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸', 10, 0, '1', NULL, NULL, NULL, NULL),
 (505, 146, '2023-06-09 04:15:31.000000', 'à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™ à¸£à¸­à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™', 9, 0, '1', NULL, NULL, NULL, NULL),
 (506, 146, '2023-06-09 04:15:39.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸', 10, 0, '1', NULL, NULL, NULL, NULL),
-(507, 146, '2023-06-09 05:09:44.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-06-13 15:30:53', NULL, NULL),
+(507, 146, '2023-06-09 05:09:44.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-07-17 17:08:01', NULL, NULL),
 (508, 146, NULL, NULL, 3, 1, '', NULL, NULL, NULL, NULL),
 (509, 146, NULL, NULL, 3, 1, '', NULL, NULL, NULL, NULL),
 (511, 146, '2023-06-09 05:31:04.000000', 'à¸„à¸¸à¸“à¹„à¸”à¹‰à¸—à¸³à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¹à¸¥à¸°à¸—à¸³à¸à¸²à¸£à¸¢à¸·à¸™à¸¢à¸±à¸™à¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 3, 0, '', NULL, NULL, NULL, NULL),
@@ -11828,7 +12340,7 @@ INSERT INTO `repair_status` (`rs_id`, `get_r_id`, `rs_date_time`, `rs_detail`, `
 (534, 156, '2023-06-09 18:18:02.000000', 'à¸„à¸¸à¸“à¹„à¸”à¹‰à¸ªà¹ˆà¸‡à¸«à¸¥à¸±à¸à¸à¸²à¸™à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¸ªà¸­à¸šà¸ˆà¸²à¸à¹€à¸ˆà¹‰à¸²à¸«à¸™à¹‰à¸²à¸—à¸µà¹ˆ', 25, 0, '', NULL, NULL, NULL, NULL),
 (535, 156, '2023-06-09 18:18:16.000000', 'à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™ à¸£à¸­à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™', 9, 0, '1', NULL, NULL, NULL, NULL),
 (536, 156, '2023-06-09 18:18:34.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸', 10, 0, '1', NULL, NULL, NULL, NULL),
-(537, 156, '2023-06-09 18:21:29.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-06-13 15:30:53', NULL, NULL),
+(537, 156, '2023-06-09 18:21:29.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-07-17 17:08:01', NULL, NULL),
 (538, 156, '2023-06-09 18:22:41.000000', 'à¸„à¸¸à¸“à¹„à¸”à¹‰à¸—à¸³à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¹à¸¥à¸°à¸—à¸³à¸à¸²à¸£à¸¢à¸·à¸™à¸¢à¸±à¸™à¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 3, 0, '', NULL, NULL, NULL, NULL),
 (543, 155, '2023-06-12 15:36:27.000000', 'à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£fdsfsfsdf', 6, 0, '1', NULL, NULL, NULL, NULL),
 (544, 155, '2023-06-12 15:42:52.000000', 'à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸«à¸à¸”à¸à¸«à¸”à¸«à¸à¸”', 6, 0, '1', NULL, NULL, NULL, NULL),
@@ -11856,14 +12368,223 @@ INSERT INTO `repair_status` (`rs_id`, `get_r_id`, `rs_date_time`, `rs_detail`, `
 (569, 158, '2023-06-13 15:24:19.000000', 'à¸„à¸¸à¸“à¹„à¸”à¹‰à¸ªà¹ˆà¸‡à¸«à¸¥à¸±à¸à¸à¸²à¸™à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¸ªà¸­à¸šà¸ˆà¸²à¸à¹€à¸ˆà¹‰à¸²à¸«à¸™à¹‰à¸²à¸—à¸µà¹ˆ', 25, 0, '', NULL, NULL, NULL, NULL),
 (570, 158, '2023-06-13 15:25:15.000000', 'à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™ à¸£à¸­à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™', 9, 0, '1', NULL, NULL, NULL, NULL),
 (572, 158, '2023-06-13 15:27:42.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸', 10, 0, '1', NULL, NULL, NULL, NULL),
-(573, 158, '2023-06-13 15:29:09.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-06-13 15:30:53', NULL, NULL),
+(573, 158, '2023-06-13 15:29:09.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-07-17 17:08:01', NULL, NULL),
 (574, 158, '2023-06-13 15:30:53.000000', 'à¸„à¸¸à¸“à¹„à¸”à¹‰à¸—à¸³à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¹à¸¥à¸°à¸—à¸³à¸à¸²à¸£à¸¢à¸·à¸™à¸¢à¸±à¸™à¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 3, 0, '', NULL, NULL, NULL, NULL),
 (575, 159, '2023-06-13 15:37:30.000000', 'à¸¢à¸·à¸™à¸¢à¸±à¸™à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸ˆà¸²à¸à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹à¸¥à¹‰à¸§', 5, 0, '', 1, '2023-06-13 15:37:30', NULL, NULL),
 (576, 149, '2023-06-13 16:31:23.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 0, '1', NULL, NULL, NULL, NULL),
 (577, 148, '2023-06-14 13:06:26.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 0, '1', NULL, NULL, NULL, NULL),
 (578, 148, '2023-06-14 13:18:25.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 4, 0, '1', NULL, NULL, NULL, NULL),
 (579, 160, '2023-06-16 00:50:17.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 1, 0, '', NULL, NULL, NULL, NULL),
-(580, 160, '2023-06-16 14:05:22.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 0, '1', NULL, NULL, NULL, NULL);
+(580, 160, '2023-06-16 14:05:22.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 0, '1', NULL, NULL, NULL, NULL),
+(584, 160, '2023-06-21 05:02:17.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 4, 0, '1', 0, '2023-06-21 05:03:26', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(586, 160, '2023-06-21 05:11:31.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 1, '2023-06-21 05:11:46', NULL, NULL),
+(587, 160, '2023-06-21 05:11:59.000000', 'à¸à¸£à¸¸à¸“à¸²à¸—à¸³à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹à¸¥à¸°à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸•à¹ˆà¸­à¸žà¹ˆà¸§à¸‡à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸¡à¸²à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸—à¸³à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡', 5, 0, '', NULL, NULL, NULL, NULL),
+(588, 161, '2023-06-21 14:14:32.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 1, 0, '', NULL, NULL, NULL, NULL),
+(589, 162, '2023-06-21 14:24:23.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 1, 0, '', NULL, NULL, NULL, NULL),
+(590, 163, '2023-06-21 14:32:02.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 1, 0, '', NULL, NULL, NULL, NULL),
+(591, 162, '2023-06-21 14:39:52.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 0, '1', NULL, NULL, NULL, NULL),
+(592, 162, '2023-06-21 14:40:49.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 4, 0, '1', 0, '2023-06-21 14:42:46', 'à¹„à¸¡à¹ˆà¸­à¸¢à¸²à¸à¹ƒà¸Šà¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸‚à¹‰à¸²à¸‡à¸•à¹‰à¸™', NULL),
+(593, 162, '2023-06-21 14:43:22.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 1, '2023-06-21 14:43:37', NULL, NULL),
+(594, 162, '2023-06-21 14:43:44.000000', 'à¸à¸£à¸¸à¸“à¸²à¸—à¸³à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹à¸¥à¸°à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸•à¹ˆà¸­à¸žà¹ˆà¸§à¸‡à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸¡à¸²à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸—à¸³à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡', 5, 0, '', 0, NULL, NULL, NULL),
+(595, 162, '2023-06-21 14:44:47.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸„à¸¸à¸“à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸ˆà¸²à¸à¸žà¸™à¸±à¸à¸‡à¸²à¸™', 19, 0, '1', NULL, NULL, NULL, NULL),
+(596, 162, '2023-06-21 14:45:50.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸—à¸³à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 6, 0, '', NULL, NULL, NULL, NULL),
+(597, 162, '2023-06-21 14:47:32.000000', 'à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£', 6, 0, '1', NULL, NULL, NULL, NULL),
+(598, 162, '2023-06-21 14:49:56.000000', 'à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£', 6, 0, '1', NULL, NULL, NULL, NULL),
+(599, 162, '2023-06-21 14:50:16.000000', 'à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£', 6, 0, '1', NULL, NULL, NULL, NULL),
+(600, 162, '2023-06-21 14:50:34.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸„à¸§à¸²à¸¡à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 7, 0, '1', NULL, NULL, NULL, NULL),
+(601, 162, '2023-06-21 14:52:11.000000', 'à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™ à¸£à¸­à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™', 8, 0, '1', NULL, NULL, NULL, NULL),
+(602, 162, '2023-06-21 14:55:13.000000', 'à¸„à¸¸à¸“à¹„à¸”à¹‰à¸ªà¹ˆà¸‡à¸«à¸¥à¸±à¸à¸à¸²à¸™à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¸ªà¸­à¸šà¸ˆà¸²à¸à¹€à¸ˆà¹‰à¸²à¸«à¸™à¹‰à¸²à¸—à¸µà¹ˆ', 25, 0, '', NULL, NULL, NULL, NULL),
+(603, 162, '2023-06-21 14:55:41.000000', 'à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™ à¸£à¸­à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™', 9, 0, '1', NULL, NULL, NULL, NULL),
+(604, 162, '2023-06-21 14:55:54.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸', 10, 0, '1', NULL, NULL, NULL, NULL),
+(605, 162, '2023-06-21 15:00:13.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-07-17 17:08:01', NULL, NULL),
+(606, 162, '2023-06-21 15:00:39.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-07-17 17:08:01', NULL, NULL),
+(607, 162, '2023-06-21 15:01:15.000000', 'à¸„à¸¸à¸“à¹„à¸”à¹‰à¸—à¸³à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¹à¸¥à¸°à¸—à¸³à¸à¸²à¸£à¸¢à¸·à¸™à¸¢à¸±à¸™à¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 3, 0, '', NULL, NULL, NULL, NULL),
+(608, 164, '2023-06-21 15:24:11.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 1, 0, '', NULL, NULL, NULL, NULL),
+(609, 164, '2023-06-21 15:27:46.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 0, '1', NULL, NULL, NULL, NULL),
+(610, 164, '2023-06-21 15:30:07.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 4, 0, '1', 0, '2023-06-21 15:33:06', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(611, 164, '2023-06-21 15:36:34.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 1, '2023-06-21 15:37:19', NULL, NULL),
+(612, 164, '2023-06-21 15:37:39.000000', 'à¸à¸£à¸¸à¸“à¸²à¸—à¸³à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹à¸¥à¸°à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸•à¹ˆà¸­à¸žà¹ˆà¸§à¸‡à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸¡à¸²à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸—à¸³à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡', 5, 0, '', NULL, NULL, NULL, NULL),
+(613, 165, '2023-06-25 15:59:09.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 1, 0, '', NULL, NULL, NULL, NULL),
+(614, 166, '2023-06-25 16:00:54.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 1, 0, '', NULL, NULL, NULL, NULL),
+(615, 166, '2023-06-30 15:23:10.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 0, '1', NULL, NULL, NULL, NULL),
+(616, 166, '2023-06-30 15:23:41.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 4, 0, '1', 1, '2023-06-30 15:24:08', NULL, NULL),
+(617, 166, '2023-06-30 15:24:17.000000', 'à¸à¸£à¸¸à¸“à¸²à¸—à¸³à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹à¸¥à¸°à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸•à¹ˆà¸­à¸žà¹ˆà¸§à¸‡à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸¡à¸²à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸—à¸³à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡', 5, 0, '', NULL, NULL, NULL, NULL),
+(618, 166, '2023-06-30 15:24:29.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸„à¸¸à¸“à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸ˆà¸²à¸à¸žà¸™à¸±à¸à¸‡à¸²à¸™', 19, 0, '1', NULL, NULL, NULL, NULL),
+(619, 166, '2023-06-30 15:25:11.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸—à¸³à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 6, 0, '', NULL, NULL, NULL, NULL),
+(620, 166, '2023-06-30 15:25:26.000000', 'à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£', 6, 0, '1', NULL, NULL, NULL, NULL),
+(621, 166, '2023-06-30 15:25:47.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸„à¸§à¸²à¸¡à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 7, 0, '1', NULL, NULL, NULL, NULL),
+(622, 166, '2023-06-30 15:26:11.000000', 'à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™ à¸£à¸­à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™', 8, 0, '1', NULL, NULL, NULL, NULL),
+(623, 166, '2023-06-30 15:27:28.000000', 'à¸„à¸¸à¸“à¹„à¸”à¹‰à¸ªà¹ˆà¸‡à¸«à¸¥à¸±à¸à¸à¸²à¸™à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¸ªà¸­à¸šà¸ˆà¸²à¸à¹€à¸ˆà¹‰à¸²à¸«à¸™à¹‰à¸²à¸—à¸µà¹ˆ', 25, 0, '', NULL, NULL, NULL, NULL),
+(624, 166, '2023-06-30 15:27:48.000000', 'à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™ à¸£à¸­à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™', 9, 0, '1', NULL, NULL, NULL, NULL),
+(625, 166, '2023-06-30 15:27:59.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸', 10, 0, '1', NULL, NULL, NULL, NULL),
+(626, 166, '2023-06-30 15:28:14.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-07-17 17:08:01', NULL, NULL),
+(627, 166, '2023-06-30 15:28:23.000000', 'à¸„à¸¸à¸“à¹„à¸”à¹‰à¸—à¸³à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¹à¸¥à¸°à¸—à¸³à¸à¸²à¸£à¸¢à¸·à¸™à¸¢à¸±à¸™à¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 3, 0, '', NULL, NULL, NULL, NULL),
+(637, 163, '2023-07-09 00:08:44.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 0, '1', NULL, NULL, NULL, NULL),
+(639, 0, '2023-07-10 00:11:08.000000', '', 0, 0, '', NULL, NULL, NULL, NULL),
+(640, 0, '2023-07-10 00:11:16.000000', '', 0, 0, '', NULL, NULL, NULL, NULL),
+(641, 0, '2023-07-10 00:11:26.000000', '', 0, 0, '', NULL, NULL, NULL, NULL),
+(642, 0, '2023-07-10 00:15:34.000000', '', 0, 0, '', NULL, NULL, NULL, NULL),
+(643, 165, '2023-07-10 00:16:52.000000', 'asdasdasdasdfdgdfgdfgdfg', 12, 1, '', NULL, NULL, NULL, NULL),
+(644, 165, '2023-07-10 00:25:30.000000', 'dasdasdasdasdasd', 12, 1, '', NULL, NULL, NULL, NULL),
+(645, 165, '2023-07-10 00:29:14.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 1, '1', NULL, NULL, NULL, NULL),
+(646, 165, '2023-07-10 00:37:43.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 0, '1', NULL, NULL, NULL, NULL),
+(648, 167, '2023-07-10 01:04:48.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 1, 0, '', 1, '2023-07-10 02:30:10', NULL, NULL),
+(649, 167, '2023-07-10 01:05:16.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 0, '1', NULL, NULL, NULL, NULL),
+(650, 167, '2023-07-10 01:05:45.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 4, 0, '1', 0, '2023-07-10 01:36:49', 'à¹„à¸¡à¹ˆà¸­à¸¢à¸²à¸à¹ƒà¸Šà¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸‚à¹‰à¸²à¸‡à¸•à¹‰à¸™', NULL),
+(651, 167, '2023-07-10 01:45:40.000000', 'sdfsdfsfsdfssdfsdf', 12, 1, '', NULL, NULL, NULL, NULL),
+(652, 167, '2023-07-10 02:04:17.000000', NULL, 12, 1, '', NULL, NULL, NULL, NULL),
+(653, 167, '2023-07-10 02:13:40.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-10 02:39:50', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(654, 167, '2023-07-10 02:31:40.000000', 'à¸à¸£à¸¸à¸“à¸²à¸—à¸³à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹à¸¥à¸°à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸•à¹ˆà¸­à¸žà¹ˆà¸§à¸‡à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸¡à¸²à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸—à¸³à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡', 5, 1, '', NULL, NULL, NULL, NULL),
+(655, 167, '2023-07-10 02:50:42.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-10 02:51:08', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL);
+INSERT INTO `repair_status` (`rs_id`, `get_r_id`, `rs_date_time`, `rs_detail`, `status_id`, `del_flg`, `e_id`, `rs_conf`, `rs_conf_date`, `rs_cancel_detail`, `get_d_id`) VALUES
+(656, 167, '2023-07-10 02:51:21.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-10 02:58:27', 'à¹„à¸¡à¹ˆà¸­à¸¢à¸²à¸à¹ƒà¸Šà¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸‚à¹‰à¸²à¸‡à¸•à¹‰à¸™', NULL),
+(657, 167, '2023-07-10 02:59:25.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 1, '2023-07-10 03:01:53', NULL, NULL),
+(658, 167, '2023-07-10 03:02:02.000000', 'à¸à¸£à¸¸à¸“à¸²à¸—à¸³à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹à¸¥à¸°à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸•à¹ˆà¸­à¸žà¹ˆà¸§à¸‡à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸¡à¸²à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸—à¸³à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡', 5, 0, '', NULL, NULL, NULL, NULL),
+(659, 168, '2023-07-10 03:31:03.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 1, 0, '', NULL, NULL, NULL, NULL),
+(660, 168, '2023-07-10 03:31:21.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 0, '1', NULL, NULL, NULL, NULL),
+(668, 168, '2023-07-10 03:57:24.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 4, 0, '1', 0, '2023-07-10 04:09:14', 'à¹„à¸¡à¹ˆà¸­à¸¢à¸²à¸à¹ƒà¸Šà¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸‚à¹‰à¸²à¸‡à¸•à¹‰à¸™', NULL),
+(669, 168, '2023-07-10 04:09:37.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 1, '2023-07-10 04:16:56', NULL, NULL),
+(670, 168, '2023-07-10 04:17:06.000000', 'à¸à¸£à¸¸à¸“à¸²à¸—à¸³à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹à¸¥à¸°à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸•à¹ˆà¸­à¸žà¹ˆà¸§à¸‡à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸¡à¸²à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸—à¸³à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡', 5, 0, '', NULL, NULL, NULL, NULL),
+(671, 168, '2023-07-10 15:51:05.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸„à¸¸à¸“à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸ˆà¸²à¸à¸žà¸™à¸±à¸à¸‡à¸²à¸™', 19, 0, '1', NULL, '2023-07-10 16:57:28', NULL, NULL),
+(672, 168, '2023-07-10 15:53:47.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸—à¸³à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 6, 1, '', NULL, NULL, NULL, NULL),
+(673, 168, '2023-07-10 16:28:14.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-10 16:44:34', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(674, 168, '2023-07-10 16:44:58.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', NULL, NULL, NULL, NULL),
+(675, 168, '2023-07-10 16:57:28.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 19, 0, '', NULL, '2023-07-10 16:57:32', NULL, NULL),
+(676, 168, '2023-07-10 16:57:32.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 19, 0, '', NULL, '2023-07-10 16:58:15', NULL, NULL),
+(677, 168, '2023-07-10 16:58:15.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 19, 0, '', NULL, '2023-07-10 16:59:24', NULL, NULL),
+(678, 168, '2023-07-10 16:58:37.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-10 16:58:52', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(679, 168, '2023-07-10 16:59:13.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', NULL, NULL, NULL, NULL),
+(680, 168, '2023-07-10 16:59:24.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 19, 0, '', NULL, NULL, NULL, NULL),
+(681, 168, '2023-07-10 16:59:34.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸—à¸³à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 6, 0, '', NULL, NULL, NULL, NULL),
+(682, 168, '2023-07-10 16:59:58.000000', 'à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸„à¸£à¸±à¸‡à¸—à¸µà¹ˆ 2', 6, 0, '1', NULL, NULL, NULL, NULL),
+(683, 168, '2023-07-10 17:00:21.000000', 'à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸«à¸”à¸«à¸à¸”à¸«à¸à¸”9', 6, 0, '1', NULL, NULL, NULL, NULL),
+(684, 168, '2023-07-10 17:05:59.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸„à¸§à¸²à¸¡à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 7, 0, '1', NULL, NULL, NULL, NULL),
+(685, 168, '2023-07-10 17:08:22.000000', 'à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™ à¸£à¸­à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™', 8, 0, '1', NULL, NULL, NULL, NULL),
+(686, 168, '2023-07-10 17:10:18.000000', 'à¸„à¸¸à¸“à¹„à¸”à¹‰à¸ªà¹ˆà¸‡à¸«à¸¥à¸±à¸à¸à¸²à¸™à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¸ªà¸­à¸šà¸ˆà¸²à¸à¹€à¸ˆà¹‰à¸²à¸«à¸™à¹‰à¸²à¸—à¸µà¹ˆ', 25, 0, '', NULL, NULL, NULL, NULL),
+(688, 168, '2023-07-10 17:14:41.000000', 'à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™ à¸£à¸­à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™', 9, 0, '1', NULL, NULL, NULL, NULL),
+(689, 168, '2023-07-11 15:06:51.000000', 'à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¸³à¹€à¸£à¹‡à¸ˆà¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™    ', 3, 1, '1', NULL, NULL, NULL, NULL),
+(690, 168, '2023-07-11 15:10:41.000000', 'à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¸³à¹€à¸£à¹‡à¸ˆà¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™    ', 3, 1, '1', NULL, NULL, NULL, NULL),
+(691, 168, '2023-07-11 15:16:49.000000', 'à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¸³à¹€à¸£à¹‡à¸ˆà¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™    ', 3, 0, '1', NULL, NULL, NULL, NULL),
+(692, 169, '2023-07-11 15:31:51.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 1, 0, '', 0, '2023-07-17 23:03:23', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(693, 169, '2023-07-11 15:40:00.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 0, '1', NULL, NULL, NULL, NULL),
+(694, 169, '2023-07-11 15:40:37.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 4, 0, '1', 0, '2023-07-11 15:40:54', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(695, 169, '2023-07-11 15:41:11.000000', 'à¸—à¸³à¸à¸²à¸£à¸›à¸à¸´à¹€à¸ªà¸˜à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¹€à¸™à¸·à¹ˆà¸­à¸‡à¸ˆà¸²à¸...', 0, 1, '1', NULL, NULL, NULL, NULL),
+(696, 169, '2023-07-11 15:41:58.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-11 15:42:13', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(698, 169, '2023-07-11 15:43:06.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 1, '2023-07-11 15:43:14', NULL, NULL),
+(699, 169, '2023-07-11 15:43:22.000000', 'à¸à¸£à¸¸à¸“à¸²à¸—à¸³à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹à¸¥à¸°à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸•à¹ˆà¸­à¸žà¹ˆà¸§à¸‡à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸¡à¸²à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸—à¸³à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡', 5, 0, '', NULL, NULL, NULL, NULL),
+(700, 169, '2023-07-11 15:44:34.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸„à¸¸à¸“à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸ˆà¸²à¸à¸žà¸™à¸±à¸à¸‡à¸²à¸™', 19, 0, '1', NULL, '2023-07-11 16:33:23', NULL, NULL),
+(703, 169, '2023-07-11 16:20:09.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-11 16:20:47', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(704, 169, '2023-07-11 16:21:02.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-11 16:22:31', 'à¹„à¸¡à¹ˆà¸­à¸¢à¸²à¸à¹ƒà¸Šà¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸‚à¹‰à¸²à¸‡à¸•à¹‰à¸™', NULL),
+(705, 169, '2023-07-11 16:22:44.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-11 16:23:30', 'à¹„à¸¡à¹ˆà¸­à¸¢à¸²à¸à¹ƒà¸Šà¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸‚à¹‰à¸²à¸‡à¸•à¹‰à¸™', NULL),
+(706, 169, '2023-07-11 16:23:43.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-11 16:25:03', 'à¹„à¸¡à¹ˆà¸­à¸¢à¸²à¸à¹ƒà¸Šà¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸‚à¹‰à¸²à¸‡à¸•à¹‰à¸™', NULL),
+(707, 169, '2023-07-11 16:26:09.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-11 16:27:31', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(708, 169, '2023-07-11 16:27:46.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', NULL, NULL, NULL, NULL),
+(710, 169, '2023-07-11 16:33:23.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 19, 0, '', NULL, '2023-07-11 16:37:18', NULL, NULL),
+(711, 169, '2023-07-11 16:35:56.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', NULL, NULL, NULL, NULL),
+(712, 169, '2023-07-11 16:37:18.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 19, 0, '', NULL, '2023-07-11 16:38:07', NULL, NULL),
+(713, 169, '2023-07-11 16:37:58.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', NULL, NULL, NULL, NULL),
+(714, 169, '2023-07-11 16:38:07.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 19, 0, '', NULL, NULL, NULL, NULL),
+(715, 170, '2023-07-11 16:41:45.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 1, 0, '', NULL, NULL, NULL, NULL),
+(716, 170, '2023-07-11 16:43:09.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 0, '1', NULL, NULL, NULL, NULL),
+(719, 170, '2023-07-11 16:52:43.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 4, 0, '1', 0, '2023-07-11 16:53:02', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(720, 170, '2023-07-11 16:53:38.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-11 16:54:42', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(721, 170, '2023-07-11 16:55:17.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-11 16:56:11', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(722, 170, '2023-07-11 16:56:28.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-11 16:58:14', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(723, 170, '2023-07-11 16:58:37.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-11 16:59:40', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(724, 170, '2023-07-11 17:00:42.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-11 17:05:19', 'à¹„à¸¡à¹ˆà¸­à¸¢à¸²à¸à¹ƒà¸Šà¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸‚à¹‰à¸²à¸‡à¸•à¹‰à¸™', NULL),
+(725, 170, '2023-07-11 17:05:39.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-11 17:06:32', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(726, 170, '2023-07-11 17:06:47.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-11 17:07:33', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(727, 170, '2023-07-11 17:08:01.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 1, '2023-07-11 17:10:58', NULL, NULL),
+(728, 170, '2023-07-11 17:15:23.000000', 'à¸à¸£à¸¸à¸“à¸²à¸—à¸³à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹à¸¥à¸°à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸•à¹ˆà¸­à¸žà¹ˆà¸§à¸‡à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸¡à¸²à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸—à¸³à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡', 5, 0, '', NULL, NULL, NULL, NULL),
+(729, 170, '2023-07-11 17:15:34.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸„à¸¸à¸“à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸ˆà¸²à¸à¸žà¸™à¸±à¸à¸‡à¸²à¸™', 19, 0, '1', NULL, '2023-07-11 17:26:26', NULL, NULL),
+(730, 170, '2023-07-11 17:16:07.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-11 17:23:10', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(731, 170, '2023-07-11 17:23:32.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-11 17:25:44', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(732, 170, '2023-07-11 17:26:08.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', NULL, NULL, NULL, NULL),
+(733, 170, '2023-07-11 17:26:26.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 19, 0, '', NULL, '2023-07-11 17:28:45', NULL, NULL),
+(734, 170, '2023-07-11 17:27:34.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', NULL, NULL, NULL, NULL),
+(735, 170, '2023-07-11 17:28:45.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 19, 0, '', NULL, '2023-07-11 17:39:46', NULL, NULL),
+(736, 170, '2023-07-11 17:34:39.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-11 17:38:22', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(737, 170, '2023-07-11 17:39:12.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 1, '2023-07-11 17:55:46', NULL, NULL),
+(738, 170, '2023-07-11 17:39:46.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 19, 0, '', NULL, '2023-07-12 10:17:34', NULL, NULL),
+(739, 170, '2023-07-12 10:16:51.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', NULL, NULL, NULL, NULL),
+(740, 170, '2023-07-12 10:17:34.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 19, 0, '', NULL, NULL, NULL, NULL),
+(741, 170, '2023-07-12 10:18:03.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸—à¸³à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 6, 0, '', NULL, NULL, NULL, NULL),
+(742, 170, '2023-07-12 10:18:35.000000', 'à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£', 6, 0, '1', NULL, NULL, NULL, NULL),
+(743, 170, '2023-07-12 10:28:55.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸„à¸§à¸²à¸¡à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 7, 0, '1', NULL, NULL, NULL, NULL),
+(744, 170, '2023-07-12 10:29:27.000000', 'à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™ à¸£à¸­à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™', 8, 0, '1', NULL, NULL, NULL, NULL),
+(745, 170, '2023-07-12 10:36:21.000000', 'à¸„à¸¸à¸“à¹„à¸”à¹‰à¸ªà¹ˆà¸‡à¸«à¸¥à¸±à¸à¸à¸²à¸™à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¸ªà¸­à¸šà¸ˆà¸²à¸à¹€à¸ˆà¹‰à¸²à¸«à¸™à¹‰à¸²à¸—à¸µà¹ˆ', 25, 0, '', NULL, NULL, NULL, NULL),
+(752, 170, '2023-07-12 10:58:54.000000', 'à¸à¸£à¸¸à¸“à¸²à¸ªà¹ˆà¸‡à¸«à¸¥à¸±à¸à¸à¸²à¸™à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™à¹ƒà¸«à¸¡à¹ˆà¸­à¸µà¸à¸„à¸£à¸±à¹‰à¸‡ à¹€à¸™à¸·à¹ˆà¸­à¸‡à¸ˆà¸²à¸à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸¡à¹ˆà¸ªà¸²à¸¡à¸²à¸£à¸–à¸•à¸£à¸§à¸ˆà¸ªà¸­à¸šà¹ƒà¸«à¹‰à¸„à¸¸à¸“à¹„à¸”à¹‰', 26, 0, '1', NULL, NULL, NULL, NULL),
+(753, 170, '2023-07-12 11:08:13.000000', 'à¸„à¸¸à¸“à¹„à¸”à¹‰à¸ªà¹ˆà¸‡à¸«à¸¥à¸±à¸à¸à¸²à¸™à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¸ªà¸­à¸šà¸ˆà¸²à¸à¹€à¸ˆà¹‰à¸²à¸«à¸™à¹‰à¸²à¸—à¸µà¹ˆ', 25, 0, '', NULL, NULL, NULL, NULL),
+(754, 170, '2023-07-12 11:08:48.000000', 'à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™ à¸£à¸­à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™', 9, 0, '1', NULL, NULL, NULL, NULL),
+(755, 170, '2023-07-12 11:09:04.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸', 10, 0, '1', NULL, NULL, NULL, NULL),
+(756, 170, '2023-07-12 11:11:24.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-07-17 17:08:01', NULL, NULL),
+(758, 170, '2023-07-12 12:13:08.000000', 'à¸„à¸¸à¸“à¹„à¸”à¹‰à¸—à¸³à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¹à¸¥à¸°à¸—à¸³à¸à¸²à¸£à¸¢à¸·à¸™à¸¢à¸±à¸™à¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 3, 0, '', NULL, NULL, NULL, NULL),
+(759, 171, '2023-07-14 15:00:31.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 1, 0, '', 0, '2023-07-17 22:47:26', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(760, 164, '2023-07-17 16:16:30.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸„à¸¸à¸“à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸ˆà¸²à¸à¸žà¸™à¸±à¸à¸‡à¸²à¸™', 19, 0, '1', NULL, NULL, NULL, NULL),
+(761, 164, '2023-07-17 16:20:20.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-17 16:20:53', 'à¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸¢à¸à¹€à¸¥à¸´à¸à¸„à¸³à¸ªà¸±à¹ˆà¸‡à¸‹à¹ˆà¸­à¸¡', NULL),
+(763, 164, '2023-07-17 16:52:34.000000', 'à¸—à¸²à¸‡à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸•à¸£à¸§à¸ˆà¸ªà¸­à¸šà¸—à¸µà¹ˆà¸­à¸¢à¸¹à¹ˆà¸‚à¸­à¸‡à¸„à¸¸à¸“à¹à¸¥à¹‰à¸§à¹à¸¥à¸°à¹„à¸”à¹‰à¸£à¸²à¸„à¸²à¸„à¹ˆà¸²à¸ªà¹ˆà¸‡à¸£à¸§à¸¡à¸„à¹ˆà¸²à¸šà¸£à¸´à¸à¸²à¸£à¸”à¸±à¸‡à¸™à¸µà¹‰', 8, 0, '1', NULL, NULL, NULL, NULL),
+(764, 164, '2023-07-17 17:00:58.000000', 'à¸„à¸¸à¸“à¹„à¸”à¹‰à¸ªà¹ˆà¸‡à¸«à¸¥à¸±à¸à¸à¸²à¸™à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¸ªà¸­à¸šà¸ˆà¸²à¸à¹€à¸ˆà¹‰à¸²à¸«à¸™à¹‰à¸²à¸—à¸µà¹ˆ', 25, 0, '', NULL, NULL, NULL, NULL),
+(765, 164, '2023-07-17 17:01:12.000000', 'à¸à¸£à¸¸à¸“à¸²à¸ªà¹ˆà¸‡à¸«à¸¥à¸±à¸à¸à¸²à¸™à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™à¹ƒà¸«à¸¡à¹ˆà¸­à¸µà¸à¸„à¸£à¸±à¹‰à¸‡ à¹€à¸™à¸·à¹ˆà¸­à¸‡à¸ˆà¸²à¸à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸¡à¹ˆà¸ªà¸²à¸¡à¸²à¸£à¸–à¸•à¸£à¸§à¸ˆà¸ªà¸­à¸šà¹ƒà¸«à¹‰à¸„à¸¸à¸“à¹„à¸”à¹‰', 26, 0, '1', NULL, NULL, NULL, NULL),
+(766, 164, '2023-07-17 17:01:24.000000', 'à¸„à¸¸à¸“à¹„à¸”à¹‰à¸ªà¹ˆà¸‡à¸«à¸¥à¸±à¸à¸à¸²à¸™à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¸ªà¸­à¸šà¸ˆà¸²à¸à¹€à¸ˆà¹‰à¸²à¸«à¸™à¹‰à¸²à¸—à¸µà¹ˆ', 25, 0, '', NULL, NULL, NULL, NULL),
+(767, 164, '2023-07-17 17:01:35.000000', 'à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™ à¸£à¸­à¸à¸²à¸£à¸Šà¸³à¸£à¸°à¹€à¸‡à¸´à¸™', 9, 0, '1', NULL, NULL, NULL, NULL),
+(768, 164, '2023-07-17 17:01:44.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸', 10, 0, '1', NULL, NULL, NULL, NULL),
+(769, 164, '2023-07-17 17:02:17.000000', 'à¸—à¸²à¸‡à¹€à¸£à¸²à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹ƒà¸«à¹‰à¸—à¹ˆà¸²à¸™à¸œà¹ˆà¸²à¸™à¸œà¸¹à¹‰à¹ƒà¸«à¹‰à¸šà¸£à¸´à¸à¸²à¸£à¸ˆà¸±à¸”à¸ªà¹ˆà¸‡à¸žà¸±à¸ªà¸”à¸¸à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 24, 0, '1', 1, '2023-07-17 17:08:01', '', NULL),
+(771, 164, '2023-07-17 17:08:01.000000', 'à¸„à¸¸à¸“à¹„à¸”à¹‰à¸—à¸³à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¹à¸¥à¸°à¸—à¸³à¸à¸²à¸£à¸¢à¸·à¸™à¸¢à¸±à¸™à¹€à¸ªà¸£à¹‡à¸ˆà¸ªà¸´à¹‰à¸™à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¹€à¸£à¸µà¸¢à¸šà¸£à¹‰à¸­à¸¢à¹à¸¥à¹‰à¸§', 3, 0, '', NULL, NULL, NULL, NULL),
+(772, 171, '2023-07-17 17:14:19.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 0, '1', NULL, NULL, NULL, NULL),
+(773, 171, '2023-07-17 17:14:37.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 4, 0, '1', 0, '2023-07-17 17:15:07', 'à¹„à¸¡à¹ˆà¸­à¸¢à¸²à¸à¹ƒà¸Šà¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸‚à¹‰à¸²à¸‡à¸•à¹‰à¸™', NULL),
+(774, 171, '2023-07-17 17:15:38.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 1, '2023-07-17 17:16:04', NULL, NULL),
+(775, 171, '2023-07-17 17:16:23.000000', 'à¸à¸£à¸¸à¸“à¸²à¸—à¸³à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹à¸¥à¸°à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸•à¹ˆà¸­à¸žà¹ˆà¸§à¸‡à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸¡à¸²à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸—à¸³à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡', 5, 0, '', NULL, NULL, NULL, NULL),
+(776, 171, '2023-07-17 17:31:59.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸„à¸¸à¸“à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸ˆà¸²à¸à¸žà¸™à¸±à¸à¸‡à¸²à¸™', 19, 0, '1', NULL, '2023-07-17 22:49:03', NULL, NULL),
+(778, 171, '2023-07-17 22:47:05.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-17 22:49:26', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(779, 171, '2023-07-17 22:49:03.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 19, 0, '', NULL, '2023-07-17 22:50:00', NULL, NULL),
+(780, 171, '2023-07-17 22:49:42.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 1, '2023-07-17 22:50:12', NULL, NULL),
+(781, 171, '2023-07-17 22:50:00.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 19, 0, '', NULL, '2023-07-17 23:02:22', NULL, NULL),
+(784, 171, '2023-07-17 23:01:37.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-17 23:14:30', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(785, 171, '2023-07-17 23:02:22.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 19, 0, '', NULL, '2023-07-17 23:15:53', NULL, NULL),
+(786, 172, '2023-07-17 23:03:07.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 1, 0, '', 0, '2023-07-17 23:17:07', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(787, 171, '2023-07-17 23:15:37.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-17 23:15:59', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(788, 171, '2023-07-17 23:15:53.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 19, 0, '', NULL, NULL, NULL, NULL),
+(789, 172, '2023-07-17 23:16:22.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 0, '1', NULL, NULL, NULL, NULL),
+(790, 172, '2023-07-17 23:16:51.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 4, 0, '1', 0, '2023-07-17 23:17:21', NULL, NULL),
+(791, 172, '2023-07-17 23:19:34.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-17 23:19:48', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(792, 172, '2023-07-17 23:20:02.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 1, '2023-07-17 23:20:31', NULL, NULL),
+(793, 172, '2023-07-17 23:20:41.000000', 'à¸à¸£à¸¸à¸“à¸²à¸—à¸³à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹à¸¥à¸°à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸•à¹ˆà¸­à¸žà¹ˆà¸§à¸‡à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸¡à¸²à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸—à¸³à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡', 5, 0, '', NULL, NULL, NULL, NULL),
+(794, 172, '2023-07-17 23:24:14.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸„à¸¸à¸“à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸ˆà¸²à¸à¸žà¸™à¸±à¸à¸‡à¸²à¸™', 19, 0, '1', NULL, '2023-07-17 23:24:44', NULL, NULL),
+(795, 172, '2023-07-17 23:24:32.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', NULL, NULL, NULL, NULL),
+(796, 172, '2023-07-17 23:24:44.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 19, 0, '', NULL, NULL, NULL, NULL),
+(797, 172, '2023-07-17 23:29:02.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 1, '2023-07-17 23:29:10', NULL, NULL),
+(799, 172, '2023-07-17 23:52:48.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸—à¸³à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 6, 0, '', NULL, NULL, NULL, NULL),
+(800, 172, '2023-07-18 00:18:20.000000', 'à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£', 6, 0, '1', NULL, NULL, NULL, NULL),
+(801, 167, '2023-07-19 12:44:48.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸„à¸¸à¸“à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸ˆà¸²à¸à¸žà¸™à¸±à¸à¸‡à¸²à¸™', 19, 0, '1', NULL, NULL, NULL, NULL),
+(802, 165, '2023-07-24 23:11:12.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 4, 0, '1', 1, '2023-07-24 23:12:37', NULL, NULL),
+(803, 165, '2023-07-24 23:12:53.000000', 'à¸à¸£à¸¸à¸“à¸²à¸—à¸³à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹à¸¥à¸°à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸•à¹ˆà¸­à¸žà¹ˆà¸§à¸‡à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸¡à¸²à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸—à¸³à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡', 5, 0, '', NULL, NULL, NULL, NULL),
+(804, 165, '2023-07-24 23:13:11.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸„à¸¸à¸“à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸ˆà¸²à¸à¸žà¸™à¸±à¸à¸‡à¸²à¸™', 19, 0, '1', NULL, NULL, NULL, NULL),
+(805, 165, '2023-07-24 23:13:44.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-24 23:14:04', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(806, 165, '2023-07-24 23:14:26.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 1, '2023-07-24 23:15:05', NULL, NULL),
+(807, 165, '2023-07-24 23:15:17.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸—à¸³à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸”à¸³à¹€à¸™à¸´à¸™à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 6, 0, '', NULL, NULL, NULL, NULL),
+(808, 163, '2023-07-24 23:17:37.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 4, 0, '1', 0, '2023-07-24 23:18:02', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(809, 163, '2023-07-24 23:18:13.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 1, '2023-07-24 23:18:24', NULL, NULL),
+(810, 163, '2023-07-24 23:18:32.000000', 'à¸à¸£à¸¸à¸“à¸²à¸—à¸³à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹à¸¥à¸°à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸•à¹ˆà¸­à¸žà¹ˆà¸§à¸‡à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸¡à¸²à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸—à¸³à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡', 5, 0, '', NULL, NULL, NULL, NULL),
+(811, 163, '2023-07-24 23:18:50.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸„à¸¸à¸“à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸ˆà¸²à¸à¸žà¸™à¸±à¸à¸‡à¸²à¸™', 19, 0, '1', NULL, '2023-07-24 23:44:17', NULL, NULL),
+(813, 163, '2023-07-24 23:42:43.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-24 23:43:23', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(814, 163, '2023-07-24 23:43:51.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', NULL, NULL, NULL, NULL),
+(815, 163, '2023-07-24 23:44:17.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 19, 0, '', NULL, NULL, NULL, NULL),
+(817, 163, '2023-07-25 00:09:42.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', NULL, NULL, NULL, NULL),
+(818, 171, '2023-07-25 00:13:00.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', NULL, NULL, NULL, NULL),
+(819, 173, '2023-07-25 00:51:31.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 1, 0, '', NULL, NULL, NULL, NULL),
+(820, 173, '2023-07-25 00:52:32.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸‚à¹‰à¸­à¸¡à¸¹à¸¥à¸‚à¸­à¸‡à¸—à¹ˆà¸²à¸™à¹à¸¥à¸°à¸à¸³à¸¥à¸±à¸‡à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸£à¸²à¸¢à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸‚à¸­à¸‡à¸„à¸¸à¸“à¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸‚à¸“à¸°à¸™à¸µà¹‰', 2, 0, '1', NULL, NULL, NULL, NULL),
+(829, 173, '2023-07-25 23:30:20.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 4, 0, '1', 0, '2023-07-25 23:30:59', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(830, 173, '2023-07-25 23:31:13.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 1, '2023-07-25 23:31:24', NULL, NULL),
+(834, 173, '2023-07-25 23:48:18.000000', 'à¸à¸£à¸¸à¸“à¸²à¸—à¸³à¸à¸²à¸£à¸ªà¹ˆà¸‡à¹€à¸„à¸£à¸·à¹ˆà¸­à¸‡à¹€à¸ªà¸µà¸¢à¸‡à¹à¸¥à¸°à¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸•à¹ˆà¸­à¸žà¹ˆà¸§à¸‡à¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡à¸¡à¸²à¹ƒà¸«à¹‰à¸—à¸²à¸‡à¸£à¹‰à¸²à¸™à¸—à¸³à¸à¸²à¸£à¸‹à¹ˆà¸­à¸¡', 5, 0, '', NULL, NULL, NULL, NULL),
+(835, 173, '2023-07-25 23:53:10.000000', 'à¸žà¸™à¸±à¸à¸‡à¸²à¸™à¹„à¸”à¹‰à¸£à¸±à¸šà¸­à¸¸à¸›à¸à¸£à¸“à¹Œà¸‚à¸­à¸‡à¸„à¸¸à¸“à¹à¸¥à¹‰à¸§à¹‚à¸›à¸£à¸”à¸£à¸­à¸à¸²à¸£à¸•à¸£à¸§à¸ˆà¹€à¸Šà¹‡à¸„à¸ˆà¸²à¸à¸žà¸™à¸±à¸à¸‡à¸²à¸™', 19, 0, '1', NULL, '2023-07-26 00:20:22', NULL, NULL),
+(837, 173, '2023-07-26 00:03:51.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-26 00:04:24', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(838, 173, '2023-07-26 00:04:39.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-26 00:09:59', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(840, 173, '2023-07-26 00:10:18.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-26 00:12:36', '', NULL),
+(842, 173, '2023-07-26 00:13:00.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-26 00:16:22', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(844, 173, '2023-07-26 00:16:35.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-26 00:18:25', 'à¸­à¸¢à¸²à¸à¹„à¸”à¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸–à¸¹à¸à¸à¸§à¹ˆà¸²à¸™à¸µà¹‰', NULL),
+(846, 173, '2023-07-26 00:18:35.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', 0, '2023-07-26 00:19:35', 'à¹„à¸¡à¹ˆà¸­à¸¢à¸²à¸à¹ƒà¸Šà¹‰à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸‚à¹‰à¸²à¸‡à¸•à¹‰à¸™', NULL),
+(848, 173, '2023-07-26 00:20:04.000000', 'à¸­à¸°à¹„à¸«à¸¥à¹ˆà¸—à¸µà¹ˆà¸•à¹‰à¸­à¸‡à¹ƒà¸Šà¹‰à¸¡à¸µà¸”à¸±à¸‡à¸™à¸µà¹‰', 17, 0, '1', NULL, NULL, NULL, NULL),
+(849, 173, '2023-07-26 00:20:22.000000', 'à¸¢à¸·à¹ˆà¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸‹à¹ˆà¸­à¸¡', 19, 0, '', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -11872,10 +12593,10 @@ INSERT INTO `repair_status` (`rs_id`, `get_r_id`, `rs_date_time`, `rs_detail`, `
 --
 
 CREATE TABLE `role` (
-  `role_id` int(6) NOT NULL,
+  `role_id` int NOT NULL,
   `role_name` varchar(255) DEFAULT NULL,
-  `del_flg` tinyint(1) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `del_flg` tinyint(1) DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `role`
@@ -11888,11 +12609,11 @@ INSERT INTO `role` (`role_id`, `role_name`, `del_flg`) VALUES
 (4, 'à¸Šà¹ˆà¸²à¸‡', 0),
 (5, 'à¸œà¸¹à¹‰à¸ˆà¸±à¸”à¸à¸²à¸£', 0),
 (6, 'à¸¥à¸¹à¸à¸ˆà¹‰à¸²à¸‡', 0),
-(7, 'à¸¥à¸¹à¸à¸ˆà¹‰à¸²à¸‡', 0),
-(8, 'à¸¥à¸¹à¸à¸ˆà¹‰à¸²à¸‡', 0),
-(9, 'à¸¥à¸¹à¸à¸ˆà¹‰à¸²à¸‡', 0),
-(10, 'à¸¥à¸¹à¸à¸ˆà¹‰à¸²à¸‡', 0),
-(11, 'à¸¥à¸¹à¸à¸ˆà¹‰à¸²à¸‡329', 0);
+(7, 'à¸¥à¸¹à¸à¸ˆà¹‰à¸²à¸‡', 1),
+(8, 'à¸¥à¸¹à¸à¸ˆà¹‰à¸²à¸‡', 1),
+(9, 'à¸¥à¸¹à¸à¸ˆà¹‰à¸²à¸‡', 1),
+(10, 'à¸¥à¸¹à¸à¸ˆà¹‰à¸²à¸‡', 1),
+(11, 'à¸¥à¸¹à¸à¸ˆà¹‰à¸²à¸‡329', 1);
 
 -- --------------------------------------------------------
 
@@ -11901,26 +12622,26 @@ INSERT INTO `role` (`role_id`, `role_name`, `del_flg`) VALUES
 --
 
 CREATE TABLE `status_type` (
-  `status_id` int(6) NOT NULL,
+  `status_id` int NOT NULL,
   `status_name` varchar(255) DEFAULT NULL,
   `status_color` varchar(50) DEFAULT NULL,
-  `del_flg` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'ลบ = 1',
+  `del_flg` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'ลบ = 1',
   `value_code` varchar(10) DEFAULT NULL COMMENT 'เก็บชื่อย่อ'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `status_type` Version.3
+-- Dumping data for table `status_type`
 --
 
 INSERT INTO `status_type` (`status_id`, `status_name`, `status_color`, `del_flg`, `value_code`) VALUES
 (1, 'ส่งเรื่องซ่อม', '#0693bd', 0, 'submit'),
 (2, 'รับเรื่องซ่อมแล้ว', '#19d200', 0, 'received'),
 (3, 'สำเร็จ', '#1ca800', 0, 'success'),
-(4, 'รายละเอียด	', '#9c9c9c', 0, 'detail'),
+(4, 'รายละเอียด', '#9c9c9c', 0, 'detail'),
 (5, 'ยืนยันการซ่อม', '#288500', 0, 'confirm'),
 (6, 'ดำเนินการซ่อม', '#b3ad00', 0, ' carry_out'),
 (7, 'ดำเนินการตรวจเช็ค', '#19d200', 0, 'check'),
-(8, 'รอการชำระเงิน', '#06bc76', 0, 'wait_pay'),
+(8, 'รอการชำระเงิน', '#b38c00', 0, 'wait_pay'),
 (9, 'ชำระเงินเรียบร้อย', '#0693bd', 0, 'succ_pay'),
 (10, 'ดำเนินการส่งอุปกรณ์', '#19d200', 0, 'execute'),
 (11, 'ปฏิเสธการซ่อม', '#ff0000', 0, ' refuse'),
@@ -11931,10 +12652,37 @@ INSERT INTO `status_type` (`status_id`, `status_name`, `status_color`, `del_flg`
 (16, 'การจัดส่งล่าช้า', 'red', 0, NULL),
 (17, 'ยื่นข้อเสนอ', '#ea7406', 0, ''),
 (18, 'เกินระยะเก็บของ', '#8000ff', 0, NULL),
-(19, 'รับอุปกรณ์เครื่องเสียง', '#878787', 0, 'getaudio'),
+(19, 'รับอุปกรณ์ซ่อม', '#878787', 0, 'getaudio'),
 (20, 'คำร้องจากสมาชิก', '#cc0000', 0, 'refuse_mem'),
+(21, 'ยืนยันการส่งคืน', '#d68800', 0, 'cancel_re'),
+(22, 'test12231', '#000000', 1, '1212sdad'),
 (24, 'ดำเนินการส่งอุปกรณ์ เรียบร้อย', '#d1ca00', 0, 'send_succ'),
-(25, 'หลักฐานการชำระเงิน', '#e08e00', 0, ' pro_pay');
+(25, 'หลักฐานการชำระเงิน', '#e08e00', 0, ' pro_pay'),
+(26, 'ส่งหลักฐานการชำระเงินใหม่', '#cc0000', 0, 'send_pay_a');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stock_type`
+--
+
+CREATE TABLE `stock_type` (
+  `st_id` int NOT NULL COMMENT 'ไอดีประเภทการเพิ่ม',
+  `st_name` varchar(50) DEFAULT NULL COMMENT 'ชื่อประเภท',
+  `st_type` varchar(1) DEFAULT NULL COMMENT '1=เพิ่ม,0=ลด',
+  `del_flg` int DEFAULT '0' COMMENT 'ลบ = 1',
+  `st_source` varchar(1) NOT NULL DEFAULT '0' COMMENT '1 = มีที่มา/ใบเสร็จ'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `stock_type`
+--
+
+INSERT INTO `stock_type` (`st_id`, `st_name`, `st_type`, `del_flg`, `st_source`) VALUES
+(1, 'Self_Record', '1', 0, '0'),
+(2, 'have_company', '1', 0, '1'),
+(3, 'Use', '0', 0, '0'),
+(4, 'Return', '2', 0, '0');
 
 -- --------------------------------------------------------
 
@@ -11943,12 +12691,12 @@ INSERT INTO `status_type` (`status_id`, `status_name`, `status_color`, `del_flg`
 --
 
 CREATE TABLE `tracking` (
-  `t_id` int(6) NOT NULL COMMENT 'ไอดีรหัสไปรษณีย์',
+  `t_id` int NOT NULL COMMENT 'ไอดีรหัสไปรษณีย์',
   `t_parcel` varchar(50) DEFAULT NULL COMMENT 'รหัสไปรษณีย์',
   `t_c_id` varchar(6) DEFAULT NULL COMMENT 'รหัสบริษัทไปรษณีย์',
   `t_date_in` datetime(6) DEFAULT NULL COMMENT 'วันที่เพิ่มรหัสไปรษณีย์',
   `del_flg` tinyint(1) NOT NULL COMMENT 'ลบ = 1'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COMMENT='ตารางบริษัทไปรษณีย์';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='ตารางบริษัทไปรษณีย์';
 
 --
 -- Dumping data for table `tracking`
@@ -11957,7 +12705,15 @@ CREATE TABLE `tracking` (
 INSERT INTO `tracking` (`t_id`, `t_parcel`, `t_c_id`, `t_date_in`, `del_flg`) VALUES
 (1, 'TH44589655854', '1', '2023-06-09 05:05:01.000000', 0),
 (2, 'NIM1212312121', '1', '2023-06-09 18:20:15.000000', 0),
-(3, 'ERERER121212', '1', '2023-06-13 15:29:09.000000', 0);
+(3, 'ERERER121212', '1', '2023-06-13 15:29:09.000000', 0),
+(4, 'TH445896558544564564', '1', '2023-06-21 15:00:13.000000', 0),
+(8, 'TH65956185178564', '1', '2023-07-10 06:05:43.000000', 0),
+(7, 'TH659561851', '1', '2023-07-10 06:05:15.000000', 0),
+(9, 'TH65956185156456', '1', '2023-07-10 06:05:43.000000', 0),
+(10, 'TH659561851441141', '1', '2023-07-10 14:35:35.000000', 0),
+(11, 'TH6595618515540', '1', '2023-07-11 15:44:09.000000', 0),
+(12, 'TH4458965585488', '1', '2023-07-12 10:54:42.000000', 0),
+(13, 'TH44589655854AA', '1', '2023-07-12 11:11:24.000000', 0);
 
 --
 -- Indexes for dumped tables
@@ -11974,6 +12730,12 @@ ALTER TABLE `amphures`
 --
 ALTER TABLE `company`
   ADD PRIMARY KEY (`com_id`);
+
+--
+-- Indexes for table `company_parts`
+--
+ALTER TABLE `company_parts`
+  ADD PRIMARY KEY (`com_p_id`);
 
 --
 -- Indexes for table `company_transport`
@@ -12042,10 +12804,28 @@ ALTER TABLE `parts_log`
   ADD PRIMARY KEY (`pl_id`);
 
 --
+-- Indexes for table `parts_log_detail`
+--
+ALTER TABLE `parts_log_detail`
+  ADD PRIMARY KEY (`pl_d_id`);
+
+--
 -- Indexes for table `parts_type`
 --
 ALTER TABLE `parts_type`
   ADD PRIMARY KEY (`p_type_id`);
+
+--
+-- Indexes for table `parts_use`
+--
+ALTER TABLE `parts_use`
+  ADD PRIMARY KEY (`pu_id`);
+
+--
+-- Indexes for table `parts_use_detail`
+--
+ALTER TABLE `parts_use_detail`
+  ADD PRIMARY KEY (`pu_d_id`);
 
 --
 -- Indexes for table `provinces`
@@ -12090,6 +12870,12 @@ ALTER TABLE `status_type`
   ADD PRIMARY KEY (`status_id`);
 
 --
+-- Indexes for table `stock_type`
+--
+ALTER TABLE `stock_type`
+  ADD PRIMARY KEY (`st_id`);
+
+--
 -- Indexes for table `tracking`
 --
 ALTER TABLE `tracking`
@@ -12103,127 +12889,157 @@ ALTER TABLE `tracking`
 -- AUTO_INCREMENT for table `amphures`
 --
 ALTER TABLE `amphures`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1007;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1007;
 
 --
 -- AUTO_INCREMENT for table `company`
 --
 ALTER TABLE `company`
-  MODIFY `com_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `com_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `company_parts`
+--
+ALTER TABLE `company_parts`
+  MODIFY `com_p_id` int NOT NULL AUTO_INCREMENT COMMENT 'ไอดีบริษัทที่สั่งซื้อ', AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `company_transport`
 --
 ALTER TABLE `company_transport`
-  MODIFY `com_t_id` int(6) NOT NULL AUTO_INCREMENT COMMENT 'ไอดีบริษัทขนส่ง', AUTO_INCREMENT=2;
+  MODIFY `com_t_id` int NOT NULL AUTO_INCREMENT COMMENT 'ไอดีบริษัทขนส่ง', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `e_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `e_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `geographies`
 --
 ALTER TABLE `geographies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `get_detail`
 --
 ALTER TABLE `get_detail`
-  MODIFY `get_d_id` int(6) NOT NULL AUTO_INCREMENT COMMENT 'ไอดีรายละเอียดรับการซ่อม', AUTO_INCREMENT=38;
+  MODIFY `get_d_id` int NOT NULL AUTO_INCREMENT COMMENT 'ไอดีรายละเอียดรับการซ่อม', AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `get_repair`
 --
 ALTER TABLE `get_repair`
-  MODIFY `get_r_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=161;
+  MODIFY `get_r_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=174;
 
 --
 -- AUTO_INCREMENT for table `log_employee`
 --
 ALTER TABLE `log_employee`
-  MODIFY `e_log_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `e_log_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `log_member`
 --
 ALTER TABLE `log_member`
-  MODIFY `m_log_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
+  MODIFY `m_log_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=190;
 
 --
 -- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
-  MODIFY `m_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `m_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `parts`
 --
 ALTER TABLE `parts`
-  MODIFY `p_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `p_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `parts_log`
 --
 ALTER TABLE `parts_log`
-  MODIFY `pl_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `pl_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
+--
+-- AUTO_INCREMENT for table `parts_log_detail`
+--
+ALTER TABLE `parts_log_detail`
+  MODIFY `pl_d_id` int NOT NULL AUTO_INCREMENT COMMENT 'ไอดีรายละเอียดอะไหล่', AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `parts_type`
 --
 ALTER TABLE `parts_type`
-  MODIFY `p_type_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `p_type_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `parts_use`
+--
+ALTER TABLE `parts_use`
+  MODIFY `pu_id` int NOT NULL AUTO_INCREMENT COMMENT 'ไอดีการใช้อะไหล่', AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `parts_use_detail`
+--
+ALTER TABLE `parts_use_detail`
+  MODIFY `pu_d_id` int NOT NULL AUTO_INCREMENT COMMENT 'ไอดีรายละเอียดการลดอะไหล่', AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `provinces`
 --
 ALTER TABLE `provinces`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- AUTO_INCREMENT for table `repair`
 --
 ALTER TABLE `repair`
-  MODIFY `r_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
+  MODIFY `r_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=170;
 
 --
 -- AUTO_INCREMENT for table `repair_detail`
 --
 ALTER TABLE `repair_detail`
-  MODIFY `rd_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
+  MODIFY `rd_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=285;
 
 --
 -- AUTO_INCREMENT for table `repair_pic`
 --
 ALTER TABLE `repair_pic`
-  MODIFY `rp_id` int(6) NOT NULL AUTO_INCREMENT COMMENT 'ไอดี Repair Picture', AUTO_INCREMENT=425;
+  MODIFY `rp_id` int NOT NULL AUTO_INCREMENT COMMENT 'ไอดี Repair Picture', AUTO_INCREMENT=497;
 
 --
 -- AUTO_INCREMENT for table `repair_status`
 --
 ALTER TABLE `repair_status`
-  MODIFY `rs_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=581;
+  MODIFY `rs_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=850;
 
 --
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
-  MODIFY `role_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `role_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `status_type`
 --
 ALTER TABLE `status_type`
-  MODIFY `status_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `status_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- AUTO_INCREMENT for table `stock_type`
+--
+ALTER TABLE `stock_type`
+  MODIFY `st_id` int NOT NULL AUTO_INCREMENT COMMENT 'ไอดีประเภทการเพิ่ม', AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tracking`
 --
 ALTER TABLE `tracking`
-  MODIFY `t_id` int(6) NOT NULL AUTO_INCREMENT COMMENT 'ไอดีรหัสไปรษณีย์', AUTO_INCREMENT=4;
+  MODIFY `t_id` int NOT NULL AUTO_INCREMENT COMMENT 'ไอดีรหัสไปรษณีย์', AUTO_INCREMENT=14;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
