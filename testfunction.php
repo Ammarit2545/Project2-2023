@@ -12,6 +12,6 @@ $motherFolderPath = dirname(dirname($selectedFolderPath));
 $motherFolderName = basename($motherFolderPath);
 
 // Display the name of the mother folder
-echo "The mother folder is: " . $motherFolderName . "<br> ";
+echo "The mother folder is: " . $motherFolderName . "<br>";
 
 ?>
