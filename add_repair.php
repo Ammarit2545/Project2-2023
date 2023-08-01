@@ -75,6 +75,7 @@ $row = mysqli_fetch_array($result);
 
     $id = $_SESSION["id"];
 
+
     $sql = "SELECT * FROM member WHERE m_id = '$id'";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($result);
@@ -100,7 +101,42 @@ $row = mysqli_fetch_array($result);
                     </div>
                     <div class="grid-item">
                         <label for="borderinput1" class="form-label">เลข Serial Number</label>
-                        <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)">
+                        <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)" onchange="checkSerial()">
+                        <span class="serialMessage" style="color: red; display: none;">ใช้เลข Serial Number นี้ไปแล้วในรายการ</span>
+
+                        <?php
+                        $array_serial_use = [];
+
+                        $count_serial = 1;
+                        while (isset($_SESSION['serial_number_' . $count_serial])) {
+
+                            $array_serial_use[] = $_SESSION['serial_number_' . $count_serial];
+
+                            // Process each serial number in the session
+                            echo $current_session . '<br>';
+
+                            $count_serial++;
+                        }
+
+                        ?>
+
+                        <script>
+                            function checkSerial() {
+                                var inputSerial = document.querySelector(".input[name='serial_number']").value;
+                                var sessionSerials = <?php echo json_encode($array_serial_use); ?>;
+                                var serialMessage = document.querySelector(".serialMessage");
+
+                                var isSerialUsed = sessionSerials.includes(inputSerial);
+
+                                if (isSerialUsed) {
+                                    serialMessage.style.display = "inline";
+                                } else {
+                                    serialMessage.style.display = "none";
+                                }
+                            }
+                        </script>
+
+
                     </div>
                     <div class="grid-item">
                         <label for="borderinput1" class="form-label">ชื่อรุ่น</label>

@@ -54,11 +54,14 @@ $row = mysqli_fetch_array($result);
     ?>
     <br><br><br>
     <h1 class="pt-5 text-center">
-        การบริการส่งซ่อม
+        การบริการส่งซ่อม <?=  $_SESSION['id_repair_ever_1']; ?>
         <!-- <?= $i ?> -->
     </h1>
     <center>
-        <p>แบบไม่มีกับมีประกันทางร้าน</p>
+        <?php if(isset($_SESSION['id_repair_ever_1'])){
+            ?>   <p>สามารถเพิ่มได้หลายรายการ</p><?php
+        } ?>
+     
     </center>
     <br><br>
     <div class="container">

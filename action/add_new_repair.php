@@ -126,6 +126,10 @@ if (!isset($_SESSION["r_id_1"])) {
     $_SESSION["image2_1"] = $_POST['image2'];
     $_SESSION["image3_1"] = $_POST['image3'];
     $_SESSION["image4_1"] = $_POST['image4'];
+
+    if (isset($_SESSION['id_repair_ever'])) {
+        $_SESSION['id_repair_ever_1'] = 1;
+    }
 } else {
     for ($i = 1; $i < 1000; $i++) {
         $r_id = 'r_id_' . $i;
@@ -167,7 +171,14 @@ if (!isset($_SESSION["r_id_1"])) {
 
             $image4 = 'image4_' . $i;
             $_SESSION[$image4] = $_POST['image4'];
-            break;
+
+            if (isset($_SESSION['id_repair_ever'])) {
+                $id_repair_ever = 'id_repair_ever_' . $i;
+                $_SESSION[$id_repair_ever] = 1;
+                break;
+            }else{
+                break;
+            }
         }
     }
 }
@@ -203,6 +214,7 @@ unset($_SESSION["image1"]);
 unset($_SESSION["image2"]);
 unset($_SESSION["image3"]);
 unset($_SESSION["image4"]);
+unset($_SESSION["id_repair_ever"]);
 
 if ($row == NULL) {
     // header("location:../repair_check.php");

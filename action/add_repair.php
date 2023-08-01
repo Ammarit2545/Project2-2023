@@ -124,6 +124,16 @@ $_SESSION["name_model"] = $_POST['name_model'];
 $_SESSION["number_model"] = $_POST['number_model'];
 $_SESSION["tel"] = $_POST['tel'];
 $_SESSION["description"] = $_POST['description'];
+if (isset($_POST['id_repair_ever'])) {
+    $_SESSION['id_repair_ever'] = 1;
+}
+
+if ($_POST['id_repair'] != NULL) {
+    $_SESSION["id_repair"] = $_POST['id_repair'];
+} else {
+    $_SESSION["id_repair"] = NULL;
+}
+
 if ($_POST['flexRadioDefault'] == 'have_gua') {
     $_SESSION["company"] = $_POST['company'];
 } else {
@@ -135,7 +145,6 @@ $_SESSION["image1"] = $_POST['image1'];
 $_SESSION["image2"] = $_POST['image2'];
 $_SESSION["image3"] = $_POST['image3'];
 $_SESSION["image4"] = $_POST['image4'];
-
 
 
 for ($i = 1; $i <= 4; $i++) {
@@ -157,7 +166,8 @@ $sql = "SELECT * FROM repair WHERE r_serial_number = '$serial_number' AND m_id =
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
-if ($row == NULL) {
+if ($row == NULL || isset($_POST['id_repair_ever']) || isset($_SESSION["id_repair_ever"])) {
+
     // header("location:../repair_check.php");
     header("location:../repair_check.php");
 } else {

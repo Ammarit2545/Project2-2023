@@ -8,8 +8,28 @@ $sql = "SELECT * FROM member WHERE m_id = '$id'";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
-?>
+$id_r = $_GET["id"];
 
+$sql1 = "SELECT * FROM repair WHERE r_id = '$id_r ' AND m_id = '$id'";
+$result1 = mysqli_query($conn, $sql1);
+$row1 = mysqli_fetch_array($result1);
+$company = $row1['com_id'];
+
+$sql2 = "SELECT * FROM get_repair WHERE r_id = '$id_r'";
+$result2 = mysqli_query($conn, $sql2);
+$row2 = mysqli_fetch_array($result2);
+
+if ($row2['get_r_detail'] == NULL) {
+    $description = $_SESSION["description"];
+} else {
+    $description = $row2['get_r_detail'];
+}
+
+
+$sql = "SELECT * FROM member WHERE m_id = '$id'";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_array($result);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,6 +47,44 @@ $row = mysqli_fetch_array($result);
 
     </script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+    <style>
+        .grid {
+            margin-bottom: 3rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 600px));
+            grid-gap: 2rem;
+
+        }
+
+        .grid-pic {
+            margin-bottom: 3rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-gap: 2rem;
+
+        }
+
+        .grid-item {
+            /* box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3); */
+            /* Add a gray shadow */
+            transition: transform 0.3s, box-shadow 0.3s;
+            /* Add transition for transform and box-shadow */
+        }
+
+        .file-input {
+            display: inline-block;
+            width: 20px;
+        }
+
+        .preview-container {
+            display: inline-block;
+            width: 20px;
+        }
+
+        .preview_pic {
+            width: 0.02px;
+        }
+    </style>
 </head>
 
 <body>
@@ -36,23 +94,6 @@ $row = mysqli_fetch_array($result);
     include('bar/topbar_invisible.php');
 
     $id = $_SESSION["id"];
-    $id_r = $_GET["id"];
-
-    $sql1 = "SELECT * FROM repair WHERE r_id = '$id_r ' AND m_id = '$id'";
-    $result1 = mysqli_query($conn, $sql1);
-    $row1 = mysqli_fetch_array($result1);
-    $company = $row1['com_id'];
-
-    $sql2 = "SELECT * FROM get_repair WHERE r_id = '$id_r'";
-    $result2 = mysqli_query($conn, $sql2);
-    $row2 = mysqli_fetch_array($result2);
-    
-    if($row2['get_r_detail'] == NULL){
-        $description = $_SESSION["description"];
-    }else{
-        $description = $row2['get_r_detail'];
-    }
-    
 
     $sql = "SELECT * FROM member WHERE m_id = '$id'";
     $result = mysqli_query($conn, $sql);
@@ -61,194 +102,256 @@ $row = mysqli_fetch_array($result);
     <!-- end navbar-->
 
     <div class="background"></div>
-
+    <br>
     <div class="px-5 pt-5 edit">
         <h1 class="pt-5 text-center">ระบบได้ตรวจพบหมายเลขรุ่นนี้ในระบบ</h1>
         <center>
+            <!-- <p>แบบไม่มีกับมีประกันทางร้าน</p> -->
             <p>คุณต้องการใช้รายละเอียดการซ่อม"เดิม"หรือไม่ ถ้าใช่กด "ยืนยัน"</p>
         </center>
         <br>
-        <form action="action/add_rapair_ever.php" method="POST" enctype="multipart/form-data">
+        <br>
+        <form action="action/add_repair.php" method="POST" class="contact-form" name="inputname" enctype="multipart/form-data">
             <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="row">
-                            <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="name_brand" readonly placeholder="ชื่อยี่ห้อ" value="<?= $row1['r_brand'] ?>">
-                                <input type="text" class="form-control input" id="borderinput" name="id_repair" readonly placeholder="ไอดี" value="<?= $id_r ?>" style="display:none">
-                            </div>
-                            <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="serial_number" readonly placeholder="เลข Serial Number(ไม่จำเป็น)" value="<?= $row1['r_serial_number'] ?>">
-                            </div>
+                <div class="grid">
+                    <div class="grid-item">
+                        <label for="borderinput1" class="form-label">ชื่อยี่ห้อ</label>
+                        <input type="text" class="form-control input" id="borderinput" name="name_brand" value="<?= $row1['r_brand'] ?>" placeholder="กรุณากรอกชื่อยี่ห้อ" required readonly>
+                        <input type="text" class="form-control input" id="borderinput" name="id_repair" readonly placeholder="ไอดี" value="<?= $id_r ?>" style="display:none">
+                        <input type="text" class="form-control input" id="borderinput" name="id_repair_ever" readonly placeholder="ไอดี" value="1" style="display:none">
+                    </div>
+                    <div class="grid-item">
+                        <label for="borderinput1" class="form-label">เลข Serial Number</label>
+                        <input type="text" class="form-control input" id="borderinput" name="serial_number" value="<?= $row1['r_serial_number'] ?>" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)" readonly>
+                    </div>
+                    <div class="grid-item">
+                        <label for="borderinput1" class="form-label">ชื่อรุ่น</label>
+                        <input type="text" class="form-control input" id="borderinput" name="name_model" value="<?= $row1['r_model']  ?>" placeholder="กรุณากรอกชื่อรุ่น" required readonly>
+                    </div>
+                    <div class="grid-item">
+                        <label for="borderinput1" class="form-label">หมายเลขรุ่น</label>
+                        <input type="text" class="form-control input" id="borderinput" name="number_model" value="<?= $row1['r_number_model'] ?>" placeholder="กรุณากรอก หมายเลขรุ่น  (ไม่จำเป็น)" readonly>
+                    </div>
+                    <div class="grid-item">
+                        <label for="borderinput1" class="form-label">ประเภทของการซ่อม</label>
+                        <?php if ($row1['com_id'] != NULL) {
+                            $have_company = 1;
+                        } else {
+                            $have_company = 0;
+                        } ?>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" value="have_non_gua" id="flexRadioDefault1" onclick="return check_non_gua()" <?php if ($have_company == 0) {
+                                                                                                                                                                                ?>checked<?php
+                                                                                                                                                                                        } else {
+                                                                                                                                                                                            ?>hidden<?php
+                                                                                                                                                                                                } ?>>
+                            <label class="form-check-label" for="flexRadioDefault1" <?php if ($have_company == 0) {
+                                                                                    } else { ?>hidden<?php } ?>>
+                                ไม่มีประกันกับทางร้าน
+                            </label>
                         </div>
-                        <br>
-
-                        <div class="row">
-                            <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="name_model" readonly placeholder="ชื่อรุ่น" value="<?= $row1['r_model'] ?>">
-                            </div>
-                            <div class="col-6">
-                                <input type="text" class="form-control input" id="borderinput" name="number_model" readonly placeholder="หมายเลขรุ่น  (ไม่จำเป็น)" value="<?= $row1['r_number_model'] ?>">
-                            </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" value="have_gua" id="flexRadioDefault2" onclick="return check_gua()" <?php if ($have_company == 1) {
+                                                                                                                                                                        ?>checked<?php } else {
+                                                                                                                                                                                    ?>hidden<?php
+                                                                                                                                                                                }
+                                                                                                                                                                                    ?>>
+                            <label class="form-check-label" for="flexRadioDefault2" <?php if ($have_company == 1) {
+                                                                                    } else { ?>hidden<?php } ?>>
+                                มีประกันกับทางร้าน
+                            </label>
                         </div>
-                        <br>
+                    </div>
 
-                        <?php
-                        $com_check = $row1['com_id'];
-                        if ($com_check != NULL) {
+                    <div class="grid-item" id="check_gua" <?php if ($have_company == 1) {
+                                                            ?>style="display: block;" <?php } else {
+                                                                                        ?> style="display: none;" <?php
+                                                                                                                } ?>>
+                        <label for="borderinput1" class="form-label">บริษัท</label>
+                        <select class="form-select" name="company" id="company" aria-label="Default select example" readonly>
+                            <?php
                             $sql_c = "SELECT * FROM company WHERE com_id = '$company' AND del_flg = '0'";
                             $result_c = mysqli_query($conn, $sql_c);
                             $row_c = mysqli_fetch_array($result_c);
-
-                            $company = $row_c['com_name'];
-                        ?>
-                            <div class="row">
-                                <div class="col-6">
-                                    <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
-                                    <?php if($row2['get_tel'] != NULL){
-                                        ?><input type="text" class="form-control" id="borderinput" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $row2['get_tel'] ?>" readonly require><?php
-                                    }else{
-                                        ?><input type="text" class="form-control" id="borderinput" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $_SESSION['tel'] ?>" readonly require><?php
-                                    } ?>
-                                    
-                                </div>
-                                <div class="col-6">
-                                    <label for="borderinput1" class="form-label">ชื่อบริษัท</label>
-                                    <input type="text" class="form-control" id="borderinput" name="show_company" placeholder="กรุณากรอกชื่อบริษัท" value="<?= $company ?>" readonly require>
-                                    <input type="text" class="form-control" id="borderinput" name="company" placeholder="กรุณากรอกชื่อบริษัท" value="<?= $row_c['com_id'] ?>" readonly require style="display:none">
-                                </div>
-                            </div>
-                            <br>
-                            <label for="borderinput1" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ</label>
-                            <div class="row">
-                                <div class="col-3">
-                                    <input type="file" name="image1" onchange="previewImage('image-preview1')" id="fileToUpload">
-                                </div>
-                                <div class="col-3">
-                                    <input type="file" name="image2" onchange="previewImage('image-preview2')" id="fileToUpload">
-                                    <div id="image-preview2"></div>
-                                </div>
-                                <div class="col-3">
-                                    <input type="file" name="image3" onchange="previewImage('image-preview3')" id="fileToUpload">
-                                    <div id="image-preview3"></div>
-                                </div>
-                                <div class="col-3">
-                                    <input type="file" name="image4" onchange="previewImage('image-preview4')" id="fileToUpload">
-                                    <div id="image-preview4"></div>
-                                </div>
-
-                                <script>
-                                    function previewImage(previewId) {
-                                        var input = event.target;
-                                        var previewContainer = document.getElementById(previewId);
-                                        var previewImage = document.createElement('img');
-
-                                        if (input.files && input.files[0]) {
-                                            var reader = new FileReader();
-                                            reader.onload = function(e) {
-                                                previewImage.setAttribute('src', e.target.result);
-                                                previewContainer.appendChild(previewImage);
-                                            };
-                                            reader.readAsDataURL(input.files[0]);
-                                        }
-                                    }
-                                </script>
-
-                            </div>
-                            <br>
-                            <br>
+                            ?>
+                            <?php if ($have_company == 1) { ?><option value="<?= $row_c['com_id'] ?>"><?= $row_c['com_name'] ?></option>
                             <?php } else {
-                            $tel = $row2['get_tel'];
-                            if ($tel) {
-                            ?>
-                                <div class="row">
-                                    <div class="col">
-                                        <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
-                                        <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $row2['get_tel'] ?>" readonly require>
-                                    </div>
-                                </div>
-                                <br>
+                            ?> <option value="" selected>กรุณาเลือกบริษัทที่ต้องการเคลม</option> <?php } ?>
 
-                            <?php
-                            } else {
-                            ?>
-                                <div class="row">
-                                    <div class="col">
-                                        <label for="borderinput1" class="form-label">หมายเลขโทรศัพท์</label>
-                                        <input type="text" class="form-control" id="borderinput1" name="tel" placeholder="กรุณากรอกหมายเลขโทรศัพท์" value="<?= $_SESSION['tel'] ?>" require>
-                                    </div>
-                                </div>
-                                <br>
-                                <label for="borderinput1" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ</label>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <input type="file" name="image1" onchange="previewImage('image-preview1')" id="fileToUpload">
-                                    </div>
-                                    <div class="col-3">
-                                        <input type="file" name="image2" onchange="previewImage('image-preview2')" id="fileToUpload">
-                                        <div id="image-preview2"></div>
-                                    </div>
-                                    <div class="col-3">
-                                        <input type="file" name="image3" onchange="previewImage('image-preview3')" id="fileToUpload">
-                                        <div id="image-preview3"></div>
-                                    </div>
-                                    <div class="col-3">
-                                        <input type="file" name="image4" onchange="previewImage('image-preview4')" id="fileToUpload">
-                                        <div id="image-preview4"></div>
-                                    </div>
 
-                                    <script>
-                                        function previewImage(previewId) {
-                                            var input = event.target;
-                                            var previewContainer = document.getElementById(previewId);
-                                            var previewImage = document.createElement('img');
-
-                                            if (input.files && input.files[0]) {
-                                                var reader = new FileReader();
-                                                reader.onload = function(e) {
-                                                    previewImage.setAttribute('src', e.target.result);
-                                                    previewContainer.appendChild(previewImage);
-                                                };
-                                                reader.readAsDataURL(input.files[0]);
-                                            }
-                                        }
-                                    </script>
-
-                                </div>
-                                <br>
-                            <?php
-                            } ?>
-                        <?php } ?>
-                        <div class="row">
-                            <div class="mb-3">
-                                <label for="inputtext" class="form-label" style="color:red">กรุณากรอกรายละเอียด (กรณีไม่ใช้ข้อมูลเดิม)</label>
-                                <textarea class="form-control" id="inputtext" rows="3" name="description" required><?= $description ?></textarea>
-                            </div>
-
-                            <div class="text-center pt-4">
-                                <button type="submit" class="btn btn-success">ยืนยัน</button>
-
-                                <a href="">ข้อมูลไม่ถูกต้อง?</a>
-
-                                <!-- <a herf="repair_non_gua.php" class="btn btn-warning">กลับไปหน้าส่งซ่อม</a> -->
-                            </div>
-
-                        </div>
-
+                        </select>
                     </div>
 
+                    <script>
+                        function check_non_gua() {
+                            document.getElementById("check_gua").style.display = "none";
+                            document.getElementById("company").required = false;
+                            return true;
+                        }
+
+                        function check_gua() {
+                            document.getElementById("check_gua").style.display = "block";
+                            document.getElementById("company").required = true;
+                            return true;
+                        }
+                    </script>
+
+
+                </div>
+                <div class="mb-3">
+                    <label for="inputtext" class="form-label">กรุณากรอกรายละเอียด</label>
+                    <textarea class="form-control" id="inputtext" rows="3" name="description" required placeholder="กรุณากรอกรายละเอียด"></textarea>
                 </div>
             </div>
+            <br>
+            <div class="container">
+                <label for="borderinput" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ (สูงสุด 4 ไฟล์) <p id="insert_bill" <?php if ($have_company == 1) {
+                                                                                                                                ?> style="display: inline-block; color:red" <?php } else {
+                                                                                                                                                                            ?> style="display: none; color:red" <?php
+                                                                                                                                                                                                            } ?>>*** เพิ่มรูปใบเสร็จของท่านเพื่อเป็นการยืนยันอย่างน้อย 1 รูป ***</p></label>
+                <!-- <a class="btn btn-primary" style="margin-left:10px;" onclick="addImage4()">+</a> -->
+                <div class="row grid">
+                    <div class="col-3 grid-item">
+                        <input type="file" name="image1" onchange="previewImage('image-preview1', this)" id="input1">
+                    </div>
+                    <div class="col-3 grid-item">
+                        <input type="file" name="image2" onchange="previewImage('image-preview2', this)" id="input2">
+                    </div>
+                    <div class="col-3 grid-item">
+                        <input type="file" name="image3" onchange="previewImage('image-preview3', this)" id="input3">
+                    </div>
+                    <div class="col-3 grid-item">
+                        <input type="file" name="image4" onchange="previewImage('image-preview4', this)" id="input1">
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function switchInput() {
+                    var inputIndex = parseInt(document.getElementById('inputIndex').value);
+                    var nextIndex = inputIndex + 1;
+                    if (nextIndex > 4) {
+                        nextIndex = 4;
+                        document.querySelector('button').style.display = 'none';
+                    }
+                    document.getElementById('inputIndex').value = nextIndex;
+
+                    // Hide all input fields
+                    var inputFields = document.getElementsByClassName('input-field');
+                    for (var i = 0; i < inputFields.length; i++) {
+                        inputFields[i].style.display = 'none';
+                    }
+
+                    // Show the input field corresponding to the current index
+                    var currentInputField = document.getElementById('input' + nextIndex);
+                    currentInputField.style.display = 'block';
+                    currentInputField.focus();
+
+                    // Trigger click event on the input field
+                    var clickEvent = new MouseEvent('click', {
+                        view: window,
+                        bubbles: true,
+                        cancelable: true
+                    });
+                    currentInputField.dispatchEvent(clickEvent);
+                }
+
+                window.onload = function() {
+                    switchInput(); // Automatically trigger the switchInput() function on page load
+                };
+            </script>
+            <!-- <button type="button" onclick="switchInput()">Switch Input</button> -->
+
+            <div class="container">
+                <div class="grid-pic">
+                    <div class="grid-item">
+                        <div id="image-preview1"></div>
+                    </div>
+                    <div class="grid-item">
+                        <div id="image-preview2"></div>
+                    </div>
+                    <div class="grid-item">
+                        <div id="image-preview3"></div>
+                    </div>
+                    <div class="grid-item">
+                        <div id="image-preview4"></div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                function check_gua() {
+                    document.getElementById('check_gua').style.display = 'block';
+                    document.getElementById('insert_bill').style.display = 'inline-block';
+                }
+
+                function check_non_gua() {
+                    document.getElementById('check_gua').style.display = 'none';
+                    document.getElementById('insert_bill').style.display = 'none';
+                }
+
+                function addImage4() {
+                    var fileInput = document.createElement('input');
+                    fileInput.setAttribute('type', 'file');
+                    fileInput.setAttribute('name', 'image1');
+                    fileInput.setAttribute('onchange', "previewImage('image-preview1', this)");
+                    fileInput.setAttribute('id', 'fileToUpload');
+
+                    var gridItems = document.querySelectorAll('.grid-item input[type="file"]');
+                    var emptyGridItem = Array.prototype.find.call(gridItems, function(item) {
+                        return !item.value; // Find the first empty grid item
+                    });
+
+                    if (emptyGridItem) {
+                        emptyGridItem.parentNode.replaceChild(fileInput, emptyGridItem);
+                    } else {
+                        console.log('Maximum number of images reached');
+                    }
+                }
+
+                function previewImage(previewId, input) {
+                    var previewContainer = document.getElementById(previewId);
+                    var previewElement;
+
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            if (input.files[0].type.includes('video')) {
+                                // If the file is a video, create a video element
+                                previewElement = document.createElement('video');
+                                previewElement.setAttribute('src', e.target.result);
+                                previewElement.setAttribute('style', 'max-width: 200px; max-height: 200px; border-radius: 10%; border: 2px solid gray;');
+                                previewElement.setAttribute('autoplay', 'true');
+                                previewElement.setAttribute('muted', 'true');
+                                previewElement.setAttribute('controls', 'true');
+                            } else {
+                                // If the file is an image, create an image element
+                                previewElement = document.createElement('img');
+                                previewElement.setAttribute('src', e.target.result);
+                                previewElement.setAttribute('style', 'max-width: 200px; max-height: 200px; border-radius: 10%; border: 2px solid gray;');
+                            }
+
+                            previewContainer.innerHTML = ''; // Clear previous content
+                            previewContainer.appendChild(previewElement);
+                        };
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+            </script>
+
+            <center>
+                <br>
+                <a href="repair_have.php" class="btn btn-primary" style="color:white">เคยซ่อมแล้วหรือไม่?</a>
+                <button type="submit" class="btn btn-success" name="submit">ยืนยัน</button>
+            </center>
         </form>
 
 
     </div>
     </div>
 
-
     <!-- footer-->
     <?php
-    // include('footer/footer.php') 
+    include('footer/footer.php')
     ?>
     <!-- end footer-->
 
