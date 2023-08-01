@@ -186,9 +186,34 @@ $row = mysqli_fetch_array($result);
                     <div class="grid-item">
                         <label for="borderinput1" class="form-label">ชื่อยี่ห้อ</label>
                         <input type="text" class="form-control input" id="borderinput" value="<?= $name_brand ?>" name="name_brand" placeholder="กรุณากรอกชื่อยี่ห้อ" required readonly>
+                        <?php
+                        // Assuming you have already established a connection to your database and stored it in the $conn variable
+
+                        $sql_id = "SELECT r_id FROM repair WHERE r_serial_number = '$serial_number'";
+                        $result_id = mysqli_query($conn, $sql_id);
+                        if (!$result_id) {
+                            die("Error in SQL query: " . mysqli_error($conn));
+                        }
+
+                        $row_id = mysqli_fetch_assoc($result_id);
+                        $r_id = $row_id['r_id'];
+
+                        $sql_round = "SELECT COUNT(repair.r_id) AS total_round FROM get_detail 
+                                    LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                    WHERE repair.r_id = '$r_id' AND get_detail.del_flg = 0";
+                        $result_round = mysqli_query($conn, $sql_round);
+                        if (!$result_round) {
+                            die("Error in SQL query: " . mysqli_error($conn));
+                        }
+
+                        $row_round = mysqli_fetch_assoc($result_round);
+                        $total_round = $row_round['total_round'];
+                        ?>
                     </div>
                     <div class="grid-item">
                         <label for="borderinput1" class="form-label">เลข Serial Number</label>
+                        <!-- Display the input field with the result -->
+                        <input type="text" class="form-control input" id="borderinput" name="repair_round" value="<?= $total_round ?>" placeholder="จำนวนรอบที่ซ่อม" hidden>
                         <input type="text" class="form-control input" id="borderinput" value="<?= $serial_number ?>" name="serial_number" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)" readonly>
                     </div>
                     <div class="grid-item">

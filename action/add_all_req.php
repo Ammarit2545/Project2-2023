@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $id = $_SESSION["id"];
 $r_id = $_GET['id'];
 $tel  = $_POST['get_tel'];
+$id_r = 0;
 
 $sql = "SELECT * FROM member WHERE m_id = '$id'";
 $result = mysqli_query($conn, $sql);
@@ -83,6 +84,11 @@ if ($result2) {
             $image3 = 'image3_' . $i;
 
             $image4 = 'image4_' . $i;
+
+            $id_repair_ever = 'id_repair_ever_' . $i;
+
+            $id_repair_round = 'id_repair_round_' . $i;
+
             // echo  $i;
             $sql = "SELECT * FROM repair WHERE r_serial_number = '$serial_number' AND m_id = '$id'";
             $result = mysqli_query($conn, $sql);
@@ -111,20 +117,37 @@ if ($result2) {
 
                 $image4_data = $_SESSION[$image4];
 
+                if (isset($_SESSION[$id_repair_ever])) {
+                    $id_repair_round_data = $_SESSION[$id_repair_round];
+                } else {
+                    $id_repair_round_data = 1;
+                }
+
                 $id_r = $row['r_id'];
 
-                $sql = "SELECT COUNT(r_id) FROM `get_detail` 
-                        WHERE r_id = '$id_r ';";
-                $result = mysqli_query($conn, $sql);
-                $row = mysqli_fetch_array($result);
-                $r_id_count = $row[0];
+                // Assuming you have already initialized the variables used in the query
 
+                // Prepare the first statement to count occurrences of r_id
+                $stmt = mysqli_prepare($conn, "SELECT COUNT(r_id) FROM get_detail WHERE r_id = ?");
+                mysqli_stmt_bind_param($stmt, "s", $id_r);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_bind_result($stmt, $r_id_count);
+                mysqli_stmt_fetch($stmt);
+                mysqli_stmt_close($stmt);
 
-                $sql = "INSERT INTO get_detail (get_r_id, r_id, get_d_record, get_d_detail)
-                    VALUES ('$insertedId', '$id_r', '$r_id_count', '$description_data')";
-                $result = mysqli_query($conn, $sql);
+                // Prepare the second statement to insert a new record
+                $stmt = mysqli_prepare($conn, "INSERT INTO get_detail (get_r_id, get_d_record, r_id, get_d_record, get_d_detail) VALUES (?, ?, ?, ?, ?)");
+                mysqli_stmt_bind_param($stmt, "sssis", $insertedId, $id_repair_round_data, $id_r, $r_id_count, $description_data);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_close($stmt);
+
                 $insertedId_get_detail = mysqli_insert_id($conn);
-                $rs_id = $insertedId_st;
+
+                // Here, you would need to replace 'make stm ?? to blind value' with the actual code to set the value of $rs_id.
+                // Depending on your application logic, it might be another database operation or some other value assignment.
+
+                // For example, if you want to set $rs_id to the auto-generated ID from the second INSERT operation:
+                $rs_id = $insertedId_get_detail;
 
                 $folderName_insert_get = "../uploads/$id/$id_r_g/"; // the name of the new folder
                 if (!file_exists($folderName_insert_get)) { // check if the folder already exists
@@ -188,16 +211,31 @@ if ($result2) {
 
                 $image4_data = $_SESSION[$image4];
 
-                echo 'the number : ' . $i . '<br>';
-                $sql = "INSERT INTO repair (m_id, r_brand, r_model, r_number_model, r_serial_number ,com_id)
-                    VALUES ('$id', '$name_brand_data', '$name_model_data', '$number_model_data', '$serial_number_data' ,'$company_data')";
-                $result = mysqli_query($conn, $sql);
-                $insertedId_r = mysqli_insert_id($conn);
+                $id_repair_ever = 'id_repair_ever_' . $i;
 
-                $id_r = $insertedId_r;
+                $id_repair_round = 'id_repair_round_' . $i;
+
+
+                if (isset($_SESSION[$id_repair_ever])) {
+                    $id_repair_round_data = $_SESSION[$id_repair_round];
+                
+                    $sql_r_id = "SELECT r_id FROM repair WHERE r_serial_number = '$serial_number_data' AND m_id = '$id'";
+                    $result_r_id = mysqli_query($conn, $sql_r_id);
+                    $row_r_id = mysqli_fetch_array($result_r_id);
+                
+                    $id_r = $row_r_id['r_id'];
+                } else {
+                    $id_repair_round_data = 1;
+                    echo 'the number : ' . $i . '<br>';
+                    $sql = "INSERT INTO repair (m_id, r_brand, r_model, r_number_model, r_serial_number ,com_id)
+                            VALUES ('$id', '$name_brand_data', '$name_model_data', '$number_model_data', '$serial_number_data' ,'$company_data')";
+                    $result = mysqli_query($conn, $sql);
+                    $insertedId_r = mysqli_insert_id($conn);
+                    $id_r = $insertedId_r;
+                }                
 
                 $sql = "INSERT INTO get_detail (get_r_id, r_id, get_d_record, get_d_detail)
-                    VALUES ('$insertedId', '$insertedId_r', '1', '$description_data')";
+                    VALUES ('$insertedId', '$id_r', '$id_repair_round_data', '$description_data')";
                 $result = mysqli_query($conn, $sql);
                 $insertedId_get_detail = mysqli_insert_id($conn);
                 $rs_id = $insertedId_st;
@@ -291,6 +329,9 @@ if ($result2) {
             unset($_SESSION["image2"]);
             unset($_SESSION["image3"]);
             unset($_SESSION["image4"]);
+
+            unset($_SESSION['id_repair_ever']);
+            unset($_SESSION['id_repair_round']);
         }
     }
 
@@ -309,6 +350,9 @@ if ($result2) {
         unset($_SESSION['image2_' . $count]);
         unset($_SESSION['image3_' . $count]);
         unset($_SESSION['image4_' . $count]);
+
+        unset($_SESSION['id_repair_ever_' . $count]);
+        unset($_SESSION['id_repair_round_' . $count]);
         $count++;
     }
 

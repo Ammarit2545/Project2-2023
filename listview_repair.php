@@ -54,14 +54,10 @@ $row = mysqli_fetch_array($result);
     ?>
     <br><br><br>
     <h1 class="pt-5 text-center">
-        การบริการส่งซ่อม <?=  $_SESSION['id_repair_ever_1']; ?>
-        <!-- <?= $i ?> -->
+        การบริการส่งซ่อม
     </h1>
     <center>
-        <?php if(isset($_SESSION['id_repair_ever_1'])){
-            ?>   <p>สามารถเพิ่มได้หลายรายการ</p><?php
-        } ?>
-     
+        <p>สามารถเพิ่มได้หลายรายการ</p>
     </center>
     <br><br>
     <div class="container">
@@ -111,6 +107,10 @@ $row = mysqli_fetch_array($result);
                         $image3 = 'image3_' . $i;
 
                         $image4 = 'image4_' . $i;
+
+                        $id_repair_ever = 'id_repair_ever_' . $i;
+
+                        $id_repair_round = 'id_repair_round_' . $i;
             ?>
                         <div class="grid-item">
                             <a href="detail_new_repair.php?session_id=<?= $i ?>">
@@ -128,9 +128,13 @@ $row = mysqli_fetch_array($result);
                                                 $company_name = $row_c['com_name'];
                                             ?><h5 style="display:inline; margin-right:10px" class="btn btn-secondary"><?= $company_name ?></h5>
                                             <?php } ?>
+
+                                            
                                         </h5>
                                         <br><br>
-                                        <h6 class="card-subtitle mb-2 text-muted">Serial Number : <?= $_SESSION[$serial_number] ?></h6>
+                                        <h6 class="card-subtitle mb-2 text-muted">Serial Number : <?= $_SESSION[$serial_number] ?><?php if (isset($_SESSION[$id_repair_ever])) {   ?>
+                                                <span style="display:inline; margin-right:10px" class="btn btn-primary">ครั้งที่ # <?= $_SESSION[$id_repair_round] ?></span>
+                                            <?php  } ?></h6>
                                         <hr>
                                         <!-- <h6 style="display:inline">รายละเอียดการซ่อม : </h6>
                                         <p class="card-text" style="display:inline"><?= $_SESSION[$description] ?></p>
@@ -225,7 +229,8 @@ $row = mysqli_fetch_array($result);
         <span class="tooltip">คำสั่งซ่อมที่ #<?= $_SESSION[$r_id] ?></span>
     </div>
 
-<?php }
+<?php
+                    }
                 }
             } ?>
 </div>

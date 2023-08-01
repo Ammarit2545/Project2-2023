@@ -128,7 +128,10 @@ if (!isset($_SESSION["r_id_1"])) {
     $_SESSION["image4_1"] = $_POST['image4'];
 
     if (isset($_SESSION['id_repair_ever'])) {
+
         $_SESSION['id_repair_ever_1'] = 1;
+
+        $_SESSION['id_repair_round_1'] = $_POST['repair_round'] + 1;
     }
 } else {
     for ($i = 1; $i < 1000; $i++) {
@@ -175,8 +178,11 @@ if (!isset($_SESSION["r_id_1"])) {
             if (isset($_SESSION['id_repair_ever'])) {
                 $id_repair_ever = 'id_repair_ever_' . $i;
                 $_SESSION[$id_repair_ever] = 1;
+
+                $id_repair_ever = 'id_repair_round_' . $i;
+                $_SESSION[$id_repair_ever] = $_POST['repair_round'] + 1;
                 break;
-            }else{
+            } else {
                 break;
             }
         }
