@@ -509,7 +509,7 @@ if ($_SESSION["log_login"] == 0) {
   </div>
   <!-- End Hero -->
   <div>
-    <?php
+    <!-- <?php
     if (isset($_SESSION['profile'])) {
       $profile = $_SESSION['profile'];
     }
@@ -517,7 +517,7 @@ if ($_SESSION["log_login"] == 0) {
     <h1>Welcome , <?= $profile->name; ?></h1>
     <p class="lead">Your Email : <?= $profile->email; ?></p>
     <p class="lead">Line ID : <?= $profile->line_id; ?></p>
-    <img width="200px" src="<?php echo $profile->picture  ?>" class="rounded" alt="Profile Picture">
+    <img width="200px" src="<?php echo $profile->picture  ?>" class="rounded" alt="Profile Picture"> -->
   </div>
   <!-- Features -->
   <div class="container px-4 py-5" id="custom-cards">
@@ -692,7 +692,7 @@ if ($_SESSION["log_login"] == 0) {
           <script>
             Swal.fire({
               title: 'Line ของคุณได้ทำการผูกกับบัญชี Email เก่าของคุณแล้ว',
-              text: 'รายการเก่าของคุณยังอยู่',
+              text: 'รายการเก่าของคุณยังคงอยู่',
               icon: 'success',
               confirmButtonText: 'Accept'
             });
@@ -704,7 +704,7 @@ if ($_SESSION["log_login"] == 0) {
           ?>
           <script>
             Swal.fire({
-              title: 'ใช้ Line ในการ Login เสร็จสิ้น',
+              title: 'Line Login เสร็จสิ้น',
               text: 'กด Accept เพื่อออก',
               icon: 'success',
               confirmButtonText: 'Accept'

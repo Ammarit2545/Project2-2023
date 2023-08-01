@@ -111,7 +111,6 @@ if (!isset($_SESSION["id"])) {
                                 if ($obj->description == NULL) {
                                     echo "ไม่มีข้อมูล";
                                 } else {
-
                                     echo $obj->description;
                                 }
                                 ?>
