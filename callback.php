@@ -87,35 +87,43 @@ if ($token->id_token) {
                 exit; // Exit the script after redirect
             }
         } else {
+            // Full name received from the input
+            $fullname = $name;
+
+            // Split the full name into first name and last name
+            $name_parts = explode(" ", $fullname);
+            $fname = $name_parts[0];
+            $lname = $name_parts[1];
+
             // No matching record found, do something else here
-            $sql = "INSERT INTO member_line (`ml_line_id`, `ml_name`, `ml_date_in`, `ml_email`) VALUES (?, ?, NOW(),?)";
+            $sql = "INSERT INTO member (`m_line_id`, `m_fname`, `m_lname`, `m_date_in`, `m_email`) VALUES (?, ?, ?, NOW(), ?)";
             $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "sss", $line_id, $name, $email);
+            mysqli_stmt_bind_param($stmt, "ssss", $line_id, $fname, $lname, $email);
             $result = mysqli_stmt_execute($stmt);
 
             if ($result) {
-                $sql = "SELECT * FROM member_line WHERE ml_line_id = ? AND del_flg = 0;";
+                $sql = "SELECT * FROM member WHERE m_line_id = ? AND m_email = ?  AND del_flg = 0;";
                 $stmt = mysqli_prepare($conn, $sql);
-                mysqli_stmt_bind_param($stmt, "s", $line_id);
+                mysqli_stmt_bind_param($stmt, "ss", $line_id, $email);
                 mysqli_stmt_execute($stmt);
                 $result = mysqli_stmt_get_result($stmt);
                 $row = mysqli_fetch_array($result);
 
                 // Store user information in the session
-                $_SESSION["email"] = $row['ml_email'];
-                $_SESSION["id"] = $row['ml_id'];
-                $_SESSION["tel"] = $row['ml_tel'];
-                $_SESSION["fname"] = $row['ml_fname'];
-                $_SESSION["lname"] = $row['ml_lname'];
+                $_SESSION["email"] = $row['m_email'];
+                $_SESSION["id"] = $row['m_id'];
+                $_SESSION["tel"] = $row['m_tel'];
+                $_SESSION["fname"] = $row['m_fname'];
+                $_SESSION["lname"] = $row['m_lname'];
                 $_SESSION['Error'] = "";
                 $_SESSION["address"] = $row['ml_add'];
                 $_SESSION["log_login"] = 0;
 
-                $ml_id = $row['ml_id'];
+                $m_id = $row['m_id'];
 
-                $sql = "INSERT INTO `log_member`(`ml_id`, `date_in`) VALUES (?, NOW())";
+                $sql = "INSERT INTO `log_member`(`m_id`, `date_in`) VALUES (?, NOW())";
                 $stmt = mysqli_prepare($conn, $sql);
-                mysqli_stmt_bind_param($stmt, "i", $ml_id);
+                mysqli_stmt_bind_param($stmt, "i", $m_id);
                 $result = mysqli_stmt_execute($stmt);
 
                 if ($result) {
