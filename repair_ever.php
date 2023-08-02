@@ -15,9 +15,6 @@ $result1 = mysqli_query($conn, $sql1);
 $row1 = mysqli_fetch_array($result1);
 $company = $row1['com_id'];
 
-$sql2 = "SELECT * FROM get_repair WHERE r_id = '$id_r'";
-$result2 = mysqli_query($conn, $sql2);
-$row2 = mysqli_fetch_array($result2);
 
 if ($row2['get_r_detail'] == NULL) {
     $description = $_SESSION["description"];
