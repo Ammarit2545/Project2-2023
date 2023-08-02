@@ -387,7 +387,7 @@ if (isset($_GET["status_id"])) {
                      FROM get_repair
                      LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
                      LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                     WHERE repair.m_id = '$id'
+                     WHERE repair.m_id = '$id' AND get_repair.del_flg = 0
                      GROUP BY get_repair.get_r_id
                      ORDER BY MAX(get_repair.get_r_date_in) DESC;";
                     } elseif ($status_id > 0) {
@@ -401,7 +401,7 @@ if (isset($_GET["status_id"])) {
                             GROUP BY get_r_id
                         ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
                         LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
-                        WHERE repair.m_id = '$id' AND rs.status_id = '$status_id' AND rs.rs_date_time = subquery.max_date
+                        WHERE repair.m_id = '$id' AND rs.status_id = '$status_id' AND rs.rs_date_time = subquery.max_date AND get_repair.del_flg = 0 
                         
                         ORDER BY get_repair.get_r_date_in DESC;
                                 ";
@@ -412,7 +412,7 @@ if (isset($_GET["status_id"])) {
                         LEFT JOIN repair ON get_detail.r_id = repair.r_id
                         WHERE
                             get_repair.m_id = '$id'
-                            AND (
+                            AND get_repair.del_flg = 0  AND (
                                 repair.r_brand LIKE '%$search%'
                                 OR repair.r_model LIKE '%$search%'
                                 OR repair.r_serial_number LIKE '%$search%'

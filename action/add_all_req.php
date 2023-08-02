@@ -36,22 +36,22 @@ if (isset($_POST['Ref_prov_id']) && isset($_POST['Ref_dist_id']) && isset($_POST
 $radiocheck = $_POST['flexRadioDefault'];
 
 if (isset($_SESSION['r_id_1'])) {
-    $sql2 = "INSERT INTO get_repair (get_r_date_in, get_tel,get_add,get_deli) 
-    VALUES (NOW(), '$tel','$address_json','$radiocheck')";
-    $result2 = mysqli_query($conn, $sql2);
+    $sql2 = "INSERT INTO get_repair (get_r_date_in, get_tel, get_add, get_deli) VALUES (NOW(), ?, ?, ?)";
+    $stmt2 = mysqli_prepare($conn, $sql2);
+    mysqli_stmt_bind_param($stmt2, "sss", $tel, $address_json, $radiocheck);
+    $result2 = mysqli_stmt_execute($stmt2);
 } else {
     header("location:../listview_repair.php");
 }
 
 if ($result2) {
-
     $insertedId = mysqli_insert_id($conn);
-    echo "Record inserted with ID: " . $insertedId;
     $id_r_g = $insertedId;
 
-    $sql3 = "INSERT INTO repair_status (get_r_id, rs_date_time, rs_detail, status_id)
-                    VALUES ('$id_r_g', NOW(), 'ยื่นเรื่องซ่อม','1')";
-    $result3 = mysqli_query($conn, $sql3);
+    $sql3 = "INSERT INTO repair_status (get_r_id, rs_date_time, rs_detail, status_id) VALUES (?, NOW(), 'ยื่นเรื่องซ่อม','1')";
+    $stmt3 = mysqli_prepare($conn, $sql3);
+    mysqli_stmt_bind_param($stmt3, "i", $id_r_g);
+    $result3 = mysqli_stmt_execute($stmt3);
     $insertedId_st = mysqli_insert_id($conn);
 
     // Loop in Sum
@@ -218,11 +218,11 @@ if ($result2) {
 
                 if (isset($_SESSION[$id_repair_ever])) {
                     $id_repair_round_data = $_SESSION[$id_repair_round];
-                
+
                     $sql_r_id = "SELECT r_id FROM repair WHERE r_serial_number = '$serial_number_data' AND m_id = '$id'";
                     $result_r_id = mysqli_query($conn, $sql_r_id);
                     $row_r_id = mysqli_fetch_array($result_r_id);
-                
+
                     $id_r = $row_r_id['r_id'];
                 } else {
                     $id_repair_round_data = 1;
@@ -232,7 +232,7 @@ if ($result2) {
                     $result = mysqli_query($conn, $sql);
                     $insertedId_r = mysqli_insert_id($conn);
                     $id_r = $insertedId_r;
-                }                
+                }
 
                 $sql = "INSERT INTO get_detail (get_r_id, r_id, get_d_record, get_d_detail)
                     VALUES ('$insertedId', '$id_r', '$id_repair_round_data', '$description_data')";
