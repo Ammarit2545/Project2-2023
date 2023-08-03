@@ -220,7 +220,10 @@ $row = mysqli_fetch_array($result);
                             รายละเอียดของอุปกรณ์
                         </div>
                         <div class="card-body">
-                            <h4 class="card-title"><?= $row1['r_brand'] . ' ' . $row1['r_model'] ?> </h4><h5>Model : <?= $row1['r_number_model'] ?></h5>
+                            <br>
+                            <h4 class="card-title"><?= $row1['r_brand'] . ' ' . $row1['r_model'] ?> </h4>
+                            <br>
+                            <h5>Model : <?= $row1['r_number_model'] ?></h5>
                             <p class="card-text">Serial Number : <?= $row1['r_serial_number'] ?></p>
                             <a href="detail_status.php?id=<?= $get_r_id ?>" class="btn btn-primary" style="color:white">ดูรายการของท่าน</a>
                         </div>
@@ -245,7 +248,7 @@ $row = mysqli_fetch_array($result);
                             <?php if($daysAgo > 0){
                                 echo $daysAgo.' days ago';
                             }else{
-                                echo 'Today';
+                                echo '> 1 day';
                             } ?>
                         </div>
 
