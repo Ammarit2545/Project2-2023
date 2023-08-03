@@ -266,21 +266,27 @@ if (isset($_GET["status_id"])) {
                                         ) AS latest_get_detail ON latest_get_detail.get_r_id = repair_status.get_r_id
                                         LEFT JOIN repair ON repair.r_id = latest_get_detail.r_id
                                         LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
+                                        LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
                                         WHERE repair_status.status_id = '$status_id_data'
                                         AND repair.m_id = '$id'
-                                        AND repair_status.del_flg = '0';
+                                        AND repair_status.del_flg = '0' AND get_repair.del_flg = '0';
                                         ";
+                                $get_r_check;
                                 $result_status_get = mysqli_query($conn, $sql_status_get);
                                 $sql_count = 0; // Unique count for each status type
                                 while ($row_status_get = mysqli_fetch_array($result_status_get)) {
                                     $get_r_id = $row_status_get['get_r_id'];
-                                    $sql_count_status = "SELECT repair_status.status_id FROM get_repair 
+                                    $sql_count_status = "SELECT repair_status.status_id,repair_status.get_r_id FROM get_repair 
                                     LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
                                     WHERE get_repair.get_r_id = '$get_r_id' AND repair_status.del_flg = '0' ORDER BY repair_status.rs_id DESC LIMIT 1";
                                     $result_count_status = mysqli_query($conn, $sql_count_status);
                                     $row_count_status = mysqli_fetch_array($result_count_status);
-                                    if ($row_count_status['status_id'] == $status_id_data) {
-                                        $sql_count++;
+
+                                    if ($row_status_get['get_r_id'] != $get_r_check) {
+                                        if ($row_count_status['status_id'] == $status_id_data) {
+                                            $get_r_check = $get_r_id;
+                                            $sql_count++;
+                                        }
                                     }
                                 }
                                 if ($sql_count > 0) {
@@ -395,28 +401,28 @@ if (isset($_GET["status_id"])) {
                     <?php
                     if (!isset($search) && !isset($status_id)) {
                         $sql = "SELECT
-                        get_repair.*,
-                        MAX(repair.m_id) AS m_id -- Assuming n_id is a column in the repair table
-                     FROM get_repair
-                     LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
-                     LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                     WHERE repair.m_id = '$id' AND get_repair.del_flg = 0
-                     GROUP BY get_repair.get_r_id
-                     ORDER BY MAX(get_repair.get_r_date_in) DESC;";
+                                get_repair.*,
+                                MAX(repair.m_id) AS m_id -- Assuming n_id is a column in the repair table
+                            FROM get_repair
+                            LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
+                            LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                            WHERE repair.m_id = '$id' AND get_repair.del_flg = 0
+                            GROUP BY get_repair.get_r_id
+                            ORDER BY MAX(get_repair.get_r_date_in) DESC;";
                     } elseif ($status_id > 0) {
                         $sql = "SELECT get_repair.*, repair.*, rs.status_id
-                        FROM get_detail
-                        LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
-                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                        LEFT JOIN (
-                            SELECT get_r_id, MAX(rs_date_time) AS max_date
-                            FROM repair_status
-                            GROUP BY get_r_id
-                        ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
-                        LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
-                        WHERE repair.m_id = '$id' AND rs.status_id = '$status_id' AND rs.rs_date_time = subquery.max_date AND get_repair.del_flg = 0 
-                        
-                        ORDER BY get_repair.get_r_date_in DESC;
+                                FROM get_detail
+                                LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                                LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                                LEFT JOIN (
+                                    SELECT get_r_id, MAX(rs_date_time) AS max_date
+                                    FROM repair_status
+                                    GROUP BY get_r_id
+                                ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
+                                LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
+                                WHERE repair.m_id = '$id' AND rs.status_id = '$status_id' AND rs.rs_date_time = subquery.max_date AND get_repair.del_flg = 0 
+                                
+                                ORDER BY get_repair.get_r_date_in DESC;
                                 ";
                     } else {
                         $sql = "SELECT

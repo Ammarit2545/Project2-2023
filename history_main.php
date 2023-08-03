@@ -231,41 +231,47 @@ if (isset($_GET["status_id"])) {
         <?php } ?>
         <br>
         <br>
-
         <form class="search-form" action="history_main.php" method="GET">
             <input type="text" name="search" id="search" placeholder="หาด้วยเลข Serial Number, ชื่อแบรนด์, ชื่อรุ่น, หมายเลขแจ้งซ่อม..." onkeyup="showResults(this.value)">
-            <!-- <div id="search-results"></div> -->
             <input type="text" name="status_id" placeholder="หาด้วยเลข Serial Number, ชื่อแบรนด์, ชื่อรุ่น, หมายเลขแจ้งซ่อม. . ." value="<?= isset($status_id) ? $status_id : '' ?>" style="display: none">
             <button type="submit">Search</button>
+            <div id="search-results"></div> <!-- Add the id attribute here -->
         </form>
 
-        <script>
-            function showResults(searchValue) {
-                if (searchValue.length === 0) {
+        <!-- Add jQuery library (you can get it from a CDN) -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <!-- <script>
+            function showResults(value) {
+                if (value.length === 0) {
                     document.getElementById("search-results").innerHTML = "";
                     return;
                 }
 
                 // Make an AJAX request to retrieve search results from the server
-                var xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState === 4 && this.status === 200) {
-                        document.getElementById("search-results").innerHTML = this.responseText;
+                $.ajax({
+                    type: 'GET',
+                    url: 'action/get_results.php', // Replace with the URL of the PHP script to handle the search and return results
+                    data: {
+                        search: value
+                    },
+                    success: function(response) {
+                        document.getElementById("search-results").innerHTML = response;
                         document.getElementById("search-results").style.display = "block";
                     }
-                };
-                xhttp.open("GET", "action/get_results.php?search=" + searchValue, true);
-                xhttp.send();
+                });
             }
 
             // Perform automatic search when clicking on a dropdown result
             document.addEventListener('click', function(event) {
                 var clickedElement = event.target;
                 if (clickedElement.matches('.search-result')) {
-                    var searchValue = clickedElement.getAttribute('data-value');
-                    document.getElementById("search").value = searchValue;
+                    var get_r_id = clickedElement.getAttribute('data-value');
+                    document.getElementById("search").value = get_r_id;
                     document.getElementById("search-results").innerHTML = "";
                     document.getElementById("search-results").style.display = "none";
+                    // Submit the form with the get_r_id as the search parameter
+                    document.getElementById("search-form").submit();
                 }
             });
 
@@ -279,7 +285,9 @@ if (isset($_GET["status_id"])) {
                     searchResults.style.display = "none";
                 }
             });
-        </script>
+        </script> -->
+
+
         <br>
         <br>
         <form action="action/add_repair_non_gua.php" method="POST">
@@ -288,7 +296,7 @@ if (isset($_GET["status_id"])) {
                     <?php
 
                     if (!isset($_GET["search"])) {
-                        $sql = "SELECT get_repair.*, repair.*, rs.status_id
+                        $sql = "SELECT get_repair.get_r_id
                         FROM get_detail
                         LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
                         LEFT JOIN repair ON get_detail.r_id = repair.r_id
@@ -303,7 +311,7 @@ if (isset($_GET["status_id"])) {
                         ORDER BY get_repair.get_r_date_in DESC;
                                 ";
                     } else {
-                        $sql = "SELECT get_repair.*, repair.*, rs.status_id
+                        $sql = "SELECT get_repair.get_r_id
                         FROM get_detail
                         LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
                         LEFT JOIN repair ON get_detail.r_id = repair.r_id

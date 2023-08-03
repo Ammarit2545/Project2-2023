@@ -245,6 +245,7 @@ $id = $_SESSION["id"];
                                         ) AS latest_get_detail ON latest_get_detail.get_r_id = repair_status.get_r_id
                                         LEFT JOIN repair ON repair.r_id = latest_get_detail.r_id
                                         LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
+                                        LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
                                         WHERE repair_status.status_id = '$status_id'
                                         AND repair.m_id = '$id'
                                         AND repair_status.del_flg = '0';

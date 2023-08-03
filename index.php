@@ -502,7 +502,7 @@ if ($_SESSION["log_login"] == 0) {
     <div class="col-lg-6 mx-auto">
       <p class="lead mb-4">จำหน่ายและซ่อมเครื่องเสียงทุกชนิด โดยทีมงานมืออาชีพมากประสบการณ์ที่พร้อมจะบริการ การันตรีทั้งคุณภาพและประสิทธิภาพของผลลัพธ์</p>
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-        <button type="button" class="btn btn-primary btn-lg px-4 gap-3">ส่งซ่อม</button>
+        <a href="listview_repair.php" class="btn btn-primary btn-lg px-4 gap-3">ส่งซ่อม</a>
         <button type="button" class="btn btn-outline-secondary btn-lg px-4">วิธีการส่งซ่อม</button>
       </div>
     </div>
@@ -510,201 +510,209 @@ if ($_SESSION["log_login"] == 0) {
   <!-- End Hero -->
   <div>
     <!-- <?php
-    if (isset($_SESSION['profile'])) {
-      $profile = $_SESSION['profile'];
-    }
+          if (isset($_SESSION['profile'])) {
+            $profile = $_SESSION['profile'];
+          }
+          ?> Features -->
+    <div class="container px-4 py-5" id="custom-cards">
+      <h2 class="pb-2 border-bottom">ทำไมต้องเลือกเรา?</h2>
+
+      <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
+        <div class="col">
+          <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('https://www.shutterstock.com/th/blog/wp-content/uploads/sites/16/2020/10/shutterstock_509699914.jpg');">
+            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+              <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">เช็คสถานะสินค้าได้ทุกที่ทุกเวลา</h3>
+              <ul class="d-flex list-unstyled mt-auto">
+                <li class="me-auto">
+                  <img src="data:image/png;base64,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" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
+                </li>
+                <li class="d-flex align-items-center me-3">
+                  <svg class="bi me-2" width="1em" height="1em">
+                    <use xlink:href="#geo-fill"></use>
+                  </svg>
+                </li>
+                <li class="d-flex align-items-center">
+                  <svg class="bi me-2" width="1em" height="1em">
+                    <use xlink:href="#calendar3"></use>
+                  </svg>
+                  <small>สามารถเช็คสถานะของสินค้าได้ด้วยตัวเองผ่านเว็ปแอพลิเคชั่น</small>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('https://p4.wallpaperbetter.com/wallpaper/805/526/459/target-4k-windows-background-wallpaper-thumb.jpg');">
+            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+              <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">เจาะตรงเป้าหมาย แก้ปัญหาถูกจุด</h3>
+              <ul class="d-flex list-unstyled mt-auto">
+                <li class="me-auto">
+                  <img src="data:image/png;base64,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" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
+                </li>
+                <li class="d-flex align-items-center me-3">
+                  <svg class="bi me-2" width="1em" height="1em">
+                    <use xlink:href="#geo-fill"></use>
+                  </svg>
+                </li>
+                <li class="d-flex align-items-center">
+                  <svg class="bi me-2" width="1em" height="1em">
+                    <use xlink:href="#calendar3"></use>
+                  </svg>
+                  <small>วางแผนการซ่อมแซมได้อย่างรวดเร็ว แม่นยำ เหมาะสม และมีการรับประกันครอบคลุมถึง1ปี</small>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('https://i.pinimg.com/originals/99/c3/b2/99c3b240b8a64b392a009f6192c2afd1.jpg');">
+            <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
+              <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">ครอบคลุมทุกแพลตฟอร์ม</h3>
+              <ul class="d-flex list-unstyled mt-auto">
+                <li class="d-flex align-items-center me-3">
+                  <svg class="bi me-2" width="1em" height="1em">
+                    <use xlink:href="#geo-fill"></use>
+                  </svg>
+                </li>
+                <li class="d-flex align-items-center">
+                  <svg class="bi me-2" width="1em" height="1em">
+                    <use xlink:href="#calendar3"></use>
+                  </svg>
+                  <small>เว็ปแอพลิเคชั่นขยายฐานการเข้าถึงกลุ่มลูกค้าได้อย่างเหมาะสม เพื่อความสะดวก ใช้งานง่าย</small>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Features -->
+
+    <!-- -ขอแปะเป็นรูปไว้ก่อน -->
+    <div class="px-1 py-1 my-1 text-center">
+      <img class="d-block mx-auto my-4 imglogo" src="img brand/S__4358151.jpg" alt="" width="100%">
+    </div>
+    <!-- End ขอแปะเป็นรูปไว้ก่อน -->
+
+
+    <html>
+
+    <head>
+      <style>
+        .my-div {
+          padding-top: 700px;
+        }
+      </style>
+    </head>
+
+    <body>
+      <div class="my-div">
+        <!-- สโลแกน -->
+        <main class="px-3">
+          <div class="px-1 py-1 my-1 text-center">
+            <h1>รู้ดีกว่าช่าง กรุณาซ่อมเอง</h1>
+            <p class="lead">ANAN ELECTRONIC</p>
+            <p class="lead">
+              <a href="#" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Learn more</a>
+          </div>
+          </p>
+        </main>
+        <!-- End สโลแกน -->
+      </div>
+    </body>
+
+    </html>
+
+
+    <!-- รีวิว -->
+    <div class="px-1 py-1 my-1 text-center">
+      <img class="d-block mx-auto my-4 imglogo" src="img brand/S__4358153.jpg" alt="" width="100%">
+      <img class="d-block mx-auto my-4 imglogo" src="img brand/S__4358154.jpg" alt="" width="100%">
+    </div>
+    <!-- End รีวิว -->
+
+    <html>
+
+    <head>
+      <style>
+        .my-div {
+          padding-top: 200px;
+          padding-bottom: 200px;
+        }
+      </style>
+    </head>
+
+    <body>
+      <div class="my-div">
+        <!-- Features อันสุดท้าย -->
+        <main class="px-3">
+          <div class="px-1 py-1 my-1 text-center">
+            <h1>COMING SOON</h1>
+            <p class="lead">สินค้าเข้าใหม่จากทางร้านที่พร้อมให้บริการคุณ</p>
+            <p class="lead">
+              <a href="#" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Learn more</a>
+          </div>
+          </p>
+        </main>
+        <!-- End Featuresอันสุดท้าย -->
+      </div>
+    </body>
+
+    </html>
+
+
+    <!-- แนะนำสินค้า -->
+    <div class="px-1 py-1 my-1 text-center">
+      <img class="d-block mx-auto my-4 imglogo" src="img brand/S__4358156.jpg" alt="" width="100%">
+    </div>
+    <!-- End แนะนำสินค้า -->
+    <html>
+
+    <!-- footer-->
+    <?php
+    include('footer/footer.php')
     ?>
-    <h1>Welcome , <?= $profile->name; ?></h1>
-    <p class="lead">Your Email : <?= $profile->email; ?></p>
-    <p class="lead">Line ID : <?= $profile->line_id; ?></p>
-    <img width="200px" src="<?php echo $profile->picture  ?>" class="rounded" alt="Profile Picture"> -->
-  </div>
-  <!-- Features -->
-  <div class="container px-4 py-5" id="custom-cards">
-    <h2 class="pb-2 border-bottom">ทำไมต้องเลือกเรา?</h2>
+    <!-- end footer-->
 
-    <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
-      <div class="col">
-        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('https://www.shutterstock.com/th/blog/wp-content/uploads/sites/16/2020/10/shutterstock_509699914.jpg');">
-          <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-            <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">เช็คสถานะสินค้าได้ทุกที่ทุกเวลา</h3>
-            <ul class="d-flex list-unstyled mt-auto">
-              <li class="me-auto">
-                <img src="data:image/png;base64,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" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
-              </li>
-              <li class="d-flex align-items-center me-3">
-                <svg class="bi me-2" width="1em" height="1em">
-                  <use xlink:href="#geo-fill"></use>
-                </svg>
-              </li>
-              <li class="d-flex align-items-center">
-                <svg class="bi me-2" width="1em" height="1em">
-                  <use xlink:href="#calendar3"></use>
-                </svg>
-                <small>สามารถเช็คสถานะของสินค้าได้ด้วยตัวเองผ่านเว็ปแอพลิเคชั่น</small>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('https://p4.wallpaperbetter.com/wallpaper/805/526/459/target-4k-windows-background-wallpaper-thumb.jpg');">
-          <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-            <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">เจาะตรงเป้าหมาย แก้ปัญหาถูกจุด</h3>
-            <ul class="d-flex list-unstyled mt-auto">
-              <li class="me-auto">
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAABVlBMVEX///8CAaX///3///sAAKL///kAAJUAAKb//f8AAaqlotL///f9//8AAKAAAJ1OUqEAAJcAAI0AAK7///SXmsYAAIwAAIT8+v8AALPu7fr39//SzOnLyucAAIGrqtdgXpOKjb709/oAAG7k4+nLydycnsH29vKipcXQ0deRlcDW1+02NJ9SUKtqY7Tl4/r/+P26ut2vr+IeHaQuKphyc71UVJpMTK5DRJrr7f5nabXEx+hHQ6eLiMimoMh6gMEVFaBoZaiCgrk5OZgWFI+zs9yenNLK0OBERshycbFkYsspJqJFSLPLzPM6N6Vrbru4t+OKjLd6fM4nJIrX1/6enbG+vclnaZdKR461udaopb+Afp6Vj69WToxuaot6eanf3OohInpVV3ZMP44KFH4QGHwoKKTs3v0AAFqorsDr7Nx2fqYrJ3BlaqA1O4FSTpFOT38/QHk1N2lHEtr8AAANOklEQVR4nO2a/V/bxhnAT3c66YRekCVsRcKAhXlJDDFuIMU4gYANjKVNw1jbOC3DLGnXrA0p+/9/2XMn+SWFfULWbbjd800C0UkCPXrenzMhCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCILcAhT+jhByx+mfGcIY/eUqZ4MLxx7GR4gE41fXqSAhy1Zpf4nQ8NYe+eMAidhAVxSEifIT8jA/Y3MiBqu5shlht/XIHwcN6cK9qSGLiZ2dWFqeGl1Oc3nu9i++V/uN6NBh6Yo+xF1V2qJOWDOGq5avx+pizu672ZJXrJM1W/DrfypfY2PjpU7YMExtgP8Jg9gD8YdPGMNVy3ugJCQsXs+XzA0unPThp5PXslnmYyMhZavWUBSt0OxLuKVflZCScl9uv2U7rFW09GsxmpTesmAD+HShr0JT0/VVqsyLsnTduk7CKS9b0R8lEIAeuyOvYYCu6avRv7Lf/z10y3X7cpi6N6UyJCF2uTTyzJafS8hX5cWmZ3rbxCZ00/KuCmi5mj9FxkaFpFcMBk9pWd5drp6N0infvCohTwqZZi2jzmzSLFlX5JOmYPm1cHysdEfz+qLolu4LJjI/nNRHJDT9J1mkKReVTKa7C5ewhu9eKyKYMCf27cqVwQVPSpY/fDbvERGZhKCe0Uij+z2lkz1PrnqB0SBU0CNds9SbgWtN07Qs05QmbHmP5Q+/XdkyGAkrBXMgCkSanf6ZRnFUQhPsjknbbSudedZ6TLmgBSs/9IxR9GL5VsUaJUw6mhUMzdGf7Z/ZeD+EgIRSh/WiJS+2vB0Q0O4ZgSYPA++oNg2Uy61Wo7G//8lsMjZOyA88C1LE0N1a2Tp1vg9G/RCKGnVm2VVmaRXKNBTsAEJqdlgLOfQfEtmqqK/jgUhWghFFuVaxBquOI0h9xlI5BKKQp+zXfw5+R7bUon5nJQI3o48g8SkdbgrhOCPNFB2bmpwvF0YUBZoymrDqQKCfMIJMs8oqITp6s0zYDjitPIZIwhiJ85tN/4CNT432PsmmnmX73E4tI4FV2UKtQgzJPE7lA1NzQQp+CI4nD0vlEOxwP8+YZqkORnrbslzPvpHnMyuPmA+kKphgSQnKFrno/uFBFmW1PUiAFctSZenTKCSQK/oW/mlewIyR/0kcKFAe+ZASdNfs/NF0lUU+VaeE3eqrx59tK7MM/PtE8BVYkRVbBdpmkT7tG/dnGxu7W5Pt9Scz02ORBHPAkRoFK4DeL3B3DnylRXddPiG44VFeqpqF+qoKOIH3qUN60vGgJit+Lq8qF4ZRCvpKF/6uJOMlYbIp44gemEbtOMt++lP1hCxa6Rdjk2RDCusG3rOEzkrNmrrZiSBW8sdeX0JLFTNgCztknAKOIA3Dks2P5X9BHrueetKnypFYLas+XdM7YBV5Rg/0Tkx2swTibYCWIRgNE6bUoEyLrXFSISFROzPEwCiTPTePNEvyDJvyVI/kB8WaPWsoxVlGD+ofdVHxOeRCVito72UaqEw741PKSHgj8yM3uE9zCTXrSUqyvkJXATZ4QMJGIZewXDZU4giKTShgyGxBf09CCEFbhI6TlTptXWVv3W8wkFDPMr7skXivoxIkuNYGJTUpoWxqZ4/1zFsnqYDecCtPpWaGFlhGwx6bYgZiPXleykou81mzmWyovKhD6JSn9w1Tqcc1QPhqUV7kat6fNlUhpxsH0FWE1U7We+ieUVQNBXxP7I/s7Cnj/6VX4jAenUAoVL2eXyyVCl72uIWarCl3PVUCmKbR5CxZye3wwRNTabYwzRw5oMvziffnuBknkmvyvZwov3dMf3VRcLPZgeOwCT/IyxlL+lAuBQQdbsfrVqZSvS04c1b7rYdlqiJ8PZHD7p1+d7Vq29A1CyoicfUXUc7fE0kejx7Rjx/n8BsViJQl5/1kZlqu7+Uymn4DeoaGf0c1RZ6sXai9oQ+jpfz+BSc2TfsZ06vYwgZCm18zAk8TwUZFYiSKBsGIpuXG8ZcfK2GU3GQ3QZApo9/C63L6oKn0oGveFLHJkW4pD9WNBofCoOKZrtmXENzuE3jxbLqYS+g/59we7FE58v1CH2VTh3PC2VdfO1Ek3VaoqYZtt158SZw0jRwO1xy/Xeym0ncph3vgVUCMhiYFnMB2bO4wOIqiNF2iAg7hjANZauHdvZvoncYnoxOkrCXKpxg8buc2qxeaDJS4bWQS5pFTjTNIJZ+T6096IZebVKBG9Y9IO8q2ceAB44dzpy/DEP5rQz1vM/LNy7W1b0/n5hYJBLvlh29PVWiDR7apEGDQQu78SKuX/kZp9Je5ubkuSC7XpBfzM3gnN6kr7vmD0YWcUMuQLx3NNaFNaBXzU94jeI2UtQxrkPl0S3sGb51Fm5mWTe/TqzYjRCjzotyO4zwVDgXpQvgvAw07MtHIbjmksAa9Nhi37J3tKNvJDOWEDlQOFs9seDWg7sgO5e9gPORw+1nvRqEm7mhZqQ31lgcYyki1wLUMm5zlMcQ0NkJ4q7zmW9pQQuO+nMbVZ7QsgXqfHR9XjiuVyt7O0dHWw8kjOa/i1d3X5/uEfLMAufWv5NsupfGrJbb3+mxmMSS9uU67S8lcz+m2O6dV5iyev35RI7W5h6XzshN9893MsUO658XTHon/Coa5+Ib0Novny8xpnJ/P7EFA+5AfhpG9Z5h5JN2qLfQWFnq7SgbpZvX0+37s9LrK4uOOd2cQTi1PzqrCAz1vmk1tuFehuXo2Rkw7XRKfz9K38AN6HbI3C+ZaSlrnf3vZe12Lf2iR3nfPyau71XdV8maGbh8RsjCfTs93SXk+bbwi5KvwzXcx6XbieJ5E7HgxnolpfLpITmPy8iL9sAqhTClCGaZyW6kldU7JsZEXMV63Vuz7nF9TJ5MVLxjM/S1DTnLIpqlds2FhagU5RhR/XwiZXXtN3nYZ752QyiwN05m1HydISHcb1bsspOV35KJmO+EamY/jdpWR8+rCC/CzVwu1H7oxX1uIwTF/XGzOEwESkrNFxpb3bLg/Xq9+2ESF2PDk4EWa5dM4eyOzXjar0N0vHg9Gb+tZDndWvcHc39TWoa4DIw2u35FZkXWtWDo4i20yT44WOO29Bh1SO5mJdvcpZ7vdpLKXhM1zkJCWv56cK8XJSZXQk+rhHGSmyQXS2v1pilS/eSl498dYSlgBCbeJ/XKHLPxl8udS78MSQqTXs9BhetDQyQkg7RZUMyGLsKcDhd0X2S7nFkiYO6Lprso58pRx5zoV+u6fVJg7POkusd4M2QVdLkgr5XZvJto+5lDNdhubh0t8oU0uetXvGnUwwOpPqaDr1cOHcOeLMgvD9KT6ducwJHv3qvMQhd8ukqN9Spf34vlGL968gYTioevlnuO3lKc5pOaNDoDlVrCu+RWaheWK6Q73BR8zCIZtPdBc/Qqu15A/jsc/tUi8uUyPj6J0t0O23yVre6W0+vpwjTzsNufLon7RIBfT1ZOEkx+a8XkiyEnv8B08y8+tap00T6rdiyZpnNej+c/p9Mw2OVqm5OVefT4h4sUNJGwV7kCOV3RiFXoZSTp9nehWIM+YQeDts74Jm0F+QwD9A6HTxaC/8D5PmrKuYbx2+uJywuHx6avLjRdhenZxudFOw9blRfXsK/DBy4t9hx/POcfty+ZFMz5NCJlbO/waaoKvp+/+4/KiYtOpixdzNRaWf9q83F0mZ11G3nRJ5fLn5tyHJWQnbqG/zbDrqHaHCd4e6C/QC74Bf/ziNFe7K6xVMvIbfKNQg1xxVvSNX+IDxqRK9VDFiTgNHW5HSSqWbIgP8A3KuiheSrjgDqyGRKRQ1adhBFc5LBJQCNqcJoJGcSI/5pEmMo+CT0ciCiPHjlIeCigCxTXV7y9YWpxYnsipMVVmQblxBCk/m2drn83OTmxvT0wsJ9nnSXh1cbt/w+KyIwR/czBxhW1gsZbtqMF7gTKNClmpQKkCNQ6TLm0zcERbwINTIT/XIp08K14YLAsIKlBfCPnZFmFDyQ9Fn8r0UGBAioVaDkpc8W9vvLKGF/TruE79325wxmeIke+i9BsbKFzqBel8WaK/T6FM4u+Nd/s3/OJwhPERLoOOfJWx1CaPvCyDWJ5l7DNx/QbuvxZj3AS8AiXbvptlfd3UOzUom8EdKAnH/slvDG0W7gxLs/UaVd2LzapifD5x8Gs50vo9setphUrTIU5S2/sKIuBtP9l/CLteHLSMpqX5xkm7/aT4TAbr3wk2eexZrj5s/aEIu2PcoET67cDjTTcYVN06eOOd0vPx2of4lXBeP/EHbZJrWl7x+e/HRInMF4LV2r781J0rO8TA+/5zEo7TNsSvxyEsfmz4pgWBBirtnfi2H+i/gG2T+sH9Z52nj7Zmmzea2f3WkL2UTaIoBeOUFc3vD4fK0SvNNwbGrphGEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEOT/jH8CGC069GLFINIAAAAASUVORK5CYII=" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
-              </li>
-              <li class="d-flex align-items-center me-3">
-                <svg class="bi me-2" width="1em" height="1em">
-                  <use xlink:href="#geo-fill"></use>
-                </svg>
-              </li>
-              <li class="d-flex align-items-center">
-                <svg class="bi me-2" width="1em" height="1em">
-                  <use xlink:href="#calendar3"></use>
-                </svg>
-                <small>วางแผนการซ่อมแซมได้อย่างรวดเร็ว แม่นยำ เหมาะสม และมีการรับประกันครอบคลุมถึง1ปี</small>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('https://i.pinimg.com/originals/99/c3/b2/99c3b240b8a64b392a009f6192c2afd1.jpg');">
-          <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
-            <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">ครอบคลุมทุกแพลตฟอร์ม</h3>
-            <ul class="d-flex list-unstyled mt-auto">
-              <li class="d-flex align-items-center me-3">
-                <svg class="bi me-2" width="1em" height="1em">
-                  <use xlink:href="#geo-fill"></use>
-                </svg>
-              </li>
-              <li class="d-flex align-items-center">
-                <svg class="bi me-2" width="1em" height="1em">
-                  <use xlink:href="#calendar3"></use>
-                </svg>
-                <small>เว็ปแอพลิเคชั่นขยายฐานการเข้าถึงกลุ่มลูกค้าได้อย่างเหมาะสม เพื่อความสะดวก ใช้งานง่าย</small>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- End Features -->
-
-  <!-- -ขอแปะเป็นรูปไว้ก่อน -->
-  <div class="px-1 py-1 my-1 text-center">
-    <img class="d-block mx-auto my-4 imglogo" src="img brand/S__4358151.jpg" alt="" width="100%">
-  </div>
-  <!-- End ขอแปะเป็นรูปไว้ก่อน -->
-
-
-  <html>
-
-  <head>
-    <style>
-      .my-div {
-        padding-top: 700px;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="my-div">
-      <!-- สโลแกน -->
-      <main class="px-3">
-        <div class="px-1 py-1 my-1 text-center">
-          <h1>รู้ดีกว่าช่าง กรุณาซ่อมเอง</h1>
-          <p class="lead">ANAN ELECTRONIC</p>
-          <p class="lead">
-            <a href="#" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Learn more</a>
-        </div>
-        </p>
-      </main>
-      <!-- End สโลแกน -->
-    </div>
-  </body>
-
-  </html>
-
-
-  <!-- รีวิว -->
-  <div class="px-1 py-1 my-1 text-center">
-    <img class="d-block mx-auto my-4 imglogo" src="img brand/S__4358153.jpg" alt="" width="100%">
-    <img class="d-block mx-auto my-4 imglogo" src="img brand/S__4358154.jpg" alt="" width="100%">
-  </div>
-  <!-- End รีวิว -->
-
-  <html>
-
-  <head>
-    <style>
-      .my-div {
-        padding-top: 200px;
-        padding-bottom: 200px;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="my-div">
-      <!-- Features อันสุดท้าย -->
-      <main class="px-3">
-        <div class="px-1 py-1 my-1 text-center">
-          <h1>COMING SOON</h1>
-          <p class="lead">สินค้าเข้าใหม่จากทางร้านที่พร้อมให้บริการคุณ</p>
-          <p class="lead">
-            <a href="#" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Learn more</a>
-        </div>
-        </p>
-      </main>
-      <!-- End Featuresอันสุดท้าย -->
-    </div>
-  </body>
-
-  </html>
-
-
-  <!-- แนะนำสินค้า -->
-  <div class="px-1 py-1 my-1 text-center">
-    <img class="d-block mx-auto my-4 imglogo" src="img brand/S__4358156.jpg" alt="" width="100%">
-  </div>
-  <!-- End แนะนำสินค้า -->
-  <html>
-
-  <!-- footer-->
-  <?php
-  include('footer/footer.php')
-  ?>
-  <!-- end footer-->
-
-  <!-- Sweet Alert Show Start -->
-  <?php
-  if (isset($_SESSION['add_data_alert'])) {
-    if ($_SESSION['add_data_alert'] == 0) {
-      if($_SESSION['add_line_alert'] == 0){
-        if(isset($_SESSION['add_new_line_alert']) && $_SESSION['add_new_line_alert'] == 0){
+    <!-- Sweet Alert Show Start -->
+    <?php
+    if (isset($_SESSION['add_data_alert'])) {
+      if ($_SESSION['add_data_alert'] == 0) {
+        if ($_SESSION['add_line_alert'] == 0) {
+          if (isset($_SESSION['add_new_line_alert']) && $_SESSION['add_new_line_alert'] == 0) {
+    ?>
+            <script>
+              Swal.fire({
+                title: 'Line ของคุณได้ทำการผูกกับบัญชี Email เก่าของคุณแล้ว',
+                text: 'รายการเก่าของคุณยังคงอยู่',
+                icon: 'success',
+                confirmButtonText: 'Accept'
+              });
+            </script>
+          <?php
+            unset($_SESSION['add_data_alert']);
+            unset($_SESSION['add_line_alert']);
+          } else {
+          ?>
+            <script>
+              Swal.fire({
+                title: 'Line Login เสร็จสิ้น',
+                text: 'กด Accept เพื่อออก',
+                icon: 'success',
+                confirmButtonText: 'Accept'
+              });
+            </script>
+          <?php
+            unset($_SESSION['add_data_alert']);
+            unset($_SESSION['add_line_alert']);
+          }
+        } else {
           ?>
           <script>
             Swal.fire({
-              title: 'Line ของคุณได้ทำการผูกกับบัญชี Email เก่าของคุณแล้ว',
-              text: 'รายการเก่าของคุณยังคงอยู่',
-              icon: 'success',
-              confirmButtonText: 'Accept'
-            });
-          </script>
-        <?php
-          unset($_SESSION['add_data_alert']);
-          unset($_SESSION['add_line_alert']);
-        }else{
-          ?>
-          <script>
-            Swal.fire({
-              title: 'Line Login เสร็จสิ้น',
+              title: 'เข้าสู่ระบบเสร็จสิ้น',
               text: 'กด Accept เพื่อออก',
               icon: 'success',
               confirmButtonText: 'Accept'
@@ -712,14 +720,52 @@ if ($_SESSION["log_login"] == 0) {
           </script>
         <?php
           unset($_SESSION['add_data_alert']);
-          unset($_SESSION['add_line_alert']);
         }
-       
-      }else{
+        $id = 123; // Replace 123 with the actual ID you want to pass to the deletion action
+
+      } else if ($_SESSION['add_data_alert'] == 1) {
         ?>
         <script>
           Swal.fire({
-            title: 'เข้าสู่ระบบเสร็จสิ้น',
+            title: 'ข้อมูล Email กับ Password \nไม่ถูกต้อง ',
+            text: 'กด Accept เพื่อออก',
+            icon: 'error',
+            confirmButtonText: 'Accept'
+          });
+        </script>
+
+      <?php
+        unset($_SESSION['add_data_alert']);
+      } else if ($_SESSION['add_data_alert'] == 3) {
+      ?>
+        <script>
+          Swal.fire({
+            title: 'ข้อมูล Email หรือ เบอร์โทรศัพท์นี้ถูกใช้งานแล้ว ',
+            text: 'กด Accept เพื่อออก',
+            icon: 'error',
+            confirmButtonText: 'Accept'
+          });
+        </script>
+
+      <?php
+        unset($_SESSION['add_data_alert']);
+      } else if ($_SESSION['add_data_alert'] == 4) {
+      ?>
+        <script>
+          Swal.fire({
+            title: 'สมัครบัญชีผู้ใช้ของคุณเสร็จสิ้น',
+            text: 'กด Accept เพื่อออกและทำการ Login',
+            icon: 'success',
+            confirmButtonText: 'Accept'
+          });
+        </script>
+      <?php
+        unset($_SESSION['add_data_alert']);
+      } else if ($_SESSION['add_data_alert'] == 5) {
+      ?>
+        <script>
+          Swal.fire({
+            title: 'แก้ไขข้อมูลของคุณเสร็จสิ้น',
             text: 'กด Accept เพื่อออก',
             icon: 'success',
             confirmButtonText: 'Accept'
@@ -727,78 +773,25 @@ if ($_SESSION["log_login"] == 0) {
         </script>
       <?php
         unset($_SESSION['add_data_alert']);
+      } else if ($_SESSION['add_data_alert'] == 6) {
+      ?>
+        <script>
+          Swal.fire({
+            title: 'ข้อมูลไม่ถูกต้อง',
+            text: 'กด Accept เพื่อออก',
+            icon: 'error',
+            confirmButtonText: 'Accept'
+          });
+        </script>
+
+    <?php
+        unset($_SESSION['add_data_alert']);
       }
-      $id = 123; // Replace 123 with the actual ID you want to pass to the deletion action
-
-    } else if ($_SESSION['add_data_alert'] == 1) {
-    ?>
-      <script>
-        Swal.fire({
-          title: 'ข้อมูล Email กับ Password \nไม่ถูกต้อง ',
-          text: 'กด Accept เพื่อออก',
-          icon: 'error',
-          confirmButtonText: 'Accept'
-        });
-      </script>
-
-    <?php
-      unset($_SESSION['add_data_alert']);
-    } else if ($_SESSION['add_data_alert'] == 3) {
-    ?>
-      <script>
-        Swal.fire({
-          title: 'ข้อมูล Email หรือ เบอร์โทรศัพท์นี้ถูกใช้งานแล้ว ',
-          text: 'กด Accept เพื่อออก',
-          icon: 'error',
-          confirmButtonText: 'Accept'
-        });
-      </script>
-
-    <?php
-      unset($_SESSION['add_data_alert']);
-    } else if ($_SESSION['add_data_alert'] == 4) {
-    ?>
-      <script>
-        Swal.fire({
-          title: 'สมัครบัญชีผู้ใช้ของคุณเสร็จสิ้น',
-          text: 'กด Accept เพื่อออกและทำการ Login',
-          icon: 'success',
-          confirmButtonText: 'Accept'
-        });
-      </script>
-    <?php
-      unset($_SESSION['add_data_alert']);
-    } else if ($_SESSION['add_data_alert'] == 5) {
-    ?>
-      <script>
-        Swal.fire({
-          title: 'แก้ไขข้อมูลของคุณเสร็จสิ้น',
-          text: 'กด Accept เพื่อออก',
-          icon: 'success',
-          confirmButtonText: 'Accept'
-        });
-      </script>
-    <?php
-      unset($_SESSION['add_data_alert']);
-    } else if ($_SESSION['add_data_alert'] == 6) {
-    ?>
-      <script>
-        Swal.fire({
-          title: 'ข้อมูลไม่ถูกต้อง',
-          text: 'กด Accept เพื่อออก',
-          icon: 'error',
-          confirmButtonText: 'Accept'
-        });
-      </script>
-
-  <?php
-      unset($_SESSION['add_data_alert']);
     }
-  }
-  ?>
-  <!-- Sweet Alert Show End -->
+    ?>
+    <!-- Sweet Alert Show End -->
 
-  <!-- <script>
+    <!-- <script>
     // Show full page LoadingOverlay
     $.LoadingOverlay("show");
 
@@ -807,7 +800,7 @@ if ($_SESSION["log_login"] == 0) {
       $.LoadingOverlay("hide");
     }, 10);
   </script> -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
