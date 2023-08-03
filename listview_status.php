@@ -419,13 +419,13 @@ if (isset($_GET["status_id"])) {
                         ORDER BY get_repair.get_r_date_in DESC;
                                 ";
                     } else {
-                        $sql = "SELECT *
-                        FROM get_repair
-                        LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
-                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                        WHERE
-                            get_repair.m_id = '$id'
-                            AND get_repair.del_flg = 0  AND (
+                        $sql = "SELECT
+                        get_repair.*,
+                        MAX(repair.m_id) AS m_id -- Assuming n_id is a column in the repair table
+                     FROM get_repair
+                     LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
+                     LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                     WHERE repair.m_id = '$id' AND get_repair.del_flg = 0 AND (
                                 repair.r_brand LIKE '%$search%'
                                 OR repair.r_model LIKE '%$search%'
                                 OR repair.r_serial_number LIKE '%$search%'
@@ -434,9 +434,8 @@ if (isset($_GET["status_id"])) {
                                 OR CONCAT(repair.r_brand, ' ', repair.r_model) LIKE '%$search%'
                                 OR CONCAT(repair.r_brand, '', repair.r_model) LIKE '%$search%'
                             )
-                        ORDER BY get_repair.get_r_date_in DESC;
-                        ;
-                        ";
+                     GROUP BY get_repair.get_r_id
+                     ORDER BY MAX(get_repair.get_r_date_in) DESC;";
                     }
                     $result = mysqli_query($conn, $sql);
                     $i = 0;
