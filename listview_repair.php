@@ -145,7 +145,10 @@ $row = mysqli_fetch_array($result);
                                         <p class="card-text" style="display:inline"><?= $_SESSION[$description] ?></p>
                                         <hr> -->
                             </a>
-                            <h6>รูปภาพประกอบ</h6>
+                            <!-- <?php if ($_SESSION['image1_' . $i] != NULL || $_SESSION['image2_' . $i] != NULL || $_SESSION['image3_' . $i] != NULL || $_SESSION['image_' . $i] != NULL) { ?>
+                                <h6>รูปภาพประกอบ</h6>
+                            <?php } ?> -->
+                            <h6>รูปภาพ/ไฟล์</h6>
                             <?php
                             $folderPath = "uploads/$id/Holder/$i/"; // Replace with the actual path to your folder
 
@@ -223,8 +226,8 @@ $row = mysqli_fetch_array($result);
                                     }
                                 });
                             </script>
-
                             <hr>
+
                             <div class="d-flex justify-content-end">
                                 <a href="edit_repair.php?id=<?= $i ?>" class="btn btn-outline-primary" style="margin-right: 10px;">แก้ไข</a>
                                 <a class="btn btn-outline-danger ml-2" onclick="confirmDelete('<?= $_SESSION[$r_id] ?>')">ลบ</a>

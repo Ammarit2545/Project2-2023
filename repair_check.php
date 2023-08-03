@@ -267,25 +267,33 @@ $row = mysqli_fetch_array($result);
             </div>
             <br>
             <div class="container">
-                <label for="borderinput1" class="form-label">ไฟล์อ้างอิงของท่าน</label>
+                <?php if (isset($_SESSION['image'])) {
+                ?> <label for="borderinput1" class="form-label">ไฟล์อ้างอิง</label><?php
+                                                                                } ?>
+
                 <div class="row">
                     <?php
+
                     $i = 1;
                     while (isset($_SESSION['r_id_' . $i])) {
                         $i++;
-                        $folderName = "uploads/$id/Holder/$i/"; // the name of the new folder
-                        if (!file_exists($folderName)) { // check if the folder already exists
-                            mkdir($folderName); // create the new folder
-                            // echo "Folder created successfully";
-                        } else {
-                            // echo "Folder already exists";
-                        }
-                    }
-                    foreach (new DirectoryIterator("uploads/$id/Holder/$i/") as $file) {
-                        if ($file->isFile()) {
-                            $rp_pic = "uploads/{$id}/Holder/{$i}/" . $file->getFilename();
-                            $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
-                    ?>
+                        $folderName = "uploads/$id/Holder/$i/"; // the name of the folder to check
+
+                        if (file_exists($folderName)) { // check if the folder exists
+                            $fileList = glob($folderName . "*"); // get a list of files in the folder
+                            if (!empty($fileList)) {
+                                // If there are files in the folder, display them
+                    ?><p>ไฟล์อ้างอิง</p><?php
+                                                }
+                                            }
+                                        }
+                                                    ?><br><?php
+
+                            foreach (new DirectoryIterator("uploads/$id/Holder/$i/") as $file) {
+                                if ($file->isFile()) {
+                                    $rp_pic = "uploads/{$id}/Holder/{$i}/" . $file->getFilename();
+                                    $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                            ?>
                             <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'jfif'])) : ?>
                                 <div class="col-3">
                                     <a href="#">
@@ -305,8 +313,8 @@ $row = mysqli_fetch_array($result);
                             <?php endif; ?>
 
                     <?php
-                        }
-                    }
+                                }
+                            }
                     ?>
                     <div id="modalimg" class="modal">
                         <span class="close" onclick="closeModalIMG()">&times;</span>
