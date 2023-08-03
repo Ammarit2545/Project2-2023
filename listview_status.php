@@ -235,84 +235,97 @@ if (isset($_GET["status_id"])) {
                 <div class="col-2"></div>
                 <div class="col">
                     <center>
-                        <ul class="nav nav-tabs" id="select_under">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" style="box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);">ทั้งหมด</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="listview_status.php">ทั้งหมด</a></li>
-                                    <?php
-                                    $sql_s = "SELECT status_type.status_id, status_type.status_name, COUNT(*) ,status_type.status_color  as count
-                                            FROM get_detail 
-                                            LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
-                                            LEFT JOIN repair_status ON get_detail.get_r_id = repair_status.get_r_id
-                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                            LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
-                                            WHERE repair.m_id = '$id' AND repair_status.del_flg = '0'
-                                            GROUP BY status_type.status_id 
-                                            ORDER BY status_type.status_id ASC;";
-                                    $result_s = mysqli_query($conn, $sql_s);
-                                    while ($row_s = mysqli_fetch_array($result_s)) { ?>
-                                        <li class="nav-item">
-                                        <li> <a class="dropdown-item" href="listview_status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>"><?= $row_s['status_name'] ?>
-                                                <p style="display: inline-block; color:<?= $row_s[3] ?>; ">(<?= $row_s[2] ?>)</p>
-                                            </a>
-                                        </li>
-                            </li>
-                        <?php } ?>
-                        </ul>
-                        </li>
-                        </ul>
-                    </center>
-                    <center>
                         <ul class="nav nav-tabs" id="bar_under">
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="listview_status.php">ทั้งหมด</a>
                             </li>
                             <?php
-                            $sql_s = "SELECT status_type.status_id, status_type.status_name, COUNT(*) as count, status_type.status_color
-                            FROM repair_status
-                            LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
-                            LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
-                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                            LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
-                            WHERE repair.m_id = '$id'
-                            GROUP BY status_type.status_id, status_type.status_name, status_type.status_color
-                            ORDER BY status_type.status_id ASC ";
-                            $result_s = mysqli_query($conn, $sql_s);
-                            $numItems = mysqli_num_rows($result_s);
+                            $sql_st = "SELECT status_type.status_id FROM status_type WHERE status_type.del_flg = 0";
+                            $result_st = mysqli_query($conn, $sql_st);
+                            $status_data = array(); // Array to store status data
+                            while ($row_st_id = mysqli_fetch_array($result_st)) {
+                                $status_id_data = $row_st_id['status_id'];
+                                $sql_status_get = "SELECT repair_status.get_r_id, (
+                                            SELECT COUNT(*)
+                                            FROM repair_status AS rs
+                                            LEFT JOIN (
+                                                SELECT get_r_id, MAX(r_id) AS r_id
+                                                FROM get_detail
+                                                GROUP BY get_r_id
+                                            ) AS latest_get_detail ON latest_get_detail.get_r_id = rs.get_r_id
+                                            LEFT JOIN repair ON repair.r_id = latest_get_detail.r_id
+                                            WHERE rs.status_id = '$status_id_data'
+                                            AND repair.m_id = '$id'
+                                            AND rs.del_flg = '0'
+                                        ) AS row_count
+                                        FROM repair_status
+                                        LEFT JOIN (
+                                            SELECT get_r_id, MAX(r_id) AS r_id
+                                            FROM get_detail
+                                            GROUP BY get_r_id
+                                        ) AS latest_get_detail ON latest_get_detail.get_r_id = repair_status.get_r_id
+                                        LEFT JOIN repair ON repair.r_id = latest_get_detail.r_id
+                                        LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
+                                        WHERE repair_status.status_id = '$status_id_data'
+                                        AND repair.m_id = '$id'
+                                        AND repair_status.del_flg = '0';
+                                        ";
+                                $result_status_get = mysqli_query($conn, $sql_status_get);
+                                $sql_count = 0; // Unique count for each status type
+                                while ($row_status_get = mysqli_fetch_array($result_status_get)) {
+                                    $get_r_id = $row_status_get['get_r_id'];
+                                    $sql_count_status = "SELECT repair_status.status_id FROM get_repair 
+                                    LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
+                                    WHERE get_repair.get_r_id = '$get_r_id' AND repair_status.del_flg = '0' ORDER BY repair_status.rs_id DESC LIMIT 1";
+                                    $result_count_status = mysqli_query($conn, $sql_count_status);
+                                    $row_count_status = mysqli_fetch_array($result_count_status);
+                                    if ($row_count_status['status_id'] == $status_id_data) {
+                                        $sql_count++;
+                                    }
+                                }
+                                if ($sql_count > 0) {
+                                    $sql_status = "SELECT status_name ,status_id,status_color FROM status_type WHERE status_id = '$status_id_data' AND del_flg = '0'";
+                                    $result_status = mysqli_query($conn, $sql_status);
+                                    $row_status_1 = mysqli_fetch_array($result_status);
+                                    $status_data[] = array(
+                                        'status_name' => $row_status_1['status_name'],
+                                        'status_id' => $row_status_1['status_id'],
+                                        'status_color' => $row_status_1['status_color'],
+                                        'count' => $sql_count,
+                                    );
+                                }
+                            }
                             $counter = 0;
-                            while ($row_s = mysqli_fetch_array($result_s)) {
-                                if ($row_s[0] != NULL) {
-                                    $counter++;
-                                    if ($counter <= 4) { ?>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="listview_status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>"><?= $row_s['status_name'] ?>
-                                                <p style="display: inline-block; color:<?= $row_s[3] ?>; ">(<?= $row_s[2] ?>)</p>
-                                            </a>
-                                        </li>
-                                        <?php
-                                    } else {
-                                        if ($counter === 5) {
-                                        ?>
-                                            <li class="nav-item dropdown">
-                                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">อื่นๆ</a>
-                                                <ul class="dropdown-menu">
-                                                <?php
-                                            }
-                                                ?>
-                                                <li>
-                                                    <a class="dropdown-item" href="listview_status.php?status_id=<?= $row_s['status_id'] ?>&search=<?= $search ?>">
-                                                        <?= $row_s['status_name'] ?>
-                                                        <p style="display: inline-block; color:<?= $row_s[3] ?>; ">(<?= $row_s[2] ?>)</p>
-                                                    </a>
-                                                </li>
-                                                <?php
-                                                if ($counter === $numItems) {
-                                                ?>
-                                                </ul>
+                            $numItems = count($status_data);
+                            foreach ($status_data as $data) {
+                                $counter++;
+                                if ($counter <= 4) { ?>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="listview_status.php?status_id=<?= $data['status_id'] ?>&search=<?= $search ?>"><?= $data['status_name'] ?>
+                                            <p style="display: inline-block; color:<?= $data['status_color'] ?>; ">(<?= $data['count'] ?>)</p>
+                                        </a>
+                                    </li>
+                                    <?php } else {
+                                    if ($counter === 5) {
+                                    ?>
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">อื่นๆ</a>
+                                            <ul class="dropdown-menu">
+                                            <?php
+                                        }
+                                            ?>
+                                            <li>
+                                                <a class="dropdown-item" href="listview_status.php?status_id=<?= $data['status_id'] ?>&search=<?= $search ?>">
+                                                    <?= $data['status_name'] ?>
+                                                    <p style="display: inline-block; color:<?= $data['status_color'] ?>; ">(<?= $data['count'] ?>)</p>
+                                                </a>
                                             </li>
+                                            <?php
+                                            if ($counter === $numItems) {
+                                            ?>
+                                            </ul>
+                                        </li>
                             <?php
-                                                }
                                             }
                                         }
                                     }
@@ -428,170 +441,175 @@ if (isset($_GET["status_id"])) {
                     $result = mysqli_query($conn, $sql);
                     $i = 0;
                     $found_data = false;
+                    $id_r;
 
+                    // while card get_repair id
                     while ($row1 = mysqli_fetch_array($result)) {
-                        $i = $i + 1;
-                        $id_r = $row1[0];
-                        $id_r_get = $row1['r_id'];
-                        $sql_c = "SELECT COUNT(get_r_id) FROM get_detail WHERE get_r_id = '$id_r' AND del_flg = '0'";
-                        $result_c = mysqli_query($conn, $sql_c);
-                        $row_c = mysqli_fetch_array($result_c);
+                        // Check get_r_id is not as it was 
+                        if ($id_r != $row1['get_r_id']) {
+                            $i = $i + 1;
+                            $id_r = $row1['get_r_id'];
+                            $id_r_get = $row1['r_id'];
+                            $sql_c = "SELECT COUNT(get_r_id) FROM get_detail WHERE get_r_id = '$id_r' AND del_flg = '0'";
+                            $result_c = mysqli_query($conn, $sql_c);
+                            $row_c = mysqli_fetch_array($result_c);
 
-                        $id_g = $row_c[0];
+                            $id_g = $row_c[0];
 
-                        $sql_s = "SELECT status_type.status_name,status_type.status_color,repair_status.status_id FROM repair_status 
+                            $sql_s = "SELECT status_type.status_name,status_type.status_color,repair_status.status_id FROM repair_status 
                                     LEFT JOIN status_type ON status_type.status_id = repair_status.status_id 
                                     WHERE get_r_id = '$id_r' AND repair_status.del_flg = '0' ORDER BY rs_date_time DESC LIMIT 1;";
-                        $result_s = mysqli_query($conn, $sql_s);
-                        $row_status = mysqli_fetch_array($result_s);
+                            $result_s = mysqli_query($conn, $sql_s);
+                            $row_status = mysqli_fetch_array($result_s);
 
-                        // Check if data is found
-                        if ($row_c) {
-                            $found_data = true;
-                            // Display data
-                        }
+                            // Check if data is found
+                            if ($row_c) {
+                                $found_data = true;
+                                // Display data
+                            }
                     ?>
-                        <div class="grid-item">
-                            <a href="detail_status.php?id=<?= $id_r ?>" id="card_sent">
-                                <div class="card" style="box-shadow: 0px 10px 50px rgba(0, 1, 65, 0.18);">
-                                    <div class="card-header">
-                                        <h3>
-                                            <button type="button" class="btn btn-primary" style="font-size:16px; display:inline-block;">
-                                                <?= $i ?>
-                                            </button>
-                                            หมายเลขส่งซ่อม : <?= $id_r ?>
-                                            <a class="btn" style="background-color: <?= $row_status['status_color'] ?>; color:white;">
-                                                <?= $row_status['status_name'] ?> <?php if ($row_status['status_id'] == 6) {
-                                                                                        $carry_out_id = $row_status['status_id'];
-                                                                                        $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = '$id_r' AND status_id = 6 AND del_flg = 0 ORDER BY rs_date_time DESC;";
-                                                                                        $result_carry_out = mysqli_query($conn, $sql_cary_out);
-                                                                                        $row_carry_out = mysqli_fetch_array($result_carry_out);
-                                                                                        echo '#ครั้งที่ ' . $row_carry_out[0];
-                                                                                    } ?>
-                                            </a>
-                                            <?php if ($row_c[0] == 1) { ?>
+                            <div class="grid-item">
+                                <a href="detail_status.php?id=<?= $id_r ?>" id="card_sent">
+                                    <div class="card" style="box-shadow: 0px 10px 50px rgba(0, 1, 65, 0.18);">
+                                        <div class="card-header">
+                                            <h3>
+                                                <button type="button" class="btn btn-primary" style="font-size:16px; display:inline-block;">
+                                                    <?= $i ?>
+                                                </button>
+                                                หมายเลขส่งซ่อม : <?= $id_r ?>
+                                                <a class="btn" style="background-color: <?= $row_status['status_color'] ?>; color:white;">
+                                                    <?= $row_status['status_name'] ?> <?php if ($row_status['status_id'] == 6) {
+                                                                                            $carry_out_id = $row_status['status_id'];
+                                                                                            $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = '$id_r' AND status_id = 6 AND del_flg = 0 ORDER BY rs_date_time DESC;";
+                                                                                            $result_carry_out = mysqli_query($conn, $sql_cary_out);
+                                                                                            $row_carry_out = mysqli_fetch_array($result_carry_out);
+                                                                                            echo '#ครั้งที่ ' . $row_carry_out[0];
+                                                                                        } ?>
+                                                </a>
+                                                <!-- <?php if ($row_c[0] == 1) { ?>
                                                 <a class="btn btn-outline-secondary">#ครั้งที่ <?= $row1['get_d_record'] ?> </a>
-                                            <?php } ?>
-                                        </h3>
-                                    </div>
-                                    <?php
+                                            <?php } ?> -->
+                                            </h3>
+                                        </div>
+                                        <?php
 
-                                    // Check Repair Count 
-                                    $sql_count_p = "SELECT COUNT(get_d_id)
+                                        // Check Repair Count 
+                                        $sql_count_p = "SELECT COUNT(get_d_id)
                                     FROM get_detail
                                     LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
                                     LEFT JOIN repair ON get_detail.r_id = repair.r_id
                                     WHERE repair.m_id = '$id' AND get_repair.get_r_id = '$id_r '
                                     ORDER BY get_repair.get_r_date_in DESC;";
-                                    $result_count_p = mysqli_query($conn, $sql_count_p);
-                                    $row_count_p = mysqli_fetch_array($result_count_p);
+                                        $result_count_p = mysqli_query($conn, $sql_count_p);
+                                        $row_count_p = mysqli_fetch_array($result_count_p);
 
-                                    // Data In Get_repair Select r_id From Repair
-                                    $sql_detail = "SELECT get_repair.*, repair.*
+                                        // Data In Get_repair Select r_id From Repair
+                                        $sql_detail = "SELECT get_repair.*, repair.*
                                     FROM get_detail
                                     LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
                                     LEFT JOIN repair ON get_detail.r_id = repair.r_id
                                     WHERE repair.m_id = '$id' 
                                     ORDER BY get_repair.get_r_date_in DESC;";
-                                    $result_detail = mysqli_query($conn, $sql_detail);
-                                    $row_detail = mysqli_fetch_array($result_detail);
+                                        $result_detail = mysqli_query($conn, $sql_detail);
+                                        $row_detail = mysqli_fetch_array($result_detail);
 
-                                    if ($row_count_p[0] == 1) { ?>
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item">
-                                                <h5 style="color: blue" id="head_text"><?= $row_detail['r_brand'] ?> <?= $row_detail['r_model'] ?></h5>
-                                                <br>
-                                                <p style="text-align: start" id="body_text">Serial Number: <?= $row_detail['r_serial_number'] ?></p>
-                                                <p style="text-align: start" id="body_text">Model: <?= $row_detail['r_number_model'] ?></p>
-                                            </li>
-                                            <?php if ($row_c['get_r_detail'] != NULL) {
-                                                $text = $row_c['get_r_detail'];
-                                                $summary = strlen($text) > 100 ? substr($text, 0, 200) . "..." : $text;
-
-                                                $dateString = date('d-m-Y', strtotime($row_detail['get_r_date_in']));
-                                                $date = DateTime::createFromFormat('d-m-Y', $dateString);
-                                                $formattedDate = $date->format('d F Y');
-                                            ?>
+                                        if ($row_count_p[0] == 1) { ?>
+                                            <ul class="list-group list-group-flush">
                                                 <li class="list-group-item">
-                                                    <h5 style="color: blue" id="head_text">รายละเอียดการส่งซ่อม :</h5>
+                                                    <h5 style="color: blue" id="head_text"><?= $row_detail['r_brand'] ?> <?= $row_detail['r_model'] ?></h5>
                                                     <br>
-                                                    <p><?= $summary ?></p>
+                                                    <p style="text-align: start" id="body_text">Serial Number: <?= $row_detail['r_serial_number'] ?></p>
+                                                    <p style="text-align: start" id="body_text">Model: <?= $row_detail['r_number_model'] ?></p>
                                                 </li>
-                                            <?php } ?>
-                                            <li class="list-group-item">
-                                                <br>
-                                                <h5 style="color: gray" id="date_time">
-                                                    ส่งเรื่องล่าสุดวันที่: <?= $formattedDate ?>, เวลา: <?= date('H:i:s', strtotime($row1['get_r_date_in'])); ?>
-                                                </h5>
-                                            </li>
-                                        </ul>
-                                        <span class="tooltip">#หมายเลขส่งซ่อมที่ <?= $id_r ?></span>
-                                    <?php } else {
-                                        $sql_get_count = "SELECT COUNT(get_r_id) FROM get_detail 
-                                         WHERE get_r_id = '$id_r' AND get_detail.del_flg = 0";
-                                        $result_get_count = mysqli_query($conn, $sql_get_count);
-                                        $row_get_count = mysqli_fetch_array($result_get_count);
-                                    ?>
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item">
-                                                <br>
-                                                <h5 style="color:blue" id="head_text"> คำส่งซ่อมนี้มี <?= $row_get_count[0] ?> รายการ </h5>
-                                                <br>
-                                                <!-- <p style="text-align:start" id="body_text"> Serial Number : <?= $row1['r_serial_number'] ?></p>
-                                                <p style="text-align:start" id="body_text">Model : <?= $row1['r_number_model'] ?></p> -->
-                                                <div class="accordion-item" style="border: 1px solid gray; padding:15px;  ">
-                                                    <h2 class="accordion-header" id="flush-headingThree">
-                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree<?= $id_r ?>" aria-expanded="false" aria-controls="flush-collapseThree<?= $id_r ?>">
-                                                            <h5> ดูรายการส่งซ่อมทั้งหมด </h5>
-                                                        </button>
-                                                    </h2>
-                                                    <div id="flush-collapseThree<?= $id_r ?>" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+                                                <?php if ($row_c['get_r_detail'] != NULL) {
+                                                    $text = $row_c['get_r_detail'];
+                                                    $summary = strlen($text) > 100 ? substr($text, 0, 200) . "..." : $text;
 
-                                                        <hr>
-                                                        <?php
-                                                        $count_get_no = 0;
-                                                        $sql_get = "SELECT * FROM get_detail 
+                                                    $dateString = date('d-m-Y', strtotime($row_detail['get_r_date_in']));
+                                                    $date = DateTime::createFromFormat('d-m-Y', $dateString);
+                                                    $formattedDate = $date->format('d F Y');
+                                                ?>
+                                                    <li class="list-group-item">
+                                                        <h5 style="color: blue" id="head_text">รายละเอียดการส่งซ่อม :</h5>
+                                                        <br>
+                                                        <p><?= $summary ?></p>
+                                                    </li>
+                                                <?php } ?>
+                                                <li class="list-group-item">
+                                                    <br>
+                                                    <h5 style="color: gray" id="date_time">
+                                                        ส่งเรื่องล่าสุดวันที่: <?= $formattedDate ?>, เวลา: <?= date('H:i:s', strtotime($row1['get_r_date_in'])); ?>
+                                                    </h5>
+                                                </li>
+                                            </ul>
+                                            <span class="tooltip">#หมายเลขส่งซ่อมที่ <?= $id_r ?></span>
+                                        <?php } else {
+                                            $sql_get_count = "SELECT COUNT(get_r_id) FROM get_detail 
+                                         WHERE get_r_id = '$id_r' AND get_detail.del_flg = 0";
+                                            $result_get_count = mysqli_query($conn, $sql_get_count);
+                                            $row_get_count = mysqli_fetch_array($result_get_count);
+                                        ?>
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item">
+                                                    <br>
+                                                    <h5 style="color:blue" id="head_text"> คำส่งซ่อมนี้มี <?= $row_get_count[0] ?> รายการ </h5>
+                                                    <br>
+                                                    <!-- <p style="text-align:start" id="body_text"> Serial Number : <?= $row1['r_serial_number'] ?></p>
+                                                <p style="text-align:start" id="body_text">Model : <?= $row1['r_number_model'] ?></p> -->
+                                                    <div class="accordion-item" style="border: 1px solid gray; padding:15px;  ">
+                                                        <h2 class="accordion-header" id="flush-headingThree">
+                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree<?= $id_r ?>" aria-expanded="false" aria-controls="flush-collapseThree<?= $id_r ?>">
+                                                                <h5> ดูรายการส่งซ่อมทั้งหมด </h5>
+                                                            </button>
+                                                        </h2>
+                                                        <div id="flush-collapseThree<?= $id_r ?>" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+
+                                                            <hr>
+                                                            <?php
+                                                            $count_get_no = 0;
+                                                            $sql_get = "SELECT * FROM get_detail 
                                                                     LEFT JOIN repair ON repair.r_id = get_detail.r_id
                                                                     WHERE get_detail.get_r_id = '$id_r' AND get_detail.del_flg = 0";
-                                                        $result_count = mysqli_query($conn, $sql_get);
-                                                        $result_get = mysqli_query($conn, $sql_get);
-                                                        while ($row_get = mysqli_fetch_array($result_get)) {
-                                                            $dateString = date('d-m-Y', strtotime($row1['get_r_date_in']));
-                                                            $date = DateTime::createFromFormat('d-m-Y', $dateString);
-                                                            $formattedDate = $date->format('d F Y');
-                                                            $count_get_no++;
-                                                        ?>
+                                                            $result_count = mysqli_query($conn, $sql_get);
+                                                            $result_get = mysqli_query($conn, $sql_get);
+                                                            while ($row_get = mysqli_fetch_array($result_get)) {
+                                                                $dateString = date('d-m-Y', strtotime($row1['get_r_date_in']));
+                                                                $date = DateTime::createFromFormat('d-m-Y', $dateString);
+                                                                $formattedDate = $date->format('d F Y');
+                                                                $count_get_no++;
+                                                            ?>
 
-                                                            <p style="text-align:start" id="body_text"> <span class="btn btn-secondary"><?= $count_get_no ?></span> : <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?> | Serial Number : <?= $row_get['r_serial_number'] ?> <?php if ($row_get['get_d_record'] > 1) {
-                                                                                                                                                                                                                                                                                    ?>
-                                                                    <span> - ครั้งที่ <?= $row_get['get_d_record'] ?></span>
-                                                                <?php
-                                                                                                                                                                                                                                                                                    } ?>
-                                                            </p>
+                                                                <p style="text-align:start" id="body_text"> <span class="btn btn-secondary"><?= $count_get_no ?></span> : <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?> | Serial Number : <?= $row_get['r_serial_number'] ?> <?php if ($row_get['get_d_record'] > 1) {
+                                                                                                                                                                                                                                                                                        ?>
+                                                                        <span> - ครั้งที่ <?= $row_get['get_d_record'] ?></span>
+                                                                    <?php
+                                                                                                                                                                                                                                                                                        } ?>
+                                                                </p>
 
-                                                        <?php
-                                                        }
+                                                            <?php
+                                                            }
 
-                                                        ?>
+                                                            ?>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </li>
-                                            <li class="list-group-item">
-                                                <br>
-                                                <h5 style="color : gray" id="date_time">
-                                                    ส่งเรื่องล่าสุดวันที่ :<?= $formattedDate ?>, เวลา : <?= date('H:i:s', strtotime($row1['get_r_date_in'])); ?>
-                                                </h5>
-                                            </li>
-                                        </ul>
-                                        <span class="tooltip">#หมายเลขส่งซ่อมที่ <?= $id_r ?></span>
-                                    <?php } ?>
-                                </div>
-                            </a>
-                            <br> <br>
-                        </div>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <br>
+                                                    <h5 style="color : gray" id="date_time">
+                                                        ส่งเรื่องล่าสุดวันที่ :<?= $formattedDate ?>, เวลา : <?= date('H:i:s', strtotime($row1['get_r_date_in'])); ?>
+                                                    </h5>
+                                                </li>
+                                            </ul>
+                                            <span class="tooltip">#หมายเลขส่งซ่อมที่ <?= $id_r ?></span>
+                                        <?php } ?>
+                                    </div>
+                                </a>
+                                <br> <br>
+                            </div>
 
 
-                    <?php }
+                        <?php }
+                    }
                     // Display message if no data found
                     if (!$found_data) { ?>
                         <center>
