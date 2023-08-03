@@ -133,11 +133,12 @@ $row = mysqli_fetch_array($result);
 
                                         </h5>
                                         <br><br>
-                                        <h6 class="card-subtitle mb-2 text-muted">Serial Number : <?= $_SESSION[$serial_number] ?><?php if (isset($_SESSION[$id_repair_ever])) {   ?>
-                                            <?php if ($_SESSION[$id_repair_round] > 1) { ?>
-                                                <span style="display:inline; margin-right:10px" class="btn btn-primary">ครั้งที่ # <?= $_SESSION[$id_repair_round] ?></span>
-                                            <?php } ?>
-                                        <?php  } ?>
+                                        <h6 class="card-subtitle mb-2 text-muted">Serial Number : <?= $_SESSION[$serial_number] ?>
+                                            <?php if (isset($_SESSION[$id_repair_ever])) {   ?>
+                                                <?php if ($_SESSION[$id_repair_round] > 1) { ?>
+                                                    <span style="display:inline; margin-right:10px" class="btn btn-primary">ครั้งที่ # <?= $_SESSION[$id_repair_round] ?></span>
+                                                <?php } ?>
+                                            <?php  } ?>
                                         </h6>
                                         <hr>
                                         <!-- <h6 style="display:inline">รายละเอียดการซ่อม : </h6>

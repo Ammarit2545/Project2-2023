@@ -179,8 +179,8 @@ if (!isset($_SESSION["r_id_1"])) {
                 $id_repair_ever = 'id_repair_ever_' . $i;
                 $_SESSION[$id_repair_ever] = 1;
 
-                $id_repair_ever = 'id_repair_round_' . $i;
-                $_SESSION[$id_repair_ever] = $_POST['repair_round'] + 1;
+                $id_repair_round_ = 'id_repair_round_' . $i;
+                $_SESSION[$id_repair_round_] = $_POST['repair_round'] + 1;
                 break;
             } else {
                 break;

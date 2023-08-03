@@ -174,27 +174,33 @@ $row = mysqli_fetch_array($result);
 
 if ($row == NULL || isset($_POST['id_repair_ever']) || isset($_SESSION["id_repair_ever"])) {
 
-    $sql = "SELECT repair.r_id, get_detail.get_d_id, get_detail.get_r_id
-            FROM repair_status
-            LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
-            LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
-            LEFT JOIN repair ON get_detail.r_id = repair.r_id
-            WHERE repair.r_serial_number = '$serial_number' 
-            AND get_repair.del_flg = '0' 
-            AND repair.del_flg = '0' 
-            AND get_detail.del_flg = '0'
-            AND repair_status.status_id != '3'
-            AND repair.m_id = '$id';
-            ";
-    $result = mysqli_query($conn, $sql);
-    if (mysqli_num_rows($result)) {
-        $row = mysqli_fetch_array($result);
-        // ever repair
-        $id = $row['r_id'];
-        $get_r_id = $row['get_r_id'];
-        $_SESSION['sn_check_success'] = 1;
-        header("location:../repair_ever.php?id=$id&get_r_id=$get_r_id");
-    } else {
+    if ($row == NULL) {
+        $sql = "SELECT repair.r_id, get_detail.get_d_id, get_detail.get_r_id
+        FROM repair_status
+        LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
+        LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
+        LEFT JOIN repair ON get_detail.r_id = repair.r_id
+        WHERE repair.r_serial_number = '$serial_number' 
+        AND get_repair.del_flg = '0' 
+        AND repair.del_flg = '0' 
+        AND get_detail.del_flg = '0'
+        AND repair_status.status_id != '3'
+        AND repair.m_id = '$id';
+        ";
+        $result = mysqli_query($conn, $sql);
+        if (mysqli_num_rows($result)) {
+            $row = mysqli_fetch_array($result);
+            // ever repair
+            $id = $row['r_id'];
+            $get_d_id = $row['get_d_id'];
+            $_SESSION['sn_check_success'] = 1;
+            header("location:../repair_ever.php?id=$id&get_d_id=$get_d_id");
+        } else {
+            // never repair
+            unset($_SESSION['sn_check_success']);
+            header("location:../repair_check.php");
+        }
+    }else {
         // never repair
         unset($_SESSION['sn_check_success']);
         header("location:../repair_check.php");
@@ -202,6 +208,6 @@ if ($row == NULL || isset($_POST['id_repair_ever']) || isset($_SESSION["id_repai
 } else {
     unset($_SESSION['sn_check_success']);
     // ever repair
-    $id = $row[0];
+    $id = $row['r_id'];
     header("location:../repair_ever.php?id=$id");
 }

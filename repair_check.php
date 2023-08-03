@@ -189,7 +189,7 @@ $row = mysqli_fetch_array($result);
                         <?php
                         // Assuming you have already established a connection to your database and stored it in the $conn variable
 
-                        $sql_id = "SELECT r_id FROM repair WHERE r_serial_number = '$serial_number'";
+                        $sql_id = "SELECT r_id FROM repair WHERE r_serial_number = '$serial_number' AND del_flg = 0 AND m_id = '$id'";
                         $result_id = mysqli_query($conn, $sql_id);
                         if (!$result_id) {
                             die("Error in SQL query: " . mysqli_error($conn));
@@ -204,16 +204,18 @@ $row = mysqli_fetch_array($result);
                         $result_round = mysqli_query($conn, $sql_round);
                         if (!$result_round) {
                             die("Error in SQL query: " . mysqli_error($conn));
+                            $total_round = 0;
+                        } else {
+                            $row_round = mysqli_fetch_assoc($result_round);
+                            $total_round = $row_round['total_round'];
                         }
 
-                        $row_round = mysqli_fetch_assoc($result_round);
-                        $total_round = $row_round['total_round'];
                         ?>
                     </div>
                     <div class="grid-item">
                         <label for="borderinput1" class="form-label">เลข Serial Number</label>
                         <!-- Display the input field with the result -->
-                        <input type="text" class="form-control input" id="borderinput" name="repair_round" value="<?= $total_round ?>" placeholder="จำนวนรอบที่ซ่อม" hidden>
+                        <input type="text" class="form-control input" id="borderinput" name="repair_round" value="<?= $total_round ?>" placeholder="จำนวนรอบที่ซ่อม">
                         <input type="text" class="form-control input" id="borderinput" value="<?= $serial_number ?>" name="serial_number" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)" readonly>
                     </div>
                     <div class="grid-item">
