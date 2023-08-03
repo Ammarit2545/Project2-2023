@@ -199,7 +199,7 @@ if (!isset($_SESSION['r_id_1'])) {
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="1">
                 <label class="form-check-label" for="flexRadioDefault2">
-                    จัดส่งโดยขนส่ง <span style="color:red"> (ที่อยู่ตามที่ท่านได้กรอกลงไป)</span>
+                    จัดส่งโดยขนส่ง <span style="color:red"> (ที่อยู่ในการส่งจะตรงตามที่ท่านได้กรอกลงไป)</span>
                 </label>
             </div>
         </div>

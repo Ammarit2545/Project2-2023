@@ -41,7 +41,6 @@ if (isset($_SESSION['r_id_1'])) {
 } else {
     header("location:../listview_repair.php");
 }
-
 if ($result2) {
 
     $insertedId = mysqli_insert_id($conn);
@@ -53,296 +52,301 @@ if ($result2) {
     $result3 = mysqli_query($conn, $sql3);
     $insertedId_st = mysqli_insert_id($conn);
 
-    // Loop in Sum
-    for ($i = 1; $i <= $sum; $i++) {
-        $r_id = 'r_id_' . $i;
-
-        if (isset($_SESSION[$r_id])) {
+    if ($result3) {
+        // Loop in Sum
+        for ($i = 1; $i <= $sum; $i++) {
             $r_id = 'r_id_' . $i;
 
-            $_SESSION[$r_id] = $i;
+            if (isset($_SESSION[$r_id])) {
+                $r_id = 'r_id_' . $i;
 
-            $name_brand = 'name_brand_' . $i;
+                $_SESSION[$r_id] = $i;
 
-            $serial_number = 'serial_number_' . $i;
+                $name_brand = 'name_brand_' . $i;
 
-            $name_model = 'name_model_' . $i;
+                $serial_number = 'serial_number_' . $i;
 
-            $number_model = 'number_model_' . $i;
+                $name_model = 'name_model_' . $i;
 
-            // $tel = 'tel_' . $i;
-
-            $description = 'description_' . $i;
-
-            $company = 'company_' . $i;
-
-            $image1 = 'image1_' . $i;
-
-            $image2 = 'image2_' . $i;
-
-            $image3 = 'image3_' . $i;
-
-            $image4 = 'image4_' . $i;
-            // echo  $i;
-            $sql = "SELECT * FROM repair WHERE r_serial_number = '$serial_number' AND m_id = '$id'";
-            $result = mysqli_query($conn, $sql);
-            $row = mysqli_fetch_array($result);
-            if ($row > 0) {
-                // การกระทำอื่น
-                $name_brand_data = $_SESSION[$name_brand];
-
-                $serial_number_data = $_SESSION[$serial_number];
-
-                $name_model_data = $_SESSION[$name_model];
-
-                $number_model_data = $_SESSION[$number_model];
+                $number_model = 'number_model_' . $i;
 
                 // $tel = 'tel_' . $i;
 
-                $description_data = $_SESSION[$description];
+                $description = 'description_' . $i;
 
-                $company_data = $_SESSION[$company];
+                $company = 'company_' . $i;
 
-                $image1_data = $_SESSION[$image1];
+                $image1 = 'image1_' . $i;
 
-                $image2_data = $_SESSION[$image2];
+                $image2 = 'image2_' . $i;
 
-                $image3_data = $_SESSION[$image3];
+                $image3 = 'image3_' . $i;
 
-                $image4_data = $_SESSION[$image4];
+                $image4 = 'image4_' . $i;
 
-                $id_r = $row['r_id'];
-
-                $sql = "SELECT COUNT(r_id) FROM `get_detail` 
-                        WHERE r_id = '$id_r ';";
+                $serial_number_check = $_SESSION[$serial_number];
+                // echo  $i;
+                $sql = "SELECT * FROM repair WHERE r_serial_number = '$serial_number_check' AND m_id = '$id' AND del_flg = 0";
                 $result = mysqli_query($conn, $sql);
-                $row = mysqli_fetch_array($result);
-                $r_id_count = $row[0];
+                if (mysqli_num_rows($result) > 0) {
 
+                    $row = mysqli_fetch_array($result);
+                    // การกระทำอื่น
+                    $name_brand_data = $_SESSION[$name_brand];
 
-                $sql = "INSERT INTO get_detail (get_r_id, r_id, get_d_record, get_d_detail)
+                    $serial_number_data = $_SESSION[$serial_number];
+
+                    $name_model_data = $_SESSION[$name_model];
+
+                    $number_model_data = $_SESSION[$number_model];
+
+                    // $tel = 'tel_' . $i;
+
+                    $description_data = $_SESSION[$description];
+
+                    $company_data = $_SESSION[$company];
+
+                    $image1_data = $_SESSION[$image1];
+
+                    $image2_data = $_SESSION[$image2];
+
+                    $image3_data = $_SESSION[$image3];
+
+                    $image4_data = $_SESSION[$image4];
+
+                    $id_r = $row['r_id'];
+
+                    $sql = "SELECT COUNT(r_id) AS count_r_id FROM `get_detail` 
+                        WHERE r_id = '$id_r'AND del_flg = 0 ;";
+                    $result = mysqli_query($conn, $sql);
+                    $row = mysqli_fetch_array($result);
+                    $r_id_count = $row['count_r_id'];
+
+                    $sql = "INSERT INTO get_detail (get_r_id, r_id, get_d_record, get_d_detail)
                     VALUES ('$insertedId', '$id_r', '$r_id_count', '$description_data')";
-                $result = mysqli_query($conn, $sql);
-                $insertedId_get_detail = mysqli_insert_id($conn);
-                $rs_id = $insertedId_st;
+                    $result = mysqli_query($conn, $sql);
+                    $insertedId_get_detail = mysqli_insert_id($conn);
+                    $rs_id = $insertedId_st;
 
-                $folderName_insert_get = "../uploads/$id/$id_r_g/"; // the name of the new folder
-                if (!file_exists($folderName_insert_get)) { // check if the folder already exists
-                    mkdir($folderName_insert_get); // create the new folder
-                    echo "Folder created successfully";
-                } else {
-                    echo "Folder already exists";
-                }
+                    $folderName_insert_get = "../uploads/$id/$id_r_g/"; // the name of the new folder
+                    if (!file_exists($folderName_insert_get)) { // check if the folder already exists
+                        mkdir($folderName_insert_get); // create the new folder
+                        echo "Folder created successfully";
+                    } else {
+                        echo "Folder already exists";
+                    }
 
-                $folderName = "../uploads/$id/$id_r_g/$insertedId_get_detail/"; // the name of the new folder
-                if (!file_exists($folderName)) { // check if the folder already exists
-                    mkdir($folderName); // create the new folder
-                    echo "Folder created successfully";
-                } else {
-                    echo "Folder already exists";
-                }
+                    $folderName = "../uploads/$id/$id_r_g/$insertedId_get_detail/"; // the name of the new folder
+                    if (!file_exists($folderName)) { // check if the folder already exists
+                        mkdir($folderName); // create the new folder
+                        echo "Folder created successfully";
+                    } else {
+                        echo "Folder already exists";
+                    }
 
-                $source_dir = "../uploads/$id/Holder/$i/"; // Replace with the actual path to the directory you want to move the files from
-                $destination_dir = "../uploads/$id/$id_r_g/$insertedId_get_detail/"; // Replace with the actual path to the directory you want to move the files to
+                    $source_dir = "../uploads/$id/Holder/$i/"; // Replace with the actual path to the directory you want to move the files from
+                    $destination_dir = "../uploads/$id/$id_r_g/$insertedId_get_detail/"; // Replace with the actual path to the directory you want to move the files to
 
-                if (!is_dir($destination_dir)) { // Check if the destination directory exists
-                    mkdir($destination_dir, 0777, true); // Create the destination directory if it doesn't exist
-                }
+                    if (!is_dir($destination_dir)) { // Check if the destination directory exists
+                        mkdir($destination_dir, 0777, true); // Create the destination directory if it doesn't exist
+                    }
 
-                foreach (new DirectoryIterator($source_dir) as $file) {
-                    if ($file->isFile()) {
-                        $file_name = $file->getFilename();
-                        $destination_file = $destination_dir . $file_name;
-                        if (rename($file->getPathname(), $destination_file)) {
-                            echo "File " . $file_name . " moved successfully<br>";
-                            $path_file_pic = "uploads/$id/$id_r_g/$insertedId_get_detail/$file_name";
-                            $sql_p = "INSERT INTO repair_pic (rp_pic, rp_date ,get_d_id)
+                    foreach (new DirectoryIterator($source_dir) as $file) {
+                        if ($file->isFile()) {
+                            $file_name = $file->getFilename();
+                            $destination_file = $destination_dir . $file_name;
+                            if (rename($file->getPathname(), $destination_file)) {
+                                echo "File " . $file_name . " moved successfully<br>";
+                                $path_file_pic = "uploads/$id/$id_r_g/$insertedId_get_detail/$file_name";
+                                $sql_p = "INSERT INTO repair_pic (rp_pic, rp_date ,get_d_id)
                        VALUES ( '$path_file_pic', NOW(),'$insertedId_get_detail')";
-                            $result_p = mysqli_query($conn, $sql_p);
-                        } else {
-                            echo "Error moving file " . $file_name . "<br>";
+                                $result_p = mysqli_query($conn, $sql_p);
+                            } else {
+                                echo "Error moving file " . $file_name . "<br>";
+                            }
                         }
                     }
-                }
-            } else {
+                } else {
 
-                $name_brand_data = $_SESSION[$name_brand];
+                    $name_brand_data = $_SESSION[$name_brand];
 
-                $serial_number_data = $_SESSION[$serial_number];
+                    $serial_number_data = $_SESSION[$serial_number];
 
-                $name_model_data = $_SESSION[$name_model];
+                    $name_model_data = $_SESSION[$name_model];
 
-                $number_model_data = $_SESSION[$number_model];
+                    $number_model_data = $_SESSION[$number_model];
 
-                // $tel = 'tel_' . $i;
+                    // $tel = 'tel_' . $i;
 
-                $description_data = $_SESSION[$description];
+                    $description_data = $_SESSION[$description];
 
-                $company_data = $_SESSION[$company];
+                    $company_data = $_SESSION[$company];
 
-                $image1_data = $_SESSION[$image1];
+                    $image1_data = $_SESSION[$image1];
 
-                $image2_data = $_SESSION[$image2];
+                    $image2_data = $_SESSION[$image2];
 
-                $image3_data = $_SESSION[$image3];
+                    $image3_data = $_SESSION[$image3];
 
-                $image4_data = $_SESSION[$image4];
+                    $image4_data = $_SESSION[$image4];
 
-                echo 'the number : ' . $i . '<br>';
-                $sql = "INSERT INTO repair (m_id, r_brand, r_model, r_number_model, r_serial_number ,com_id)
+                    echo 'the number : ' . $i . '<br>';
+                    $sql = "INSERT INTO repair (m_id, r_brand, r_model, r_number_model, r_serial_number ,com_id)
                     VALUES ('$id', '$name_brand_data', '$name_model_data', '$number_model_data', '$serial_number_data' ,'$company_data')";
-                $result = mysqli_query($conn, $sql);
-                $insertedId_r = mysqli_insert_id($conn);
+                    $result = mysqli_query($conn, $sql);
+                    $insertedId_r = mysqli_insert_id($conn);
 
-                $id_r = $insertedId_r;
+                    $id_r = $insertedId_r;
 
-                $sql = "INSERT INTO get_detail (get_r_id, r_id, get_d_record, get_d_detail)
+                    $sql = "INSERT INTO get_detail (get_r_id, r_id, get_d_record, get_d_detail)
                     VALUES ('$insertedId', '$insertedId_r', '1', '$description_data')";
-                $result = mysqli_query($conn, $sql);
-                $insertedId_get_detail = mysqli_insert_id($conn);
-                $rs_id = $insertedId_st;
+                    $result = mysqli_query($conn, $sql);
+                    $insertedId_get_detail = mysqli_insert_id($conn);
+                    $rs_id = $insertedId_st;
 
-                $folderName_insert_get = "../uploads/$id/$id_r_g/"; // the name of the new folder
-                if (!file_exists($folderName_insert_get)) { // check if the folder already exists
-                    mkdir($folderName_insert_get); // create the new folder
-                    echo "Folder created successfully";
-                } else {
-                    echo "Folder already exists";
-                }
+                    $folderName_insert_get = "../uploads/$id/$id_r_g/"; // the name of the new folder
+                    if (!file_exists($folderName_insert_get)) { // check if the folder already exists
+                        mkdir($folderName_insert_get); // create the new folder
+                        echo "Folder created successfully";
+                    } else {
+                        echo "Folder already exists";
+                    }
 
-                $folderName = "../uploads/$id/$id_r_g/$insertedId_get_detail/"; // the name of the new folder
-                if (!file_exists($folderName)) { // check if the folder already exists
-                    mkdir($folderName); // create the new folder
-                    echo "Folder created successfully";
-                } else {
-                    echo "Folder already exists";
-                }
+                    $folderName = "../uploads/$id/$id_r_g/$insertedId_get_detail/"; // the name of the new folder
+                    if (!file_exists($folderName)) { // check if the folder already exists
+                        mkdir($folderName); // create the new folder
+                        echo "Folder created successfully";
+                    } else {
+                        echo "Folder already exists";
+                    }
 
-                $source_dir = "../uploads/$id/Holder/$i/"; // Replace with the actual path to the directory you want to move the files from
-                $destination_dir = "../uploads/$id/$id_r_g/$insertedId_get_detail/"; // Replace with the actual path to the directory you want to move the files to
+                    $source_dir = "../uploads/$id/Holder/$i/"; // Replace with the actual path to the directory you want to move the files from
+                    $destination_dir = "../uploads/$id/$id_r_g/$insertedId_get_detail/"; // Replace with the actual path to the directory you want to move the files to
 
-                if (!is_dir($destination_dir)) { // Check if the destination directory exists
-                    mkdir($destination_dir, 0777, true); // Create the destination directory if it doesn't exist
-                }
+                    if (!is_dir($destination_dir)) { // Check if the destination directory exists
+                        mkdir($destination_dir, 0777, true); // Create the destination directory if it doesn't exist
+                    }
 
-                foreach (new DirectoryIterator($source_dir) as $file) {
-                    if ($file->isFile()) {
-                        $file_name = $file->getFilename();
-                        $destination_file = $destination_dir . $file_name;
-                        if (rename($file->getPathname(), $destination_file)) {
-                            echo "File " . $file_name . " moved successfully<br>";
-                            $path_file_pic = "uploads/$id/$id_r_g/$insertedId_get_detail/$file_name";
-                            $sql_p = "INSERT INTO repair_pic (rp_pic, rp_date ,get_d_id)
+                    foreach (new DirectoryIterator($source_dir) as $file) {
+                        if ($file->isFile()) {
+                            $file_name = $file->getFilename();
+                            $destination_file = $destination_dir . $file_name;
+                            if (rename($file->getPathname(), $destination_file)) {
+                                echo "File " . $file_name . " moved successfully<br>";
+                                $path_file_pic = "uploads/$id/$id_r_g/$insertedId_get_detail/$file_name";
+                                $sql_p = "INSERT INTO repair_pic (rp_pic, rp_date ,get_d_id)
                        VALUES ( '$path_file_pic', NOW(),'$insertedId_get_detail')";
-                            $result_p = mysqli_query($conn, $sql_p);
-                        } else {
-                            echo "Error moving file " . $file_name . "<br>";
+                                $result_p = mysqli_query($conn, $sql_p);
+                            } else {
+                                echo "Error moving file " . $file_name . "<br>";
+                            }
                         }
                     }
                 }
-            }
 
-            $sql_m = "SELECT * FROM member WHERE m_id = '$id'";
-            $result_m = mysqli_query($conn, $sql_m);
-            $row_m = mysqli_fetch_array($result_m);
+                $sql_m = "SELECT * FROM member WHERE m_id = '$id'";
+                $result_m = mysqli_query($conn, $sql_m);
+                $row_m = mysqli_fetch_array($result_m);
 
-            $sToken = "T0lE5UddwpapG3HSgghgwchZWmo45nkRt6KkPMyF5o3";
-            // T0lE5UddwpapG3HSgghgwchZWmo45nkRt6KkPMyF5o3
+                $sToken = "T0lE5UddwpapG3HSgghgwchZWmo45nkRt6KkPMyF5o3";
+                // T0lE5UddwpapG3HSgghgwchZWmo45nkRt6KkPMyF5o3
 
-            $dateString = date('Y-m-d');
-            $date = DateTime::createFromFormat('Y-m-d', $dateString);
-            $formattedDate = $date->format('d F Y');
+                $dateString = date('Y-m-d');
+                $date = DateTime::createFromFormat('Y-m-d', $dateString);
+                $formattedDate = $date->format('d F Y');
 
-            $sMessage = "\nวันที่ : " . $formattedDate . "\n";
-            $sMessage .= "\nมีการแจ้งซ่อมใหม่เข้ามา : " . "\n";
-            $sMessage .= "เลขที่ใบส่งซ่อม : " . $id_r_g;
-            $sMessage .= "\nชื่อ : " . $row_m['m_fname'] . " " . $row_m['m_lname'] . "\n";
-            $sMessage .= "เบอร์โทรติดต่อ : " . $tel . "\n";
+                $sMessage = "\nวันที่ : " . $formattedDate . "\n";
+                $sMessage .= "\nมีการแจ้งซ่อมใหม่เข้ามา : " . "\n";
+                $sMessage .= "เลขที่ใบส่งซ่อม : " . $id_r_g;
+                $sMessage .= "\nชื่อ : " . $row_m['m_fname'] . " " . $row_m['m_lname'] . "\n";
+                $sMessage .= "เบอร์โทรติดต่อ : " . $tel . "\n";
 
-            $chOne = curl_init();
-            curl_setopt($chOne, CURLOPT_URL, "https://notify-api.line.me/api/notify");
-            curl_setopt($chOne, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($chOne, CURLOPT_SSL_VERIFYPEER, 0);
-            curl_setopt($chOne, CURLOPT_POST, 1);
-            curl_setopt($chOne, CURLOPT_POSTFIELDS, "message=" . $sMessage);
-            $headers = array('Content-type: application/x-www-form-urlencoded', 'Authorization: Bearer ' . $sToken . '',);
-            curl_setopt($chOne, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($chOne, CURLOPT_RETURNTRANSFER, 1);
-            $result = curl_exec($chOne);
+                $chOne = curl_init();
+                curl_setopt($chOne, CURLOPT_URL, "https://notify-api.line.me/api/notify");
+                curl_setopt($chOne, CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($chOne, CURLOPT_SSL_VERIFYPEER, 0);
+                curl_setopt($chOne, CURLOPT_POST, 1);
+                curl_setopt($chOne, CURLOPT_POSTFIELDS, "message=" . $sMessage);
+                $headers = array('Content-type: application/x-www-form-urlencoded', 'Authorization: Bearer ' . $sToken . '',);
+                curl_setopt($chOne, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($chOne, CURLOPT_RETURNTRANSFER, 1);
+                $result = curl_exec($chOne);
 
-            //Result error 
-            if (curl_error($chOne)) {
-                echo 'error:' . curl_error($chOne);
-            } else {
-                $result_ = json_decode($result, true);
-                echo "status : " . $result_['status'];
-                echo "message : " . $result_['message'];
-            }
-            curl_close($chOne);
+                //Result error 
+                if (curl_error($chOne)) {
+                    echo 'error:' . curl_error($chOne);
+                } else {
+                    $result_ = json_decode($result, true);
+                    echo "status : " . $result_['status'];
+                    echo "message : " . $result_['message'];
+                }
+                curl_close($chOne);
 
-            unset($_SESSION["id_repair"]);
-            unset($_SESSION["name_brand"]);
-            unset($_SESSION["serial_number"]);
-            unset($_SESSION["name_model"]);
-            unset($_SESSION["number_model"]);
-            unset($_SESSION["tel"]);
-            unset($_SESSION["description"]);
-            unset($_SESSION["image1"]);
-            unset($_SESSION["image2"]);
-            unset($_SESSION["image3"]);
-            unset($_SESSION["image4"]);
-        }
-    }
-
-    $count = 1;
-    while (isset($_SESSION['r_id_' . $count])) {
-        unset($_SESSION['r_id_' . $count]);
-        unset($_SESSION['name_brand_' . $count]);
-        unset($_SESSION['serial_number_' . $count]);
-        unset($_SESSION['name_model_' . $count]);
-        unset($_SESSION['number_model_' . $count]);
-        unset($_SESSION['tel_' . $count]);
-        unset($_SESSION['description_' . $count]);
-        unset($_SESSION['company_' . $count]);
-
-        unset($_SESSION['image1_' . $count]);
-        unset($_SESSION['image2_' . $count]);
-        unset($_SESSION['image3_' . $count]);
-        unset($_SESSION['image4_' . $count]);
-        $count++;
-    }
-
-    // Usage:
-    $folderName = "../uploads/$id/Holder/"; // the name of the folder to be deleted
-
-    function deleteDirectory($dir)
-    {
-        if (!file_exists($dir)) {
-            return true;
-        }
-
-        if (!is_dir($dir)) {
-            return unlink($dir);
-        }
-
-        $files = array_diff(scandir($dir), ['.', '..']);
-        foreach ($files as $file) {
-            $filePath = $dir . DIRECTORY_SEPARATOR . $file;
-
-            if (is_dir($filePath)) {
-                deleteDirectory($filePath);
-            } else {
-                unlink($filePath);
+                unset($_SESSION["id_repair"]);
+                unset($_SESSION["name_brand"]);
+                unset($_SESSION["serial_number"]);
+                unset($_SESSION["name_model"]);
+                unset($_SESSION["number_model"]);
+                unset($_SESSION["tel"]);
+                unset($_SESSION["description"]);
+                unset($_SESSION["image1"]);
+                unset($_SESSION["image2"]);
+                unset($_SESSION["image3"]);
+                unset($_SESSION["image4"]);
             }
         }
 
-        return rmdir($dir);
+        $count = 1;
+        while (isset($_SESSION['r_id_' . $count])) {
+            unset($_SESSION['r_id_' . $count]);
+            unset($_SESSION['name_brand_' . $count]);
+            unset($_SESSION['serial_number_' . $count]);
+            unset($_SESSION['name_model_' . $count]);
+            unset($_SESSION['number_model_' . $count]);
+            unset($_SESSION['tel_' . $count]);
+            unset($_SESSION['description_' . $count]);
+            unset($_SESSION['company_' . $count]);
+
+            unset($_SESSION['image1_' . $count]);
+            unset($_SESSION['image2_' . $count]);
+            unset($_SESSION['image3_' . $count]);
+            unset($_SESSION['image4_' . $count]);
+            $count++;
+        }
+
+        // Usage:
+        $folderName = "../uploads/$id/Holder/"; // the name of the folder to be deleted
+
+        function deleteDirectory($dir)
+        {
+            if (!file_exists($dir)) {
+                return true;
+            }
+
+            if (!is_dir($dir)) {
+                return unlink($dir);
+            }
+
+            $files = array_diff(scandir($dir), ['.', '..']);
+            foreach ($files as $file) {
+                $filePath = $dir . DIRECTORY_SEPARATOR . $file;
+
+                if (is_dir($filePath)) {
+                    deleteDirectory($filePath);
+                } else {
+                    unlink($filePath);
+                }
+            }
+
+            return rmdir($dir);
+        }
+        deleteDirectory($folderName);
+
+        header("location:../repair_wait.php");
+    } else {
+        header("location:../listview_repair.php");
+        echo "Error: " . mysqli_error($conn);
     }
-    deleteDirectory($folderName);
-
-
-
-    header("location:../repair_wait.php");
 } else {
     header("location:../listview_repair.php");
     echo "Error: " . mysqli_error($conn);

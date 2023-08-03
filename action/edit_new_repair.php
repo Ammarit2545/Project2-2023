@@ -110,7 +110,7 @@ $sql = "SELECT * FROM repair WHERE r_serial_number = '$serial_number' AND m_id =
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
-if ($row == NULL) {
+if ($row == NULL || isset($_SESSION["id_repair_ever"])) {
     header("location:../repair_check.php");
 } else {
     $id = $row[0];

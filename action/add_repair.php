@@ -124,6 +124,16 @@ $_SESSION["name_model"] = $_POST['name_model'];
 $_SESSION["number_model"] = $_POST['number_model'];
 $_SESSION["tel"] = $_POST['tel'];
 $_SESSION["description"] = $_POST['description'];
+if (isset($_POST['id_repair_ever'])) {
+    $_SESSION['id_repair_ever'] = 1;
+}
+
+if ($_POST['id_repair'] != NULL) {
+    $_SESSION["id_repair"] = $_POST['id_repair'];
+} else {
+    $_SESSION["id_repair"] = NULL;
+}
+
 if ($_POST['flexRadioDefault'] == 'have_gua') {
     $_SESSION["company"] = $_POST['company'];
 } else {
@@ -135,7 +145,6 @@ $_SESSION["image1"] = $_POST['image1'];
 $_SESSION["image2"] = $_POST['image2'];
 $_SESSION["image3"] = $_POST['image3'];
 $_SESSION["image4"] = $_POST['image4'];
-
 
 
 for ($i = 1; $i <= 4; $i++) {
@@ -153,15 +162,52 @@ for ($i = 1; $i <= 4; $i++) {
 
 $id = $_SESSION["id"];
 
-$sql = "SELECT * FROM repair WHERE r_serial_number = '$serial_number' AND m_id = '$id'";
+$sql = " SELECT repair.r_id,get_detail.`get_d_id`,get_detail.`get_r_id` FROM repair 
+        LEFT JOIN get_detail ON get_detail.r_id = repair.r_id
+        LEFT JOIN get_repair ON get_detail.get_r_id = get_repair.get_r_id
+        LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
+        WHERE repair.r_serial_number = '$serial_number' 
+        AND repair.del_flg = 0 AND get_repair.del_flg = 0 AND get_detail.del_flg = 0
+        AND repair_status.status_id = 3 AND repair.m_id = '$id'";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
-if ($row == NULL) {
-    // header("location:../repair_check.php");
-    header("location:../repair_check.php");
+if ($row == NULL || isset($_POST['id_repair_ever']) || isset($_SESSION["id_repair_ever"])) {
+
+    if ($row == NULL) {
+        $sql = "SELECT repair.r_id, get_detail.get_d_id, get_detail.get_r_id
+        FROM repair_status
+        LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
+        LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
+        LEFT JOIN repair ON get_detail.r_id = repair.r_id
+        WHERE repair.r_serial_number = '$serial_number' 
+        AND get_repair.del_flg = '0' 
+        AND repair.del_flg = '0' 
+        AND get_detail.del_flg = '0'
+        AND repair_status.status_id != '3'
+        AND repair.m_id = '$id';
+        ";
+        $result = mysqli_query($conn, $sql);
+        if (mysqli_num_rows($result)) {
+            $row = mysqli_fetch_array($result);
+            // ever repair
+            $id = $row['r_id'];
+            $get_d_id = $row['get_d_id'];
+            $_SESSION['sn_check_success'] = 1;
+            header("location:../repair_ever.php?id=$id&get_d_id=$get_d_id");
+        } else {
+            // never repair
+            unset($_SESSION['sn_check_success']);
+            header("location:../repair_check.php");
+        }
+    }else {
+        // never repair
+        unset($_SESSION['sn_check_success']);
+        header("location:../repair_check.php");
+    }
 } else {
-    echo ("ever");
-    $id = $row[0];
+    unset($_SESSION['sn_check_success']);
+    // ever repair
+    $id = $row['r_id'];
     header("location:../repair_ever.php?id=$id");
 }

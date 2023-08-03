@@ -36,6 +36,7 @@ $row = mysqli_fetch_array($result);
 
     </script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
@@ -55,10 +56,9 @@ $row = mysqli_fetch_array($result);
     <br><br><br>
     <h1 class="pt-5 text-center">
         การบริการส่งซ่อม
-        <!-- <?= $i ?> -->
     </h1>
     <center>
-        <p>แบบไม่มีกับมีประกันทางร้าน</p>
+        <p>สามารถเพิ่มได้หลายรายการ</p>
     </center>
     <br><br>
     <div class="container">
@@ -108,6 +108,10 @@ $row = mysqli_fetch_array($result);
                         $image3 = 'image3_' . $i;
 
                         $image4 = 'image4_' . $i;
+
+                        $id_repair_ever = 'id_repair_ever_' . $i;
+
+                        $id_repair_round = 'id_repair_round_' . $i;
             ?>
                         <div class="grid-item">
                             <a href="detail_new_repair.php?session_id=<?= $i ?>">
@@ -125,15 +129,26 @@ $row = mysqli_fetch_array($result);
                                                 $company_name = $row_c['com_name'];
                                             ?><h5 style="display:inline; margin-right:10px" class="btn btn-secondary"><?= $company_name ?></h5>
                                             <?php } ?>
+
+
                                         </h5>
                                         <br><br>
-                                        <h6 class="card-subtitle mb-2 text-muted">Serial Number : <?= $_SESSION[$serial_number] ?></h6>
+                                        <h6 class="card-subtitle mb-2 text-muted">Serial Number : <?= $_SESSION[$serial_number] ?>
+                                            <?php if (isset($_SESSION[$id_repair_ever])) {   ?>
+                                                <?php if ($_SESSION[$id_repair_round] > 1) { ?>
+                                                    <span style="display:inline; margin-right:10px" class="btn btn-primary">ครั้งที่ # <?= $_SESSION[$id_repair_round] ?></span>
+                                                <?php } ?>
+                                            <?php  } ?>
+                                        </h6>
                                         <hr>
                                         <!-- <h6 style="display:inline">รายละเอียดการซ่อม : </h6>
                                         <p class="card-text" style="display:inline"><?= $_SESSION[$description] ?></p>
                                         <hr> -->
                             </a>
-                            <h6>รูปภาพประกอบ</h6>
+                            <!-- <?php if ($_SESSION['image1_' . $i] != NULL || $_SESSION['image2_' . $i] != NULL || $_SESSION['image3_' . $i] != NULL || $_SESSION['image_' . $i] != NULL) { ?>
+                                <h6>รูปภาพประกอบ</h6>
+                            <?php } ?> -->
+                            <h6>รูปภาพ/ไฟล์</h6>
                             <?php
                             $folderPath = "uploads/$id/Holder/$i/"; // Replace with the actual path to your folder
 
@@ -211,8 +226,8 @@ $row = mysqli_fetch_array($result);
                                     }
                                 });
                             </script>
-
                             <hr>
+
                             <div class="d-flex justify-content-end">
                                 <a href="edit_repair.php?id=<?= $i ?>" class="btn btn-outline-primary" style="margin-right: 10px;">แก้ไข</a>
                                 <a class="btn btn-outline-danger ml-2" onclick="confirmDelete('<?= $_SESSION[$r_id] ?>')">ลบ</a>
@@ -222,7 +237,8 @@ $row = mysqli_fetch_array($result);
         <span class="tooltip">คำสั่งซ่อมที่ #<?= $_SESSION[$r_id] ?></span>
     </div>
 
-<?php }
+<?php
+                    }
                 }
             } ?>
 </div>
@@ -359,33 +375,44 @@ $query = mysqli_query($conn, $sql_provinces);
 </script>
 <?php
 if (isset($_SESSION['add_data_detail'])) {
-    if ($_SESSION['add_data_detail'] == 1) {
-?>
-        <script>
-            Swal.fire({
-                title: 'โปรดทำการเพิ่มรายการส่งซ่อมก่อนทำรายการ',
-                text: 'กด Accept เพื่อออก',
-                icon: 'error',
-                confirmButtonText: 'Accept'
-            });
-        </script>
-    <?php
-        unset($_SESSION['add_data_detail']);
-    } elseif ($_SESSION['add_data_detail'] == 2) {
-    ?>
-        <script>
-            Swal.fire({
-                title: 'ไม่มีรายการนี้',
-                text: 'กด Accept เพื่อออก',
-                icon: 'error',
-                confirmButtonText: 'Accept'
-            });
-        </script>
-<?php
-        unset($_SESSION['add_data_detail']);
+    $message = "";
+    $icon = "error";
+
+    switch ($_SESSION['add_data_detail']) {
+        case 1:
+            $message = "โปรดทำการเพิ่มรายการส่งซ่อมก่อนทำรายการ";
+            break;
+        case 2:
+            $message = "ไม่มีรายการนี้";
+            break;
+        case 3:
+            $message = "ทำรายการสำเร็จ";
+            $icon = "success";
+            break;
+        case 4:
+            $message = "ไม่สามารถทำรายการได้";
+            $message .= "\nโปรดติดต่อผู้ดูแลระบบ";
+            break;
+        default:
+            // Handle any other cases if needed
+            break;
     }
+?>
+
+    <script>
+        Swal.fire({
+            title: '<?= $message ?>',
+            text: 'กด Accept เพื่อออก',
+            icon: '<?= $icon ?>',
+            confirmButtonText: 'Accept'
+        });
+    </script>
+
+<?php
+    unset($_SESSION['add_data_detail']);
 }
 ?>
+
 <div id="modalimg" class="modal">
     <span class="close" onclick="closeModalIMG()">&times;</span>
     <img id="modal-image" src="" alt="Modal Photo">

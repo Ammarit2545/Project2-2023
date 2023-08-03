@@ -146,7 +146,7 @@ GROUP BY
     <div style="background-color: <?= $row_2['status_color'] ?>;height:200px;padding:7%;color:white">
         <?php if ($row_2['status_id'] == 1) { ?>
             <h3><i class="fa fa-check-square-o"></i> คุณได้ทำการส่งเรื่องแล้ว</h3>
-            <p>โปรดรอการตอบกลับจากพนักงาน<br>หากคุณต้องการยกเลิกคำสั่งซ่อมสามารถทำการ <span style="color:white">"ยกเลิก"</span> ได้</p>
+            <p>โปรดรอการตอบกลับ พนักงานจะทำการตอบกลับภายใน 2 วันทำการ<br>หากคุณต้องการยกเลิกคำสั่งซ่อมสามารถทำการ <span style="color:white">"ยกเลิก"</span> ได้</p>
 
         <?php  } ?>
         <?php if ($row_2['status_id'] == 10) { ?>

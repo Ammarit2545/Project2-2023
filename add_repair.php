@@ -75,6 +75,7 @@ $row = mysqli_fetch_array($result);
 
     $id = $_SESSION["id"];
 
+
     $sql = "SELECT * FROM member WHERE m_id = '$id'";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($result);
@@ -95,13 +96,49 @@ $row = mysqli_fetch_array($result);
             <div class="container">
                 <div class="grid">
                     <div class="grid-item">
-                        <label for="borderinput1" class="form-label">ชื่อยี่ห้อ</label>
-                        <input type="text" class="form-control input" id="borderinput" name="name_brand" placeholder="กรุณากรอกชื่อยี่ห้อ" required>
+                        <label for="name_brand" class="form-label">ชื่อยี่ห้อ</label>
+                        <input type="text" class="form-control input" id="borderinput"  name="name_brand" placeholder="กรุณากรอกชื่อยี่ห้อ" required>
                     </div>
                     <div class="grid-item">
-                        <label for="borderinput1" class="form-label">เลข Serial Number</label>
-                        <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)">
+                        <label for="serial_number" class="form-label">เลข Serial Number</label>
+                        <div>
+                            <input type="text" class="form-control input" id="borderinput"  name="serial_number" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)" onkeyup="checkSerial(this)">
+                        </div>
+                        <span class="serialMessage" style="color: red; display: none;">ใช้เลข Serial Number นี้ไปแล้วในรายการ</span>
+
+                        <?php
+                        $array_serial_use = [];
+
+                        $count_serial = 1;
+                        while (isset($_SESSION['serial_number_' . $count_serial])) {
+                            $array_serial_use[] = $_SESSION['serial_number_' . $count_serial];
+
+                            // Process each serial number in the session
+                            echo $current_session . '<br>';
+
+                            $count_serial++;
+                        }
+                        ?>
+
+                        <script>
+                            function checkSerial(inputElement) {
+                                var inputSerial = inputElement.value;
+                                var sessionSerials = <?php echo json_encode($array_serial_use); ?>;
+                                var serialMessage = document.querySelector(".serialMessage");
+
+                                var isSerialUsed = sessionSerials.includes(inputSerial);
+
+                                if (isSerialUsed) {
+                                    serialMessage.style.display = "inline";
+                                    inputElement.setCustomValidity('Serial number already used in the session');
+                                } else {
+                                    serialMessage.style.display = "none";
+                                    inputElement.setCustomValidity('');
+                                }
+                            }
+                        </script>
                     </div>
+
                     <div class="grid-item">
                         <label for="borderinput1" class="form-label">ชื่อรุ่น</label>
                         <input type="text" class="form-control input" id="borderinput" name="name_model" placeholder="กรุณากรอกชื่อรุ่น" required>

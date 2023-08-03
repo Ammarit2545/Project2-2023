@@ -1,4 +1,6 @@
 <?php
+session_start();
+$_SESSION['id_repair_ever_1'];
 // Replace 'Project2-2023' with the folder name you want to select
 $selectedFolder = '../';
 
@@ -13,5 +15,7 @@ $motherFolderName = basename($motherFolderPath);
 
 // Display the name of the mother folder
 echo "The mother folder is: " . $motherFolderName . "<br>";
-
+ echo $_SESSION['id_repair_round_1'];
 ?>
+
+<!-- <?php echo 'SESSION ='. $_SESSION['add_data_detail']; ?> -->

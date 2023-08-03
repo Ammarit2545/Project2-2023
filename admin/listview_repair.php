@@ -124,7 +124,7 @@ if (!isset($_SESSION['role_id'])) {
                                                 // Rest of the code that uses $dateString
                                                 $date = DateTime::createFromFormat('d-m-Y', $dateString);
                                                 // Additional code using $date
-                                            }                                            
+                                            }
                                             $formattedDate = $date->format('F / d / Y');
                                             $i = $i + 1;
                                             $get_r_id = $row['get_r_id'];
@@ -152,16 +152,16 @@ if (!isset($_SESSION['role_id'])) {
                                                 </td>
                                                 <td><?php
                                                     if ($row['get_deli'] != NULL) {
-                                                        if($row['get_deli'] == 0){
+                                                        if ($row['get_deli'] == 0) {
                                                             // echo "รับที่ร้าน";
-                                                            ?>
+                                                    ?>
                                                             <p style="color:black">รับที่ร้าน</p>
-                                                            <?php
-                                                        }else{
+                                                        <?php
+                                                        } else {
                                                             // echo "จัดส่งไปรษณีย์";
-                                                            ?>
+                                                        ?>
                                                             <p style="color:green">จัดส่งไปรษณีย์</p>
-                                                            <?php
+                                                    <?php
                                                         }
                                                         // echo $row['get_deli'];
                                                     } else {
@@ -172,21 +172,21 @@ if (!isset($_SESSION['role_id'])) {
                                                     if (isset($row['r_brand']) && $row_get_count[0] == 1) {
                                                         echo $row['r_brand'];
                                                     } elseif ($row_get_count[0] > 1) {
-                                                        ?>
+                                                    ?>
                                                         <p style="color:blue">มากกว่า 1 ชิ้น</p>
-                                                        <?php
+                                                    <?php
                                                     } else {
                                                         echo "-";
                                                     }
-                                                     ?>
+                                                    ?>
                                                 </td>
                                                 <td><?php
                                                     if (isset($row['r_model']) && $row_get_count[0] == 1) {
                                                         echo $row['r_model'];
                                                     } elseif ($row_get_count[0] > 1) {
-                                                        ?>
+                                                    ?>
                                                         <p style="color:blue">มากกว่า 1 ชิ้น</p>
-                                                        <?php
+                                                    <?php
                                                     } else {
                                                         echo "-";
                                                     }
@@ -219,14 +219,15 @@ if (!isset($_SESSION['role_id'])) {
                                                 <!-- <td>System Architect</td> -->
                                                 <td><?php
                                                     if ($row_get_count[0] > 1) {
-                                                        ?>
-                                                        <p style="color:blue"><?php  echo $row_get_count[0]; ?></p>
-                                                        <?php
+                                                    ?>
+                                                        <p style="color:blue"><?php echo $row_get_count[0]; ?></p>
+                                                    <?php
                                                     } elseif ($row_get_count[0] == 1) {
                                                         echo $row_get_count[0];
                                                     } else {
                                                         echo "-";
-                                                    } ?></td>
+                                                    } ?>
+                                                </td>
                                                 <td>
                                                     <?php
                                                     if ($formattedDate != NULL) {
@@ -319,6 +320,45 @@ if (!isset($_SESSION['role_id'])) {
             </div>
         </div>
     </div>
+    <?php
+    if (isset($_SESSION['add_data_detail'])) {
+        $message = "";
+        $icon = "error";
+
+        switch ($_SESSION['add_data_detail']) {
+            case 1:
+                $message = "โปรดทำการเพิ่มรายการส่งซ่อมก่อนทำรายการ";
+                break;
+            case 2:
+                $message = "ไม่มีรายการนี้";
+                break;
+            case 3:
+                $message = "ทำรายการสำเร็จ";
+                $icon = "success";
+                break;
+            case 4:
+                $message = "ไม่สามารถทำรายการได้";
+                $message .= "\nโปรดติดต่อผู้ดูแลระบบ";
+                break;
+            default:
+                // Handle any other cases if needed
+                break;
+        }
+    ?>
+
+        <script>
+            Swal.fire({
+                title: '<?= $message ?>',
+                text: 'กด Accept เพื่อออก',
+                icon: '<?= $icon ?>',
+                confirmButtonText: 'Accept'
+            });
+        </script>
+
+    <?php
+        unset($_SESSION['add_data_detail']);
+    }
+    ?>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
