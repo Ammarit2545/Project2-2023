@@ -562,7 +562,12 @@ if (isset($_GET["status_id"])) {
                                                             $count_get_no++;
                                                         ?>
 
-                                                            <p style="text-align:start" id="body_text"> <span class="btn btn-secondary"><?= $count_get_no ?></span> : <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?> | Serial Number : <?= $row_get['r_serial_number'] ?> </p>
+                                                            <p style="text-align:start" id="body_text"> <span class="btn btn-secondary"><?= $count_get_no ?></span> : <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?> | Serial Number : <?= $row_get['r_serial_number'] ?> <?php if ($row_get['get_d_record'] > 1) {
+                                                                                                                                                                                                                                                                                    ?>
+                                                                    <span> - ครั้งที่ <?= $row_get['get_d_record'] ?></span>
+                                                                <?php
+                                                                                                                                                                                                                                                                                    } ?>
+                                                            </p>
 
                                                         <?php
                                                         }

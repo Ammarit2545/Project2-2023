@@ -15,7 +15,6 @@ $result1 = mysqli_query($conn, $sql1);
 $row1 = mysqli_fetch_array($result1);
 $company = $row1['com_id'];
 
-
 if ($row2['get_r_detail'] == NULL) {
     $description = $_SESSION["description"];
 } else {

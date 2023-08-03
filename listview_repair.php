@@ -36,6 +36,7 @@ $row = mysqli_fetch_array($result);
 
     </script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
@@ -129,12 +130,15 @@ $row = mysqli_fetch_array($result);
                                             ?><h5 style="display:inline; margin-right:10px" class="btn btn-secondary"><?= $company_name ?></h5>
                                             <?php } ?>
 
-                                            
+
                                         </h5>
                                         <br><br>
                                         <h6 class="card-subtitle mb-2 text-muted">Serial Number : <?= $_SESSION[$serial_number] ?><?php if (isset($_SESSION[$id_repair_ever])) {   ?>
+                                            <?php if ($_SESSION[$id_repair_round] > 1) { ?>
                                                 <span style="display:inline; margin-right:10px" class="btn btn-primary">ครั้งที่ # <?= $_SESSION[$id_repair_round] ?></span>
-                                            <?php  } ?></h6>
+                                            <?php } ?>
+                                        <?php  } ?>
+                                        </h6>
                                         <hr>
                                         <!-- <h6 style="display:inline">รายละเอียดการซ่อม : </h6>
                                         <p class="card-text" style="display:inline"><?= $_SESSION[$description] ?></p>
@@ -367,33 +371,44 @@ $query = mysqli_query($conn, $sql_provinces);
 </script>
 <?php
 if (isset($_SESSION['add_data_detail'])) {
-    if ($_SESSION['add_data_detail'] == 1) {
-?>
-        <script>
-            Swal.fire({
-                title: 'โปรดทำการเพิ่มรายการส่งซ่อมก่อนทำรายการ',
-                text: 'กด Accept เพื่อออก',
-                icon: 'error',
-                confirmButtonText: 'Accept'
-            });
-        </script>
-    <?php
-        unset($_SESSION['add_data_detail']);
-    } elseif ($_SESSION['add_data_detail'] == 2) {
-    ?>
-        <script>
-            Swal.fire({
-                title: 'ไม่มีรายการนี้',
-                text: 'กด Accept เพื่อออก',
-                icon: 'error',
-                confirmButtonText: 'Accept'
-            });
-        </script>
-<?php
-        unset($_SESSION['add_data_detail']);
+    $message = "";
+    $icon = "error";
+
+    switch ($_SESSION['add_data_detail']) {
+        case 1:
+            $message = "โปรดทำการเพิ่มรายการส่งซ่อมก่อนทำรายการ";
+            break;
+        case 2:
+            $message = "ไม่มีรายการนี้";
+            break;
+        case 3:
+            $message = "ทำรายการสำเร็จ";
+            $icon = "success";
+            break;
+        case 4:
+            $message = "ไม่สามารถทำรายการได้";
+            $message .= "\nโปรดติดต่อผู้ดูแลระบบ";
+            break;
+        default:
+            // Handle any other cases if needed
+            break;
     }
+?>
+
+    <script>
+        Swal.fire({
+            title: '<?= $message ?>',
+            text: 'กด Accept เพื่อออก',
+            icon: '<?= $icon ?>',
+            confirmButtonText: 'Accept'
+        });
+    </script>
+
+<?php
+    unset($_SESSION['add_data_detail']);
 }
 ?>
+
 <div id="modalimg" class="modal">
     <span class="close" onclick="closeModalIMG()">&times;</span>
     <img id="modal-image" src="" alt="Modal Photo">
