@@ -215,7 +215,7 @@ $row = mysqli_fetch_array($result);
                     <div class="grid-item">
                         <label for="borderinput1" class="form-label">เลข Serial Number</label>
                         <!-- Display the input field with the result -->
-                        <input type="text" class="form-control input" id="borderinput" name="repair_round" value="<?= $total_round ?>" placeholder="จำนวนรอบที่ซ่อม">
+                        <input type="text" class="form-control input" id="borderinput" name="repair_round" value="<?= $total_round ?>" placeholder="จำนวนรอบที่ซ่อม" hidden>
                         <input type="text" class="form-control input" id="borderinput" value="<?= $serial_number ?>" name="serial_number" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)" readonly>
                     </div>
                     <div class="grid-item">
