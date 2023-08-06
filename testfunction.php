@@ -1,17 +1,14 @@
 <?php
-// Replace 'Project2-2023' with the folder name you want to select
-$selectedFolder = '../';
+session_start();
 
-// Get the path of the selected folder
-$selectedFolderPath = __DIR__ . '/' . $selectedFolder;
+// Assuming you have the values of 'id_repair_ever_1', 'id_repair_ever_2', 'id_repair_ever_3', and 'id_repair_ever_4' stored somewhere, for example:
+// $_SESSION['id_repair_ever_1'] = 123;
+// $_SESSION['id_repair_ever_2'] = 456;
+// $_SESSION['id_repair_ever_3'] = 789;
+// $_SESSION['id_repair_ever_4'] = 101112;
 
-// Use dirname twice to get the mother folder path
-$motherFolderPath = dirname(dirname($selectedFolderPath));
-
-// Use basename to get the name of the mother folder
-$motherFolderName = basename($motherFolderPath);
-
-// Display the name of the mother folder
-echo "The mother folder is: " . $motherFolderName . "<br>";
-
-?>
+$i = 1;
+while (isset($_SESSION['id_repair_ever_' . $i])) {
+    echo 'Have $_SESSION[\'id_repair_ever_' . $i . '\']';
+    $i++;
+}
