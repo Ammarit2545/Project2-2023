@@ -37,9 +37,9 @@ if ($stock_type != NULL || $stock_type != '') {
 
         if ($row_check_bill['pl_id'] > 0) {
             $_SESSION["add_data_alert"] = 3;
-            echo '33333';
-            header("Location: ../edit_stock.php");
-            exit();
+            // echo '33333';
+            // header("Location: ../edit_stock.php");
+            // exit();
         } else {
             $sql = "INSERT INTO `parts_log` (`pl_date`, `e_id`, `st_id`, `pl_bill_number`, `pl_tax_number`, `pl_date_in`, `pl_detail`, `com_p_id`)
                     VALUES (NOW(), '$id', '$stock_type', '$pl_bill_number', '$pl_tax_number', '$pl_date_in', '$pl_detail', '$com_p_id')";
@@ -66,7 +66,17 @@ if ($stock_type != NULL || $stock_type != '') {
                 $result_update = mysqli_query($conn, $sql_update);
 
                 if ($result_update) {
-                    $sql_p = "INSERT INTO `parts_log_detail` (`p_id`, `pl_d_value`, `pl_id`) VALUES ('$p_id', '$p_stock', '$pl_id')";
+                    $sql_count_stock = "SELECT COUNT(pl_d_id) AS count_stock FROM parts_log_detail WHERE p_id = '$p_id'AND del_flg = '0'";  // make del flg = 0
+                    $result_count_stock = mysqli_query($conn, $sql_count_stock);
+                    $row_count_stock = mysqli_fetch_array($result_count_stock);
+
+                    if ($row_count_stock['count_stock'] == NULL || $row_count_stock['count_stock'] == 0) {
+                        $count_stock =  1;
+                    } else {
+                        $count_stock = $row_count_stock['count_stock'] + 1;
+                    }
+
+                    $sql_p = "INSERT INTO `parts_log_detail` (`p_id`, `pl_d_value`, `pl_id`, `count_stock`) VALUES ('$p_id', '$p_stock', '$pl_id', '$count_stock')";
                     $result_insert = mysqli_query($conn, $sql_p);
                     if (!$result_insert) {
                         $_SESSION["add_data_error_alert$i"] = 1;

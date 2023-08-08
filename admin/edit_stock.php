@@ -231,7 +231,7 @@ if (!isset($_SESSION['role_id'])) {
                                         <?php
                                         } else { ?>
                                             <!-- <label for="st_id" class="col-sm-1 col-form-label">รหัสอะไหล่</label> -->
-                                            <select class="form-select" name="st_id" id="stockType" aria-label="Default select example" onchange="ShowBillFunc()" required>
+                                            <select class="form-select" name="st_id" id="stockType" aria-label="Default select example" onchange="ShowBillFunc(),EditSession(this,6)" required>
                                                 <option selected>เลือกวิธีการเพิ่มอะไหล่</option>
                                                 <?php
                                                 $sql = "SELECT * FROM stock_type WHERE del_flg = '0'  AND st_type = '1'";
