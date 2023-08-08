@@ -242,7 +242,7 @@ if (!isset($_SESSION['role_id'])) {
                                 <input type="text" name="zip_code" id="zip_code" class="form-control" required>
                                 <br>
 
-                                <label for="exampleFormControlTextarea1" class="form-label">กรุณากรอกที่อยู่ที่ต้องการจัดส่ง</label>
+                                <label for="exampleFormControlTextarea1" class="form-label">รายละเอียดที่อยู่</label>
                                 <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3" required></textarea>
 
                                 <!-- <div class="text-center py-4">
