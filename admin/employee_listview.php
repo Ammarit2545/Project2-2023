@@ -100,7 +100,9 @@ if (!isset($_SESSION['role_id'])) {
                                                     if ($row['e_id'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $row['e_id'];
+                                                    ?>
+                                                        <p style="font-size : 80%"><?= $row['e_id'] ?></p>
+                                                    <?php
                                                     }
                                                     ?>
                                                 </td>
@@ -108,7 +110,9 @@ if (!isset($_SESSION['role_id'])) {
                                                     if ($row['e_fname'] == NULL || $row['e_lname'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $row['e_fname'] . " " . $row['e_lname'];
+                                                    ?>
+                                                        <p style="font-size : 80%"><?= $row['e_fname'] . " " . $row['e_lname']; ?></p>
+                                                    <?php
                                                     }
                                                     ?>
                                                 </td>
@@ -117,7 +121,9 @@ if (!isset($_SESSION['role_id'])) {
                                                     if ($row['role_name'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $row['role_name'];
+                                                    ?>
+                                                        <p style="font-size : 80%"><?= $row['role_name']; ?></p>
+                                                    <?php
                                                     }
                                                     ?>
                                                 </td>
@@ -126,7 +132,9 @@ if (!isset($_SESSION['role_id'])) {
                                                     if ($row['e_tel'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $row['e_tel'];
+                                                    ?>
+                                                        <p style="font-size : 80%"><?= $row['e_tel']; ?></p>
+                                                    <?php
                                                     }
                                                     ?>
                                                 </td>
@@ -135,16 +143,34 @@ if (!isset($_SESSION['role_id'])) {
                                                     if ($row['e_add'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $row['e_add'];
-                                                    }
-                                                    ?>
+
+                                                        $jsonobj = $row['e_add'];
+
+                                                        if ($jsonobj) {
+                                                            $obj = json_decode($jsonobj);
+
+                                                            if ($obj !== null && property_exists($obj, 'province') && property_exists($obj, 'district') && property_exists($obj, 'sub_district')) {
+                                                                $sql_p = "SELECT provinces.name_th, amphures.name_th, districts.name_th
+                                                                            FROM provinces
+                                                                            LEFT JOIN amphures ON provinces.id = amphures.province_id
+                                                                            LEFT JOIN districts ON amphures.id = districts.amphure_id
+                                                                            WHERE provinces.id = '$obj->province' AND amphures.id = '$obj->district' AND districts.id = '$obj->sub_district';";
+                                                                $result_p = mysqli_query($conn, $sql_p);
+                                                                $row_p = mysqli_fetch_array($result_p);
+                                                            }
+                                                        }
+                                                    ?><p style="font-size : 80%"><?= 'จ.' . $row_p[0] . ' ,อ.' . $row_p[1] . ' ,ต.' . $row_p[2]; ?></p><?php
+                                                                                                                                                    }
+                                                                                                                                                        ?>
                                                 </td>
                                                 <td>
                                                     <?php
                                                     if ($row['e_date_in'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $row['e_date_in'];
+                                                    ?>
+                                                        <p style="font-size : 80%"><?= $row['e_date_in'] ?></p>
+                                                    <?php
                                                     }
                                                     ?>
                                                 </td>
@@ -153,7 +179,9 @@ if (!isset($_SESSION['role_id'])) {
                                                     if ($row['e_salary'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo number_format($row['e_salary'], 0, '.', ',') . " ฿";
+                                                    ?>
+                                                        <p style="font-size : 80%"><?= number_format($row['e_salary'], 0, '.', ',') . " ฿"; ?></p>
+                                                    <?php
                                                     }
                                                     ?>
                                                 </td>

@@ -25,6 +25,7 @@ if (!isset($_SESSION['role_id'])) {
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
@@ -176,19 +177,18 @@ if (!isset($_SESSION['role_id'])) {
                                 <input type="text" name="e_lname" class="form-control" id="inputPassword">
                             </div>
                         </div>
+                        <br>
                         <div class="mb-3 row">
                             <label for="inputPassword" class="col-sm-1 col-form-label">เบอร์โทรศัพท์</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <input type="text" name="e_tel" class="form-control" id="inputPassword">
                             </div>
                             <label for="inputPassword" class="col-sm-1 col-form-label">เงินเดือน</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <input type="text" name="e_salary" class="form-control" id="inputPassword">
                             </div>
-                        </div>
-                        <div class="mb-3 row">
                             <label for="inputPassword" class="col-sm-1 col-form-label">ตำแหน่ง</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <select name="role_id" id="role_id" class="mt-2 form-select" aria-label="Default select example">
                                     <?php
                                     if (isset($conn)) {
@@ -256,8 +256,58 @@ if (!isset($_SESSION['role_id'])) {
 
                         </div>
                         <div class="mb-3">
-                            <label for="exampleFormControlTextarea1" class="col-form-label">ที่อยู่ :</label>
-                            <textarea class="form-control" name="e_add" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            <?php
+                            mysqli_query($conn, "SET NAMES 'utf8' ");
+                            error_reporting(error_reporting() & ~E_NOTICE);
+                            date_default_timezone_set('Asia/Bangkok');
+
+                            $sql_provinces = "SELECT * FROM provinces";
+                            $query = mysqli_query($conn, $sql_provinces);
+
+                            ?>
+                            <!-- <label for="exampleFormControlTextarea1" class="col-form-label">ที่อยู่ :</label> -->
+                            <!-- <textarea class="form-control" name="e_add" id="exampleFormControlTextarea1" rows="3"></textarea> -->
+                            <div id="address">
+                                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="sel1">จังหวัด:</label>
+                                        <select class="form-control" name="Ref_prov_id" id="provinces" required>
+                                            <option value="" selected disabled>กรุณาเลือกจังหวัด</option>
+                                            <?php foreach ($query as $value) { ?>
+                                                <option value="<?= $value['id'] ?>"><?= $value['name_th'] ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="sel1">อำเภอ:</label>
+                                        <select class="form-control" name="Ref_dist_id" id="amphures" required>
+                                            <option value="" selected disabled>กรุณาเลือกอำเภอ</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="sel1">ตำบล:</label>
+                                        <select class="form-control" name="Ref_subdist_id" id="districts" required>
+                                            <option value="" selected disabled>กรุณาเลือกตำบล</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="sel1">รหัสไปรษณีย์:</label>
+                                        <input type="text" name="zip_code" id="zip_code" class="form-control" required>
+                                    </div>
+                                </div>
+                                <br>
+
+                                <label for="exampleFormControlTextarea1" class="form-label">รายละเอียดที่อยู่</label>
+                                <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3" required></textarea>
+
+                                <!-- <div class="text-center py-4">
+                                    <a class="btn btn-success" name="submit" onclick="validateForm()">ยืนยัน</a>
+                                </div> -->
+                            </div>
                         </div>
                         <div class="text-center pt-4">
                             <!-- <button type="submit" class="btn btn-success" 
@@ -332,6 +382,8 @@ if (!isset($_SESSION['role_id'])) {
             xhttp.send();
         }
     </script>
+
+    <?php include('script.php'); ?>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>

@@ -31,6 +31,12 @@
             <!-- Custom styles for this page -->
             <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
+            <style>
+                .font-style {
+                    font-size: 90%;
+                }
+            </style>
+
         </head>
 
         <body id="page-top">
@@ -90,14 +96,66 @@
                                                     $i = $i + 1;
                                                 ?>
                                                     <tr>
-                                                        <td><?= $i ?></td>
-                                                        <td><?= $row['m_fname'] . " " . $row['m_lname']  ?></td>
-                                                        <td><?= $row['m_email'] ?></td>
-                                                        <td><?= $row['m_add'] ?></td>
-                                                        <td><?= $row['m_tel'] ?></td>
-                                                        <td><?= $row['m_date_in'] ?></td>
                                                         <td>
-                                                            <a href="action/delete_member.php?id=<?= $row['m_id'] ?>" class="btn btn-danger" onclick="return confirmDelete(event)">ลบ</a>
+                                                            <?php if ($row['m_email'] != NULL) { ?>
+                                                                <p class="font-style"><?= $i ?></p>
+                                                            <?php  } else { ?>
+                                                                <p class="font-style">ไม่มีข้อมูล</p>
+                                                            <?php } ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php if ($row['m_fname'] != NULL && $row['m_lname'] != NULL) { ?>
+                                                                <p class="font-style"> <?= $row['m_fname'] . " " . $row['m_lname']  ?></p>
+                                                            <?php  } else { ?>
+                                                                <p class="font-style">ไม่มีข้อมูล</p>
+                                                            <?php } ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php if ($row['m_email'] != NULL) { ?>
+                                                                <p class="font-style"><?= $row['m_email'] ?></p>
+                                                            <?php  } else { ?>
+                                                                <p class="font-style">ไม่มีข้อมูล</p>
+                                                            <?php } ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php if ($row['m_add'] != NULL) {
+                                                                $jsonobj = $row['m_add'];
+                                                                if ($jsonobj) {
+                                                                    $obj = json_decode($jsonobj);
+
+                                                                    if ($obj !== null && property_exists($obj, 'province') && property_exists($obj, 'district') && property_exists($obj, 'sub_district')) {
+                                                                        $sql_p = "SELECT provinces.name_th, amphures.name_th, districts.name_th
+                                                                            FROM provinces
+                                                                            LEFT JOIN amphures ON provinces.id = amphures.province_id
+                                                                            LEFT JOIN districts ON amphures.id = districts.amphure_id
+                                                                            WHERE provinces.id = '$obj->province' AND amphures.id = '$obj->district' AND districts.id = '$obj->sub_district';";
+                                                                        $result_p = mysqli_query($conn, $sql_p);
+                                                                        $row_p = mysqli_fetch_array($result_p);
+                                                                    }
+                                                                }
+                                                            ?><p class="font-style"><?= 'จ.' . $row_p[0] . ' ,อ.' . $row_p[1] . ' ,ต.' . $row_p[2]; ?></p>
+                                                            <?php  } else { ?>
+                                                                <p class="font-style">ไม่มีข้อมูล</p>
+                                                            <?php } ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php if ($row['m_tel'] != NULL) { ?>
+                                                                <p class="font-style"><?= $row['m_tel'] ?></p>
+                                                            <?php  } else { ?>
+                                                                <p class="font-style">ไม่มีข้อมูล</p>
+                                                            <?php } ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php if ($row['m_date_in'] != NULL) { ?>
+                                                                <p class="font-style"><?= $row['m_date_in'] ?></p>
+                                                            <?php  } else { ?>
+                                                                <p class="font-style">ไม่มีข้อมูล</p>
+                                                            <?php } ?>
+                                                        </td>
+                                                        <td>
+                                                            <center>
+                                                                <a href="action/delete_member.php?id=<?= $row['m_id'] ?>" class="btn btn-danger" onclick="return confirmDelete(event)">ลบ</a>
+                                                            </center>
                                                             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
                                                             <!-- JavaScript function for confirmation -->
@@ -121,7 +179,7 @@
                                                                     });
                                                                 }
                                                             </script>
-                                                            <a href="detail_member.php?id=<?= $row['m_id'] ?>" class="btn btn-warning">แก้ไข</a>
+                                                            <!-- <a href="detail_member.php?id=<?= $row['m_id'] ?>" class="btn btn-warning">ดูรายละเอียด</a> -->
                                                         </td>
                                                     </tr>
                                                 <?php

@@ -5,7 +5,7 @@
 
     $.ajax({
       type: "POST",
-      url: "ajax_db.php",
+      url: "../ajax_db.php",
       data: {
         id: id_province,
         function: 'provinces'
@@ -24,7 +24,7 @@
 
     $.ajax({
       type: "POST",
-      url: "ajax_db.php",
+      url: "../ajax_db.php",
       data: {
         id: id_amphures,
         function: 'amphures'
@@ -40,7 +40,7 @@
 
     $.ajax({
       type: "POST",
-      url: "ajax_db.php",
+      url: "../ajax_db.php",
       data: {
         id: id_districts,
         function: 'districts'

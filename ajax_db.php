@@ -1,6 +1,10 @@
 <?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "ane_electronic";
 
-$con = mysqli_connect("localhost", "root", "123456", "ane_electronic") or die("Error: " . mysqli_error($con));
+$con = mysqli_connect($servername, $username, $password, $dbname) or die("Error: " . mysqli_error($con));
 mysqli_query($con, "SET NAMES 'utf8' ");
 error_reporting(error_reporting() & ~E_NOTICE);
 date_default_timezone_set('Asia/Bangkok');
@@ -26,7 +30,6 @@ if (isset($_POST['function']) && $_POST['function'] == 'amphures') {
     echo '<option value="' . $value2['id'] . '">' . $value2['name_th'] . '</option>';
   }
 }
-
 
 if (isset($_POST['function']) && $_POST['function'] == 'districts') {
   $id = $_POST['id'];

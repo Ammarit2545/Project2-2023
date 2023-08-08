@@ -25,6 +25,7 @@ if (!isset($_SESSION['role_id'])) {
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
@@ -56,8 +57,30 @@ if (!isset($_SESSION['role_id'])) {
                 ?>
                 <!-- End of Topbar -->
 
+                <?php
+                $sql = "SELECT * FROM employee WHERE e_id = '$e_id'";
+                $result = mysqli_query($conn, $sql);
+                $row = mysqli_fetch_array($result);
+
+                $jsonobj = $row['e_add'];
+
+                if ($jsonobj) {
+                    $obj = json_decode($jsonobj);
+
+                    if ($obj !== null && property_exists($obj, 'province') && property_exists($obj, 'district') && property_exists($obj, 'sub_district')) {
+                        $sql_p = "SELECT provinces.name_en, amphures.name_en, districts.name_en
+                                    FROM provinces
+                                    LEFT JOIN amphures ON provinces.id = amphures.province_id
+                                    LEFT JOIN districts ON amphures.id = districts.amphure_id
+                                    WHERE provinces.id = '$obj->province' AND amphures.id = '$obj->district' AND districts.id = '$obj->sub_district';";
+                        $result_p = mysqli_query($conn, $sql_p);
+                        $row_p = mysqli_fetch_array($result_p);
+                    }
+                }
+                ?>
+
                 <!-- Begin Page Content -->
-                <form action="action/edit_employee.php?id=<?= $e_id ?>" method="POST">
+                <form id="form_edit" action="action/edit_employee.php?id=<?= $e_id ?>" method="POST">
                     <div class="container-fluid">
 
                         <!-- Page Heading -->
@@ -126,33 +149,271 @@ if (!isset($_SESSION['role_id'])) {
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="exampleFormControlTextarea1" class="col-form-label">ที่อยู่ :</label>
-                            <textarea name="e_add" class="form-control" id="exampleFormControlTextarea1" rows="3"><?= $row['e_add'] ?></textarea>
-                        </div>
-                        <br>
-                        <div class="text-center pt-4">
-                            <button type="submit" class="btn btn-success" onclick="return confirm('คุฯต้องการแก้ไขข้อมูลพนักงานหรือไม่?\n*โปรดตรวจสอบข้อมูลให้ถูกต้อง')">ยืนยัน</button>
-                        </div>
+                            <div class="mb-3" id="old_address">
+                                <br>
+                                <hr>
+                                <!-- Page Heading -->
+                                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                                    <h1 class="h3 mb-0 text-gray-800">รายละเอียดข้อมูลการติดต่อ</h1>
+                                </div>
+                                <!-- <label for="exampleFormControlTextarea1" class="form-label fw-bold">รายละเอียดข้อมูลการติดต่อ</label> -->
+                                <!-- <br> -->
+                                <?php if ($row['e_add'] != NULL) {
+                                ?>
+                                    <div class="row">
+                                        <div class="col-4" id="bounce-item">
+                                            <label for="exampleFormControlTextarea1" class="col-form-label">จังหวัด :</label>
+                                            <input type="text" class="form-control" value="<?= $row_p[0] ?>" placeholder="กรุณาเลือกจังหวัดที่ต้องการ" readonly>
+                                        </div>
+                                        <div class="col-4" id="bounce-item">
+                                            <label for="exampleFormControlTextarea1" class="col-form-label">อำเภอ :</label>
+                                            <input type="text" class="form-control" value="<?= $row_p[1] ?>" placeholder="กรุณาเลือกอำเภอที่ต้องการ" readonly>
+                                        </div>
+                                        <div class="col-4" id="bounce-item">
+                                            <label for="exampleFormControlTextarea1" class="col-form-label">ตำบล :</label>
+                                            <input type="text" class="form-control" value="<?= $row_p[2] ?>" placeholder="กรุณาเลือกตำบลที่ต้องการ" readonly>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <label for="exampleFormControlTextarea1" class="col-form-label" id="bounce-item">รายละเอียดเพิ่มเติม :</label>
+                                    <textarea class="form-control" id="bounce-item" rows="3" disabled="disabled" required>
+                                <?php
+                                    if ($obj->description == NULL) {
+                                        echo "ไม่มีข้อมูล";
+                                    } else {
+                                        echo $obj->description;
+                                    }
+                                ?>
+                    </textarea>
+                                <?php
+                                } else {
+                                ?>
+                                    <center>
+                                        <h5>ไม่มีข้อมูลที่อยู่</h5>
+                                    </center>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                            <?php
+                            mysqli_query($conn, "SET NAMES 'utf8' ");
+                            error_reporting(error_reporting() & ~E_NOTICE);
+                            date_default_timezone_set('Asia/Bangkok');
 
+                            $sql_provinces = "SELECT * FROM provinces";
+                            $query = mysqli_query($conn, $sql_provinces);
+
+                            ?>
+                            <center>
+                                <button class="btn btn-primary" onclick="New_address()" id="button_new_address" style="display: block;">ต้องการใช้ที่อยู่ใหม่</button>
+                            </center>
+                            <div id="address" style="display:none">
+                                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+                                <br>
+                                <hr>
+                                <!-- Page Heading -->
+                                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                                    <h1 class="h3 mb-0 text-gray-800">รายละเอียดข้อมูลการติดต่อ</h1>
+                                </div>
+                                <br>
+                                <label for="sel1">จังหวัด:</label>
+                                <select class="form-control" name="Ref_prov_id" id="provinces" required>
+                                    <option value="" selected disabled>กรุณาเลือกจังหวัด</option>
+                                    <?php foreach ($query as $value) { ?>
+                                        <option value="<?= $value['id'] ?>"><?= $value['name_th'] ?></option>
+                                    <?php } ?>
+                                </select>
+                                <br>
+
+                                <label for="sel1">อำเภอ:</label>
+                                <select class="form-control" name="Ref_dist_id" id="amphures" required>
+                                    <option value="" selected disabled>กรุณาเลือกอำเภอ</option>
+                                </select>
+                                <br>
+
+                                <label for="sel1">ตำบล:</label>
+                                <select class="form-control" name="Ref_subdist_id" id="districts" required>
+                                    <option value="" selected disabled>กรุณาเลือกตำบล</option>
+                                </select>
+                                <br>
+
+                                <label for="sel1">รหัสไปรษณีย์:</label>
+                                <input type="text" name="zip_code" id="zip_code" class="form-control" required>
+                                <br>
+
+                                <label for="exampleFormControlTextarea1" class="form-label">รายละเอียดที่อยู่</label>
+                                <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3" required></textarea>
+
+                                <!-- <div class="text-center py-4">
+                                    <a class="btn btn-success" name="submit" onclick="validateForm()">ยืนยัน</a>
+                                </div> -->
+                            </div>
+
+                            <script>
+                                let provinceSelect = document.getElementById("provinces");
+                                let amphurSelect = document.getElementById("amphures");
+                                let districtSelect = document.getElementById("districts");
+
+                                // Event listener for province select change
+                                provinceSelect.addEventListener("change", function() {
+                                    let provinceId = this.value;
+                                    resetSelectOptions(amphurSelect);
+                                    resetSelectOptions(districtSelect);
+                                    if (provinceId) {
+                                        loadAmphurData(provinceId);
+                                    }
+                                });
+
+                                // Event listener for amphur select change
+                                amphurSelect.addEventListener("change", function() {
+                                    let amphurId = this.value;
+                                    resetSelectOptions(districtSelect);
+                                    if (amphurId) {
+                                        loadDistrictData(amphurId);
+                                    }
+                                });
+
+                                // Event listener for district select change
+                                districtSelect.addEventListener("change", function() {
+                                    let districtId = this.value;
+                                    let selectedDistrict = response.find(district => district.id === districtId);
+                                    if (selectedDistrict) {
+                                        document.getElementById("zip_code").value = selectedDistrict.zip_code;
+                                    }
+                                });
+
+                                // Function to reset select options
+                                function resetSelectOptions(selectElement) {
+                                    selectElement.innerHTML = '<option value="" selected disabled>-กรุณาเลือก-</option>';
+                                }
+
+                                // Function to load amphur data
+                                function loadAmphurData(provinceId) {
+                                    // Perform an AJAX request to fetch the amphur data
+                                    $.ajax({
+                                        url: "../get_amphures.php",
+                                        method: "POST",
+                                        data: {
+                                            province_id: provinceId
+                                        }, // เพิ่มการส่งค่า province_id
+                                        dataType: "json",
+                                        success: function(response) {
+                                            // Populate the amphur select options
+                                            response.forEach(function(amphur) {
+                                                let option = document.createElement("option");
+                                                option.value = amphur.id;
+                                                option.textContent = amphur.name_th;
+                                                amphurSelect.appendChild(option);
+                                            });
+                                        }
+                                    });
+                                }
+
+                                // Function to load district data
+                                function loadDistrictData(amphurId) {
+                                    // Perform an AJAX request to fetch the district data
+                                    $.ajax({
+                                        url: "../get_districts.php",
+                                        method: "POST",
+                                        data: {
+                                            amphur_id: amphurId
+                                        }, // เพิ่มการส่งค่า amphur_id
+                                        dataType: "json",
+                                        success: function(response) {
+                                            // Reset district select options
+                                            resetSelectOptions(districtSelect);
+
+                                            // Populate the district select options
+                                            response.forEach(function(district) {
+                                                let option = document.createElement("option");
+                                                option.value = district.id;
+                                                option.textContent = district.name_th;
+                                                districtSelect.appendChild(option);
+                                            });
+
+                                            // Set the zip code based on the first district
+                                            if (response.length > 0) {
+                                                document.getElementById("zip_code").value = response[0].zip_code;
+                                            }
+                                        }
+                                    });
+                                }
+
+                                // Function to validate the form before submission
+                                function validateForm() {
+                                    // Check if all required fields have values
+                                    let provinceValue = provinceSelect.value;
+                                    let amphurValue = amphurSelect.value;
+                                    let districtValue = districtSelect.value;
+                                    let zipCodeValue = document.getElementById("zip_code").value;
+                                    let descriptionValue = document.getElementById("exampleFormControlTextarea1").value;
+
+                                    if (provinceValue && amphurValue && districtValue && zipCodeValue && descriptionValue) {
+                                        // All required fields have values, proceed with submission
+                                        showConfirmation();
+                                    } else {
+                                        // Missing required fields, display an error message or take appropriate action
+                                        incompleteInformation();
+                                    }
+                                }
+                            </script>
+                            <!-- <center>
+                    <br>
+                    <a class="btn btn-warning" onclick="New_address()" href="">ต้องการใช้ที่อยู่เดิม</a>
+                </center> -->
+                            <br>
+                        </div>
                     </div>
-                </form>
-                <!-- /.container-fluid -->
+
+                    <?php include('script.php'); ?>
+
+                    <!-- <label for="exampleFormControlTextarea1" class="col-form-label">ที่อยู่ :</label>
+                            <textarea name="e_add" class="form-control" id="exampleFormControlTextarea1" rows="3"><?= $row['e_add'] ?></textarea> -->
+            </div>
+            <br>
+            <div class="text-center pt-4">
+                <a href="#" class="btn btn-success" onclick="showConfirmation()">ยืนยัน</a>
+
+                <script>
+                    function showConfirmation() {
+                        Swal.fire({
+                            title: 'คุณต้องการแก้ไขข้อมูลพนักงานหรือไม่?',
+                            text: '*โปรดตรวจสอบข้อมูลให้ถูกต้อง',
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonText: 'ยืนยัน',
+                            cancelButtonText: 'ยกเลิก'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // User clicked "Confirm", trigger the form submission
+                                document.getElementById('form_edit').submit();
+                            }
+                        });
+                    }
+                </script>
 
             </div>
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2020</span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
 
         </div>
-        <!-- End of Content Wrapper -->
+        </form>
+        <!-- /.container-fluid -->
+
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Copyright &copy; Your Website 2020</span>
+            </div>
+        </div>
+    </footer>
+    <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
 
     </div>
     <!-- End of Page Wrapper -->
@@ -191,6 +452,23 @@ if (!isset($_SESSION['role_id'])) {
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
 
+    <script>
+        // Show full page LoadingOverlay
+        $.LoadingOverlay("show");
+
+        // Hide it after 3 seconds
+        setTimeout(function() {
+            $.LoadingOverlay("hide");
+        }, 10);
+
+        function New_address() {
+            document.getElementById('address').style.display = 'block';
+            document.getElementById('old_address').style.display = 'none';
+            document.getElementById('button_new_address').style.display = 'none';
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>

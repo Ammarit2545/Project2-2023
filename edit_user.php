@@ -293,6 +293,8 @@ if (!isset($_SESSION["id"])) {
                 </div>
             </div>
 
+            <?php include('script.php'); ?>
+
             <script>
                 function showConfirmation() {
                     Swal.fire({
