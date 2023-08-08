@@ -3,15 +3,18 @@
   $('#provinces').change(function() {
     var id_province = $(this).val();
 
-      $.ajax({
+    $.ajax({
       type: "POST",
       url: "ajax_db.php",
-      data: {id:id_province,function:'provinces'},
-      success: function(data){
-          $('#amphures').html(data); 
-          $('#districts').html(' '); 
-          $('#districts').val(' ');  
-          $('#zip_code').val(' '); 
+      data: {
+        id: id_province,
+        function: 'provinces'
+      },
+      success: function(data) {
+        $('#amphures').html(data);
+        $('#districts').html(' ');
+        $('#districts').val(' ');
+        $('#zip_code').val(' ');
       }
     });
   });
@@ -19,27 +22,33 @@
   $('#amphures').change(function() {
     var id_amphures = $(this).val();
 
-      $.ajax({
+    $.ajax({
       type: "POST",
       url: "ajax_db.php",
-      data: {id:id_amphures,function:'amphures'},
-      success: function(data){
-          $('#districts').html(data);  
+      data: {
+        id: id_amphures,
+        function: 'amphures'
+      },
+      success: function(data) {
+        $('#districts').html(data);
       }
     });
   });
 
-   $('#districts').change(function() {
-    var id_districts= $(this).val();
+  $('#districts').change(function() {
+    var id_districts = $(this).val();
 
-      $.ajax({
+    $.ajax({
       type: "POST",
       url: "ajax_db.php",
-      data: {id:id_districts,function:'districts'},
-      success: function(data){
-          $('#zip_code').val(data)
+      data: {
+        id: id_districts,
+        function: 'districts'
+      },
+      success: function(data) {
+        $('#zip_code').val(data)
       }
     });
-  
+
   });
 </script>
