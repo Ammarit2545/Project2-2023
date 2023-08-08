@@ -206,7 +206,7 @@ if (!isset($_SESSION['role_id'])) {
                                                 <?php
                                                 } else {
                                                     $st_id = $_SESSION['stock_type'];
-                                                    $sql = "SELECT * FROM stock_type WHERE del_flg = '0' AND st_id = '$st_id'";
+                                                    $sql = "SELECT * FROM stock_type WHERE del_flg = '0' AND st_id = '$st_id' ";
                                                     $result = mysqli_query($conn, $sql);
                                                     $row_st_session = mysqli_fetch_array($result);
                                                 ?>
@@ -217,7 +217,7 @@ if (!isset($_SESSION['role_id'])) {
 
                                                 <?php
                                                 $st_id = $_SESSION['stock_type'];
-                                                $sql = "SELECT * FROM stock_type WHERE del_flg = '0' AND st_id <> '$st_id'";
+                                                $sql = "SELECT * FROM stock_type WHERE del_flg = '0' AND st_id <> '$st_id' AND st_type = '1'";
 
                                                 $result = mysqli_query($conn, $sql);
                                                 while ($row_st = mysqli_fetch_array($result)) {
@@ -231,10 +231,10 @@ if (!isset($_SESSION['role_id'])) {
                                         <?php
                                         } else { ?>
                                             <!-- <label for="st_id" class="col-sm-1 col-form-label">รหัสอะไหล่</label> -->
-                                            <select class="form-select" name="st_id" id="stockType" aria-label="Default select example" onchange="ShowBillFunc()" required>
+                                            <select class="form-select" name="st_id" id="stockType" aria-label="Default select example" onchange="ShowBillFunc(),EditSession(this,6)" required>
                                                 <option selected>เลือกวิธีการเพิ่มอะไหล่</option>
                                                 <?php
-                                                $sql = "SELECT * FROM stock_type WHERE del_flg = '0'";
+                                                $sql = "SELECT * FROM stock_type WHERE del_flg = '0'  AND st_type = '1'";
                                                 $result = mysqli_query($conn, $sql);
                                                 while ($row_st = mysqli_fetch_array($result)) {
                                                 ?>
@@ -732,7 +732,7 @@ if (!isset($_SESSION['role_id'])) {
                                 function showConfirmation(action, message) {
                                     return Swal.fire({
                                         title: "คุณแน่ใจหรือไม่?",
-                                        text: message,
+                                        text: 'ระบบจะทำการบันทึกข้อมูลของคุณ',
                                         icon: "warning",
                                         showCancelButton: true,
                                         confirmButtonColor: "#3085d6",
@@ -840,16 +840,16 @@ if (!isset($_SESSION['role_id'])) {
         <?php
         if (isset($_SESSION['add_data_alert'])) {
             if ($_SESSION['add_data_alert'] == 0) {
-                $id = 123; // Replace 123 with the actual ID you want to pass to the deletion action
+                // $id = 123; // Replace 123 with the actual ID you want to pass to the deletion action
         ?>
-                <!-- <script>
+                <script>
                 Swal.fire({
                     title: 'ข้อมูลของคุณได้ถูกบันทึกแล้ว',
                     text: 'กด Accept เพื่อออก',
                     icon: 'success',
                     confirmButtonText: 'Accept'
                 });
-            </script> -->
+            </script>
             <?php
                 unset($_SESSION['add_data_alert']);
             } else if ($_SESSION['add_data_alert'] == 1) {
