@@ -32,6 +32,17 @@ if (!isset($_SESSION['role_id'])) {
     <!-- Custom styles for this page -->
     <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
+    <style>
+        .font-more-one-style {
+            font-size: 90%;
+            color: blue;
+        }
+
+        .font-one-style {
+            font-size: 90%;
+        }
+    </style>
+
 </head>
 
 <body id="page-top">
@@ -119,8 +130,14 @@ if (!isset($_SESSION['role_id'])) {
                                         $num_rows = mysqli_fetch_array($result_nofi_count);
                                         $i = 0;
                                         while ($row = mysqli_fetch_array($result_nofi)) {
-                                            if (isset($row['get_r_date_in']) && $row['get_r_date_in'] !== null) {
-                                                $dateString = date('d-m-Y', strtotime($row['get_r_date_in']));
+                                            $get_r_id = $row['get_r_id'];
+                                            $sql_date = "SELECT get_r_date_in FROM get_repair WHERE get_r_id = '$get_r_id' ";
+                                            $result_date = mysqli_query($conn, $sql_date);
+                                            $row_date = mysqli_fetch_array($result_date);
+
+
+                                            if (isset($row_date['get_r_date_in']) && $row_date['get_r_date_in'] !== null) {
+                                                $dateString = date('d-m-Y', strtotime($row_date['get_r_date_in']));
                                                 // Rest of the code that uses $dateString
                                                 $date = DateTime::createFromFormat('d-m-Y', $dateString);
                                                 // Additional code using $date
@@ -140,17 +157,33 @@ if (!isset($_SESSION['role_id'])) {
                                                     WHERE get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
                                             $result_get_count = mysqli_query($conn, $sql_get_count);
                                             $row_get_count = mysqli_fetch_array($result_get_count);
+                                            $row_repair;
+
+                                            if ($row_get_count[0] == 1) {
+                                                // เก็บค่า $r_id จาก
+                                                $r_id = $row['r_id'];
+
+                                                // หากมีแค่ 1 ชิ้น
+                                                $sql_repair = "SELECT r_brand,r_model,r_number_model,r_serial_number FROM repair 
+                                                                WHERE r_id = '$r_id' AND repair.del_flg = 0";
+                                                $result_repair = mysqli_query($conn, $sql_repair);
+                                                $row_repair = mysqli_fetch_array($result_repair);
+                                            }
                                         ?>
                                             <tr>
                                                 <td><?= $i ?></td>
-                                                <td><?php
+                                                <td>
+                                                    <!-- หมายเลขซ่อม -->
+                                                    <?php
                                                     if ($row['get_r_id'] != NULL) {
                                                         echo $row['get_r_id'];
                                                     } else {
                                                         echo "-";
                                                     } ?>
                                                 </td>
-                                                <td><?php
+                                                <td>
+                                                    <!-- วิธีการรับ/ส่งอุปกรณ์ -->
+                                                    <?php
                                                     if ($row['get_deli'] != NULL) {
                                                         if ($row['get_deli'] == 0) {
                                                             // echo "รับที่ร้าน";
@@ -168,77 +201,104 @@ if (!isset($_SESSION['role_id'])) {
                                                         echo "-";
                                                     } ?>
                                                 </td>
-                                                <td><?php
-                                                    if (isset($row['r_brand']) && $row_get_count[0] == 1) {
-                                                        echo $row['r_brand'];
-                                                    } elseif ($row_get_count[0] > 1) {
-                                                    ?>
-                                                        <p style="color:blue">มากกว่า 1 ชิ้น</p>
-                                                    <?php
-                                                    } else {
-                                                        echo "-";
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td><?php
-                                                    if (isset($row['r_model']) && $row_get_count[0] == 1) {
-                                                        echo $row['r_model'];
-                                                    } elseif ($row_get_count[0] > 1) {
-                                                    ?>
-                                                        <p style="color:blue">มากกว่า 1 ชิ้น</p>
-                                                    <?php
-                                                    } else {
-                                                        echo "-";
-                                                    }
-                                                    ?>
-                                                </td>
                                                 <td>
+                                                    <!-- ชื่อยี่ห้อ -->
                                                     <?php
-                                                    if (isset($row['get_d_record']) != NULL && $row_get_count[0] == 1) {
-                                                        echo $row['get_d_record'];
-                                                    } elseif ($row_get_count[0] > 1) {
-                                                    ?>
-                                                        <p style="color:blue">มากกว่า 1 ชิ้น</p>
-                                                    <?php
-                                                    } else {
-                                                        echo "-";
-                                                    } ?>
-                                                </td>
-                                                <td><?php
-                                                    if (isset($row['r_serial_number']) != NULL && $row_get_count[0] == 1) {
-                                                        echo $row['r_serial_number'];
-                                                    } elseif ($row_get_count[0] > 1) {
-                                                    ?>
-                                                        <p style="color:blue">มากกว่า 1 ชิ้น</p>
-                                                    <?php
-                                                    } else {
-                                                        echo "-";
-                                                    } ?>
-                                                </td>
-
-                                                <!-- <td>System Architect</td> -->
-                                                <td><?php
                                                     if ($row_get_count[0] > 1) {
                                                     ?>
-                                                        <p style="color:blue"><?php echo $row_get_count[0]; ?></p>
+                                                        <p class="font-more-one-style">มากกว่า 1 ชิ้น</p>
+                                                    <?php
+                                                    } elseif (isset($row['r_brand']) || $row_repair['r_brand'] != NULL) {
+                                                    ?>
+                                                        <p class="font-one-style"><?= $row_repair['r_brand'] ?></p>
+                                                    <?php
+                                                    } else {
+                                                        echo "-";
+                                                    } ?>
+                                                </td>
+                                                <td>
+                                                    <!-- ชื่อโมเดล -->
+                                                    <?php
+                                                    if ($row_get_count[0] > 1) {
+                                                    ?>
+                                                        <p class="font-more-one-style">มากกว่า 1 ชิ้น</p>
+                                                    <?php
+                                                    } elseif (isset($row['r_model']) || $row_repair['r_model'] != NULL) {
+                                                    ?>
+                                                        <p class="font-one-style"><?= $row_repair['r_model'] ?></p>
+                                                    <?php
+                                                    } else {
+                                                        echo "-";
+                                                    } ?>
+                                                </td>
+                                                <td>
+                                                    <!-- ซ่อมครั้งที่เท่าไหร่ -->
+                                                    <?php
+                                                    if ($row_get_count[0] > 1) {
+                                                    ?>
+                                                        <p class="font-more-one-style">มากกว่า 1 ชิ้น</p>
+                                                    <?php
+                                                    } elseif ($row['get_d_record'] != NULL  || $row_repair['r_model'] != NULL) {
+                                                        $get_r_id_round = $row['get_r_id'];
+                                                        $sql_round = "SELECT get_d_record FROM get_detail 
+                                                                    WHERE r_id = '$r_id' AND get_r_id = '$get_r_id_round' AND del_flg = 0";
+                                                        $result_round = mysqli_query($conn, $sql_round);
+                                                        $row_round = mysqli_fetch_array($result_round);
+                                                    ?>
+                                                        <p class="font-one-style"><?= $row_round['get_d_record'] ?></p>
+                                                    <?php
+                                                    } else {
+                                                        echo "-";
+                                                    } ?>
+                                                </td>
+                                                <td>
+                                                    <!-- หมายเลขประจำเครื่อง SN -->
+                                                    <?php
+                                                    if ($row_get_count[0] > 1) {
+                                                    ?>
+                                                        <p class="font-more-one-style">มากกว่า 1 ชิ้น</p>
+                                                    <?php
+                                                    } elseif (isset($row['r_serial_number']) || $row_repair['r_serial_number'] != NULL) {
+                                                    ?>
+                                                        <p class="font-one-style"><?= $row_repair['r_serial_number'] ?></p>
+                                                    <?php
+                                                    } else {
+                                                        echo "-";
+                                                    } ?>
+                                                </td>
+                                                <td>
+                                                    <!-- จำนวนของอุปกรณ์ที่นำมาซ๋อม -->
+                                                    <?php
+                                                    if ($row_get_count[0] > 1) {
+                                                    ?>
+                                                        <p class="font-more-one-style"><?php echo $row_get_count[0]; ?></p>
                                                     <?php
                                                     } elseif ($row_get_count[0] == 1) {
-                                                        echo $row_get_count[0];
+                                                    ?>
+                                                        <p class="font-one-style"><?= $row_get_count[0] ?></p>
+                                                    <?php
                                                     } else {
                                                         echo "-";
                                                     } ?>
                                                 </td>
                                                 <td>
+                                                    <!-- วันที่รับซ่อม -->
                                                     <?php
                                                     if ($formattedDate != NULL) {
-                                                        echo $formattedDate;
+                                                    ?>
+                                                        <p class="font-one-style"><?= $formattedDate ?></p>
+                                                    <?php
                                                     } else {
                                                         echo "-";
                                                     } ?>
                                                 </td>
-                                                <td style="color: <?= $row_c['status_color'] ?>;"><?= $row_c['status_name'] ?></td>
+                                                <!-- สถานะล่าสุด -->
                                                 <td>
-
+                                                    <center>
+                                                        <button style="background-color: <?= $row_c['status_color'] ?>; color:white" class="btn btn-light"><?= $row_c['status_name'] ?></button>
+                                                    </center>
+                                                </td>
+                                                <td>
                                                     <div class="text-center">
                                                         <a class="btn btn-primary" href="detail_repair.php?id=<?= $row['get_r_id'] ?>">ดู</a>
                                                         <a class="btn btn-danger" href="action/delete_repair.php?get_r_id=<?= $row['get_r_id'] ?>" onclick="return confirmDelete(event);">ลบ</a>
