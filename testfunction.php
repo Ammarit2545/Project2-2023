@@ -1,21 +1,38 @@
 <?php
 session_start();
-$_SESSION['id_repair_ever_1'];
-// Replace 'Project2-2023' with the folder name you want to select
-$selectedFolder = '../';
 
-// Get the path of the selected folder
-$selectedFolderPath = __DIR__ . '/' . $selectedFolder;
+include('database/condb.php');
 
-// Use dirname twice to get the mother folder path
-$motherFolderPath = dirname(dirname($selectedFolderPath));
+$status_req = 0;
 
-// Use basename to get the name of the mother folder
-$motherFolderName = basename($motherFolderPath);
+$sql_get = "SELECT get_repair.get_r_id
+FROM get_repair
+RIGHT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
+WHERE get_repair.del_flg = 0
+GROUP BY get_repair.get_r_id;
+";
+$result_get = mysqli_query($conn, $sql_get);
 
-// Display the name of the mother folder
-echo "The mother folder is: " . $motherFolderName . "<br>";
- echo $_SESSION['id_repair_round_1'];
-?>
+if ($result_get) {
+    $stmt_found = $conn->prepare("SELECT status_id FROM repair_status WHERE del_flg = 0 AND get_r_id = ? ORDER BY rs_date_time DESC LIMIT 1");
 
-<!-- <?php echo 'SESSION ='. $_SESSION['add_data_detail']; ?> -->
+    while ($row_get = mysqli_fetch_array($result_get)) {
+        $get_r_id = $row_get['get_r_id'];
+
+        // ซ่อนตัวแปรไว้ข้างใน
+        $stmt_found->bind_param("i", $get_r_id);
+        $stmt_found->execute();
+
+        $result_found = $stmt_found->get_result();
+        $row_found = mysqli_fetch_array($result_found);
+
+        if ($row_found && $row_found['status_id'] == 2) {
+            $status_req = $status_req + 1;
+        }
+    }
+
+    // เอาตัวแปรออก
+    $stmt_found->close();
+}
+
+echo $status_req;
