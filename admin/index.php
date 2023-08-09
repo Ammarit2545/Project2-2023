@@ -60,6 +60,52 @@ if (!isset($_SESSION['role_id'])) {
 
                     <!-- Content Row -->
                     <div class="row">
+                        <?php
+
+                        $status_req = 0;
+                        $status_doing = 0;
+                        $status_wait_pay = 0;
+                        $status_not_suc = 0;
+
+                        $sql_get = "SELECT get_repair.get_r_id
+                        FROM get_repair
+                        RIGHT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
+                        WHERE get_repair.del_flg = 0
+                        GROUP BY get_repair.get_r_id;
+                        ";
+                        $result_get = mysqli_query($conn, $sql_get);
+
+                        if ($result_get) {
+                            $stmt_found = $conn->prepare("SELECT status_id FROM repair_status WHERE del_flg = 0 AND get_r_id = ? ORDER BY rs_date_time DESC LIMIT 1");
+
+                            while ($row_get = mysqli_fetch_array($result_get)) {
+                                $get_r_id = $row_get['get_r_id'];
+
+                                // ซ่อนตัวแปรไว้ข้างใน
+                                $stmt_found->bind_param("i", $get_r_id);
+                                $stmt_found->execute();
+
+                                $result_found = $stmt_found->get_result();
+                                $row_found = mysqli_fetch_array($result_found);
+
+                                if ($row_found && $row_found['status_id'] == 1) {
+                                    $status_req = $status_req + 1;
+                                }
+                                if ($row_found && $row_found['status_id'] == 6) {
+                                    $status_doing = $status_doing + 1;
+                                }
+                                if ($row_found && $row_found['status_id'] == 8) {
+                                    $status_wait_pay = $status_wait_pay + 1;
+                                }
+                                if ($row_found && $row_found['status_id'] == 12) {
+                                    $status_not_suc = $status_not_suc + 1;
+                                }
+                            }
+
+                            // เอาตัวแปรออก
+                            $stmt_found->close();
+                        }
+                        ?>
 
                         <!-- Earnings (Monthly) Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
@@ -68,8 +114,8 @@ if (!isset($_SESSION['role_id'])) {
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                ยอดต่อเดือน</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                                คำขอซ่อม</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $status_req; ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -86,8 +132,8 @@ if (!isset($_SESSION['role_id'])) {
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                จำนวนอะไหร่</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">500</div>
+                                                คำขอที่กำลังซ่อม</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $status_doing ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -104,8 +150,8 @@ if (!isset($_SESSION['role_id'])) {
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                จำนวนบุคลากร</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                                ยังไม่ชำระเงิน</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $status_wait_pay ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-solid fa-users fa-2x text-gray-300"></i>
@@ -122,8 +168,8 @@ if (!isset($_SESSION['role_id'])) {
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                                จำนวนผู้ใช้</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                                ยังไม่เสร็จ</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $status_not_suc ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-user fa-2x text-gray-300"></i>
