@@ -76,13 +76,21 @@ if (!isset($_SESSION['role_id'])) {
                         $result_get = mysqli_query($conn, $sql_get);
 
                         if ($result_get) {
+<<<<<<< HEAD
                             $stmt_found = $conn->prepare("SELECT status_id,rs_conf FROM repair_status WHERE del_flg = 0 AND get_r_id = ? ORDER BY rs_date_time DESC LIMIT 1");
+=======
+                            $stmt_found = $conn->prepare("SELECT status_id FROM repair_status WHERE del_flg = 0 AND get_r_id = ? ORDER BY rs_date_time DESC LIMIT 1");
+>>>>>>> 780d5795f4b41bc603566655e39a0b4c2de84d20
 
                             while ($row_get = mysqli_fetch_array($result_get)) {
                                 $get_r_id = $row_get['get_r_id'];
 
                                 // ซ่อนตัวแปรไว้ข้างใน
+<<<<<<< HEAD
                                 $stmt_found->bind_param("i", $get_r_id); // ? มาแทนใน $get_r_id เพื่อความ secuerity
+=======
+                                $stmt_found->bind_param("i", $get_r_id);
+>>>>>>> 780d5795f4b41bc603566655e39a0b4c2de84d20
                                 $stmt_found->execute();
 
                                 $result_found = $stmt_found->get_result();
@@ -91,7 +99,11 @@ if (!isset($_SESSION['role_id'])) {
                                 if ($row_found && $row_found['status_id'] == 1) {
                                     $status_req = $status_req + 1;
                                 }
+<<<<<<< HEAD
                                 if ($row_found && $row_found['status_id'] == 6) {
+=======
+                                if ($row_found && $row_found['status_id'] == 4) {
+>>>>>>> 780d5795f4b41bc603566655e39a0b4c2de84d20
                                     $status_doing = $status_doing + 1;
                                 }
                                 if ($row_found && $row_found['status_id'] == 8) {
@@ -101,10 +113,17 @@ if (!isset($_SESSION['role_id'])) {
                                     $status_not_suc = $status_not_suc + 1;
                                 }
                             }
+<<<<<<< HEAD
                             }
 
                             // เอาตัวแปรออก
                             $stmt_found->close();
+=======
+
+                            // เอาตัวแปรออก
+                            $stmt_found->close();
+                        }
+>>>>>>> 780d5795f4b41bc603566655e39a0b4c2de84d20
                         ?>
 
                         <!-- Earnings (Monthly) Card Example -->
