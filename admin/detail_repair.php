@@ -30,7 +30,7 @@ if (!isset($_SESSION['role_id'])) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 
@@ -161,19 +161,19 @@ if (!isset($_SESSION['role_id'])) {
         grid-gap: 2rem;
     }
 
-    #bounce-item {
-        /* box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3); */
-        /* Add a gray shadow */
-        transition: transform 0.3s, box-shadow 0.3s;
-        /* Add transition for transform and box-shadow */
+    .table>:not(caption)>*>* {
+        padding: 0rem .5rem;
+        background-color: var(--bs-table-bg);
+        border-bottom-width: 1px;
+        box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
     }
 
-    #bounce-item:hover {
-        transform: scale(1.1);
-        /* Increase size on hover */
-        /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); */
-        /* Increase shadow size and intensity on hover */
+    .selected-image {
+        display: block;
+    }
 
+    .hidden-image {
+        display: none;
     }
 </style>
 
@@ -287,7 +287,7 @@ if (!isset($_SESSION['role_id'])) {
 
                         <hr>
 
-                        <div class="accordion-item" style="border: 1px solid #ffff; padding:15px;   ">
+                        <div class="accordion-item">
                             <h2 class="accordion-header" id="headingOne">
                                 <a id="bounce-item" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="true" aria-controls="collapseOne">
                                     <h5> ดูรายการส่งซ่อมทั้งหมด </h5>
@@ -1264,10 +1264,43 @@ if (!isset($_SESSION['role_id'])) {
                                         <br>
                                         <div class="mb-3">
                                             <h6>อะไหล่</h6>
-                                            <div id="cardContainer" style="display: none;">
+                                            <?php
+                                            $count_conf = 0;
+                                            $sql_get_c = "SELECT * FROM get_detail 
+            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+            WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
+                                            $result_get_c = mysqli_query($conn, $sql_get_c);
+                                            ?>
+
+                                            <div class="accordion" id="accordionExample">
+                                                <?php
+                                                while ($row_get_c = mysqli_fetch_array($result_get_c)) {
+                                                    $count_conf++;
+                                                ?>
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header" id="heading<?= $count_conf ?>">
+                                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $count_conf ?>" aria-expanded="true" aria-controls="collapse<?= $count_conf ?>">
+                                                                <?= $count_conf . ". " . $row_get_c['r_brand'] . " " . $row_get_c['r_model'] . " - Model : " . $row_get_c['r_number_model'] . " - Serial Number : " . $row_get_c['r_serial_number'] ?>
+                                                            </button>
+                                                        </h2>
+                                                        <div id="collapse<?= $count_conf ?>" class="accordion-collapse collapse show" aria-labelledby="heading<?= $count_conf ?>" data-bs-parent="#accordionExample">
+                                                            <div class="accordion-body">
+                                                                <div id="cardContainer<?= $count_conf ?>" style="display: none;">
+                                                                    <table class="table" id="cardSection<?= $count_conf ?>"></table>
+                                                                </div>
+                                                                <button type="button" class="btn btn-primary" onclick="showNextCard(<?= $count_conf ?>)">เพิ่มอะไหล่</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php
+                                                }
+                                                ?>
+                                            </div>
+
+                                            <!-- <div id="cardContainer" style="display: none;">
                                                 <table class="table" id="cardSection"></table>
                                             </div>
-                                            <button type="button" class="btn btn-primary" onclick="showNextCard()">เพิ่มอะไหล่</button>
+                                            <button type="button" class="btn btn-primary" onclick="showNextCard()">เพิ่มอะไหล่</button> -->
                                         </div>
 
                                         <br>
@@ -1426,13 +1459,12 @@ if (!isset($_SESSION['role_id'])) {
                                     $sql_c_conf_send = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' And del_flg = '0' And status_id = '17' And rs_id = '$rs_id' And rs_conf = '1'";
                                     $result_c_conf_send = mysqli_query($conn, $sql_c_conf_send);
                                     $row_c_conf_send = mysqli_fetch_array($result_c_conf_send);
-                                    if($row_c_conf_send){
+                                    if ($row_c_conf_send) {
                                         include('status_option/send_back_conf.php');
-                                    }else{
+                                    } else {
                                         include('status_option/send_back.php');
                                         // echo $rs_id;
                                     }
-                                    
                                 } elseif ($row['status_id'] == '20') {
                                     include('status_option/refuse_member.php');
                                 } elseif ($row['status_id'] == '13') {
@@ -1537,13 +1569,13 @@ if (!isset($_SESSION['role_id'])) {
                                                 }
                                             </script>
 
-                                            <div class="mb-3">
+                                            <!-- <div class="mb-3">
                                                 <h6>อะไหล่</h6>
                                                 <div id="cardContainer" style="display: none;">
                                                     <table class="table" id="cardSection"></table>
                                                 </div>
                                                 <button type="button" class="btn btn-primary" onclick="showNextCard()">Show Card</button>
-                                            </div>
+                                            </div> -->
 
                                             <?php
                                             $sql_p = "SELECT * FROM parts WHERE del_flg = '0'";
@@ -1570,38 +1602,52 @@ if (!isset($_SESSION['role_id'])) {
                                                 // var partsOptionsDetail = '<?php echo $optionsHTMLDetail; ?>';
 
 
-                                                function showNextCard() {
-                                                    cardCount++;
-                                                    var cardContainer = document.getElementById("cardContainer");
-                                                    var cardSection = document.getElementById("cardSection");
+                                                function showNextCard(repairNumber) {
+
+                                                    // // Assuming cardCount is the parameter
+                                                    // function createCardCountVariable(repairNumber) {
+                                                    //     var variableName = 'repairNumber' + repairNumber;
+                                                    //     window[variableName] = repairNumber;
+                                                    // }
+
+                                                    // // Example usage
+                                                    // var repairNumber = 1;
+                                                    // createCardCountVariable(repairNumber);
+
+                                                    // console.log(repairNumber1); // Outputs the value of cardCount
+                                                    var repairNumber1;
+                                                    var repairNumber2;
+                                                    var repairNumber3;
+
+
+                                                    if (repairNumber == 1) {
+                                                        repairNumber1 += 1;
+                                                        cardCount = repairNumber1;
+                                                    }
+                                                    if (repairNumber == 2) {
+                                                        repairNumber2 += 1;
+                                                        cardCount = repairNumber2;
+                                                    }
+                                                    if (repairNumber == 3) {
+                                                        repairNumber3 += 1;
+                                                        cardCount = repairNumber3;
+                                                    }
+
+                                                    var cardContainer = document.getElementById('cardContainer' + repairNumber);
+                                                    var cardSection = document.getElementById('cardSection' + repairNumber);
+                                                    var existingCards = cardSection.querySelectorAll(".card-row"); // Select existing card rows
                                                     cardSection.innerHTML = ""; // Clear existing cards
+
+
 
                                                     for (var i = 1; i <= cardCount; i++) {
                                                         var cardId = "card" + i; // Unique ID for each card
                                                         cardValues[cardId] = cardValues[cardId] || 0; // Initialize card value to 0 if not set
 
                                                         var tableRow = document.createElement("tr");
+                                                        tableRow.className = "card-row"; // Add a class to the row to identify it
                                                         tableRow.innerHTML = `
-                                                                <td><img id="cardImg${i}" alt="Card image cap" style="max-width: 150px;"></td>
-                                                                <td id="cardTitle${i}"></td>
-                                                                <td>
-                                                                    <select name="get_d_id_${i}" class="custom-select" id="inputGroupSelectGet${i}" onchange="showSelectedOptionGet_D(${i})">
-                                                                        <option selected>กรุณาเลือกรายการซ่อมที่ต้องการ...</option>
-                                                                        <?php
-                                                                        $count_conf = 0;
-                                                                        $sql_get_c = "SELECT * FROM get_detail 
-                                                                                    LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                                                    WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
-                                                                        $result_get_c = mysqli_query($conn, $sql_get_c);
-                                                                        while ($row_get_c = mysqli_fetch_array($result_get_c)) {
-                                                                            $count_conf++;
-                                                                        ?>
-                                                                             <option value="<?= $row_get_c['get_d_id'] ?>"> <?= $row_get_c['r_brand'] . " " . $row_get_c['r_model'] . " - Model : " . $row_get_c['r_number_model'] . " - Serial Number : " . $row_get_c['r_serial_number']  ?></option>
-                                                                            <?php
-                                                                        }
-                                                                            ?>
-                                                                    </select>
-                                                                </td>
+                                                                <td><img id="cardImg${i}" alt="" style="max-width: 150px;"></td>
                                                                 <td>
                                                                     <select name="p_id${i}" class="custom-select" id="inputGroupSelect${i}" onchange="showSelectedOption(${i})">
                                                                         <option selected>Choose...</option>
@@ -1610,13 +1656,13 @@ if (!isset($_SESSION['role_id'])) {
                                                                 </td>
                                                                 <td>
                                                                     <div class="input-group">
-                                                                        <div class="col-6 px-0">
+                                                                        <div class="col-8 px-0">
                                                                             <input type="number" name="value_p${i}" id="${cardId}" value="1" class="form-control" onchange="calculateTotalPrice(${i})">
                                                                         </div>
-                                                                        <div class="col-6 px-0">
+                                                                        <div class="col-4 px-1">
                                                                             <div class="input-group-prepend">
-                                                                                <button type="button" class="btn btn-primary" onclick="increment('${cardId}')">+</button>
-                                                                                <button type="button" class="btn btn-danger" onclick="decrement('${cardId}')">-</button>
+                                                                                <button type="button" class="btn btn-primary text-center ms-2" onclick="increment('${cardId}')">+</button>
+                                                                                <button type="button" class="btn btn-danger text-center mx-2" onclick="decrement('${cardId}')">-</button>
                                                                                 <button type="button" class="btn btn-secondary" onclick="deleteCard('${cardId}')">Delete</button>
                                                                             </div>
                                                                         </div>
@@ -1631,7 +1677,12 @@ if (!isset($_SESSION['role_id'])) {
                                                                 </td>
                                                             `;
 
-                                                        cardSection.appendChild(tableRow); // Add new card row
+                                                        // Check if this row is a new one or an existing one
+                                                        if (i > existingCards.length) {
+                                                            cardSection.appendChild(tableRow); // Add new card row
+                                                        } else {
+                                                            cardSection.appendChild(existingCards[i - 1]); // Add existing card row
+                                                        }
                                                     }
 
                                                     cardContainer.style.display = "block"; // Show the card section
@@ -1644,7 +1695,6 @@ if (!isset($_SESSION['role_id'])) {
                                                     var selectElement = document.getElementById(`inputGroupSelect${cardIndex}`);
                                                     var selectedOption = selectElement.options[selectElement.selectedIndex];
                                                     var cardImg = document.getElementById(`cardImg${cardIndex}`);
-                                                    var cardTitle = document.getElementById(`cardTitle${cardIndex}`);
                                                     var cardPrice = document.getElementById(`cardPrice${cardIndex}`);
 
                                                     // Retrieve the data attributes from the selected option
@@ -1655,7 +1705,6 @@ if (!isset($_SESSION['role_id'])) {
 
                                                     // Update the card image and title with the selected option's data
                                                     cardImg.src = pic;
-                                                    cardTitle.textContent = name;
 
                                                     // Assign the price value directly as a string
                                                     cardPrice.value = p_price;
@@ -1669,6 +1718,15 @@ if (!isset($_SESSION['role_id'])) {
                                                         // Update the input field value with the price from the database
                                                         var price = parseFloat(selectedPart.p_price);
                                                         cardPrice.value = parseInt(price).toString();
+                                                    }
+
+                                                    // เปลี่ยนคลาสของรูปภาพตามสถานะตัวเลือกที่ถูกเลือกหรือไม่ถูกเลือก
+                                                    if (selectedOption.value !== "") {
+                                                        cardImg.classList.add("selected-image");
+                                                        cardImg.classList.remove("hidden-image");
+                                                    } else {
+                                                        cardImg.classList.add("hidden-image");
+                                                        cardImg.classList.remove("selected-image");
                                                     }
 
                                                     // Hide the selected option in the next select dropdown
@@ -1696,7 +1754,6 @@ if (!isset($_SESSION['role_id'])) {
 
                                                     // Update the card image and title with the selected option's data
                                                     cardImg.src = pic;
-                                                    cardTitle.textContent = name;
 
                                                     // Assign the price value directly as a string
                                                     cardPrice.value = p_price;
