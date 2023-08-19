@@ -1,3 +1,5 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
   body {
     font-family: sans-serif;
@@ -26,6 +28,51 @@
   #scrollToTop.visible {
     display: block;
     opacity: 1;
+  }
+
+  .NameTopbar {
+    position: absolute;
+    /* Default positioning */
+    top: 30%;
+    left: 45%;
+    font-size: 100%;
+
+    /* Add any other styles you need */
+    /* Media query for screens with a maximum width of 768px */
+    @media (max-width: 1400px) {
+      top: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* Media query for screens with a maximum width of 768px */
+    @media (max-width: 1200px) {
+      top: 30%;
+      left: 40%;
+      transform: translateX(-50%);
+    }
+
+    /* Media query for screens with a maximum width of 768px */
+    @media (max-width: 992px) {
+      top: 30%;
+      left: 20%;
+      transform: translateX(-50%);
+    }
+
+    /* Media query for screens with a maximum width of 768px */
+    @media (max-width: 768px) {
+      top: 30%;
+      left: 0%;
+      transform: translateX(-100%);
+      display: none;
+    }
+
+    /* Media query for screens with a maximum width of 480px */
+    @media (max-width: 480px) {
+      top: 30%;
+      left: 20%;
+      display: none;
+    }
   }
 </style>
 <!-- Your web content here -->
@@ -82,18 +129,31 @@
       </div>
     </div>
     <div class="dropdown col-md-3 text-end">
-      <!-- <?= $_SESSION['fname'] . " " . $_SESSION['lname']  ?> -->
+    
+      <span class="NameTopbar"><?= $_SESSION['fname'] . " " . $_SESSION['lname']  ?></span>
+
       <i class="uil uil-user-circle" style="font-size: 40px; cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false"></i>
 
-
       <ul class="dropdown-menu dropdown-menu-end">
-        <li><a class="dropdown-item" href="edit_user.php">แก้ไขข้อมูล</a></li>
-        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">ข้อกำหนดเกี่ยวกับเว็บไซต์</a></li>
-        <li><a class="dropdown-item" onclick="logout()">Log out</a></li>
+        <li><a class="dropdown-item" href="edit_user.php">แก้ไขข้อมูล <i class="fa fa-edit"></i></a></li>
+        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">ข้อกำหนดเกี่ยวกับเว็บไซต์ <i class="fa fa-info-circle"></i></a></li>
+        <li><a class="dropdown-item" onclick="logout()">Log out  <i class="fa fa-sign-out"></i></a></li>
       </ul>
     </div>
   </div>
 </nav>
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
+    <br><br><br>
+    <ul class="list-group">
+      <li class="list-group-item">An item</li>
+      <li class="list-group-item">A second item</li>
+      <li class="list-group-item">A third item</li>
+      <li class="list-group-item">A fourth item</li>
+      <li class="list-group-item">And a fifth one</li>
+    </ul>
+  </div>
+</div>
 <!-- end navbar-->
 
 <!-- Modal -->

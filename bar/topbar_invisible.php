@@ -6,6 +6,7 @@
     </button>
     <a class="navbar-brand" href="#" style="color: #000141;">
       <h4>Anan Electronic</h4>
+      <!-- <img src="../img brand/anelogo.png" alt=""> -->
     </a>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav ps-5">
@@ -17,7 +18,7 @@
       </div>
     </div>
     <div class="dropdown col-md-3 text-end">
-      <!-- <?= $_SESSION['fname'] . " " . $_SESSION['lname']  ?> -->
+      <?= $_SESSION['fname'] . " " . $_SESSION['lname']  ?>
       <i class="uil uil-user-circle" style="font-size: 40px; cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false"></i>
       <ul class="dropdown-menu dropdown-menu-end">
         <li><a class="dropdown-item" href="edit_user.php">แก้ไขข้อมูล</a></li>

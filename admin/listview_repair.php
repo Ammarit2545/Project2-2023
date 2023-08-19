@@ -142,7 +142,7 @@ if (!isset($_SESSION['role_id'])) {
                                                 $date = DateTime::createFromFormat('d-m-Y', $dateString);
                                                 // Additional code using $date
                                             }
-                                            $formattedDate = $date->format('F / d / Y');
+                                            $formattedDate = $date->format('d / F / Y');
                                             $i = $i + 1;
                                             $get_r_id = $row['get_r_id'];
                                             $sql_c = "SELECT * FROM repair_status
