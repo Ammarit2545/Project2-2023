@@ -1,38 +1,15 @@
 <?php
 session_start();
-
 include('database/condb.php');
 
-$status_req = 0;
+$get_r_id = 164; // Remove single quotes for integer value
 
-$sql_get = "SELECT get_repair.get_r_id
-FROM get_repair
-RIGHT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
-WHERE get_repair.del_flg = 0
-GROUP BY get_repair.get_r_id;
-";
-$result_get = mysqli_query($conn, $sql_get);
+$sql_insert = "INSERT INTO repair_status (get_r_id, rs_date_time, rs_detail, status_id) VALUES ('$get_r_id', NOW(), 'ทางร้านต้องขอแจ้งให้ทราบว่าคุณไม่ได้ชำระเงินตามระยะเวลาที่กำหนด (ระยะเวลาเก็บอุปกรณ์ของท่านคือ 1 ปี) ดังนั้นเราขอทำการเก็บอุปกณ์ของท่านเป็นทรัพย์สินของทางร้าน โปรดทราบว่าเราจะไม่มีการดำเนินการคืนเงินหรือรับผิดชอบแต่อย่างใดต่อของท่านในกรณีนี้', 14)";
+$result_insert = mysqli_query($conn, $sql_insert);
 
-if ($result_get) {
-    $stmt_found = $conn->prepare("SELECT status_id FROM repair_status WHERE del_flg = 0 AND get_r_id = ? ORDER BY rs_date_time DESC LIMIT 1");
-
-    while ($row_get = mysqli_fetch_array($result_get)) {
-        $get_r_id = $row_get['get_r_id'];
-
-        // ซ่อนตัวแปรไว้ข้างใน
-        $stmt_found->bind_param("i", $get_r_id);
-        $stmt_found->execute();
-
-        $result_found = $stmt_found->get_result();
-        $row_found = mysqli_fetch_array($result_found);
-
-        if ($row_found && $row_found['status_id'] == 2) {
-            $status_req = $status_req + 1;
-        }
-    }
-
-    // เอาตัวแปรออก
-    $stmt_found->close();
+if ($result_insert) {
+    $response[] = ['get_r_id' => $get_r_id];
+    echo 'True';
+} else {
+    echo 'Not';
 }
-
-echo $status_req;

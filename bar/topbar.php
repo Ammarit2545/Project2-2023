@@ -1,6 +1,43 @@
 <?php
 session_start();
 ?>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  function checkRecords() {
+    // Get the current domain dynamically
+    const currentDomain = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+    console.log(currentDomain);
+
+    $.ajax({
+      url: currentDomain + '/Project2023/Project2-2023/admin/action/check_records.php',
+      dataType: 'json',
+      success: function(data) {
+        if (data.length > 0) {
+          // Handle the response, e.g., display a notification or update the UI
+          for (let i = 0; i < data.length; i++) {
+            const getRId = data[i].get_r_id;
+            console.log(`Repair ID ${getRId} has not been paid.`);
+          }
+
+          // Call the function again after a delay (e.g., 5 seconds)
+          setTimeout(checkRecords, 5000); // 5 seconds (5000 milliseconds)
+        } else {
+          // No records found, call the function again after a delay
+          setTimeout(checkRecords, 5000); // 5 seconds (5000 milliseconds)
+        }
+      },
+      error: function() {
+        // Handle errors, and call the function again after a delay
+        setTimeout(checkRecords, 5000); // 5 seconds (5000 milliseconds)
+      }
+    });
+  }
+
+  // Start checking records when the page loads
+  $(document).ready(function() {
+    checkRecords();
+  });
+</script>
 <!-- navbar-->
 <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
   <div class="container">
@@ -9,6 +46,7 @@ session_start();
     </button>
     <a class="navbar-brand" href="#" style="color: #000141;">
       <h4>Anan Electronic</h4>
+      <img src="../img brand/anelogo.png" alt="">
     </a>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav ps-5">
@@ -19,6 +57,7 @@ session_start();
       </div>
     </div>
     <div class="col-md-3 text-end">
+
       <?php
       if (!isset($_SESSION['profile'])) {
         $line = new LineLogin();

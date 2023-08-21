@@ -1,3 +1,41 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function checkRecords() {
+        // Get the current domain dynamically
+        const currentDomain = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+        console.log(currentDomain);
+
+        $.ajax({
+            url: currentDomain + '/Project2023/Project2-2023/admin/action/check_records.php',
+            dataType: 'json',
+            success: function(data) {
+                if (data.length > 0) {
+                    // Handle the response, e.g., display a notification or update the UI
+                    for (let i = 0; i < data.length; i++) {
+                        const getRId = data[i].get_r_id;
+                        console.log(`Repair ID ${getRId} has not been paid.`);
+                    }
+
+                    // Call the function again after a delay (e.g., 5 seconds)
+                    setTimeout(checkRecords, 5000); // 5 seconds (5000 milliseconds)
+                } else {
+                    // No records found, call the function again after a delay
+                    setTimeout(checkRecords, 5000); // 5 seconds (5000 milliseconds)
+                }
+            },
+            error: function() {
+                // Handle errors, and call the function again after a delay
+                setTimeout(checkRecords, 5000); // 5 seconds (5000 milliseconds)
+            }
+        });
+    }
+
+    // Start checking records when the page loads
+    $(document).ready(function() {
+        checkRecords();
+    });
+</script>
+
 <!-- Topbar -->
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 

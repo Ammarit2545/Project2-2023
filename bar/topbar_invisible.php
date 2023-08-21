@@ -1,3 +1,41 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  function checkRecords() {
+    // Get the current domain dynamically
+    const currentDomain = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+    console.log(currentDomain);
+
+    $.ajax({
+      url: currentDomain + '/Project2023/Project2-2023/admin/action/check_records.php',
+      dataType: 'json',
+      success: function(data) {
+        if (data.length > 0) {
+          // Handle the response, e.g., display a notification or update the UI
+          for (let i = 0; i < data.length; i++) {
+            const getRId = data[i].get_r_id;
+            console.log(`Repair ID ${getRId} has not been paid.`);
+          }
+
+          // Call the function again after a delay (e.g., 5 seconds)
+          setTimeout(checkRecords, 5000); // 5 seconds (5000 milliseconds)
+        } else {
+          // No records found, call the function again after a delay
+          setTimeout(checkRecords, 5000); // 5 seconds (5000 milliseconds)
+        }
+      },
+      error: function() {
+        // Handle errors, and call the function again after a delay
+        setTimeout(checkRecords, 5000); // 5 seconds (5000 milliseconds)
+      }
+    });
+  }
+
+  // Start checking records when the page loads
+  $(document).ready(function() {
+    checkRecords();
+  });
+</script>
+
 <!-- <nav class="navbar fixed-top navbar-expand-lg navbar-light " id="navcolor"> -->
 <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
   <div class="container">
@@ -6,6 +44,7 @@
     </button>
     <a class="navbar-brand" href="#" style="color: #000141;">
       <h4>Anan Electronic</h4>
+      <!-- <img src="../img brand/anelogo.png" alt=""> -->
     </a>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav ps-5">
@@ -17,7 +56,7 @@
       </div>
     </div>
     <div class="dropdown col-md-3 text-end">
-      <!-- <?= $_SESSION['fname'] . " " . $_SESSION['lname']  ?> -->
+      <?= $_SESSION['fname'] . " " . $_SESSION['lname']  ?>
       <i class="uil uil-user-circle" style="font-size: 40px; cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false"></i>
       <ul class="dropdown-menu dropdown-menu-end">
         <li><a class="dropdown-item" href="edit_user.php">แก้ไขข้อมูล</a></li>
@@ -61,32 +100,30 @@
   &uarr;
 </div>
 <style>
-    body {
-      opacity: 0;
-      background-color: white;
-      transition: opacity 1s ease-in;
-    }
+  body {
+    opacity: 0;
+    background-color: white;
+    transition: opacity 1s ease-in;
+  }
 
-    body.loaded {
-      opacity: 1;
-    }
-  </style>
+  body.loaded {
+    opacity: 1;
+  }
+</style>
 
-  <!-- Your page content here -->
+<!-- Your page content here -->
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    // Fade in when the page loads
-    window.addEventListener("load", function() {
-      document.body.classList.add("loaded");
-    });
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  // Fade in when the page loads
+  window.addEventListener("load", function() {
+    document.body.classList.add("loaded");
+  });
 
-    // Fade out when the page is being closed
-    window.addEventListener("beforeunload", function() {
-      document.body.style.transition = "opacity 0.25s ease-out";
-      document.body.style.opacity = "0";
-    });
-  </script>
-  <link rel="stylesheet" href="styles.css">
-
-  
+  // Fade out when the page is being closed
+  window.addEventListener("beforeunload", function() {
+    document.body.style.transition = "opacity 0.25s ease-out";
+    document.body.style.opacity = "0";
+  });
+</script>
+<link rel="stylesheet" href="styles.css">

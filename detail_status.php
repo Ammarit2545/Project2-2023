@@ -4,7 +4,7 @@ include('database/condb.php');
 $id = $_SESSION['id'];
 $status_id = 0;
 
-$sql1 = "SELECT * FROM member WHERE m_id = '$id'";
+$sql1 = "SELECT m_fname,m_lname FROM member WHERE m_id = '$id'";
 $result1 = mysqli_query($conn, $sql1);
 $row1 = mysqli_fetch_array($result1);
 if ($id == NULL) {
@@ -13,6 +13,7 @@ if ($id == NULL) {
 
 $count_carry_out = 0;
 $check_order = 0;
+$part_check = 0;
 
 ?>
 
@@ -42,70 +43,192 @@ $check_order = 0;
 <body>
     <!-- navbar-->
     <?php
-    $part_check = 0;
     if ($row1 > 0) {
         include('bar/topbar_user.php');
     }
 
     $id_get_r = $_GET['id'];
-    $sql = "SELECT * FROM get_repair
-        LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id 
-        LEFT JOIN status_type ON repair_status.status_id  = status_type.status_id 
-        WHERE get_repair.get_r_id = $id_get_r AND repair_status.del_flg = '0' ORDER BY repair_status.rs_date_time DESC;";
-    $result = mysqli_query($conn, $sql);
+    // Assuming $id_get_r is your parameterized value
+    $sql = "SELECT rs.rs_id,
+                rs.status_id,
+                st.status_name,
+                st.status_color,
+                rs.rs_conf,
+                rs.rs_date_time,
+                rs.rs_detail,
+                gr.get_tel,
+                gr.get_add,
+                gr.get_wages,
+                gr.get_add_price,
+                gr.get_check,
+                gr.get_add_price
+            FROM get_repair gr
+            LEFT JOIN repair_status rs ON gr.get_r_id = rs.get_r_id 
+            LEFT JOIN status_type st ON rs.status_id = st.status_id 
+            WHERE gr.get_r_id = ? AND rs.del_flg = '0' 
+            ORDER BY rs.rs_date_time DESC
+           ";
 
-    $sql_c_date_time = "SELECT * FROM get_repair
-    LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id 
-    LEFT JOIN status_type ON repair_status.status_id  = status_type.status_id 
-    WHERE get_repair.get_r_id = $id_get_r AND repair_status.del_flg = '0' ORDER BY repair_status.rs_date_time DESC;";
-    $result_c_date_time = mysqli_query($conn, $sql_c_date_time);
-    $row_c_date_time = mysqli_fetch_array($result_c_date_time);
+    // Use prepared statements
+    $stmt = mysqli_prepare($conn, $sql);
+
+    if ($stmt) {
+        // Bind the parameter
+        mysqli_stmt_bind_param($stmt, "s", $id_get_r);
+
+        // Execute the statement
+        mysqli_stmt_execute($stmt);
+
+        // Get the result
+        $result = mysqli_stmt_get_result($stmt);
+
+        // Close the statement
+        mysqli_stmt_close($stmt);
+    } else {
+        // Handle the error
+        echo "Error: " . mysqli_error($conn);
+    }
+
+    // $sql_c_date_time = "SELECT * FROM get_repair
+    // LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id 
+    // LEFT JOIN status_type ON repair_status.status_id  = status_type.status_id 
+    // WHERE get_repair.get_r_id = $id_get_r AND repair_status.del_flg = '0' ORDER BY repair_status.rs_date_time DESC;";
+    // $result_c_date_time = mysqli_query($conn, $sql_c_date_time);
+    // $row_c_date_time = mysqli_fetch_array($result_c_date_time);
 
     // $row = mysqli_fetch_array($result);
 
-    $sql2 = "SELECT * FROM get_repair
-        LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id 
-        LEFT JOIN status_type ON repair_status.status_id  = status_type.status_id 
-        WHERE get_repair.get_r_id = $id_get_r AND repair_status.del_flg = '0' ORDER BY repair_status.rs_date_time DESC LIMIT 1;";
-    $result2 = mysqli_query($conn, $sql2);
-    $row_2 = mysqli_fetch_array($result2);
+    // Assuming $id_get_r is your parameterized value
+    $sql2 = "SELECT rs.rs_id, rs.status_id, st.status_color, rs.rs_conf, rs.rs_date_time, rs.rs_detail,
+                    gr.get_tel, gr.get_add, gr.get_wages, gr.get_add_price, gr.get_check, gr.get_add_price
+                FROM get_repair gr
+                LEFT JOIN repair_status rs ON gr.get_r_id = rs.get_r_id 
+                LEFT JOIN status_type st ON rs.status_id = st.status_id 
+                WHERE gr.get_r_id = ? AND rs.del_flg = '0' 
+                ORDER BY rs.rs_date_time DESC
+                LIMIT 1;";
+
+    // Use prepared statements
+    $stmt2 = mysqli_prepare($conn, $sql2);
+
+    if ($stmt2) {
+        // Bind the parameter
+        mysqli_stmt_bind_param($stmt2, "s", $id_get_r);
+
+        // Execute the statement
+        mysqli_stmt_execute($stmt2);
+
+        // Get the result
+        $result2 = mysqli_stmt_get_result($stmt2);
+
+        // Fetch data as needed
+        $row_2 = mysqli_fetch_assoc($result2);
+
+        // Close the statement
+        mysqli_stmt_close($stmt2);
+    } else {
+        // Handle the error
+        echo "Error: " . mysqli_error($conn);
+    }
+    // Assuming $id_get_r is your parameterized value
+    $sql2 = "SELECT rs.rs_id, rs.status_id, st.status_color, rs.rs_conf, rs.rs_date_time, rs.rs_detail,
+                    gr.get_tel, gr.get_add, gr.get_wages, gr.get_add_price, gr.get_check, gr.get_add_price
+                FROM get_repair gr
+                LEFT JOIN repair_status rs ON gr.get_r_id = rs.get_r_id 
+                LEFT JOIN status_type st ON rs.status_id = st.status_id 
+                WHERE gr.get_r_id = ? AND rs.del_flg = '0' 
+                ORDER BY rs.rs_date_time DESC
+                LIMIT 1;";
+
+    // Use prepared statements
+    $stmt2 = mysqli_prepare($conn, $sql2);
+
+    if ($stmt2) {
+        // Bind the parameter
+        mysqli_stmt_bind_param($stmt2, "s", $id_get_r);
+
+        // Execute the statement
+        mysqli_stmt_execute($stmt2);
+
+        // Get the result
+        $result2 = mysqli_stmt_get_result($stmt2);
+
+        // Fetch data as needed
+        $row_2 = mysqli_fetch_assoc($result2);
+
+        // Close the statement
+        mysqli_stmt_close($stmt2);
+    } else {
+        // Handle the error
+        echo "Error: " . mysqli_error($conn);
+    }
+
 
     $rs_lastest_id = $row_2['rs_id'];
 
     $carry_out_id = $row['status_id'];
-    $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = '$id_get_r' AND status_id = 6 AND del_flg = 0 ORDER BY rs_date_time DESC;";
-    $result_carry_out = mysqli_query($conn, $sql_cary_out);
-    $row_carry_out = mysqli_fetch_array($result_carry_out);
+    $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = ? AND status_id = 6 AND del_flg = 0 ORDER BY rs_date_time DESC;";
+    $stmt = $conn->prepare($sql_cary_out);
+    $stmt->bind_param("s", $id_get_r);
+    $stmt->execute();
+    $result_carry_out = $stmt->get_result();
+    $row_carry_out = $result_carry_out->fetch_assoc();
+    $stmt->close();
+
+    // $result_carry_out = mysqli_query($conn, $sql_cary_out);
+    // $row_carry_out = mysqli_fetch_array($result_carry_out);
 
     // check parts of Get_r_id
+    // Assuming $id_get_r is your parameterized value
     $sql_c_part = "SELECT
-    *,
-    repair_detail.p_id,
-    repair_detail.rd_value_parts,
-    repair_detail.get_d_id,
-    parts.p_brand,
-    parts.p_model,
-    parts.p_price,
-    parts_type.p_type_name,
-    repair_status.rs_id,
-    parts.p_pic
-FROM
-    `repair_detail`
-    LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
-    LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
-    LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
-    LEFT JOIN repair ON get_detail.r_id = repair.r_id
-    JOIN parts ON parts.p_id = repair_detail.p_id
-    LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
-WHERE
-    get_repair.del_flg = 0 AND repair_detail.del_flg = 0
-    AND get_repair.get_r_id = '$id_get_r'
-GROUP BY
-    rd_id, get_detail.get_d_id; -- Include the additional column in GROUP BY
- ";
-    $result_c_part = mysqli_query($conn, $sql_c_part);
-    while ($row_c_part = mysqli_fetch_array($result_c_part)) {
-        $total_part_price +=  $row_c_part['rd_parts_price'];
+                    *,
+                    repair_detail.p_id,
+                    repair_detail.rd_value_parts,
+                    repair_detail.get_d_id,
+                    parts.p_brand,
+                    parts.p_model,
+                    parts.p_price,
+                    parts_type.p_type_name,
+                    repair_status.rs_id,
+                    parts.p_pic
+                    FROM
+                    `repair_detail`
+                    LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
+                    LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
+                    LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
+                    LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                    JOIN parts ON parts.p_id = repair_detail.p_id
+                    LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
+                    WHERE
+                    get_repair.del_flg = 0 AND repair_detail.del_flg = 0
+                    AND get_repair.get_r_id = ?
+                    GROUP BY
+                    rd_id, get_detail.get_d_id;";
+
+    // Use prepared statements
+    $stmt_c_part = mysqli_prepare($conn, $sql_c_part);
+
+    if ($stmt_c_part) {
+        // Bind the parameter
+        mysqli_stmt_bind_param($stmt_c_part, "s", $id_get_r);
+
+        // Execute the statement
+        mysqli_stmt_execute($stmt_c_part);
+
+        // Get the result
+        $result_c_part = mysqli_stmt_get_result($stmt_c_part);
+
+        // Fetch data as needed
+        while ($row_c_part = mysqli_fetch_assoc($result_c_part)) {
+            // Process the row data
+            $total_part_price +=  $row_c_part['rd_parts_price'];
+        }
+
+        // Close the statement
+        mysqli_stmt_close($stmt_c_part);
+    } else {
+        // Handle the error
+        echo "Error: " . mysqli_error($conn);
     }
 
     // check status Process Bar
@@ -136,11 +259,22 @@ GROUP BY
         $process_dot = 8;
     }
 
-    $sql_c = "SELECT * FROM get_detail
-    LEFT JOIN get_repair ON get_detail.get_r_id = get_repair.get_r_id 
-    LEFT JOIN repair ON repair.r_id = get_detail.r_id WHERE get_repair.get_r_id = '$id_get_r' AND repair.del_flg = '0'";
-    $result_c = mysqli_query($conn, $sql_c);
-    $row_c = mysqli_fetch_array($result_c);
+    // Assuming $id_get_r is your parameterized value
+    $sql = "SELECT get_repair.get_add_price, get_detail.get_t_id 
+        FROM get_detail
+        LEFT JOIN get_repair ON get_detail.get_r_id = get_repair.get_r_id 
+        LEFT JOIN repair ON repair.r_id = get_detail.r_id 
+        WHERE get_repair.get_r_id = ? AND repair.del_flg = '0'";
+
+    // Assuming you have a mysqli connection called $conn
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $id_get_r); // Assuming $id_get_r is a string, use "i" for integers
+    $stmt->execute();
+    $result_c = $stmt->get_result();
+    $row_c = $result_c->fetch_assoc();
+    $stmt->close();
+
+
 
     $get_add_price = $row_c['get_add_price']; ?>
     <div style="background-color: <?= $row_2['status_color'] ?>;height:200px;padding:7%;color:white">
@@ -148,6 +282,16 @@ GROUP BY
             <h3><i class="fa fa-check-square-o"></i> คุณได้ทำการส่งเรื่องแล้ว</h3>
             <p>โปรดรอการตอบกลับ พนักงานจะทำการตอบกลับภายใน 2 วันทำการ<br>หากคุณต้องการยกเลิกคำสั่งซ่อมสามารถทำการ <span style="color:white">"ยกเลิก"</span> ได้</p>
 
+        <?php  } ?>
+        <?php if ($row_2['status_id'] == 14) { ?>
+            <h3><i class="fa fa-ban"></i> เกินระยะเวลาชำระเงิน (ตั้งแต่วันที่ <?php
+                                                                                // Assuming $row_2['rs_date_time'] is in the format 'Y-m-d H:i:s'
+                                                                                $dateToSubtract = strtotime('-1 year', strtotime($row_2['rs_date_time']));
+                                                                                $newDate = date('d-m-Y', $dateToSubtract);
+
+                                                                                echo $newDate;
+                                                                                ?>)</h3>
+            <p>ทางร้านต้องขอแจ้งให้ทราบว่าคุณไม่ได้ชำระเงินตามระยะเวลาที่กำหนด (ระยะเวลาเก็บอุปกรณ์ของท่านคือ 1 ปี) ดังนั้นเราขอทำการเก็บอุปกณ์ของท่านเป็นทรัพย์สินของทางร้าน โปรดทราบว่าเราจะไม่มีการดำเนินการคืนเงินหรือรับผิดชอบแต่อย่างใดต่อของท่านในกรณีนี้</p>
         <?php  } ?>
         <?php if ($row_2['status_id'] == 10) { ?>
             <h3><i class="fa fa-paper-plane-o"></i> กำลังดำเนินการส่งอุปกรณ์ให้คุณ</h3>
@@ -182,11 +326,15 @@ GROUP BY
         <?php if ($row_2['status_id'] == 6) { ?>
             <h3><i class="fa fa-check-square-o"></i> พนักงานได้ทำการซ่อมอุปกรณ์ให้คุณแล้วในขณะนี้</h3>
             <?php
-            $sql_date = "SELECT rs_date_time,get_date_conf FROM `repair_status` 
+            $sql_date = "SELECT repair_status.rs_date_time,get_repair.get_date_conf FROM `repair_status` 
             LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
-            WHERE repair_status.get_r_id = '$id_get_r' AND status_id = 6 ORDER BY rs_date_time ASC;";
-            $result_date = mysqli_query($conn, $sql_date);
-            $row_date = mysqli_fetch_array($result_date);
+            WHERE repair_status.get_r_id = ? AND status_id = 6 ORDER BY rs_date_time ASC;";
+            $stmt = $conn->prepare($sql_date);
+            $stmt->bind_param("s", $id_get_r);
+            $stmt->execute();
+            $result_date = $stmt->get_result();;
+            $row_date = $result_date->fetch_assoc();
+            $stmt->close();
             ?>
             <p>กำหนดแล้วเสร็จวันที่ <u><?=
                                         // $date = $row_date['rs_date_time'];
@@ -321,16 +469,21 @@ GROUP BY
                                 <form action="action/add_tracking.php?id=<?= $id_get_r ?>" method="POST" id="trackingForm">
                                     <?php
                                     $count_com = 0;
-                                    $sql_count_repair = "SELECT * FROM get_detail 
-                                                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                                                        WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.del_flg = 0;";
-                                    $result_count_repair  = mysqli_query($conn, $sql_count_repair);
-                                    while ($row_count_repair = mysqli_fetch_array($result_count_repair)) {
-                                        $count_com += 1;
+                                    $sql_count_repair = "SELECT gd.get_d_id, rp.r_serial_number, rp.r_model, rp.r_brand 
+                                                        FROM get_detail gd
+                                                        LEFT JOIN repair rp ON gd.r_id = rp.r_id
+                                                        WHERE gd.get_r_id = ? AND gd.del_flg = 0;";
+                                    $stmt = $conn->prepare($sql_count_repair);
+                                    $stmt->bind_param("s", $id_get_r);
+                                    $stmt->execute();
+                                    $result_count_repair = $stmt->get_result();
+
+                                    while ($row_count_repair = $result_count_repair->fetch_assoc()) {
+                                        $count_com++;
                                     ?>
                                         <div class="row">
                                             <div class="col-md-4 mb-3">
-                                                <h5><span class="badge bg-secondary"><?= $count_com ?></span><?= ' ' . $row_count_repair['r_brand'] . ' ' . $row_count_repair['r_model'] . ' ' ?><span class="badge bg-primary"><?= ' ' . $row_count_repair['r_serial_number'] ?></h5></span>
+                                                <h5><span class="badge bg-secondary"><?= $count_com ?></span><?= ' ' . $row_count_repair['r_brand'] . ' ' . $row_count_repair['r_model'] . ' ' ?><span class="badge bg-primary"><?= ' ' . $row_count_repair['r_serial_number'] ?></span></h5>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -339,9 +492,8 @@ GROUP BY
                                                 <select class="form-select" aria-label="Default select example" name="com_t_id_<?= $count_com ?>" required>
                                                     <option value="" disabled selected>เลือกบริษัทขนส่ง</option>
                                                     <?php
-                                                    $sql_com = "SELECT * FROM company_transport 
-                                                                WHERE del_flg = 0";
-                                                    $result_com  = mysqli_query($conn, $sql_com);
+                                                    $sql_com = "SELECT * FROM company_transport WHERE del_flg = 0";
+                                                    $result_com = mysqli_query($conn, $sql_com);
                                                     while ($row_com = mysqli_fetch_array($result_com)) {
                                                     ?>
                                                         <option value="<?= $row_com['com_t_id'] ?>"><?= $row_com['com_t_name'] ?></option>
@@ -358,7 +510,10 @@ GROUP BY
                                         </div>
                                         <hr>
                                     <?php
-                                    } ?>
+                                    }
+                                    $stmt->close();
+                                    ?>
+
                                     <center>
                                         <button class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">ยกเลิก</button>
                                         <button type="button" class="btn btn-success" onclick="showConfirmationTracking()">ยืนยัน</button>
@@ -677,7 +832,7 @@ GROUP BY
                                                     $sql_com_m = "SELECT * FROM get_detail
                                                                     LEFT JOIN get_repair ON get_detail.get_r_id = get_repair.get_r_id 
                                                                     LEFT JOIN tracking ON get_detail.get_t_id = tracking.t_id 
-                                                                    LEFT JOIN repair ON repair.r_id = get_detail.r_id WHERE get_repair.get_r_id = '$id_get_r' AND repair.del_flg = '0'";
+                                                                    LEFT JOIN repair ON repair.r_id = get_detail.r_id WHERE get_repair.get_r_id = '$id_get_r' AND repair.del_flg = '0' AND get_detail.get_d_conf = '0'";
                                                     $result_com_m = mysqli_query($conn, $sql_com_m);
 
                                                     $count_com = 0;
@@ -888,14 +1043,14 @@ GROUP BY
                                                                                                         $count_part++;
                                                                                                         $p_id = $row_op['p_id'];
                                                                                                         $rs_id = $row_op['rs_id'];
-                                                                                                        ?>
+                                                                                                    ?>
                                                                                                         <?php
 
                                                                                                         $sql_count = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id' AND p_id = '$p_id'";
                                                                                                         $result_count = mysqli_query($conn, $sql_count);
                                                                                                         $row_count = mysqli_fetch_array($result_count);
 
-                                                                                                    ?>
+                                                                                                        ?>
                                                                                                         <tr>
                                                                                                             <td><?php
                                                                                                                 if ($count_part == NULL) {
@@ -1285,7 +1440,7 @@ GROUP BY
                                                                         <?php
                                                                         } else {
                                                                         ?>
-                                                                            <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a>
+                                                                            <!-- <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a> -->
                                                                         <?php }
                                                                     }
                                                                 }
@@ -1670,7 +1825,7 @@ GROUP BY
                                                                         <p style="margin-left: 2%; color:red">*** หากต้องการยกเลิกคำส่งซ่อม ***</p>
                                                                         <a class="btn btn-danger" style="margin-left: 2%" onclick="showDivCancel()">ยกเลิก</a>
                                                                     <?php
-                                                                    } else if ($status_id != 1 && isset($cancel_id)) {
+                                                                    } else if ($status_id != 1 && isset($cancel_id) && $row_2['status_id'] != 14) {
                                                                     ?>
                                                                         <hr>
                                                                         <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
@@ -1926,7 +2081,7 @@ GROUP BY
                         <br>
                         <!-- <hr> -->
                         <!-- ปุ่มทำการยกเลิก -->
-                        <?php if ($status_id_last  == 1 || $status_id_last  == 2 || $status_id_last  == 14) { ?>
+                        <?php if ($status_id_last  == 1 || $status_id_last  == 2 ) { ?>
                             <div class="d-flex justify-content-center">
                                 <div class="accordion accordion-flush" id="accordionFlushExample">
                                     <div class="accordion-item">
