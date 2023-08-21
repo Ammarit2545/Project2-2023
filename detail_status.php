@@ -283,6 +283,16 @@ $part_check = 0;
             <p>โปรดรอการตอบกลับ พนักงานจะทำการตอบกลับภายใน 2 วันทำการ<br>หากคุณต้องการยกเลิกคำสั่งซ่อมสามารถทำการ <span style="color:white">"ยกเลิก"</span> ได้</p>
 
         <?php  } ?>
+        <?php if ($row_2['status_id'] == 14) { ?>
+            <h3><i class="fa fa-ban"></i> เกินระยะเวลาชำระเงิน (ตั้งแต่วันที่ <?php
+                                                                                // Assuming $row_2['rs_date_time'] is in the format 'Y-m-d H:i:s'
+                                                                                $dateToSubtract = strtotime('-1 year', strtotime($row_2['rs_date_time']));
+                                                                                $newDate = date('d-m-Y', $dateToSubtract);
+
+                                                                                echo $newDate;
+                                                                                ?>)</h3>
+            <p>ทางร้านต้องขอแจ้งให้ทราบว่าคุณไม่ได้ชำระเงินตามระยะเวลาที่กำหนด (ระยะเวลาเก็บอุปกรณ์ของท่านคือ 1 ปี) ดังนั้นเราขอทำการเก็บอุปกณ์ของท่านเป็นทรัพย์สินของทางร้าน โปรดทราบว่าเราจะไม่มีการดำเนินการคืนเงินหรือรับผิดชอบแต่อย่างใดต่อของท่านในกรณีนี้</p>
+        <?php  } ?>
         <?php if ($row_2['status_id'] == 10) { ?>
             <h3><i class="fa fa-paper-plane-o"></i> กำลังดำเนินการส่งอุปกรณ์ให้คุณ</h3>
             <p>โปรดรอการตอบกลับจากพนักงาน</p>
@@ -1430,7 +1440,7 @@ $part_check = 0;
                                                                         <?php
                                                                         } else {
                                                                         ?>
-                                                                            <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a>
+                                                                            <!-- <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a> -->
                                                                         <?php }
                                                                     }
                                                                 }
@@ -1815,7 +1825,7 @@ $part_check = 0;
                                                                         <p style="margin-left: 2%; color:red">*** หากต้องการยกเลิกคำส่งซ่อม ***</p>
                                                                         <a class="btn btn-danger" style="margin-left: 2%" onclick="showDivCancel()">ยกเลิก</a>
                                                                     <?php
-                                                                    } else if ($status_id != 1 && isset($cancel_id)) {
+                                                                    } else if ($status_id != 1 && isset($cancel_id) && $row_2['status_id'] != 14) {
                                                                     ?>
                                                                         <hr>
                                                                         <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
@@ -2071,7 +2081,7 @@ $part_check = 0;
                         <br>
                         <!-- <hr> -->
                         <!-- ปุ่มทำการยกเลิก -->
-                        <?php if ($status_id_last  == 1 || $status_id_last  == 2 || $status_id_last  == 14) { ?>
+                        <?php if ($status_id_last  == 1 || $status_id_last  == 2 ) { ?>
                             <div class="d-flex justify-content-center">
                                 <div class="accordion accordion-flush" id="accordionFlushExample">
                                     <div class="accordion-item">
