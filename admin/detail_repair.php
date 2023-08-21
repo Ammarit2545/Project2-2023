@@ -32,7 +32,7 @@ if (!isset($_SESSION['role_id'])) {
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </head>
 <style>
@@ -175,6 +175,74 @@ if (!isset($_SESSION['role_id'])) {
     .hidden-image {
         display: none;
     }
+
+    .modal2 {
+        display: none;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+    }
+
+    .modal2-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+    }
+
+    #myList {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    #myList li {
+        padding: 8px 12px;
+        cursor: pointer;
+    }
+
+    #myList li:hover {
+        background-color: #ddd;
+    }
+
+    .modal2-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
+
+    .modal2-content {
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 10000;
+    }
+
+    .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        color: #999;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .close-button:hover {
+        color: #666;
+    }
 </style>
 
 <body id="page-top">
@@ -314,7 +382,7 @@ if (!isset($_SESSION['role_id'])) {
                                     $count_get_no++;
                                 ?>
 
-                                    <h4 style="text-align:start" id="body_text"> <span class="btn btn-primary">รายการที่ <?= $count_get_no ?></span> : <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?> | Model : <?= $row_get['r_number_model'] ?> | Serial Number : <?= $row_get['r_serial_number'] ?> </h4>
+                                    <h4 style="text-align:start" class="ml-3" id="body_text"> <span class="btn btn-primary">รายการที่ <?= $count_get_no ?></span> : <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?> | Model : <?= $row_get['r_number_model'] ?> | Serial Number : <?= $row_get['r_serial_number'] ?> </h4>
                                     <hr>
                                     <div style="margin-left: 40px; ">
                                         <?php if ($row_get['get_t_id'] != NULL) { ?><button class="btn btn-outline-primary">หมายเลขพัสดุ</button>
@@ -323,12 +391,12 @@ if (!isset($_SESSION['role_id'])) {
                                             <br>
                                             <hr><?php  }
                                                 ?>
-                                        <button class="btn btn-outline-primary">รายละเอียด</button>
+                                        <button class="btn btn-outline-primary mb-2">รายละเอียด</button>
                                         <br>
                                         <?= $row_get['get_d_detail'] ?>
                                         <br>
                                         <hr>
-                                        <button class="btn btn-outline-primary">รูปภาพ</button>
+                                        <button class="btn btn-outline-primary mb-4">รูปภาพ</button>
 
                                         <br>
                                         <?php
@@ -1107,8 +1175,8 @@ if (!isset($_SESSION['role_id'])) {
                                             <?php
                                             $count_conf = 0;
                                             $sql_get_c = "SELECT * FROM get_detail 
-                                                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                        WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
+                                                    LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                    WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
                                             $result_get_c = mysqli_query($conn, $sql_get_c);
                                             while ($row_get_c = mysqli_fetch_array($result_get_c)) {
                                                 $count_conf++;
@@ -1116,100 +1184,64 @@ if (!isset($_SESSION['role_id'])) {
 
                                                 <div class="alert alert-primary" role="alert">
                                                     <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" name="check_<?= $row_get_c['get_d_id'] ?>" type="checkbox" id="inlineCheckbox1" value="option1" checked>
-                                                        <label class="form-check-label" for="inlineCheckbox1"><?= $count_conf ?></label>
+                                                        <input class="form-check-input" style="margin-top: 4px;" name="check_<?= $row_get_c['get_d_id'] ?>" type="checkbox" id="inlineCheckbox<?= $count_conf ?>" value="option1" data-bs-toggle="collapse" href="#collapseExample<?= $count_conf ?>" role="button" aria-expanded="false" aria-controls="collapseExample<?= $count_conf ?>">
+                                                        <label class="form-check-label" for="inlineCheckbox<?= $count_conf ?>"><?= $count_conf ?></label>
                                                     </div>
                                                     <?= $row_get_c['r_brand'] . " " . $row_get_c['r_model'] . " - Model : " . $row_get_c['r_number_model'] . " - Serial Number : " . $row_get_c['r_serial_number']  ?>
                                                 </div>
-                                                <div class="col-4">
-                                                    <!-- <label for="basic-url" class="form-label">รหัสสมาชิก</label>
-                                                    <input type="text" name="m_id" class="form-control" id="myInput" onclick="openModal()" placeholder="ค้นหาข้อมูลสมาชิก">
-                                                    <div id="myModal" class="modal">
-                                                        <div class="modal-overlay" id="myModal">
-                                                            <div class="modal-content">
-                                                                <button class="close-button" onclick="closeModal()">&times;</button>
-                                                                <label for="tel">รายชื่อสมาชิก <p style="color: red; display: inline;">*ส่งค่าเป็นรหัส ID สมาชิก</p></label>
-                                                                <input type="text" id="searchInput" oninput="searchFunction()" placeholder="Search...">
-                                                                <ul id="myList"></ul>
+                                                <div style="margin-bottom: 1rem;">
+                                                    <div class="collapse" id="collapseExample<?= $count_conf ?>">
+                                                        <div id="formContainer">
+                                                            <div class="row" id="formContainer_1">
+                                                                <div class="col">
+                                                                    <img id="partImage" class="img-thumbnail rounded mx-auto d-block" style="display: none;">
+                                                                </div>
+                                                                <div class="col">
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <label for="basic-url" class="form-label">อะไหล่</label>
+                                                                            <input type="text" name="p_id" class="form-control" id="myInput" onclick="openModal()" placeholder="ค้นหาข้อมูลอะไหล่">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div id="myModal" class="modal2">
+                                                                        <div class="modal2-overlay" id="myModal">
+                                                                            <div class="modal2-content">
+                                                                                <button class="close-button" onclick="closeModal()">&times;</button>
+                                                                                <label for="tel" class="d-flex">
+                                                                                    <p class="my-auto">รายชื่ออะไหล่</p>
+                                                                                </label>
+                                                                                <div class="d-flex">
+                                                                                    <input type="text" id="searchInput" class="form-control me-1" style="width: 60%;" oninput="searchFunction()" placeholder="ประเภท">
+                                                                                    <input type="text" id="searchInput2" class="form-control ms-1" style="width: 60%;" oninput="searchFunction()" placeholder="ชื่อ">
+                                                                                </div>
+                                                                                <ul id="myList"></ul>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-1">
+                                                                    <label for="basic-url" class="form-label">จำนวน</label>
+                                                                    <div class="input-group">
+                                                                        <button type="button" class="btn btn-light input-group-text" style="border: 1px solid #e6e6e6;" onclick="decrementQuantity()"><i class="fa fa-angle-down"></i></button>
+                                                                        <input name="quantity" type="text" class="form-control text-center" placeholder="0" id="quantityInput" oninput="handleQuantityChange(); updateTotal();">
+                                                                        <button type="button" class="btn btn-light input-group-text" style="border: 1px solid #e6e6e6;" onclick="incrementQuantity()"><i class="fa fa-angle-up"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <label for="basic-url" class="form-label">ราคา</label>
+                                                                    <input name="price" type="text" class="form-control" placeholder="" id="priceInput" readonly>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <label for="basic-url" class="form-label">รวม</label>
+                                                                    <input name="total" type="text" class="form-control" placeholder="" id="totalInput" readonly>
+                                                                </div>
+                                                                <div class="col" style="padding-top: 2rem!important;">
+                                                                <button class="btn btn-light addbtn" style="border: 1px solid #e6e6e6;" id="addButton" onclick="addRow()">+</button>
+                                                                    <!-- <i class="fa fa-plus" style="color: #000000;"></i> -->
+                                                                </div>
                                                             </div>
                                                         </div>
-
-
-                                                    </div> -->
-                                                    <?php
-                                                    $sql1 = "SELECT * FROM member WHERE del_flg = 0";
-                                                    $result1 = mysqli_query($conn, $sql1);
-                                                    $data = mysqli_fetch_all($result1, MYSQLI_ASSOC);
-                                                    ?>
-
-                                                    <script>
-                                                        var input = document.getElementById("myInput");
-                                                        var modal = document.getElementById("myModal");
-                                                        var searchInput = document.getElementById("searchInput");
-                                                        var myList = document.getElementById("myList");
-                                                        var data = <?php echo json_encode($data); ?>;
-
-                                                        function openModal() {
-                                                            modal.style.display = "block";
-                                                            searchInput.value = "";
-                                                            populateList(data);
-                                                            searchInput.focus();
-                                                        }
-
-                                                        function closeModal() {
-                                                            modal.style.display = "none";
-                                                        }
-
-                                                        function selectItem(event) {
-                                                            var selectedValue = event.target.textContent;
-                                                            var option = document.createElement("option");
-                                                            option.value = selectedValue.split(" - ")[0]; // Extract m_id from the selected value
-                                                            option.textContent = selectedValue;
-                                                            option.selected = true;
-                                                            input.appendChild(option);
-                                                            closeModal();
-                                                        }
-
-
-                                                        function populateList(items) {
-                                                            myList.innerHTML = "";
-
-                                                            // Create the default option element
-                                                            var defaultOption = document.createElement("option");
-                                                            defaultOption.value = "0";
-                                                            defaultOption.textContent = " 0 - ไม่มี";
-                                                            defaultOption.selected = true;
-                                                            myList.appendChild(defaultOption);
-
-                                                            for (var i = 0; i < items.length; i++) {
-                                                                var li = document.createElement("li");
-                                                                li.textContent = items[i].m_id + " - " + items[i].m_fname + " " + items[i].m_lname; // Display m_id, first name, and last name
-                                                                li.addEventListener("click", selectItem);
-                                                                myList.appendChild(li);
-                                                            }
-                                                        }
-
-
-                                                        function searchFunction() {
-                                                            var searchTerm = searchInput.value.toLowerCase();
-                                                            var filteredData = data.filter(function(item) {
-                                                                var fullName = item.m_fname.toLowerCase() + " " + item.m_lname.toLowerCase(); // Concatenate first name and last name
-                                                                return (
-                                                                    item.m_id.toString().includes(searchTerm) || // Check if m_id includes the search term
-                                                                    fullName.includes(searchTerm) // Check if the full name includes the search term
-                                                                );
-                                                            });
-                                                            populateList(filteredData);
-                                                        }
-
-                                                        function selectItem(event) {
-                                                            var selectedValue = event.target.textContent;
-                                                            var m_id = selectedValue.split(" - ")[0]; // Extract m_id from the selected value
-                                                            input.value = m_id;
-                                                            closeModal();
-                                                        }
-                                                    </script>
-
+                                                    </div>
                                                 </div>
                                             <?php
                                             }
@@ -1217,6 +1249,292 @@ if (!isset($_SESSION['role_id'])) {
                                             ?>
 
                                         </div>
+                                        <?php
+                                        $sql1 = "SELECT parts.*, parts_type.p_type_name
+                                        FROM parts
+                                        JOIN parts_type ON parts.p_type_id = parts_type.p_type_id
+                                        WHERE parts.del_flg = '0'
+                                        AND parts_type.del_flg = '0'";
+                                        $result1 = mysqli_query($conn, $sql1);
+                                        $data = mysqli_fetch_all($result1, MYSQLI_ASSOC);
+                                        ?>
+
+                                        <script>
+                                            var input = document.getElementById("myInput");
+                                            var modal = document.getElementById("myModal");
+                                            var searchInput = document.getElementById("searchInput");
+                                            var myList = document.getElementById("myList");
+                                            var data = <?php echo json_encode($data); ?>;
+                                            var searchInput = document.getElementById("searchInput");
+                                            var searchInput2 = document.getElementById("searchInput2");
+
+                                            function openModal() {
+                                                modal.style.display = "block";
+                                                searchInput.value = "";
+                                                populateList(data);
+                                                searchInput.focus();
+                                            }
+
+                                            function closeModal() {
+                                                modal.style.display = "none";
+                                            }
+
+                                            function selectItem(event) {
+                                                var selectedValue = event.target.textContent;
+                                                var p_id = selectedValue.split(" - ")[0]; // Extract p_id from the selected value
+
+                                                // Find the selected part from data using p_id
+                                                var selectedPart = data.find(function(item) {
+                                                    return item.p_type_name == p_id;
+                                                });
+
+                                                if (selectedPart) {
+                                                    var partImage = document.getElementById("partImage");
+                                                    partImage.style.display = "block";
+                                                    partImage.src = ('../') + selectedPart.p_pic;
+
+                                                    // Display price and quantity information
+                                                    var quantityInput = document.getElementById("quantityInput");
+                                                    var priceInput = document.getElementById("priceInput");
+                                                    var totalInput = document.getElementById("totalInput");
+
+                                                    // Set the input value to display p_brand and p_model
+                                                    var selectedPartInfo = selectedPart.p_brand + " , " + selectedPart.p_model;
+                                                    input.value = selectedPartInfo;
+
+                                                    // Set price, quantity, and total
+                                                    priceInput.value = selectedPart.p_price; // Set price
+                                                    quantityInput.value = 1; // Reset quantity to 1
+                                                    totalInput.value = selectedPart.p_price; // Set total initially to price
+                                                }
+
+                                                closeModal();
+                                            }
+
+                                            function incrementQuantity() {
+                                                var quantityInput = document.getElementById("quantityInput");
+                                                var currentValue = parseInt(quantityInput.value) || 0;
+                                                quantityInput.value = currentValue + 1;
+                                                updateTotal();
+                                            }
+
+                                            function decrementQuantity() {
+                                                var quantityInput = document.getElementById("quantityInput");
+                                                var currentValue = parseInt(quantityInput.value) || 0;
+                                                if (currentValue > 0) {
+                                                    quantityInput.value = currentValue - 1;
+                                                    updateTotal();
+                                                }
+                                            }
+
+                                            function updateTotal() {
+                                                var quantityInput = document.getElementById("quantityInput");
+                                                var priceInput = document.getElementById("priceInput");
+                                                var totalInput = document.getElementById("totalInput");
+                                                var quantity = parseInt(quantityInput.value) || 0;
+                                                var price = parseFloat(priceInput.value) || 0;
+                                                var total = quantity * price;
+                                                totalInput.value = total.toFixed(2);
+                                            }
+
+                                            function handleQuantityChange() {
+                                                var quantityInput = document.getElementById("quantityInput");
+                                                var priceInput = document.getElementById("priceInput");
+                                                var totalInput = document.getElementById("totalInput");
+
+                                                var selectedPartId = input.value; // Get the selected part ID
+                                                var selectedPart = data.find(function(item) {
+                                                    return item.p_id == selectedPartId;
+                                                });
+
+                                                if (selectedPart) {
+                                                    var price = parseFloat(selectedPart.p_price) || 0;
+                                                    priceInput.value = price.toFixed(2);
+                                                }
+
+                                                var quantity = parseInt(quantityInput.value) || 0;
+                                                var price = parseFloat(priceInput.value) || 0;
+                                                var total = quantity * price;
+
+                                                totalInput.value = total.toFixed(2); // Update total input
+                                            }
+
+                                            function populateList(items) {
+                                                myList.innerHTML = "";
+
+                                                // Create the default option element
+                                                var defaultOption = document.createElement("option");
+                                                defaultOption.value = "0";
+                                                // defaultOption.textContent = " 0 - ไม่มี";
+                                                // defaultOption.style.color = "red";
+                                                defaultOption.selected = true;
+                                                myList.appendChild(defaultOption);
+
+                                                for (var i = 0; i < items.length; i++) {
+                                                    var li = document.createElement("li");
+                                                    li.textContent = items[i].p_type_name + " - " + items[i].p_brand + " , " + items[i].p_model; // Display p_type_name, p_brand, and p_model
+                                                    li.addEventListener("click", selectItem);
+                                                    myList.appendChild(li);
+                                                }
+                                            }
+
+                                            function searchFunction() {
+                                                var searchTerm = searchInput.value.toLowerCase();
+                                                var searchTerm2 = searchInput2.value.toLowerCase(); // Get the value from the second input
+                                                var filteredData = data.filter(function(item) {
+                                                    var fullName = item.p_type_name.toLowerCase() + " " + item.p_model.toLowerCase(); // Concatenate p_type_name and p_model
+                                                    return (
+                                                        (searchInput2.value === "" && item.p_type_name.toString().includes(searchTerm)) || // Check if p_type_name includes the search term, if second input is empty
+                                                        (searchInput2.value !== "" && fullName.includes(searchTerm2)) // Check if the full name includes the search term from the second input
+                                                    );
+                                                });
+                                                populateList(filteredData);
+                                            }
+
+                                            //เพิ่ม row อันใหม่ สั้นลงเพราะ Clone มา ปุ่มยังกดไม่ค่อยตรง
+                                            var containerCounter = 1; // ตัวแปรนับจำนวน container ที่เพิ่มขึ้นใหม่
+
+                                            function addRow() {
+                                                containerCounter++; // เพิ่มค่านับจำนวน container
+
+                                                // Clone และปรับแต่ง element formContainer_1
+                                                var originalContainer = document.getElementById("formContainer_1");
+                                                var newContainer = originalContainer.cloneNode(true);
+                                                newContainer.id = "formContainer_" + containerCounter;
+
+                                                // รีเซ็ตค่าใน input fields ใน container ใหม่เป็นค่าว่าง
+                                                var inputs = newContainer.getElementsByTagName("input");
+                                                for (var i = 0; i < inputs.length; i++) {
+                                                    inputs[i].value = "";
+                                                }
+
+                                                // แทรก container ใหม่ลงในตำแหน่งที่ต้องการ
+                                                originalContainer.parentNode.insertBefore(newContainer, originalContainer.nextSibling);
+
+                                                // เปลี่ยนปุ่ม + เป็น -
+                                                var addButton = originalContainer.querySelector(".addbtn");
+                                                addButton.innerHTML = "-";
+                                                addButton.onclick = function() {
+                                                    removeRow(containerCounter);
+                                                };
+                                            }
+
+                                            function removeRow(containerCounter) {
+                                                var containerToRemove = document.getElementById("formContainer_" + containerCounter);
+                                                containerToRemove.remove();
+                                            }
+
+                                            //เพิ่ม row อันเก่า ปุ่มกดตรง แต่ยาวเพราะสร้างใหม่
+                                            // var rowCounter = 1; // Counter for generating unique row IDs
+
+                                            //                                             function addRow() {
+                                            //                                                 var newRow = document.createElement("div");
+                                            //                                                 newRow.className = "row pt-4";
+
+                                            //                                                 var col1 = document.createElement("div");
+                                            //                                                 col1.className = "col";
+                                            //                                                 var partImage = document.createElement("img");
+                                            //                                                 partImage.id = "partImage" + rowCounter; // Generate unique ID
+                                            //                                                 partImage.className = "img-thumbnail";
+
+                                            //                                                 var col2 = document.createElement("div");
+                                            //                                                 col2.className = "col";
+                                            //                                                 var innerRow = document.createElement("div");
+                                            //                                                 innerRow.className = "row";
+                                            //                                                 var innerCol = document.createElement("div");
+                                            //                                                 innerCol.className = "col";
+                                            //                                                 var input = document.createElement("input");
+                                            //                                                 input.type = "text";
+                                            //                                                 input.name = "p_id";
+                                            //                                                 input.className = "form-control";
+                                            //                                                 input.id = "myInput" + rowCounter; // Generate unique ID
+                                            //                                                 input.setAttribute("onclick", "openModal()");
+                                            //                                                 input.placeholder = "ค้นหาข้อมูลอะไหล่";
+
+                                            //                                                 var col3 = document.createElement("div");
+                                            //                                                 col3.className = "col-1";
+                                            //                                                 var inputGroup = document.createElement("div");
+                                            //                                                 inputGroup.className = "input-group";
+                                            //                                                 var buttonUp = document.createElement("button");
+                                            //                                                 buttonUp.type = "button";
+                                            //                                                 buttonUp.className = "btn btn-light input-group-text";
+                                            //                                                 buttonUp.style = "border: 1px solid #e6e6e6;";
+                                            //                                                 buttonUp.setAttribute("onclick", "decrementQuantity()");
+                                            //                                                 var iconUp = document.createElement("i");
+                                            //                                                 iconUp.className = "fa fa-angle-down";
+                                            //                                                 var inputQuantity = document.createElement("input");
+                                            //                                                 inputQuantity.type = "text";
+                                            //                                                 inputQuantity.className = "form-control";
+                                            //                                                 inputQuantity.placeholder = "0";
+                                            //                                                 inputQuantity.id = "quantityInput" + rowCounter; // Generate unique ID
+                                            //                                                 var buttonDown = document.createElement("button");
+                                            //                                                 buttonDown.type = "button";
+                                            //                                                 buttonDown.className = "btn btn-light input-group-text";
+                                            //                                                 buttonDown.style = "border: 1px solid #e6e6e6;";
+                                            //                                                 buttonDown.setAttribute("onclick", "incrementQuantity()");
+                                            //                                                 var iconDown = document.createElement("i");
+                                            //                                                 iconDown.className = "fa fa-angle-up";
+
+                                            //                                                 var col4 = document.createElement("div");
+                                            //                                                 col4.className = "col";
+                                            //                                                 var inputPrice = document.createElement("input");
+                                            //                                                 inputPrice.type = "text";
+                                            //                                                 inputPrice.className = "form-control";
+                                            //                                                 inputPrice.placeholder = "ราคา";
+                                            //                                                 inputPrice.readOnly = true;
+
+                                            //                                                 var col5 = document.createElement("div");
+                                            //                                                 col5.className = "col";
+                                            //                                                 var inputTotal = document.createElement("input");
+                                            //                                                 inputTotal.type = "text";
+                                            //                                                 inputTotal.className = "form-control";
+                                            //                                                 inputTotal.placeholder = "รวม";
+                                            //                                                 inputTotal.readOnly = true;
+
+                                            //                                                 var col6 = document.createElement("div");
+                                            //                                                 col6.className = "col";
+                                            //                                                 var addButton = document.createElement("button");
+                                            //                                                 addButton.className = "btn btn-light";
+                                            //                                                 addButton.style = "border: 1px solid #e6e6e6;";
+                                            //                                                 addButton.id = "addButton" + rowCounter; // Generate unique ID
+                                            //                                                 var minusIcon = document.createElement("i");
+                                            //                                                 minusIcon.className = "fa fa-minus";
+                                            //                                                 addButton.appendChild(minusIcon);
+                                            //                                                 addButton.onclick = function() {
+                                            //                                                     removeRow(newRow);
+                                            //                                                 };
+
+                                            //                                                 col1.appendChild(partImage);
+                                            //                                                 innerCol.appendChild(input);
+                                            //                                                 innerRow.appendChild(innerCol);
+                                            //                                                 col2.appendChild(innerRow);
+                                            //                                                 buttonUp.appendChild(iconUp);
+                                            //                                                 buttonDown.appendChild(iconDown);
+                                            //                                                 inputGroup.appendChild(buttonUp);
+                                            //                                                 inputGroup.appendChild(inputQuantity);
+                                            //                                                 inputGroup.appendChild(buttonDown);
+                                            //                                                 col3.appendChild(inputGroup);
+                                            //                                                 col4.appendChild(inputPrice);
+                                            //                                                 col5.appendChild(inputTotal);
+                                            //                                                 col6.appendChild(addButton);
+
+                                            //                                                 newRow.appendChild(col1);
+                                            //                                                 newRow.appendChild(col2);
+                                            //                                                 newRow.appendChild(col3);
+                                            //                                                 newRow.appendChild(col4);
+                                            //                                                 newRow.appendChild(col5);
+                                            //                                                 newRow.appendChild(col6);
+
+                                            //                                                 var parentContainer = document.getElementById("formContainer");
+                                            //                                                 parentContainer.appendChild(newRow);
+
+                                            //                                                 rowCounter++; // Increment the row counter
+                                            //                                             }
+
+                                            //                                             function removeRow(row) {
+                                            //                                                 row.parentNode.removeChild(row);
+                                            //                                             }
+                                        </script>
 
                                         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
                                         <input type="text" name="status_id" value="4" hidden>
@@ -1258,50 +1576,6 @@ if (!isset($_SESSION['role_id'])) {
                                         <br>
                                         <label for="DetailFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการส่ง <p style="display:inline; color : gray"> รายละเอียด</p> :</label>
                                         <textarea class="form-control" name="rs_detail" id="DetailFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">อะไหล่ที่ต้องใช้มีดังนี้</textarea>
-
-
-
-                                        <br>
-                                        <div class="mb-3">
-                                            <h6>อะไหล่</h6>
-                                            <?php
-                                            $count_conf = 0;
-                                            $sql_get_c = "SELECT * FROM get_detail 
-            LEFT JOIN repair ON repair.r_id = get_detail.r_id
-            WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
-                                            $result_get_c = mysqli_query($conn, $sql_get_c);
-                                            ?>
-
-                                            <div class="accordion" id="accordionExample">
-                                                <?php
-                                                while ($row_get_c = mysqli_fetch_array($result_get_c)) {
-                                                    $count_conf++;
-                                                ?>
-                                                    <div class="accordion-item">
-                                                        <h2 class="accordion-header" id="heading<?= $count_conf ?>">
-                                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $count_conf ?>" aria-expanded="true" aria-controls="collapse<?= $count_conf ?>">
-                                                                <?= $count_conf . ". " . $row_get_c['r_brand'] . " " . $row_get_c['r_model'] . " - Model : " . $row_get_c['r_number_model'] . " - Serial Number : " . $row_get_c['r_serial_number'] ?>
-                                                            </button>
-                                                        </h2>
-                                                        <div id="collapse<?= $count_conf ?>" class="accordion-collapse collapse show" aria-labelledby="heading<?= $count_conf ?>" data-bs-parent="#accordionExample">
-                                                            <div class="accordion-body">
-                                                                <div id="cardContainer<?= $count_conf ?>" style="display: none;">
-                                                                    <table class="table" id="cardSection<?= $count_conf ?>"></table>
-                                                                </div>
-                                                                <button type="button" class="btn btn-primary" onclick="showNextCard(<?= $count_conf ?>)">เพิ่มอะไหล่</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                <?php
-                                                }
-                                                ?>
-                                            </div>
-
-                                            <!-- <div id="cardContainer" style="display: none;">
-                                                <table class="table" id="cardSection"></table>
-                                            </div>
-                                            <button type="button" class="btn btn-primary" onclick="showNextCard()">เพิ่มอะไหล่</button> -->
-                                        </div>
 
                                         <br>
                                         <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
@@ -1569,13 +1843,13 @@ if (!isset($_SESSION['role_id'])) {
                                                 }
                                             </script>
 
-                                            <!-- <div class="mb-3">
+                                            <div class="mb-3">
                                                 <h6>อะไหล่</h6>
                                                 <div id="cardContainer" style="display: none;">
                                                     <table class="table" id="cardSection"></table>
                                                 </div>
                                                 <button type="button" class="btn btn-primary" onclick="showNextCard()">Show Card</button>
-                                            </div> -->
+                                            </div>
 
                                             <?php
                                             $sql_p = "SELECT * FROM parts WHERE del_flg = '0'";
@@ -1595,50 +1869,19 @@ if (!isset($_SESSION['role_id'])) {
                                             // }
                                             ?>
 
-                                            <script>
+                                            <!-- <script>
                                                 var partsOptions = '<?php echo $optionsHTML; ?>';
                                                 var partsData = <?php echo json_encode($partsData); ?>;
 
                                                 // var partsOptionsDetail = '<?php echo $optionsHTMLDetail; ?>';
 
 
-                                                function showNextCard(repairNumber) {
-
-                                                    // // Assuming cardCount is the parameter
-                                                    // function createCardCountVariable(repairNumber) {
-                                                    //     var variableName = 'repairNumber' + repairNumber;
-                                                    //     window[variableName] = repairNumber;
-                                                    // }
-
-                                                    // // Example usage
-                                                    // var repairNumber = 1;
-                                                    // createCardCountVariable(repairNumber);
-
-                                                    // console.log(repairNumber1); // Outputs the value of cardCount
-                                                    var repairNumber1;
-                                                    var repairNumber2;
-                                                    var repairNumber3;
-
-
-                                                    if (repairNumber == 1) {
-                                                        repairNumber1 += 1;
-                                                        cardCount = repairNumber1;
-                                                    }
-                                                    if (repairNumber == 2) {
-                                                        repairNumber2 += 1;
-                                                        cardCount = repairNumber2;
-                                                    }
-                                                    if (repairNumber == 3) {
-                                                        repairNumber3 += 1;
-                                                        cardCount = repairNumber3;
-                                                    }
-
-                                                    var cardContainer = document.getElementById('cardContainer' + repairNumber);
-                                                    var cardSection = document.getElementById('cardSection' + repairNumber);
-                                                    var existingCards = cardSection.querySelectorAll(".card-row"); // Select existing card rows
+                                                function showNextCard() {
+                                                    cardCount++;
+                                                    var cardContainer = document.getElementById("cardContainer");
+                                                    var cardSection = document.getElementById("cardSection");
+                                                    var existingCards = document.querySelectorAll(".card-row"); // Select existing card rows
                                                     cardSection.innerHTML = ""; // Clear existing cards
-
-
 
                                                     for (var i = 1; i <= cardCount; i++) {
                                                         var cardId = "card" + i; // Unique ID for each card
@@ -1829,7 +2072,8 @@ if (!isset($_SESSION['role_id'])) {
                                                         cardContainer.style.display = "none"; // Hide the card section if there are no cards
                                                     }
                                                 }
-                                            </script>
+                                            </script> -->
+
                                             <br>
                                             <div class="mb-3">
                                                 <!-- <input type="file" id="upload" hidden multiple>
