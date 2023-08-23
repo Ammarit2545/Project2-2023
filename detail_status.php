@@ -56,6 +56,7 @@ $part_check = 0;
                 rs.rs_conf,
                 rs.rs_date_time,
                 rs.rs_detail,
+                rs.rs_conf_date,
                 gr.get_tel,
                 gr.get_add,
                 gr.get_wages,
@@ -1830,7 +1831,8 @@ $part_check = 0;
                                                                         <hr>
                                                                         <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
                                                                         <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน/ยื่นข้อเสนอ</a>
-                                                                        <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a>
+                                                                        <!-- <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a> -->
+                                                                        <a class="btn btn-success" id="confirmButtonSuccess0" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
                                                                     <?php
                                                                     } ?>
 
@@ -2081,7 +2083,7 @@ $part_check = 0;
                         <br>
                         <!-- <hr> -->
                         <!-- ปุ่มทำการยกเลิก -->
-                        <?php if ($status_id_last  == 1 || $status_id_last  == 2 ) { ?>
+                        <?php if ($status_id_last  == 1 || $status_id_last  == 2) { ?>
                             <div class="d-flex justify-content-center">
                                 <div class="accordion accordion-flush" id="accordionFlushExample">
                                     <div class="accordion-item">
@@ -2674,7 +2676,7 @@ $part_check = 0;
                                         ?>
                                             <hr>
                                             <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
-                                            <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน</a>
+                                            <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน/ยื่นข้อเสนอ</a>
                                             <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a>
                                         <?php
                                         } ?>
@@ -2999,6 +3001,25 @@ $part_check = 0;
                 var id_get_r = <?= $id_get_r ?>; // Pass PHP variable to JavaScript
 
                 document.getElementById('confirmButtonSuccess1').addEventListener('click', function() {
+                    Swal.fire({
+                        icon: 'question',
+                        title: 'ยืนยันดำเนินการส่งซ่อม',
+                        text: 'การ "ยืนยัน" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
+                        showCancelButton: true,
+                        confirmButtonText: 'ยืนยัน',
+                        cancelButtonText: 'ยกเลิก'
+                    }).then((willConfirm) => {
+                        if (willConfirm.isConfirmed) {
+                            window.location.href = "action/conf_part.php?id=" + id_get_r + "&status_id=" + status_id; // Redirect with the passed value
+                        }
+                    });
+                });
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var id_get_r = <?= $id_get_r ?>; // Pass PHP variable to JavaScript
+
+                document.getElementById('confirmButtonSuccess0').addEventListener('click', function() {
                     Swal.fire({
                         icon: 'question',
                         title: 'ยืนยันดำเนินการส่งซ่อม',

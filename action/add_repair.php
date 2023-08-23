@@ -107,12 +107,44 @@ for ($i = 1; $i <= 4; $i++) {
         } else {
             if (move_uploaded_file($_FILES[$image_name]["tmp_name"], $target_file)) {
                 echo "The file " . htmlspecialchars(basename($_FILES[$image_name]["name"])) . " has been uploaded.";
+
+                // Resize the uploaded image
+                if (($file_extension == "jpg" || $file_extension == "jpeg" || $file_extension == "png" || $file_extension == "gif") && function_exists('imagecreatefromjpeg')) {
+                    $uploaded_image = imagecreatefromjpeg($target_file); // or imagecreatefrompng, imagecreatefromgif
+                    $new_width = 800; // Set the desired width
+                    $new_height = 600; // Set the desired height
+                    $resized_image = imagecreatetruecolor($new_width, $new_height);
+                    imagecopyresampled($resized_image, $uploaded_image, 0, 0, 0, 0, $new_width, $new_height, imagesx($uploaded_image), imagesy($uploaded_image));
+                    imagejpeg($resized_image, $target_file); // Save the resized image
+                    imagedestroy($uploaded_image);
+                    imagedestroy($resized_image);
+                } elseif (($file_extension == "mp4" || $file_extension == "mov") && function_exists('shell_exec')) {
+                    // If it's a video file, you can use shell_exec to compress it (requires external tool like FFmpeg)
+
+                    // Specify the path to the FFmpeg executable (if not in system PATH)
+                    $ffmpeg_path = "../ffmpeg/ffmpeg-6.0/"; // Specify the path to your FFmpeg executable
+
+                    // Make sure the input and output file paths are properly escaped
+                    $input_file = escapeshellarg($target_file);
+                    $output_file = escapeshellarg($target_file . ".compressed." . $file_extension);
+
+                    // Build the FFmpeg command
+                    $command = "$ffmpeg_path -i $input_file -vf scale=800:600 $output_file";
+
+                    // Execute the FFmpeg command
+                    shell_exec($command);
+
+                    // Optionally, you can replace the original with the compressed version
+                    rename($output_file, $target_file);
+                }
             } else {
                 echo "Sorry, there was an error uploading your file.";
             }
         }
     }
 }
+
+
 
 $target_dir = "../uploads/$id/"; // Change this to the desired location
 $target_file = $target_dir . basename($_FILES["pphoto"]["name"]);
@@ -200,7 +232,7 @@ if ($row == NULL || isset($_POST['id_repair_ever']) || isset($_SESSION["id_repai
             unset($_SESSION['sn_check_success']);
             header("location:../repair_check.php");
         }
-    }else {
+    } else {
         // never repair
         unset($_SESSION['sn_check_success']);
         header("location:../repair_check.php");
