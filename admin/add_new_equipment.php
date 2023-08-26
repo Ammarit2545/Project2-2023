@@ -32,7 +32,7 @@ if (!isset($_SESSION['role_id'])) {
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
     <style>
-        .modal {
+        .modal_ed {
             display: none;
             position: fixed;
             z-index: 1;
@@ -44,7 +44,7 @@ if (!isset($_SESSION['role_id'])) {
             background-color: rgba(0, 0, 0, 0.4);
         }
 
-        .modal-content {
+        .modal-content-ed {
             background-color: #fefefe;
             margin: 15% auto;
             padding: 20px;
@@ -68,7 +68,7 @@ if (!isset($_SESSION['role_id'])) {
             background-color: #ddd;
         }
 
-        .modal-overlay {
+        .modal-overlay-ed {
             position: fixed;
             top: 0;
             left: 0;
@@ -79,7 +79,7 @@ if (!isset($_SESSION['role_id'])) {
             z-index: 9999;
         }
 
-        .modal-content {
+        .modal-content-ed {
             position: absolute;
             top: 20%;
             left: 50%;
@@ -93,9 +93,9 @@ if (!isset($_SESSION['role_id'])) {
 
         .close-button {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 20px;
+            top: -18px;
+            right: -2px;
+            font-size: 34px;
             color: #999;
             background: none;
             border: none;
@@ -268,9 +268,9 @@ if (!isset($_SESSION['role_id'])) {
                                     <div class="col-4">
                                         <label for="basic-url" class="form-label">รหัสสมาชิก</label>
                                         <input type="text" name="m_id" class="form-control" id="myInput" onclick="openModal()" placeholder="ค้นหาข้อมูลสมาชิก">
-                                        <div id="myModal" class="modal">
-                                            <div class="modal-overlay" id="myModal">
-                                                <div class="modal-content">
+                                        <div id="myModal" class="modal_ed">
+                                            <div class="modal-overlay-ed" id="myModal">
+                                                <div class="modal-content-ed">
                                                     <button class="close-button" onclick="closeModal()">&times;</button>
                                                     <label for="tel">รายชื่อสมาชิก <p style="color: red; display: inline;">*ส่งค่าเป็นรหัส ID สมาชิก</p></label>
                                                     <input type="text" id="searchInput" oninput="searchFunction()" placeholder="Search...">
@@ -288,20 +288,20 @@ if (!isset($_SESSION['role_id'])) {
 
                                         <script>
                                             var input = document.getElementById("myInput");
-                                            var modal = document.getElementById("myModal");
+                                            var modal_ed = document.getElementById("myModal");
                                             var searchInput = document.getElementById("searchInput");
                                             var myList = document.getElementById("myList");
                                             var data = <?php echo json_encode($data); ?>;
 
                                             function openModal() {
-                                                modal.style.display = "block";
+                                                modal_ed.style.display = "block";
                                                 searchInput.value = "";
                                                 populateList(data);
                                                 searchInput.focus();
                                             }
 
                                             function closeModal() {
-                                                modal.style.display = "none";
+                                                modal_ed.style.display = "none";
                                             }
 
                                             function selectItem(event) {
@@ -469,7 +469,7 @@ if (!isset($_SESSION['role_id'])) {
     </a>
 
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -485,7 +485,7 @@ if (!isset($_SESSION['role_id'])) {
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
