@@ -80,7 +80,7 @@ if (!isset($_SESSION['role_id'])) {
         margin: 10px;
     }
 
-    .modal {
+    .modal_ed {
         display: none;
         position: fixed;
         z-index: 1;
@@ -96,7 +96,7 @@ if (!isset($_SESSION['role_id'])) {
         transition: opacity 0.3s ease-in;
     }
 
-    .modal.show {
+    .modal_ed.show {
         opacity: 1;
     }
 
@@ -192,14 +192,15 @@ if (!isset($_SESSION['role_id'])) {
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
-            <!-- Topbar -->
+           
+
+            <!-- Main Content -->
+            <div id="content">
+                 <!-- Topbar -->
             <?php
             include('bar/topbar_admin.php');
             ?>
             <!-- End of Topbar -->
-
-            <!-- Main Content -->
-            <div id="content">
 
 
 
@@ -230,15 +231,15 @@ if (!isset($_SESSION['role_id'])) {
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
 
-                            <h1 class="m-0 font-weight-bold text-primary">หมายเลขแจ้งซ่อม : <?= $row['get_r_id'] ?></h1>
+                            <h1 class="m-0 font-weight-bold text-primary mb-2">หมายเลขแจ้งซ่อม : <?= $row['get_r_id'] ?></h1>
                             <?php
                             if ($row_get_count[0] == 1) {
                             ?>
-                                <h1 class="m-0 font-weight-bold text-success">Serial Number : <?= $row['r_serial_number'] ?></h1>
+                                <h1 class="m-0 font-weight-bold text-success mb-2">Serial Number : <?= $row['r_serial_number'] ?></h1>
                             <?php
                             } else {
                             ?>
-                                <h1 class="m-0 font-weight-bold text-success">คำส่งซ่อมนี้มี <?= $row_get_count[0] ?> รายการ</h1>
+                                <h1 class="m-0 font-weight-bold text-success mb-2">คำส่งซ่อมนี้มี <?= $row_get_count[0] ?> รายการ</h1>
                             <?php
                             }
                             ?>
@@ -288,14 +289,14 @@ if (!isset($_SESSION['role_id'])) {
                         <hr>
 
                         <div class="accordion-item" style="border: 1px solid #ffff; padding:15px;   ">
-                            <h2 class="accordion-header" id="headingOne">
+                            <h2 class="accordion-header" style="margin-bottom: 0px;" id="headingOne">
                                 <a id="bounce-item" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="true" aria-controls="collapseOne">
-                                    <h5> ดูรายการส่งซ่อมทั้งหมด </h5>
+                                    <h5 style="margin-bottom: 0px;"> ดูรายการส่งซ่อมทั้งหมด </h5>
                                 </a>
                             </h2>
                             <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
 
-                                <hr style="border:2px solid gray">
+                                <hr style="border:2px solid gray" class="my-4">
                                 <?php
                                 $count_get_no = 0;
 
@@ -314,22 +315,23 @@ if (!isset($_SESSION['role_id'])) {
                                     $count_get_no++;
                                 ?>
 
-                                    <h4 style="text-align:start" id="body_text"> <span class="btn btn-primary">รายการที่ <?= $count_get_no ?></span> : <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?> | Model : <?= $row_get['r_number_model'] ?> | Serial Number : <?= $row_get['r_serial_number'] ?> </h4>
+                                    <h4 style="text-align:start; color:#2c2f34" id="body_text"> <span class="btn btn-primary">รายการที่ <?= $count_get_no ?></span> : <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?> | Model : <?= $row_get['r_number_model'] ?> | Serial Number : <?= $row_get['r_serial_number'] ?> </h4>
                                     <hr>
-                                    <div style="margin-left: 40px; ">
-                                        <?php if ($row_get['get_t_id'] != NULL) { ?><button class="btn btn-outline-primary">หมายเลขพัสดุ</button>
+                                    <div style="margin-left: 40px; color:#2c2f34" class="my-4">
+                                        <?php if ($row_get['get_t_id'] != NULL) { ?><button class="btn btn-outline-primary mb-3">หมายเลขพัสดุ</button>
                                             <br>
                                             <?= $row_get['t_parcel'] ?>
                                             <br>
                                             <hr><?php  }
                                                 ?>
-                                        <button class="btn btn-outline-primary">รายละเอียด</button>
+                                        <button class="btn btn-outline-primary mb-3">รายละเอียด</button>
+                                        <!-- <h5 class="fw-bold">รายละเอียด</h5> -->
                                         <br>
                                         <?= $row_get['get_d_detail'] ?>
                                         <br>
                                         <hr>
-                                        <button class="btn btn-outline-primary">รูปภาพ</button>
-
+                                        <!-- <h5 class="fw-bold">รูปภาพ</h5> -->
+                                        <button class="btn btn-outline-primary mb-3">รูปภาพ</button>
                                         <br>
                                         <?php
 
@@ -347,9 +349,9 @@ if (!isset($_SESSION['role_id'])) {
                                                 $rp_pic = $row_pic['rp_pic'];
                                                 $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
                                                 ?> <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
-                                                    <a href="#" style="margin-left: 20px;" id="bounce-item"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                    <a href="#"  id="bounce-item"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
                                                 <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
-                                                    <a href="#" style="margin-left: 20px;">
+                                                    <a href="#" >
                                                         <video width="100px" autoplay muted onclick="openModalVideo(this)" src="../<?= $row_pic['rp_pic'] ?>">
                                                             <source src="../<?= $row_pic['rp_pic'] ?>" type="video/mp4">
                                                             <source src="../<?= $row_pic['rp_pic'] ?>" type="video/ogg">
@@ -358,7 +360,7 @@ if (!isset($_SESSION['role_id'])) {
                                                     </a>
                                                 <?php endif; ?>
                                                 <!-- Modal -->
-                                                <div id="modal" class="modal">
+                                                <div id="modal_ed" class="modal_ed">
                                                     <span class="close" onclick="closeModal()">&times;</span>
                                                     <video id="modal-video" controls class="modal-video"></video>
                                                 </div>
@@ -374,64 +376,80 @@ if (!isset($_SESSION['role_id'])) {
 
 
                                     </div>
-                                    <hr style="border:2px solid gray">
+                                    <hr style="border:2px solid gray" class="my-4">
                                 <?php } ?>
                             </div>
                         </div>
 
 
                         <!--  Part modal -->
-                        <div id="quantitypartModal" class="modal">
-                            <div class="modal-content">
+                        <div id="quantitypartModal" class="modal_ed">
+                            <!-- <div class="modal-content">
                                 <h2>จำนวนอะไหล่ทั้งหมด</h2>
                                 <button class="close-button btn btn-primary" onclick="closeModalStatus('quantitypart')" width="200px">
                                     <i class="fa fa-times"></i>
                                 </button>
-                                <!--  content for Part modal -->
                                 <iframe src="mini_part_detail.php?id=<?= $get_r_id ?>" style="width: 100%; height: 1000px;" class="no-scrollbar"></iframe>
+                            </div> -->
+
+                            <div class="modal-content" style="height: 100%">
+                                <div class="modal-header">
+                                    <h2 class="mx-auto" style="margin-bottom: 0px;">จำนวนอะไหล่ทั้งหมด</h2>
+                                    <button type="button" class="btn my-auto" onclick="closeModalStatus('quantitypart')">
+                                        <i class="fa fa-times fa-lg"></i></button>
+                                </div>
+                                <iframe src="mini_part_detail.php?id=<?= $get_r_id ?>" style="width: 100%; height: 1000px; border:none;" class="no-scrollbar"></iframe>
                             </div>
                         </div>
 
                         <!--  Status modal -->
-                        <div id="quantitystatusModal" class="modal">
-                            <div class="modal-content">
+                        <div id="quantitystatusModal" class="modal_ed" style="overflow: hidden;">
+                            <div class="modal-content" style="height: 100%">
+                                <div class="modal-header">
+                                    <h1 class="mx-auto" style="margin-bottom: 0px;">สถานะ</h1>
+                                    <button type="button" class="btn my-auto" onclick="closeModalStatus('quantitystatus')">
+                                        <i class="fa fa-times fa-lg"></i></button>
+                                </div>
+                                <iframe src="mini_status.php?id=<?= $get_r_id ?>" style="width: 100%; height: 1000px; border:none;" class="no-scrollbar"></iframe>
+                            </div>
+                            <!-- <div class="modal-content">
                                 <h1>สถานะ</h1>
                                 <button class="close-button btn btn-primary" onclick="closeModalStatus('quantitystatus')" width="200px">
                                     <i class="fa fa-times"></i>
                                 </button>
-                                <!--  content for Status modal -->
+                                 content for Status modal
                                 <iframe src="mini_status.php?id=<?= $get_r_id ?>" style="width: 100%; height: 1000px;" class="no-scrollbar"></iframe>
-                            </div>
+                            </div> -->
                         </div>
 
 
                         <script>
                             function openModalPart(modalName) {
-                                var modal = document.getElementById(modalName + "Modal");
-                                modal.style.display = "block";
-                                modal.classList.add("show");
+                                var modal_ed = document.getElementById(modalName + "Modal");
+                                modal_ed.style.display = "block";
+                                modal_ed.classList.add("show");
                             }
 
                             function closeModalPart(modalName) {
-                                var modal = document.getElementById(modalName + "Modal");
-                                modal.style.display = "none";
-                                modal.classList.remove("show");
+                                var modal_ed = document.getElementById(modalName + "Modal");
+                                modal_ed.style.display = "none";
+                                modal_ed.classList.remove("show");
                             }
                             // ////////////////////////////////////////////////////////////
 
                             function openModalStatus(modalName) {
-                                var modal = document.getElementById(modalName + "Modal");
-                                modal.style.display = "block";
-                                modal.classList.add("show");
+                                var modal_ed = document.getElementById(modalName + "Modal");
+                                modal_ed.style.display = "block";
+                                modal_ed.classList.add("show");
                             }
 
                             function closeModalStatus(modalName) {
-                                var modal = document.getElementById(modalName + "Modal");
-                                modal.style.display = "none";
-                                modal.classList.remove("show");
+                                var modal_ed = document.getElementById(modalName + "Modal");
+                                modal_ed.style.display = "none";
+                                modal_ed.classList.remove("show");
                             }
                         </script>
-                        <hr>
+                        <!-- <hr> -->
                         <script>
                             // Number of status dots
                             var numStatus = 5;
@@ -454,7 +472,7 @@ if (!isset($_SESSION['role_id'])) {
                             ?>
                                 <div class="alert alert-success" role="alert">
                                     <center>
-                                        <h4>ได้รับการยืนยันการซ่อมแล้ว</h4>
+                                        <h4 class="py-2" style="margin-bottom: 0px;">ได้รับการยืนยันการซ่อมแล้ว</h4>
                                     </center>
                                 </div>
                                 <center>
@@ -465,7 +483,7 @@ if (!isset($_SESSION['role_id'])) {
                             ?>
                                 <div class="alert alert-danger" role="alert">
                                     <center>
-                                        <h4>ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
+                                        <h4 class="py-2" style="margin-bottom: 0px;">ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
                                     </center>
                                 </div>
                                 <center>
@@ -477,7 +495,7 @@ if (!isset($_SESSION['role_id'])) {
                             ?>
                                 <div class="alert alert-danger" role="alert">
                                     <center>
-                                        <h4>ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
+                                        <h4 class="py-2" style="margin-bottom: 0px;">ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
                                     </center>
                                 </div>
                                 <center>
@@ -489,7 +507,7 @@ if (!isset($_SESSION['role_id'])) {
                             ?>
                                 <div class="alert alert-danger" role="alert">
                                     <center>
-                                        <h4>ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
+                                        <h4 class="py-2" style="margin-bottom: 0px;">ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
                                     </center>
                                 </div>
                                 <center>
@@ -501,7 +519,7 @@ if (!isset($_SESSION['role_id'])) {
                             ?>
                                 <div class="alert alert-success" role="alert">
                                     <center>
-                                        <h4>เสร็จสิ้นคำสั่งซ่อมนี้แล้ว</h4>
+                                        <h4 class="py-2" style="margin-bottom: 0px;">เสร็จสิ้นคำสั่งซ่อมนี้แล้ว</h4>
                                     </center>
                                 </div>
                                 <center>
@@ -513,7 +531,7 @@ if (!isset($_SESSION['role_id'])) {
                             ?>
                                 <div class="alert alert-primary" role="alert">
                                     <center>
-                                        <h4>รอสมาชิกตอบกลับการซ่อม</h4>
+                                        <h4 class="py-2" style="margin-bottom: 0px;">รอสมาชิกตอบกลับการซ่อม</h4>
                                     </center>
                                 </div>
                                 <center>
@@ -525,7 +543,7 @@ if (!isset($_SESSION['role_id'])) {
                             ?>
                                 <div class="alert alert-primary" role="alert">
                                     <center>
-                                        <h4>สมาชิกต้องทำการชำระเงินเรียบร้อยแล้ว</h4>
+                                        <h4 class="py-2" style="margin-bottom: 0px;">สมาชิกต้องทำการชำระเงินเรียบร้อยแล้ว</h4>
                                     </center>
                                 </div>
                                 <center>
@@ -537,7 +555,7 @@ if (!isset($_SESSION['role_id'])) {
                             ?>
                                 <div class="alert alert-primary" role="alert">
                                     <center>
-                                        <h4>สมาชิกต้องการจัดส่งแบบไปรษณีย์ โปรดระบุค่าจัดส่ง</h4>
+                                        <h4 class="py-2" style="margin-bottom: 0px;">สมาชิกต้องการจัดส่งแบบไปรษณีย์ โปรดระบุค่าจัดส่ง</h4>
                                     </center>
                                 </div>
                                 <center>
@@ -549,7 +567,7 @@ if (!isset($_SESSION['role_id'])) {
                             ?>
                                 <div class="alert alert-danger" role="alert">
                                     <center>
-                                        <h4>ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
+                                        <h4 class="py-2" style="margin-bottom: 0px;">ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
                                     </center>
                                 </div>
                                 <center>
@@ -561,7 +579,7 @@ if (!isset($_SESSION['role_id'])) {
                             ?>
                                 <div class="alert alert-success" role="alert">
                                     <center>
-                                        <h4>ได้รับยืนยันการชำระเงินจากสมาชิกแล้ว</h4>
+                                        <h4 class="py-2" style="margin-bottom: 0px;">ได้รับยืนยันการชำระเงินจากสมาชิกแล้ว</h4>
                                     </center>
                                 </div>
                                 <center>
@@ -573,7 +591,7 @@ if (!isset($_SESSION['role_id'])) {
                             ?>
                                 <div class="alert alert-warning" role="alert">
                                     <center>
-                                        <h4>รอการตอบกลับจากสมาชิก</h4>
+                                        <h4 class="py-2" style="margin-bottom: 0px;">รอการตอบกลับจากสมาชิก</h4>
                                     </center>
                                 </div>
                                 <center>
@@ -585,7 +603,7 @@ if (!isset($_SESSION['role_id'])) {
                             ?>
                                 <div class="alert alert-warning" role="alert">
                                     <center>
-                                        <h4>รอการตอบกลับจากสมาชิก</h4>
+                                        <h4 class="py-2" style="margin-bottom: 0px;">รอการตอบกลับจากสมาชิก</h4>
                                     </center>
                                 </div>
                                 <br>
@@ -594,7 +612,7 @@ if (!isset($_SESSION['role_id'])) {
                             ?>
                                 <div class="alert alert-danger" role="alert">
                                     <center>
-                                        <h4>ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
+                                        <h4 class="py-2" style="margin-bottom: 0px;">ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
                                     </center>
                                 </div>
                                 <center>
@@ -606,7 +624,7 @@ if (!isset($_SESSION['role_id'])) {
                             ?>
                                 <div class="alert alert-danger" role="alert">
                                     <center>
-                                        <h4>ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
+                                        <h4 class="py-2" style="margin-bottom: 0px;">ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
                                     </center>
                                 </div>
                                 <center>
@@ -618,7 +636,7 @@ if (!isset($_SESSION['role_id'])) {
                             ?>
                                 <div class="alert alert-warning" role="alert">
                                     <center>
-                                        <h4>รอการตอบกลับจากสมาชิก</h4>
+                                        <h4 class="py-2" style="margin-bottom: 0px;">รอการตอบกลับจากสมาชิก</h4>
                                     </center>
                                 </div>
                                 <br>
@@ -645,48 +663,41 @@ if (!isset($_SESSION['role_id'])) {
                             $result_p = mysqli_query($conn, $sql_p);
                             $row_p = mysqli_fetch_array($result_p);
                             ?>
-                            <button type="button" class="btn btn-outline-primary mb-4" style="display: inline-block;">ข้อมูลการติดต่อ</button>
+                            <button type="button" class="btn btn-outline-primary mb-3" style="display: inline-block;">ข้อมูลการติดต่อ</button>
                             <p style="display: inline;">
                                 <?php if ($row['get_deli'] == 0) { ?>
-                                    <span class="btn btn-info  mb-4 ml-4">#รับที่ร้าน</span>
+                                    <span class="btn btn-info  mb-3 ml-4">#รับที่ร้าน</span>
                                 <?php } else { ?>
-                                    <span class="btn btn-info mb-4 ml-4">#จัดส่งโดยบริษัทขนส่ง</span>
+                                    <span class="btn btn-info mb-3 ml-4">#จัดส่งโดยบริษัทขนส่ง</span>
                                 <?php } ?>
                                 <?php if ($row_get_count_track['get_t_id'] != NULL) { ?>
                                     <a id="bounce-item" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="true" aria-controls="collapseOne">
-                                        <span class="btn btn-warning mb-4 ml-4"><i class="fa fa-check"></i>สมาชิกทำการส่งหมายเลขพัสดุ</span><?php  }
+                                        <span class="btn btn-warning mb-3 ml-4"><i class="fa fa-check"></i>สมาชิกทำการส่งหมายเลขพัสดุ</span><?php  }
                                                                                                                                             ?></a>
                             </p>
 
 
-                            <div class="mb-3 row">
-
-                                <h6 for="staticEmail" class="col-sm-1 col-form-label">ชื่อ</h6>
-                                <div class="col-sm-4">
-                                    <!-- <input type="text" class="form-control" id="staticEmail" value="<?= $row['m_fname']  ?>" placeholder="ไม่มีข้อมูล" disabled> -->
-                                    <p class="col-form-label"><?= $row['m_fname']  ?></p>
-                                </div>
-                                <label for="inputPassword" class="col-sm-1 col-form-label">นามสกุล</label>
-                                <div class="col-sm-4">
-                                    <!-- <input type="text" class="form-control" id="inputPassword" value="<?= $row['m_lname']  ?>" placeholder="ไม่มีข้อมูล" disabled="disabled"> -->
-                                    <p class="col-form-label"><?= $row['m_lname']  ?></p>
+                            <div class="row">
+                                <h6 for="staticEmail" class="col-1 col-form-label" style="margin-bottom: 0px;">ชื่อ : </h6>
+                                <div class="col">
+                                    <p class="col-form-label" style="color: #2c2f34"><?= $row['m_fname']  ?> <?= $row['m_lname']  ?></p>
                                 </div>
                             </div>
                             <?php
                             if ($row_get_count[0] == 1) {
                             ?>
-                                <div class="mb-3 row">
-                                    <label for="inputPassword" class="col-sm-1 col-form-label">Brand :</label>
-                                    <div class="col-sm-4">
-                                        <!-- <input type="text" class="form-control" id="inputPassword" value="<?= $row['r_brand']  ?>" placeholder="ไม่มีข้อมูล" disabled="disabled"> -->
-                                        <p class="col-form-label"><?= $row['r_brand']  ?></p>
-                                    </div>
-                                    <label for="inputPassword" class="col-sm-1 col-form-label">Model :</label>
-                                    <div class="col-sm-4">
-                                        <!-- <input type="text" class="form-control" id="inputPassword" value="<?= $row['r_model']  ?>" placeholder="ไม่มีข้อมูล" disabled="disabled"> -->
-                                        <p class="col-form-label"><?= $row['r_model']  ?></p>
-                                    </div>
+                            <div class="row">
+                                <h6 for="inputPassword" class="col-1 col-form-label" style="margin-bottom: 0px;">Brand :</h6>
+                                <div class="col">
+                                    <p class="col-form-label" style="color: #2c2f34"><?= $row['r_brand']  ?></p>
                                 </div>
+                            </div>
+                            <div class="row">
+                                <h6 for="inputPassword" class="col-1 col-form-label" style="margin-bottom: 0px;">Model :</h6>
+                                <div class="col">
+                                    <p class="col-form-label" style="color: #2c2f34"><?= $row['r_model']  ?></p>
+                                </div>
+                            </div>
                             <?php
                             } else {
                             ?>
@@ -695,27 +706,16 @@ if (!isset($_SESSION['role_id'])) {
                             }
                             ?>
 
-                            <div class="mb-3 row">
-                                <label for="inputPassword" class="col-sm-1 col-form-label">เบอร์โทรศัพท์</label>
-                                <div class="col-sm-4">
-                                    <!-- <input type="text" class="form-control" id="inputPassword" placeholder="ไม่มีข้อมูล" value="<?= $row['get_tel']  ?>" disabled="disabled"> -->
-                                    <p class="col-form-label"><?= $row['get_tel']  ?></p>
+                            <div class="row">
+                                <h6 for="inputPassword" class="col-1 col-form-label" style="margin-bottom: 0px;">เบอร์โทรศัพท์ : </h6>
+                                <div class="col">
+                                    <p class="col-form-label" style="color: #2c2f34"><?= $row['get_tel']  ?></p>
                                 </div>
-                                <label for="inputPassword" class="col-sm-1 col-form-label">บริษัท</label>
-                                <div class="col-sm-4">
-                                    <!-- <input type="text" class="form-control" id="inputPassword" placeholder="ไม่มีข้อมูล" value="<?php
-                                                                                                                                        if ($row['com_id'] == NULL) {
-                                                                                                                                            echo "ไม่มีข้อมูล";
-                                                                                                                                        } else {
-                                                                                                                                            $com_id = $row['com_id'];
-                                                                                                                                            $sql_com = "SELECT * FROM company WHERE com_id = '$com_id'";
-                                                                                                                                            $result_com = mysqli_query($conn, $sql_com);
-                                                                                                                                            $row_com = mysqli_fetch_array($result_com);
-
-                                                                                                                                            echo $row_com['com_name'];
-                                                                                                                                        }
-                                                                                                                                        ?>" disabled="disabled"> -->
-                                    <p class="col-form-label"><?php
+                            </div>
+                            <div class="row">
+                                <h6 for="inputPassword" class="col-1 col-form-label" style="margin-bottom: 0px;">บริษัท : </h6>
+                                <div class="col">
+                                    <p class="col-form-label" style="color: #2c2f34"><?php
                                                                 if ($row['com_id'] == NULL) {
                                                                     echo "ไม่มีข้อมูล";
                                                                 } else {
@@ -729,30 +729,35 @@ if (!isset($_SESSION['role_id'])) {
                                                                 ?></p>
                                 </div>
                             </div>
+                        
                             <hr>
 
-                            <div class="mb-3">
-                                <label for="exampleFormControlTextarea1" class="btn btn-outline-primary">รายละเอียดที่อยู่</label>
+                            <div class="">
+                                <label for="exampleFormControlTextarea1" class="btn btn-outline-primary">ที่อยู่</label>
                                 <?php if ($row['get_add'] != NULL) {
                                 ?>
                                     <div class="row">
                                         <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">จังหวัด :</label>
                                         <div class="col">
                                             <!-- <input type="text" class="form-control" value="<?= $row_p[0] ?>" readonly> -->
-                                            <p class="col-form-label"><?= $row_p[0] ?></p>
+                                            <p class="col-form-label" style="color: #2c2f34"><?= $row_p[0] ?></p>
                                         </div>
                                         <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">อำเภอ :</label>
                                         <div class="col">
                                             <!-- <input type="text" class="form-control" value="<?= $row_p[1] ?>" readonly> -->
-                                            <p class="col-form-label"><?= $row_p[1] ?></p>
+                                            <p class="col-form-label" style="color: #2c2f34"><?= $row_p[1] ?></p>
                                         </div>
                                         <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">ตำบล :</label>
                                         <div class="col">
                                             <!-- <input type="text" class="form-control" value="<?= $row_p[2] ?>" readonly> -->
-                                            <p class="col-form-label"><?= $row_p[2] ?></p>
+                                            <p class="col-form-label" style="color: #2c2f34"><?= $row_p[2] ?></p>
+                                        </div>
+                                        <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">รหัสไปรษณีย์ :</label>
+                                        <div class="col">
+                                            <!-- <input type="text" class="form-control" value="<?= $row_p[2] ?>" readonly> -->
+                                            <p class="col-form-label" style="color: #2c2f34"><?= $row_p[3] ?></p>
                                         </div>
                                     </div>
-                                    <br>
                                     <!-- <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?php
                                                                                                                                         if ($row['get_add'] == NULL) {
                                                                                                                                             echo "ไม่มีข้อมูล";
@@ -762,7 +767,10 @@ if (!isset($_SESSION['role_id'])) {
                                                                                                                                         }
                                                                                                                                         ?>
                                 </textarea> -->
-                                    <p class="col-form-label"><?php
+                                <div class="row">
+                                <label for="exampleFormControlTextarea1" class="col-1 col-form-label">รายละเอียดย์ :</label>
+                                <div class="col">
+                                <p class="col-form-label" style="color: #2c2f34"><?php
                                                                 if ($row['get_add'] == NULL) {
                                                                     echo "ไม่มีข้อมูล";
                                                                 } else {
@@ -779,6 +787,8 @@ if (!isset($_SESSION['role_id'])) {
                                 <?php
                                 }
                                 ?>
+                                </div>
+                                </div>
                             </div>
                             <hr>
 
@@ -797,7 +807,7 @@ if (!isset($_SESSION['role_id'])) {
                             <div class="mb-3">
                                 <label for="exampleFormControlTextarea1" class="btn btn-outline-primary">รายละเอียด</label>
                                 <!-- <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?= $row_s['rs_detail']  ?></textarea> -->
-                                <p class="col-form-label"><?= $row_s['rs_detail']  ?></p>
+                                <p class="col-form-label" style="color: #2c2f34"><?= $row_s['rs_detail']  ?></p>
                             </div>
 
                             <?php
@@ -857,7 +867,7 @@ if (!isset($_SESSION['role_id'])) {
                                                 </a>
                                             <?php endif; ?>
                                             <!-- Modal -->
-                                            <div id="modal" class="modal">
+                                            <div id="modal_ed" class="modal_ed">
                                                 <span class="close" onclick="closeModal()">&times;</span>
                                                 <video id="modal-video" controls class="modal-video"></video>
                                             </div>
@@ -869,7 +879,7 @@ if (!isset($_SESSION['role_id'])) {
                                         } else { ?> <h2>ไม่มีข้อมูล</h2> <?php
                                                                         }
                                                                     } ?>
-                                    <div id="modalimg" class="modal">
+                                    <div id="modalimg" class="modal_ed">
                                         <span class="close" onclick="closeModalIMG()">&times;</span>
                                         <img id="modal-image" src="" alt="Modal Photo">
                                     </div>
@@ -877,43 +887,43 @@ if (!isset($_SESSION['role_id'])) {
                                     <script src="script.js"></script>
                                     <script>
                                         function openModalIMG(img) {
-                                            var modal = document.getElementById("modalimg");
+                                            var modal_ed = document.getElementById("modalimg");
                                             var modalImg = document.getElementById("modal-image");
-                                            modal.style.display = "block";
+                                            modal_ed.style.display = "block";
                                             modalImg.src = img.src;
                                             modalImg.style.width = "60%"; // Set the width to 1000 pixels
                                             modalImg.style.borderRadius = "2%"; // Set the border radius to 20%
-                                            modal.classList.add("show");
+                                            modal_ed.classList.add("show");
                                         }
 
                                         function closeModalIMG() {
-                                            var modal = document.getElementById("modalimg");
-                                            modal.style.display = "none";
+                                            var modal_ed = document.getElementById("modalimg");
+                                            modal_ed.style.display = "none";
                                         }
                                     </script>
                                     <script>
                                         function openModalVideo(element) {
-                                            var modal = document.getElementById('modal');
+                                            var modal_ed = document.getElementById('modal_ed');
                                             var modalVideo = document.getElementById('modal-video');
-                                            modal.style.display = 'block';
+                                            modal_ed.style.display = 'block';
                                             modalVideo.src = element.src;
                                             modalVideo.style.height = '90%';
                                             modalVideo.style.borderRadius = '2%';
-                                            modal.classList.add('show');
+                                            modal_ed.classList.add('show');
                                         }
 
                                         function closeModal() {
-                                            var modal = document.getElementById('modal');
+                                            var modal_ed = document.getElementById('modal_ed');
                                             var modalVideo = document.getElementById('modal-video');
                                             modalVideo.pause();
                                             modalVideo.currentTime = 0;
                                             modalVideo.src = ""; // Reset the video source
-                                            modal.style.display = 'none';
+                                            modal_ed.style.display = 'none';
                                         }
 
                                         window.addEventListener('click', function(event) {
-                                            var modal = document.getElementById('modal');
-                                            if (event.target === modal) {
+                                            var modal_ed = document.getElementById('modal_ed');
+                                            if (event.target === modal_ed) {
                                                 closeModal();
                                             }
                                         });
@@ -1144,20 +1154,20 @@ if (!isset($_SESSION['role_id'])) {
 
                                                     <script>
                                                         var input = document.getElementById("myInput");
-                                                        var modal = document.getElementById("myModal");
+                                                        var modal_ed = document.getElementById("myModal");
                                                         var searchInput = document.getElementById("searchInput");
                                                         var myList = document.getElementById("myList");
                                                         var data = <?php echo json_encode($data); ?>;
 
                                                         function openModal() {
-                                                            modal.style.display = "block";
+                                                            modal_ed.style.display = "block";
                                                             searchInput.value = "";
                                                             populateList(data);
                                                             searchInput.focus();
                                                         }
 
                                                         function closeModal() {
-                                                            modal.style.display = "none";
+                                                            modal_ed.style.display = "none";
                                                         }
 
                                                         function selectItem(event) {
@@ -1426,13 +1436,12 @@ if (!isset($_SESSION['role_id'])) {
                                     $sql_c_conf_send = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' And del_flg = '0' And status_id = '17' And rs_id = '$rs_id' And rs_conf = '1'";
                                     $result_c_conf_send = mysqli_query($conn, $sql_c_conf_send);
                                     $row_c_conf_send = mysqli_fetch_array($result_c_conf_send);
-                                    if($row_c_conf_send){
+                                    if ($row_c_conf_send) {
                                         include('status_option/send_back_conf.php');
-                                    }else{
+                                    } else {
                                         include('status_option/send_back.php');
                                         // echo $rs_id;
                                     }
-                                    
                                 } elseif ($row['status_id'] == '20') {
                                     include('status_option/refuse_member.php');
                                 } elseif ($row['status_id'] == '13') {
@@ -1855,24 +1864,7 @@ if (!isset($_SESSION['role_id'])) {
             <i class="fas fa-angle-up"></i>
         </a>
 
-        <!-- Logout Modal-->
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="login.html">Logout</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
 
         <!-- Sweet Alert Show Start -->
         <?php
@@ -1919,15 +1911,6 @@ if (!isset($_SESSION['role_id'])) {
         ?>
         <!-- Sweet Alert Show End -->
 
-        <!-- Bootstrap core JavaScript-->
-        <script src="vendor/jquery/jquery.min.js"></script>
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <!-- Core plugin JavaScript-->
-        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-        <!-- Custom scripts for all pages-->
-        <script src="js/sb-admin-2.min.js"></script>
-
         <script>
             const input = document.querySelector('#upload');
             const container = document.querySelector('#image-container');
@@ -1959,6 +1942,15 @@ if (!isset($_SESSION['role_id'])) {
                 }
             });
         </script>
+
+        <!-- Bootstrap core JavaScript-->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- Core plugin JavaScript-->
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+        <!-- Custom scripts for all pages-->
+        <script src="js/sb-admin-2.min.js"></script>
 </body>
 
 </html>

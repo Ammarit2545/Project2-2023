@@ -7,7 +7,6 @@ if (!isset($_SESSION['role_id'])) {
 }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -249,6 +248,28 @@ if (!isset($_SESSION['role_id'])) {
                                     <a class="btn btn-success" name="submit" onclick="validateForm()">ยืนยัน</a>
                                 </div> -->
                             </div>
+                            <div class="text-center pt-4">
+                                <a href="#" class="btn btn-success" onclick="showConfirmation()">ยืนยัน</a>
+
+                                <script>
+                                    function showConfirmation() {
+                                        Swal.fire({
+                                            title: 'คุณต้องการแก้ไขข้อมูลพนักงานหรือไม่?',
+                                            text: '*โปรดตรวจสอบข้อมูลให้ถูกต้อง',
+                                            icon: 'question',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'ยืนยัน',
+                                            cancelButtonText: 'ยกเลิก'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                // User clicked "Confirm", trigger the form submission
+                                                document.getElementById('form_edit').submit();
+                                            }
+                                        });
+                                    }
+                                </script>
+
+                            </div>
 
                             <script>
                                 let provinceSelect = document.getElementById("provinces");
@@ -370,50 +391,21 @@ if (!isset($_SESSION['role_id'])) {
 
                     <!-- <label for="exampleFormControlTextarea1" class="col-form-label">ที่อยู่ :</label>
                             <textarea name="e_add" class="form-control" id="exampleFormControlTextarea1" rows="3"><?= $row['e_add'] ?></textarea> -->
-            </div>
-            <br>
-            <div class="text-center pt-4">
-                <a href="#" class="btn btn-success" onclick="showConfirmation()">ยืนยัน</a>
 
-                <script>
-                    function showConfirmation() {
-                        Swal.fire({
-                            title: 'คุณต้องการแก้ไขข้อมูลพนักงานหรือไม่?',
-                            text: '*โปรดตรวจสอบข้อมูลให้ถูกต้อง',
-                            icon: 'question',
-                            showCancelButton: true,
-                            confirmButtonText: 'ยืนยัน',
-                            cancelButtonText: 'ยกเลิก'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                // User clicked "Confirm", trigger the form submission
-                                document.getElementById('form_edit').submit();
-                            }
-                        });
-                    }
-                </script>
+                </form>
+                <!-- /.container-fluid -->
 
             </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <?php
+            include('bar/admin_footer.php');
+            ?>
+            <!-- End of Footer -->
 
         </div>
-        </form>
-        <!-- /.container-fluid -->
-
-    </div>
-    <!-- End of Main Content -->
-
-    <!-- Footer -->
-    <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-            <div class="copyright text-center my-auto">
-                <span>Copyright &copy; Your Website 2020</span>
-            </div>
-        </div>
-    </footer>
-    <!-- End of Footer -->
-
-    </div>
-    <!-- End of Content Wrapper -->
+        <!-- End of Content Wrapper -->
 
     </div>
     <!-- End of Page Wrapper -->
@@ -422,25 +414,6 @@ if (!isset($_SESSION['role_id'])) {
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
