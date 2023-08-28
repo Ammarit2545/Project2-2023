@@ -144,8 +144,6 @@ for ($i = 1; $i <= 4; $i++) {
     }
 }
 
-
-
 $target_dir = "../uploads/$id/"; // Change this to the desired location
 $target_file = $target_dir . basename($_FILES["pphoto"]["name"]);
 move_uploaded_file($_FILES["pphoto"]["tmp_name"], $target_file);
