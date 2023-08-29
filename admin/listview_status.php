@@ -70,41 +70,45 @@ if (!isset($_SESSION['role_id'])) {
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-10">
-                                            <input type="text" name="status_name" id="inputstatus_name" class="form-control" id="staticEmail" onblur="checkStatus()" placeholder="กรุณาใส่ประเภทที่ต้องการเพิ่มอะไหล่" value="<?= $row['status_name'] ?>" required>
-                                            <span id="part-type-error" style="color:red;display:none;">ข้อมูลนี้มีอยู่ในระบบแล้ว</span>
+                                            <input type="text" name="status_name" id="inputstatus_name" class="form-control" onchange="checkStatus()" placeholder="กรุณาใส่ประเภทที่ต้องการเพิ่มอะไหล่" required>
+                                            <span id="part-type-error" style="color: red; display: none;">ข้อมูลนี้มีอยู่ในระบบแล้ว</span>
+
+                                            <script>
+                                                function checkStatus() {
+                                                    var status_name = document.getElementById('inputstatus_name').value;
+                                                    var xhttp = new XMLHttpRequest();
+                                                    xhttp.onreadystatechange = function() {
+                                                        if (this.readyState == 4 && this.status == 200) {
+                                                            if (this.responseText == 'exists') {
+                                                                document.getElementById('part-type-error').style.display = 'block';
+                                                                document.getElementById('inputstatus_name').setCustomValidity('มีข้อมูลอยู่แล้ว');
+                                                                document.getElementById('submit-button').disabled = true; // disable the submit button
+                                                            } else {
+                                                                document.getElementById('part-type-error').style.display = 'none';
+                                                                document.getElementById('inputstatus_name').setCustomValidity('');
+                                                                document.getElementById('submit-button').disabled = false; // enable the submit button
+                                                            }
+                                                        }
+                                                    };
+                                                    // Make sure the URL is correctly formatted, and use encodeURIComponent to handle special characters in the status_name
+                                                    var url = 'action/check_status.php?status_name=' + encodeURIComponent(status_name);
+                                                    xhttp.open('GET', url, true);
+                                                    xhttp.send();
+                                                }
+                                            </script>
+
                                         </div>
                                     </div>
                                 </div>
-                                <script>
-                                    function checkStatus() {
-                                        var status_name = document.getElementById('inputstatus_name').value;
-                                        var xhttp = new XMLHttpRequest();
-                                        xhttp.onreadystatechange = function() {
-                                            if (this.readyState == 4 && this.status == 200) {
-                                                if (this.responseText == 'exists') {
-                                                    document.getElementById('part-type-error').style.display = 'block';
-                                                    document.getElementById('inputPartType').setCustomValidity('มีข้อมูลอยู่แล้ว');
-                                                    document.getElementById('submit-button').disabled = true; // disable the submit button
-                                                } else {
-                                                    document.getElementById('part-type-error').style.display = 'none';
-                                                    document.getElementById('inputPartType').setCustomValidity('');
-                                                    document.getElementById('submit-button').disabled = false; // enable the submit button
-                                                }
-                                            }
-                                        };
-                                        xhttp.open('GET', 'action/check_status.php?status_name=' + status_name, true);
-                                        xhttp.send();
-                                    }
-                                </script>
                             </div>
                             <label for="staticEmail" class="col-sm-0 col-form-label">สีของสถานะ</label>
                             <div class="col-sm-2">
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-10">
-                                            <input type="color" name="status_color" id="inputstatus_name" class="form-control" id="staticEmail" placeholder="กรุณากรอกสีที่ต้องการ (ตัวอย่าง 'red')" value="<?= $row['status_color'] ?>" required>
+                                            <input type="color" name="status_color" class="form-control" id="staticEmail" placeholder="กรุณากรอกสีที่ต้องการ (ตัวอย่าง 'red')" value="<?= $row['status_color'] ?>" required>
                                             <input type="text" name="status_id" class="form-control" id="staticEmail" placeholder="กรุณากรอกสีที่ต้องการ (ตัวอย่าง 'red')" value="<?= $row['status_id'] ?>" required hidden>
-                                            <span id="part-type-error" style="color:red;display:none;">ข้อมูลนี้มีอยู่ในระบบแล้ว</span>
+                                            <!-- <span id="part-type-error" style="color:red;display:none;">ข้อมูลนี้มีอยู่ในระบบแล้ว</span> -->
                                         </div>
                                     </div>
                                 </div>
