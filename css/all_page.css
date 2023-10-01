@@ -41,9 +41,16 @@ body {
 }
 
 /* Media query for smaller screens */
-@media screen and (min-width: 769px) {
+@media screen and (max-width: 1920px) {
     .auto-font-head  {
-        font-size: 2vw;
+        font-size: 1.2vw;
+    }
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 1645px) {
+    .auto-font-head  {
+        font-size: 1.5vw;
     }
 }
 
