@@ -50,24 +50,23 @@ $part_check = 0;
     $id_get_r = $_GET['id'];
     // Assuming $id_get_r is your parameterized value
     $sql = "SELECT rs.rs_id,
-                rs.status_id,
-                st.status_name,
-                st.status_color,
-                rs.rs_conf,
-                rs.rs_date_time,
-                rs.rs_detail,
-                rs.rs_conf_date,
-                gr.get_tel,
-                gr.get_add,
-                gr.get_wages,
-                gr.get_add_price,
-                gr.get_check,
-                gr.get_add_price
-            FROM get_repair gr
-            LEFT JOIN repair_status rs ON gr.get_r_id = rs.get_r_id 
-            LEFT JOIN status_type st ON rs.status_id = st.status_id 
-            WHERE gr.get_r_id = ? AND rs.del_flg = '0' 
-            ORDER BY rs.rs_date_time DESC
+    rs.status_id,
+    st.status_name,
+    st.status_color,
+    rs.rs_conf,
+    rs.rs_date_time,
+    rs.rs_detail,
+    rs.rs_conf_date,
+    gr.get_tel,
+    gr.get_add,
+    gr.get_wages,
+    gr.get_add_price,
+    gr.get_add_price
+FROM get_repair gr
+LEFT JOIN repair_status rs ON gr.get_r_id = rs.get_r_id 
+LEFT JOIN status_type st ON rs.status_id = st.status_id 
+WHERE gr.get_r_id = ? AND rs.del_flg = '0' 
+ORDER BY rs.rs_date_time DESC
            ";
 
     // Use prepared statements
@@ -89,19 +88,8 @@ $part_check = 0;
         // Handle the error
         echo "Error: " . mysqli_error($conn);
     }
-
-    // $sql_c_date_time = "SELECT * FROM get_repair
-    // LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id 
-    // LEFT JOIN status_type ON repair_status.status_id  = status_type.status_id 
-    // WHERE get_repair.get_r_id = $id_get_r AND repair_status.del_flg = '0' ORDER BY repair_status.rs_date_time DESC;";
-    // $result_c_date_time = mysqli_query($conn, $sql_c_date_time);
-    // $row_c_date_time = mysqli_fetch_array($result_c_date_time);
-
-    // $row = mysqli_fetch_array($result);
-
-    // Assuming $id_get_r is your parameterized value
     $sql2 = "SELECT rs.rs_id, rs.status_id, st.status_color, rs.rs_conf, rs.rs_date_time, rs.rs_detail,
-                    gr.get_tel, gr.get_add, gr.get_wages, gr.get_add_price, gr.get_check, gr.get_add_price
+                    gr.get_tel, gr.get_add, gr.get_wages, gr.get_add_price, gr.get_add_price
                 FROM get_repair gr
                 LEFT JOIN repair_status rs ON gr.get_r_id = rs.get_r_id 
                 LEFT JOIN status_type st ON rs.status_id = st.status_id 
@@ -133,7 +121,7 @@ $part_check = 0;
     }
     // Assuming $id_get_r is your parameterized value
     $sql2 = "SELECT rs.rs_id, rs.status_id, st.status_color, rs.rs_conf, rs.rs_date_time, rs.rs_detail,
-                    gr.get_tel, gr.get_add, gr.get_wages, gr.get_add_price, gr.get_check, gr.get_add_price
+                    gr.get_tel, gr.get_add, gr.get_wages, gr.get_add_price, gr.get_add_price
                 FROM get_repair gr
                 LEFT JOIN repair_status rs ON gr.get_r_id = rs.get_r_id 
                 LEFT JOIN status_type st ON rs.status_id = st.status_id 
@@ -880,7 +868,7 @@ $part_check = 0;
                                                     <br>
                                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo" style="background-color: #F1F1F1;">
                                                         <h5>
-                                                            รวมการสั่งซ่อม <?= number_format($total_part_price + $row_2['get_wages'] + $row_2['get_add_price'] + $row_2['get_check']) ?> บาท
+                                                            รวมการสั่งซ่อม <?= number_format($total_part_price + $row_2['get_wages'] + $row_2['get_add_price'] ) ?> บาท
                                                         </h5>
                                                     </button>
                                                 </h5>
@@ -913,26 +901,6 @@ $part_check = 0;
                                                                 ?>
                                                         </div>
                                                     </div>
-                                                    <?php
-                                                    if ($row_2['get_check'] != NULL) {
-                                                    ?>
-                                                        <div class="row">
-                                                            <div class="col-md-6 d-flex  justify-content-start">
-                                                                ค่าตรวจสอบอุปกรณ์
-                                                            </div>
-                                                            <div class="col-md-6 d-flex  justify-content-end">
-                                                                ฿ <?php
-                                                                    if ($row_2['get_check'] != NULL) {
-                                                                        echo number_format($row_2['get_check']);
-                                                                    } else {
-                                                                        echo '0';
-                                                                    }
-                                                                    ?>
-                                                            </div>
-                                                        </div>
-                                                    <?php
-                                                    }
-                                                    ?>
                                                     <div class="row">
                                                         <div class="col-md-6 d-flex  justify-content-start">
                                                             ค่าจัดส่ง
@@ -1170,7 +1138,7 @@ $part_check = 0;
                                                                                                         <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
                                                                                                     </tr>
                                                                                                     <?php
-                                                                                                    $sql_p = "SELECT get_deli , get_add_price ,get_check FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
+                                                                                                    $sql_p = "SELECT get_deli , get_add_price FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
                                                                                                     $result_p = mysqli_query($conn, $sql_p);
                                                                                                     $row_p = mysqli_fetch_array($result_p);
 
@@ -1185,17 +1153,7 @@ $part_check = 0;
                                                                                                         </tr>
                                                                                                     <?php
                                                                                                     }
-                                                                                                    if ($row_p['get_check'] != NULL) {
-                                                                                                        $total += $row_p['get_check'];
                                                                                                     ?>
-                                                                                                        <tr>
-                                                                                                            <td colspan="7">ค่าตรวจเช็คอุปกรณ์</td>
-                                                                                                            <td colspan="2">ค่าบริการตรวจเช็ค</td>
-                                                                                                            <td><?= number_format($row_p['get_check']) ?></td>
-                                                                                                            <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
-                                                                                                        </tr>
-                                                                                                    <?php
-                                                                                                    } ?>
 
 
                                                                                                     <tr>
