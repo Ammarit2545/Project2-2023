@@ -209,10 +209,10 @@ for ($i = 1; $i <= 4; $i++) {
 }
 
 $id = $_SESSION["id"];
+echo '<br>'.$id.'<br>';
 
 $sql = "SELECT * FROM repair WHERE r_serial_number = '$serial_number' AND m_id = '$id'";
 $result = mysqli_query($conn, $sql);
-$row = mysqli_fetch_array($result);
 
 unset($_SESSION["id_repair"]);
 unset($_SESSION["name_brand"]);
@@ -227,7 +227,7 @@ unset($_SESSION["image2"]);
 unset($_SESSION["image3"]);
 unset($_SESSION["image4"]);
 
-if ($row == NULL) {
+if ($row = mysqli_fetch_array($result)) {
     // header("location:../repair_check.php");
     header("location:../listview_repair.php");
 } else {
