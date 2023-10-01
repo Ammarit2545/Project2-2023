@@ -17,7 +17,7 @@ if (isset($_GET["search"])) {
     $search = rtrim($search);
 }
 
-if (isset($_GET["status_id"])) {
+if (isset($_GET["status_id"]) && $_GET["search"] == NULL) {
     $status_id = $_GET["status_id"];
 }
 
@@ -42,8 +42,7 @@ if (isset($_GET["status_id"])) {
     </script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
     <style>
-        <?php include('css/all_page.css'); ?>
-        #card_sent {
+        <?php include('css/all_page.css'); ?>#card_sent {
             text-decoration: none;
         }
 
@@ -206,7 +205,7 @@ if (isset($_GET["status_id"])) {
     </style>
 </head>
 
-<body class="zemist">
+<body>
 
     <!-- navbar-->
     <?php
@@ -218,10 +217,22 @@ if (isset($_GET["status_id"])) {
 
     <div class="px-5 pt-5 edit">
         <br>
-        <?php if (!isset($_GET["search"])) { ?>
+        <?php if (!isset($_GET["search"]) && !isset($_GET["status_id"])) { ?>
             <h1 class="pt-5 text-center" id="title_main">ข้อมูลการซ่อมทั้งหมดของคุณ <?= $row['m_fname'] . " " . $row['m_lname']  ?></h1>
-        <?php } elseif ($status_id == "") {
+        <?php } elseif ($_GET["search"] != NULL) {
+        ?><h1 class="pt-5 text-center" id="title_main">ผลการหาข้อมูล "<?= $_GET["search"]  ?>" </h1>
+        <?php
+        } elseif ($status_id == "") {
         ?><h1 class="pt-5 text-center" id="title_main">ข้อมูลการซ่อมทั้งหมดของคุณ <?= $row['m_fname'] . " " . $row['m_lname']  ?></h1>
+        <?php } elseif ($_GET["status_id"] != NULL) {
+            $sql_s = "SELECT status_color ,status_name FROM `status_type` WHERE status_id = $status_id";
+            $result_s = mysqli_query($conn, $sql_s);
+            $row_sk = mysqli_fetch_array($result_s);
+        ?>
+            <h1 class="pt-5 text-center">ผลการหาข้อมูล<?= "ประเภท " ?><span class="btn btn-light" style="background-color: <?= $row_sk['status_color'] ?>;">
+                    <span class="h1-text f-wh"><?= $row_sk['status_name'] ?></span>
+                </span></h1>
+
         <?php
         } else {
             $sql_s = "SELECT * FROM `status_type` WHERE status_id = $status_id";
@@ -308,7 +319,7 @@ if (isset($_GET["status_id"])) {
                                 $counter++;
                                 if ($counter <= 4) { ?>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="listview_status.php?status_id=<?= $data['status_id'] ?>&search=<?= $search ?>"><?= $data['status_name'] ?>
+                                        <a class="nav-link" href="listview_status.php?status_id=<?= $data['status_id'] ?>"><?= $data['status_name'] ?>
                                             <p style="display: inline-block; color:<?= $data['status_color'] ?>; ">(<?= $data['count'] ?>)</p>
                                         </a>
                                     </li>
@@ -410,7 +421,28 @@ if (isset($_GET["status_id"])) {
                             WHERE repair.m_id = '$id' AND get_repair.del_flg = 0
                             GROUP BY get_repair.get_r_id
                             ORDER BY MAX(get_repair.get_r_date_in) DESC;";
-                    } elseif ($status_id > 0) {
+                    }
+                    // elseif (isset($_GET['status_id']) && isset($_GET['status_id']) && $_GET['search'] != NULL && $_GET['status_id'] != NULL) {
+                    //     $sql = "SELECT
+                    //     get_repair.*,
+                    //     MAX(repair.m_id) AS m_id -- Assuming n_id is a column in the repair table
+                    //  FROM get_repair
+                    //  LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id
+                    //  LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
+                    //  LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                    //  WHERE repair.m_id = '$id' AND get_repair.del_flg = 0 AND repair_status.status_id = '$status_id' AND (
+                    //             repair.r_brand LIKE '%$search%'
+                    //             OR repair.r_model LIKE '%$search%'
+                    //             OR repair.r_serial_number LIKE '%$search%'
+                    //             OR repair.r_number_model LIKE '%$search%'
+                    //             OR get_repair.get_r_id LIKE '%$search%'
+                    //             OR CONCAT(repair.r_brand, ' ', repair.r_model) LIKE '%$search%'
+                    //             OR CONCAT(repair.r_brand, '', repair.r_model) LIKE '%$search%'
+                    //         )
+                    //  GROUP BY get_repair.get_r_id
+                    //  ORDER BY MAX(get_repair.get_r_date_in) DESC;";
+                    // }
+                    elseif ($status_id > 0) {
                         $sql = "SELECT get_repair.*, repair.*, rs.status_id
                                 FROM get_detail
                                 LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
