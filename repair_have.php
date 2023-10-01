@@ -271,6 +271,9 @@ if (isset($_GET["search"])) {
 
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center ">
+            <li class="page-item">
+                            <a class="page-link" href="repair_have.php" tabindex="-1" aria-disabled="true">ทั้งหมด</a>
+                        </li>
                 <?php
                 $sql_f = "SELECT repair.r_brand
                         FROM get_detail
@@ -306,6 +309,7 @@ if (isset($_GET["search"])) {
                     }
                 }
                 ?>
+                
             </ul>
         </nav>
 
