@@ -42,7 +42,7 @@ if (isset($_GET["status_id"])) {
     </script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
     <style>
-        #card_sent {
+        <?php include('css/all_page.css'); ?>#card_sent {
             text-decoration: none;
         }
 
@@ -292,7 +292,7 @@ if (isset($_GET["status_id"])) {
         <br>
         <form action="action/add_repair_non_gua.php" method="POST">
             <div class="container">
-                <div class="grid">
+                <div class="row">
                     <?php
 
                     if (!isset($_GET["search"])) {
@@ -365,7 +365,7 @@ if (isset($_GET["status_id"])) {
                                 // Display data
                             }
                     ?>
-                            <div class="grid-item">
+                            <div class="col-md-6" id="bounce-item">
                                 <a href="detail_status.php?id=<?= $id_r ?>" id="card_sent">
                                     <div class="card" style="box-shadow: 0px 10px 50px rgba(0, 1, 65, 0.18);">
                                         <div class="card-header">

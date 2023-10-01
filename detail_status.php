@@ -38,9 +38,12 @@ $part_check = 0;
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        <?php include('css/all_page.css'); ?>
+    </style>
 </head>
 
-<body>
+<body >
     <!-- navbar-->
     <?php
     if ($row1 > 0) {
@@ -266,7 +269,7 @@ ORDER BY rs.rs_date_time DESC
 
 
     $get_add_price = $row_c['get_add_price']; ?>
-    <div style="background-color: <?= $row_2['status_color'] ?>;height:200px;padding:7%;color:white">
+    <div style="background-color: <?= $row_2['status_color'] ?>;height:200px;padding:7%;color:white" class="auto-font">
         <?php if ($row_2['status_id'] == 1) { ?>
             <h3><i class="fa fa-check-square-o"></i> คุณได้ทำการส่งเรื่องแล้ว</h3>
             <p>โปรดรอการตอบกลับ พนักงานจะทำการตอบกลับภายใน 2 วันทำการ<br>หากคุณต้องการยกเลิกคำสั่งซ่อมสามารถทำการ <span style="color:white">"ยกเลิก"</span> ได้</p>
@@ -390,7 +393,7 @@ ORDER BY rs.rs_date_time DESC
     </div>
 
 
-    <div class="px-5 pt-5 repair">
+    <div class="px-5 pt-5 repair auto-font">
         <div class="container" style="display: none;">
             <div class="row">
                 <div class="col-6 text-left" style="background-color: #F1F1F1;">
@@ -405,7 +408,7 @@ ORDER BY rs.rs_date_time DESC
             </div>
         </div>
         <br>
-        <div class="container">
+        <div class="container auto-font">
             <div id="MiniDetailStatusSuc" style="display: block;">
                 <?php if ($row_2['status_id'] == 9) { ?>
                     <div class="alert alert-success" role="alert">
@@ -541,7 +544,7 @@ ORDER BY rs.rs_date_time DESC
                     <div class="container px-md-4 py-5 mx-auto">
                         <div class="card" id="process-status">
                             <div class="row p-4">
-                                <div class="d-flex">
+                                <div class="d-flex auto-font">
                                     <h5>หมายเลขส่งซ่อมที่ <span class="text-primary font-weight-bold">#<?= $id_get_r ?></span></h5>
                                 </div>
                                 <div class="d-flex flex-column text-sm-right">
@@ -847,10 +850,10 @@ ORDER BY rs.rs_date_time DESC
                                     </div>
                                 </font>
                                 <hr>
-                                <font>
+                                <font class="auto-font">
                                     <h5><i class="fa fa-shield"></i> วิธีการรับอุปกรณ์</h5>
                                 </font>
-                                <p style="margin-left : 5%;color : gray">
+                                <p style="margin-left : 5%;color : gray" class="auto-font">
                                     <?php
                                     if ($row_2['get_deli'] == 0) {
                                         echo 'รับอุปกรณ์ที่ร้าน';
@@ -861,13 +864,13 @@ ORDER BY rs.rs_date_time DESC
                                 </p>
                                 <?php if ($total_part_price != NULL) {  ?>
                                     <hr>
-                                    <div class="accordion accordion-flush" id="accordionFlushExample" style="background-color: #F1F1F1;">
+                                    <div class="accordion accordion-flush auto-font" id="accordionFlushExample" style="background-color: #F1F1F1;">
                                         <div class="accordion-item" id="totalprice" style="background-color:#F1F1F1">
                                             <div>
                                                 <h5 class="accordion-header" id="flush-headingTwo" style="background-color: #F1F1F1;">
                                                     <br>
                                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo" style="background-color: #F1F1F1;">
-                                                        <h5>
+                                                        <h5 class="auto-font-head">
                                                             รวมการสั่งซ่อม <?= number_format($total_part_price + $row_2['get_wages'] + $row_2['get_add_price'] ) ?> บาท
                                                         </h5>
                                                     </button>
@@ -1229,7 +1232,7 @@ ORDER BY rs.rs_date_time DESC
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" style="background-color: #f1f1f1;border:1px solid #CACACA" aria-expanded="false" aria-controls="flush-collapseOne" onclick="return MiniStatus()">
                                             <font>
                                                 <br>
-                                                <h2 style="margin-left: 1.2rem;">ติดตามสถานะ (Status)</h2>
+                                                <h2 style="margin-left: 1.2rem;" class="auto-font-head">ติดตามสถานะ (Status)</h2>
                                                 <div id="ShowMiniOfStatus" style="display: none;">
                                                     <span id="tooltip">ย่อรายละเอียดสถานะ</span>
                                                 </div>
