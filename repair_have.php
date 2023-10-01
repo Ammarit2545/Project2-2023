@@ -227,7 +227,6 @@ if (isset($_GET["search"])) {
             align-items: center;
             opacity: 50%;
         }
-
     </style>
 
 </head>
@@ -270,7 +269,11 @@ if (isset($_GET["search"])) {
         <br>
 
         <nav aria-label="Page navigation example">
+
             <ul class="pagination justify-content-center ">
+                <li class="page-item">
+                    <a class="page-link" href="repair_have.php" tabindex="-1" aria-disabled="true">ทั้งหมด</a>
+                </li>
                 <?php
                 $sql_f = "SELECT repair.r_brand
                         FROM get_detail
@@ -300,7 +303,7 @@ if (isset($_GET["search"])) {
                 ?>
                         <!-- <a href="repair_have.php?search=<?= $first_char ?>" style="color: black;"><?= $first_char ?></a> -->
                         <li class="page-item">
-                            <a class="page-link" href="repair_have.php?search=<?= $first_char ?>" tabindex="-1" aria-disabled="true"><?= $first_char ?></a>
+                            <a class="page-link" href="repair_have.php?word=<?= $first_char ?>" tabindex="-1" aria-disabled="true"><?= $first_char ?></a>
                         </li>
                 <?php
                     }
@@ -360,61 +363,120 @@ if (isset($_GET["search"])) {
 
                     // while card get_repair id
                     while ($row1 = mysqli_fetch_array($result)) {
-                        // Check get_r_id is not as it was 
-                        if ($id_r != $row1['get_r_id']) {
-                            $i = $i + 1;
-                            $id_r = $row1['get_r_id'];
-                            $id_r_get = $row1['r_id'];
+                        if (isset($_GET['word'])) {
+                            $word = $_GET['word'];
                             $string = $row1['r_brand'];
+                            $firstChar = strtoupper($string[0]);
 
-                            $sql_c = "SELECT COUNT(get_r_id) FROM get_detail WHERE get_r_id = '$id_r' AND del_flg = '0'";
-                            $result_c = mysqli_query($conn, $sql_c);
-                            $row_c = mysqli_fetch_array($result_c);
+                            if ($word == $firstChar) {
+                                // Check get_r_id is not as it was 
+                                if ($id_r != $row1['get_r_id']) {
+                                    $i = $i + 1;
+                                    $id_r = $row1['get_r_id'];
+                                    $id_r_get = $row1['r_id'];
 
-                            $id_g = $row_c[0];
 
-                            $sql_s = "SELECT status_type.status_name,status_type.status_color,repair_status.status_id FROM repair_status 
+                                    $sql_c = "SELECT COUNT(get_r_id) FROM get_detail WHERE get_r_id = '$id_r' AND del_flg = '0'";
+                                    $result_c = mysqli_query($conn, $sql_c);
+                                    $row_c = mysqli_fetch_array($result_c);
+
+                                    $id_g = $row_c[0];
+
+                                    $sql_s = "SELECT status_type.status_name,status_type.status_color,repair_status.status_id FROM repair_status 
                                     LEFT JOIN status_type ON status_type.status_id = repair_status.status_id 
                                     WHERE get_r_id = '$id_r' AND repair_status.del_flg = '0' ORDER BY rs_date_time DESC LIMIT 1;";
-                            $result_s = mysqli_query($conn, $sql_s);
-                            $row_status = mysqli_fetch_array($result_s);
+                                    $result_s = mysqli_query($conn, $sql_s);
+                                    $row_status = mysqli_fetch_array($result_s);
 
-                            // Check if data is found
-                            if ($row_c) {
-                                $found_data = true;
-                                // Display data
-                            }
+                                    // Check if data is found
+                                    if ($row_c) {
+                                        $found_data = true;
+                                        // Display data
+                                    }
+                                    if ($remember_first !== $firstChar) {
+                                        $remember_first = $firstChar;?>
+                    <h2><span class="badge bg-secondary mt-4"><?= $remember_first; ?></span></h2>
+                                        <hr>
+                                    <?php
+                                    }
+                                    ?>
+                                    <style>
+                                        .dsad {
+                                            font-size: 100;
+                                        }
+                                    </style>
+                                    <div id="bounce-item">
+                                        <a href="repair_ever.php?id=<?= $row1['r_id'] ?>" id="card_sent" data-bs-toggle="tooltip" data-bs-placement="top" title="Model: <?= $row1['r_number_model'] ?>">
+                                            <div class="alert alert-light shadow" role="alert" style="color: black; background-color: #F5F5F5; border: 1px solid #F5F5F5;">
+                                                <style>
 
-                            $firstChar = $string[0];
-
-
-                            if ($remember_first !== $firstChar) {
-                                $remember_first = $firstChar;
-
-                                ?><h2><span class="badge bg-secondary mt-4"><?= $remember_first; ?></span></h2>
-                                <hr>
-                            <?php
-                            }
-                            ?>
-                            <style>
-                                .dsad {
-                                    font-size: 100;
-                                }
-                            </style>
-                            <div id="bounce-item">
-                                <a href="repair_ever.php?id=<?= $row1['r_id'] ?>" id="card_sent" data-bs-toggle="tooltip" data-bs-placement="top" title="Model: <?= $row1['r_number_model'] ?>">
-                                    <div class="alert alert-light shadow" role="alert" style="color: black; background-color: #F5F5F5; border: 1px solid #F5F5F5;">
-                                        <style>
-
-                                        </style>
-                                        <b class="ln auto-font"><?= $row1['r_brand'] ?></b><span class="ln auto-font"><?= ' - ' . $row1['r_model'] . '   '  ?></span>
-                                        <h5 class="ln auto-font"><span class="badge bg-primary ln auto-font"><?= 'SH : ' . $row1['r_number_model'] ?></span></h5>
+                                                </style>
+                                                <b class="ln auto-font"><?= $row1['r_brand'] ?></b><span class="ln auto-font"><?= ' - ' . $row1['r_model'] . '   '  ?></span>
+                                                <h5 class="ln auto-font"><span class="badge bg-primary ln auto-font"><?= 'SH : ' . $row1['r_number_model'] ?></span></h5>
+                                            </div>
+                                        </a>
                                     </div>
-                                </a>
-                            </div>
+
+
+                                    <?php }
+                            }
+                        } else { {
+
+                                $string = $row1['r_brand'];
+                                $firstChar = $string[0];
+                                // Check get_r_id is not as it was 
+                                if ($id_r != $row1['get_r_id']) {
+                                    $i = $i + 1;
+                                    $id_r = $row1['get_r_id'];
+                                    $id_r_get = $row1['r_id'];
+
+
+                                    $sql_c = "SELECT COUNT(get_r_id) FROM get_detail WHERE get_r_id = '$id_r' AND del_flg = '0'";
+                                    $result_c = mysqli_query($conn, $sql_c);
+                                    $row_c = mysqli_fetch_array($result_c);
+
+                                    $id_g = $row_c[0];
+
+                                    $sql_s = "SELECT status_type.status_name,status_type.status_color,repair_status.status_id FROM repair_status 
+                                        LEFT JOIN status_type ON status_type.status_id = repair_status.status_id 
+                                        WHERE get_r_id = '$id_r' AND repair_status.del_flg = '0' ORDER BY rs_date_time DESC LIMIT 1;";
+                                    $result_s = mysqli_query($conn, $sql_s);
+                                    $row_status = mysqli_fetch_array($result_s);
+
+                                    // Check if data is found
+                                    if ($row_c) {
+                                        $found_data = true;
+                                        // Display data
+                                    }
+                                    if ($remember_first !== $firstChar) {
+                                        $remember_first = $firstChar;
+
+                                    ?><h2><span class="badge bg-secondary mt-4"><?= strtoupper($remember_first) ?></span></h2>
+                                        <hr>
+                                    <?php
+                                    }
+                                    ?>
+                                    <style>
+                                        .dsad {
+                                            font-size: 100;
+                                        }
+                                    </style>
+                                    <div id="bounce-item">
+                                        <a href="repair_ever.php?id=<?= $row1['r_id'] ?>" id="card_sent" data-bs-toggle="tooltip" data-bs-placement="top" title="Model: <?= $row1['r_number_model'] ?>">
+                                            <div class="alert alert-light shadow" role="alert" style="color: black; background-color: #F5F5F5; border: 1px solid #F5F5F5;">
+                                                <style>
+
+                                                </style>
+                                                <b class="ln auto-font"><?= $row1['r_brand'] ?></b><span class="ln auto-font"><?= ' - ' . $row1['r_model'] . '   '  ?></span>
+                                                <h5 class="ln auto-font"><span class="badge bg-primary ln auto-font"><?= 'SH : ' . $row1['r_number_model'] ?></span></h5>
+                                            </div>
+                                        </a>
+                                    </div>
 
 
                         <?php }
+                            }
+                        }
                     }
                     // Display message if no data found
                     if (!$found_data) { ?>
