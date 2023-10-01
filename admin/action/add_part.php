@@ -63,7 +63,9 @@ if ($row_p[0] == NULL) {
     }
 
     $target_dir = $folderName . "/";
-    $target_file = $target_dir . basename($_FILES["p_pic"]["name"]);
+    $file_extension = strtolower(pathinfo($_FILES["p_pic"]["name"], PATHINFO_EXTENSION));
+    $filename = $p_brand . "_" . $p_model . "." . $file_extension; // New filename
+    $target_file = $target_dir . $filename;
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
@@ -82,13 +84,54 @@ if ($row_p[0] == NULL) {
         echo "Sorry, your file was not uploaded.";
     } else {
         if (move_uploaded_file($_FILES["p_pic"]["tmp_name"], $target_file)) {
-            echo "The file " . htmlspecialchars(basename($_FILES["p_pic"]["name"])) . " has been uploaded.";
+            echo "The file " . htmlspecialchars(basename($_FILES["p_pic"]["tmp_name"])) . " has been uploaded.";
+
+            // Resize the uploaded image
+            if (($file_extension == "jpg" || $file_extension == "jpeg" || $file_extension == "png" || $file_extension == "gif") && function_exists('imagecreatefromjpeg')) {
+                $uploaded_image = imagecreatefromjpeg($target_file); // or imagecreatefrompng, imagecreatefromgif
+                $new_width = imagesx($uploaded_image); // Original width
+                $new_height = imagesy($uploaded_image); // Original height
+
+                // Set the desired image quality (0-100, 100 being the highest quality)
+                $image_quality = 80; // You can adjust this value as needed
+
+                // Create a new image with the same resolution
+                $resized_image = imagecreatetruecolor($new_width, $new_height);
+
+                // Copy the original image to the new image (no resizing)
+                imagecopyresampled($resized_image, $uploaded_image, 0, 0, 0, 0, $new_width, $new_height, $new_width, $new_height);
+
+                // Save the resized image with the specified quality
+                imagejpeg($resized_image, $target_file, $image_quality); // Save the resized image
+
+                // Clean up
+                imagedestroy($uploaded_image);
+                imagedestroy($resized_image);
+            } elseif (($file_extension == "mp4" || $file_extension == "mov") && function_exists('shell_exec')) {
+                // If it's a video file, you can use shell_exec to compress it (requires external tool like FFmpeg)
+
+                // Specify the path to the FFmpeg executable (if not in system PATH)
+                $ffmpeg_path = "../ffmpeg/ffmpeg-6.0/"; // Specify the path to your FFmpeg executable
+
+                // Make sure the input and output file paths are properly escaped
+                $input_file = escapeshellarg($target_file);
+                $output_file = escapeshellarg($target_file . ".compressed." . $file_extension);
+
+                // Build the FFmpeg command
+                $command = "$ffmpeg_path -i $input_file -vf scale=800:600 $output_file";
+
+                // Execute the FFmpeg command
+                shell_exec($command);
+
+                // Optionally, you can replace the original with the compressed version
+                rename($output_file, $target_file);
+            }
         } else {
             echo "Sorry, there was an error uploading your file.";
         }
     }
 
-    $pic_path = "parts/$p_type_id/$p_pic ";
+    $pic_path = "parts/$p_type_id/$filename ";
 
     $sql = "INSERT INTO parts (p_date_in, p_type_id, p_brand, p_model, p_name, p_detail, p_stock, p_price, p_pic, del_flg)
     VALUES (NOW(), '$p_type_id', '$p_brand', '$p_model', '$p_name', '$p_detail', '$p_stock', '$p_price', '$pic_path', '0')";

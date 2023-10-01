@@ -246,50 +246,94 @@ if ($rs_id > 0) {
         echo "<br>Folder already exists";
     }
 
-    // Loop over the four images
-    for ($i = 1; $i <= 4; $i++) {
-        $image_name = "file" . $i;
-        if (isset($_FILES[$image_name])) {
-            $target_dir = $folderName;
-            $target_file = $target_dir . '/' . basename($_FILES[$image_name]["name"]);
 
-            $target_file_db = "uploads/$m_id/$get_r_id/$rs_id/" . basename($_FILES[$image_name]["name"]);
-
+    if (isset($_FILES["p_picture"])) {
+        // Loop over the uploaded files
+        foreach ($_FILES["p_picture"]["name"] as $key => $filename) {
+            $target_file = $folderName . '/' . basename($filename);
+            $target_file_db = "uploads/$m_id/$get_r_id/$rs_id/" . basename($filename);
             $uploadOk = 1;
             $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
             // Check if file already exists
             if (file_exists($target_file)) {
-                echo "<br>Sorry, file already exists.";
+                echo "<br>Sorry, file '$filename' already exists.";
                 $uploadOk = 0;
             }
 
             // Allow certain file formats
-            if (
-                $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-                && $imageFileType != "gif" && $imageFileType != "mp4" && $imageFileType != "mov"
-            ) {
-                echo "<br>Sorry, only JPG, JPEG, PNG, GIF, MP4, and MOV files are allowed.";
+            $allowedFormats = ["jpg", "jpeg", "png", "gif", "mp4", "mov"];
+            if (!in_array($imageFileType, $allowedFormats)) {
+                echo "<br>Sorry, file format '$imageFileType' is not allowed.";
                 $uploadOk = 0;
             }
 
             // Check if $uploadOk is set to 0 by an error
             if ($uploadOk == 0) {
-                echo "<br>Sorry, your file was not uploaded.";
+                echo "<br>Sorry, your file '$filename' was not uploaded.";
             } else {
-                if (move_uploaded_file($_FILES[$image_name]["tmp_name"], $target_file)) {
-                    echo "<br>The file " . htmlspecialchars(basename($_FILES[$image_name]["name"])) . " has been uploaded.";
+                if (move_uploaded_file($_FILES["p_picture"]["tmp_name"][$key], $target_file)) {
+                    echo "<br>The file '$filename' has been uploaded.";
 
-                    // Insert To DATABASE
-                    $sql_p = "INSERT INTO repair_pic (rp_pic, rp_date, rs_id)
-                                  VALUES ('$target_file_db', NOW(), '$rs_id')";
+                    // Insert into DATABASE (you should use prepared statements to prevent SQL injection)
+                    $sql_p = "INSERT INTO repair_pic (rp_pic, rp_date, rs_id) VALUES ('$target_file_db', NOW(), '$rs_id')";
                     $result_p = mysqli_query($conn, $sql_p);
+
+                    if (!$result_p) {
+                        echo "<br>Error inserting data into the database: " . mysqli_error($conn);
+                    }
                 } else {
-                    echo "<br>Sorry, there was an error uploading your file.";
+                    echo "<br>Sorry, there was an error uploading your file '$filename'.";
+                }
+            }
+        }
+    } else {
+        // Loop over the four images
+        for ($i = 1; $i <= 4; $i++) {
+            $image_name = "file" . $i;
+            if (isset($_FILES[$image_name])) {
+                $target_dir = $folderName;
+                $target_file = $target_dir . '/' . basename($_FILES[$image_name]["name"]);
+
+                $target_file_db = "uploads/$m_id/$get_r_id/$rs_id/" . basename($_FILES[$image_name]["name"]);
+
+                $uploadOk = 1;
+                $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+                // Check if file already exists
+                if (file_exists($target_file)) {
+                    echo "<br>Sorry, file already exists.";
+                    $uploadOk = 0;
+                }
+
+                // Allow certain file formats
+                if (
+                    $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+                    && $imageFileType != "gif" && $imageFileType != "mp4" && $imageFileType != "mov"
+                ) {
+                    echo "<br>Sorry, only JPG, JPEG, PNG, GIF, MP4, and MOV files are allowed.";
+                    $uploadOk = 0;
+                }
+
+                // Check if $uploadOk is set to 0 by an error
+                if ($uploadOk == 0) {
+                    echo "<br>Sorry, your file was not uploaded.";
+                } else {
+                    if (move_uploaded_file($_FILES[$image_name]["tmp_name"], $target_file)) {
+                        echo "<br>The file " . htmlspecialchars(basename($_FILES[$image_name]["name"])) . " has been uploaded.";
+
+                        // Insert To DATABASE
+                        $sql_p = "INSERT INTO repair_pic (rp_pic, rp_date, rs_id)
+                                  VALUES ('$target_file_db', NOW(), '$rs_id')";
+                        $result_p = mysqli_query($conn, $sql_p);
+                    } else {
+                        echo "<br>Sorry, there was an error uploading your file.";
+                    }
                 }
             }
         }
     }
+
     if ($result_e) {
         // Process parts data
         $i = 1;

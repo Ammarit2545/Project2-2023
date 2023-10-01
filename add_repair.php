@@ -64,6 +64,31 @@ $row = mysqli_fetch_array($result);
         .preview_pic {
             width: 0.02px;
         }
+
+        .image-container {
+            position: relative;
+            display: inline-block;
+            margin: 8px;
+        }
+
+        .preview-image {
+            display: block;
+            width: 200px;
+            height: auto;
+        }
+
+        .delete-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: none;
+            border: none;
+            color: black;
+            font-weight: bold;
+            font-size: 24px;
+            cursor: pointer;
+            outline: none;
+        }
     </style>
 </head>
 
@@ -97,12 +122,12 @@ $row = mysqli_fetch_array($result);
                 <div class="grid">
                     <div class="grid-item">
                         <label for="name_brand" class="form-label">ชื่อยี่ห้อ</label>
-                        <input type="text" class="form-control input" id="borderinput"  name="name_brand" placeholder="กรุณากรอกชื่อยี่ห้อ" required>
+                        <input type="text" class="form-control input" id="borderinput" name="name_brand" placeholder="กรุณากรอกชื่อยี่ห้อ" required>
                     </div>
                     <div class="grid-item">
                         <label for="serial_number" class="form-label">เลข Serial Number</label>
                         <div>
-                            <input type="text" class="form-control input" id="borderinput"  name="serial_number" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)" onkeyup="checkSerial(this)">
+                            <input type="text" class="form-control input" id="borderinput" name="serial_number" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)" onkeyup="checkSerial(this)">
                         </div>
                         <span class="serialMessage" style="color: red; display: none;">ใช้เลข Serial Number นี้ไปแล้วในรายการ</span>
 
@@ -204,7 +229,7 @@ $row = mysqli_fetch_array($result);
             <div class="container">
                 <label for="borderinput" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ (สูงสุด 4 ไฟล์) <p id="insert_bill" style="display: none; color:red">*** เพิ่มรูปใบเสร็จของท่านเพื่อเป็นการยืนยันอย่างน้อย 1 รูป ***</p></label>
                 <!-- <a class="btn btn-primary" style="margin-left:10px;" onclick="addImage4()">+</a> -->
-                <div class="row grid">
+                <div class="row grid" hidden>
                     <div class="col-3 grid-item">
                         <input type="file" name="image1" onchange="previewImage('image-preview1', this)" id="input1">
                     </div>
@@ -218,6 +243,80 @@ $row = mysqli_fetch_array($result);
                         <input type="file" name="image4" onchange="previewImage('image-preview4', this)" id="input1">
                     </div>
                 </div>
+                <style>
+                    .preview-image,
+                    .preview-video {
+                        max-width: 200px;
+                        max-height: 200px;
+                    }
+                </style>
+
+                <div class="mb-3">
+                    <input name="p_picture[]" type="file" id="upload" multiple accept="image/*,video/*" hidden>
+                    <a class="btn btn-primary">
+                        <label for="upload" style="display: block; color: white;">Choose file</label>
+                    </a>
+                    <div id="image-container"></div>
+                </div>
+
+                <script>
+                    const input = document.querySelector('#upload');
+                    const container = document.querySelector('#image-container');
+
+                    input.addEventListener('change', () => {
+                        const files = input.files;
+                        if (files) {
+                            for (let i = 0; i < files.length; i++) {
+                                const file = files[i];
+                                const url = URL.createObjectURL(file);
+                                const imageContainer = document.createElement('div');
+                                imageContainer.classList.add('image-container');
+
+                                if (file.type.startsWith('image/')) {
+                                    // Display image
+                                    const image = document.createElement('img');
+                                    image.classList.add('preview-image');
+                                    image.src = url; // Set the src directly
+
+                                    const deleteBtn = document.createElement('button');
+                                    deleteBtn.classList.add('delete-button');
+                                    deleteBtn.innerHTML = '&times;';
+
+                                    deleteBtn.addEventListener('click', () => {
+                                        imageContainer.remove();
+                                    });
+
+                                    imageContainer.appendChild(image);
+                                    imageContainer.appendChild(deleteBtn);
+                                    container.appendChild(imageContainer);
+                                } else if (file.type.startsWith('video/')) {
+                                    // Display video
+                                    const video = document.createElement('video');
+                                    video.classList.add('preview-video');
+                                    video.src = url; // Set the src directly
+                                    video.setAttribute('controls', 'true');
+
+                                    const deleteBtn = document.createElement('button');
+                                    deleteBtn.classList.add('delete-button');
+                                    deleteBtn.innerHTML = '&times;';
+
+                                    deleteBtn.addEventListener('click', () => {
+                                        imageContainer.remove();
+                                    });
+
+                                    imageContainer.appendChild(video);
+                                    imageContainer.appendChild(deleteBtn);
+                                    container.appendChild(imageContainer);
+                                }
+                            }
+                        }
+                    });
+                </script>
+
+
+
+
+
             </div>
 
             <script>
