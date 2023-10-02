@@ -43,7 +43,399 @@ $part_check = 0;
     </style>
 </head>
 
-<body >
+<body>
+    <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel" style="height: 60%;">
+        <div class="offcanvas-header">
+            <!-- <h5 id="offcanvasTopLabel">Offcanvas top</h5> -->
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvasone" aria-label="Close"></button>
+        </div>
+        <div class="offcanvasone-body" style="height: 1000px;">
+            <br>
+            <!-- Page Wrapper -->
+            <div id="wrapper">
+                <!-- Content Wrapper -->
+                <div id="content-wrapper" class="d-flex flex-column">
+
+                    <!-- Main Content -->
+                    <div id="content">
+
+                        <!-- Begin Page Content -->
+                        <div class="container-fluid">
+
+                            <!-- Page Heading -->
+                            <br>
+                            <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ข้อมูลอะไหล่ของคุณ</h1>
+                            <!-- <a href="add_parts.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มอะไหล่หรือไม่?</a> -->
+                            <br>
+                            <br>
+
+                            <!-- DataTales Example -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">ข้อมูลอะไหล่เครื่องเสียง</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>ลำดับ</th>
+                                                    <th>หมายเลขอะไหล่</th>
+                                                    <th>รหัสการซ่อม</th>
+                                                    <th>ชื่อ</th>
+                                                    <th>Brand</th>
+                                                    <th>Model</th>
+                                                    <!-- <th>Name</th> -->
+                                                    <th>ประเภท</th>
+                                                    <!-- <th>รายละเอียด</th> -->
+                                                    <th>ราคา</th>
+                                                    <th>จำนวน</th>
+                                                    <th>ราคารวม</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $get_id = $_GET['id'];
+                                                $sql_op = "SELECT
+                                                                                                    *,
+                                                                                                    repair_detail.p_id,
+                                                                                                    repair_detail.rd_value_parts,
+                                                                                                    repair_detail.get_d_id,
+                                                                                                    parts.p_brand,
+                                                                                                    parts.p_model,
+                                                                                                    parts.p_price,
+                                                                                                    parts_type.p_type_name,
+                                                                                                    repair_status.rs_id,
+                                                                                                    parts.p_pic
+                                                                                                FROM
+                                                                                                    `repair_detail`
+                                                                                                    LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
+                                                                                                    LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
+                                                                                                    LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
+                                                                                                    LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                                                                                                    JOIN parts ON parts.p_id = repair_detail.p_id
+                                                                                                    LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
+                                                                                                WHERE
+                                                                                                    get_repair.del_flg = 0 AND repair_detail.del_flg = 0
+                                                                                                    AND get_repair.get_r_id = '$get_id'
+                                                                                                GROUP BY
+                                                                                                    rd_id, get_detail.get_d_id
+                                                                                                    ;";
+                                                $result_op = mysqli_query($conn, $sql_op);
+                                                $count_part = 0;
+                                                while ($row_op = mysqli_fetch_array($result_op)) {
+                                                    $count_part++;
+                                                    $p_id = $row_op['p_id'];
+                                                    $rs_id = $row_op['rs_id'];
+                                                ?>
+                                                    <?php
+
+                                                    $sql_count = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id' AND p_id = '$p_id'";
+                                                    $result_count = mysqli_query($conn, $sql_count);
+                                                    $row_count = mysqli_fetch_array($result_count);
+
+                                                    ?>
+                                                    <tr>
+                                                        <td><?php
+                                                            if ($count_part == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo $count_part;
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td><?php
+                                                            if ($row_op['p_id'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo $row_op['p_id'];
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td><?php
+                                                            if ($row_op['get_d_id'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo $row_op['get_d_id'] . ' ' . '(' . $row_op['r_brand'] . ' ' . $row_op['r_model'] . ')';
+                                                            }
+                                                            ?>
+                                                        </td>
+
+                                                        <td><?php
+                                                            if ($row_op['p_pic'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                            ?>
+                                                                <img src="<?= $row_op['p_pic'] ?>" width="50px" alt="Not Found">
+                                                            <?php
+                                                            }
+                                                            ?>
+                                                        </td>
+
+
+                                                        <!-- <td><?php
+                                                                    if ($row_op['p_name'] == NULL) {
+                                                                        echo "-";
+                                                                    } else {
+                                                                        echo $row_op['p_name'];
+                                                                    }
+                                                                    ?>
+                                        </td> -->
+                                                        <td><?php
+                                                            if ($row_op['p_brand'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo $row_op['p_brand'];
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td><?php
+                                                            if ($row_op['p_model'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo $row_op['p_model'];
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td><?php
+                                                            if ($row_op['p_type_name'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo $row_op['p_type_name'];
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td><?php
+                                                            if ($row_op['p_price'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo $row_op['p_price'];
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td><?php
+                                                            if ($row_op['rd_value_parts'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo $row_op['rd_value_parts'];
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php
+                                                            if ($row_op['p_price'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo number_format($row_op['rd_value_parts'] * $row_op['p_price']);
+                                                                $total +=  $row_op['rd_value_parts'] * $row_op['p_price'];
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php
+                                                }
+                                                ?>
+                                                <tr>
+                                                    <td colspan="7">ยอดอะไหล่ทั้งหมด</td>
+                                                    <td colspan="2">ราคารวม</td>
+                                                    <td><?= number_format($total) ?></td>
+                                                    <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
+                                                </tr>
+                                                <tr>
+                                                    <?php
+                                                    $sql_w = "SELECT get_wages FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
+                                                    $result_w = mysqli_query($conn, $sql_w);
+                                                    $row_w = mysqli_fetch_array($result_w);
+                                                    ?>
+                                                    <td colspan="7">ค่าแรงช่าง</td>
+                                                    <td colspan="2">ค่าแรง</td>
+                                                    <td><?= number_format($row_w['get_wages']) ?></td>
+                                                    <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
+                                                </tr>
+                                                <?php
+                                                $sql_p = "SELECT get_deli , get_add_price FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
+                                                $result_p = mysqli_query($conn, $sql_p);
+                                                $row_p = mysqli_fetch_array($result_p);
+
+                                                if ($row_p['get_deli'] == 1) {
+                                                    $total += $row_p['get_add_price'];
+                                                ?>
+                                                    <tr>
+                                                        <td colspan="7">ค่าจัดส่ง</td>
+                                                        <td colspan="2">ราคาจัดส่ง</td>
+                                                        <td><?= number_format($row_p['get_add_price']) ?></td>
+                                                        <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
+                                                    </tr>
+                                                <?php
+                                                }
+                                                ?>
+
+
+                                                <tr>
+                                                    <td colspan="7"></td>
+                                                    <td colspan="2">ราคารวมทั้งหมด</td>
+                                                    <td>
+                                                        <h5><?= number_format($total + $row_w['get_wages']) ?> </h5>
+                                                    </td>
+                                                    <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <center>
+                            </center>
+                            <!-- Place this in the <head> section of your HTML document -->
+                            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+                            <!-- Place this before the closing </body> tag -->
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    document.getElementById('confirmButton').addEventListener('click', function() {
+                                        Swal.fire({
+                                            icon: 'question',
+                                            title: 'ยืนยันการดำเนินการ',
+                                            text: 'การ "ยืนยัน" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'ยืนยัน',
+                                            cancelButtonText: 'ยกเลิก'
+                                        }).then((willConfirm) => {
+                                            if (willConfirm.isConfirmed) {
+                                                window.location.href = "action/conf_part.php?id=<?= $get_id ?>"; // Redirect to home.php
+                                            }
+                                        });
+                                    });
+                                });
+                            </script>
+
+
+                        </div>
+                        <!-- End of Main Content -->
+
+                    </div>
+                    <!-- End of Content Wrapper -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop_unique" aria-labelledby="offcanvasTopLabel" style="height: 70%">
+        <div class="offcanvas-header">
+        </div>
+        <div class="offcanvas-body">
+            <a type="button" class="btn-close text-reset d-flex justify-content-end ms-auto" data-bs-dismiss="offcanvas" aria-label="Close"></a>
+            <h2>หมายเลขพัสดุจากท่าน</h2>
+            <br>
+            <?php
+            $id_get_r = $_GET['id'];
+            $sql_com_m = "SELECT * FROM get_detail
+                                                                    LEFT JOIN get_repair ON get_detail.get_r_id = get_repair.get_r_id 
+                                                                    LEFT JOIN tracking ON get_detail.get_t_id = tracking.t_id 
+                                                                    LEFT JOIN repair ON repair.r_id = get_detail.r_id WHERE get_repair.get_r_id = '$id_get_r' AND repair.del_flg = '0' AND get_detail.get_d_conf = '0'";
+            $result_com_m = mysqli_query($conn, $sql_com_m);
+
+            $count_com = 0;
+            while ($row_com_m = mysqli_fetch_array($result_com_m)) {
+                if ($row_com_m['t_parcel'] != NULL) {
+                    $count_com += 1;
+            ?>
+                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="<?= $row_com_m['r_serial_number'] ?>">
+                        <div class="alert alert-secondary">
+                            <p>
+                                <span class="badge bg-secondary"><?= $count_com ?> </span> :
+                                <span class="inline"><?= $row_com_m['r_brand'] . ' ' . $row_com_m['r_model'] . ' - ' . $row_com_m['t_parcel'] ?></span>
+                                <!-- <span id="tooltip"><?= $row_com_m['r_serial_number'] ?></span> -->
+                            </p>
+                        </div>
+                    </a>
+            <?php
+                }
+            }
+            if($count_com == 0){
+                ?> <center><hr><br><h5 class="f-red-5">*** ไม่มีข้อมูล ***</h5></center> <?php
+            }
+            ?>
+        </div>
+    </div>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+            <!-- <h5 id="offcanvasRightLabel">Offcanvas right</h5> -->
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <br>
+            <!-- <h3><span class="badge bg-secondary">หมายเลขอุปกรณ์ของท่าน</span></h3> -->
+            <div class="container">
+                <h3>หมายเลขอุปกรณ์ของท่าน</h3>
+                <br>
+                <!-- <p>Click the button below to copy the Bootstrap code:</p> -->
+
+
+                <?php
+                $count_my_parcel = 0;
+                $id_get_r = $_GET['id'];
+                $sql_track = "SELECT * FROM `get_detail` 
+                                                                        LEFT JOIN tracking ON tracking.t_id = get_detail.t_id
+                                                                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                                        WHERE get_detail.get_r_id = '$id_get_r';";
+                $result_track = mysqli_query($conn, $sql_track);
+                while ($row_track = mysqli_fetch_array($result_track)) {
+                    if($row_track['t_parcel'] != NULL){
+                        $count_my_parcel++;
+
+                    
+                ?>
+                    <div class="row">
+                        <h5><?= $row_track['r_brand'] . ' ' . $row_track['r_model'] ?></h5>
+                    </div>
+                    <!-- <div class="row"> -->
+                    <div class="row">
+                        <!-- <div class="row"> -->
+                        <p style="font-size: 14px;">SN : <?= $row_track['r_serial_number'] ?></p>
+                        <!-- </div> -->
+                        <!-- <div class="row">
+                                                                <h6><?= $row_track['r_serial_number']  ?></h6>
+                                                            </div> -->
+                    </div>
+                    <div class="row">
+                        <div class="row">
+                            <p style="display: none;" id="bootstrapCode"><?= $row_track['t_parcel'] ?></p>
+                            <div class="col-12">
+                                หมายเลขพัสดุ : <button class="btn btn-primary" id="copyButton" onclick="copyToClipboard()" data-bs-toggle="tooltip" data-bs-placement="top" title="คลิ๊กเพื่อคัดลอก"><?= $row_track['t_parcel'] ?></button>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- </div> -->
+                    <hr>
+                    <br>
+                <?php }  
+               
+                }
+                if($count_my_parcel == 0){
+                    ?> <center><hr><br><h5 class="f-red-5">*** ไม่มีข้อมูล ***</h5></center> <?php
+                }
+                ?>
+                <script>
+                    function copyToClipboard() {
+                        var copyText = document.getElementById("bootstrapCode");
+                        var textarea = document.createElement("textarea");
+                        textarea.value = copyText.textContent;
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand("copy");
+                        document.body.removeChild(textarea);
+                        alert("Copied to clipboard: " + copyText.textContent);
+                    }
+                </script>
+
+            </div>
+
+        </div>
+    </div>
     <!-- navbar-->
     <?php
     if ($row1 > 0) {
@@ -557,70 +949,8 @@ ORDER BY rs.rs_date_time DESC
                                             <!-- <a href="">หมายเลขอุปกรณ์ของท่าน</a> -->
                                             <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">หมายเลขอุปกรณ์ของท่าน</button>
 
-                                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-                                        <div class="offcanvas-header">
-                                            <h5 id="offcanvasRightLabel">Offcanvas right</h5>
-                                            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                                        </div>
-                                        <div class="offcanvas-body">
-                                            <br>
-                                            <!-- <h3><span class="badge bg-secondary">หมายเลขอุปกรณ์ของท่าน</span></h3> -->
-                                            <div class="container">
-                                                <h3>หมายเลขอุปกรณ์ของท่าน</h3>
-                                                <br>
-                                                <!-- <p>Click the button below to copy the Bootstrap code:</p> -->
 
-
-                                                <?php $sql_track = "SELECT * FROM `get_detail` 
-                                                                        LEFT JOIN tracking ON tracking.t_id = get_detail.t_id
-                                                                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                                        WHERE get_detail.get_r_id = '$id_get_r';";
-                                                                                                                                                                                                                                                                                                                                                                        $result_track = mysqli_query($conn, $sql_track);
-                                                                                                                                                                                                                                                                                                                                                                        while ($row_track = mysqli_fetch_array($result_track)) {
-                                                ?>
-                                                    <div class="row">
-                                                        <h5><?= $row_track['r_brand'] . ' ' . $row_track['r_model'] ?></h5>
-                                                    </div>
-                                                    <!-- <div class="row"> -->
-                                                    <div class="row">
-                                                        <!-- <div class="row"> -->
-                                                        <p style="font-size: 14px;">SN : <?= $row_track['r_serial_number'] ?></p>
-                                                        <!-- </div> -->
-                                                        <!-- <div class="row">
-                                                                <h6><?= $row_track['r_serial_number']  ?></h6>
-                                                            </div> -->
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="row">
-                                                            <p style="display: none;" id="bootstrapCode"><?= $row_track['t_parcel'] ?></p>
-                                                            <div class="col-12">
-                                                                หมายเลขพัสดุ : <button class="btn btn-primary" id="copyButton" onclick="copyToClipboard()"><?= $row_track['t_parcel'] ?></button>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                    <!-- </div> -->
-                                                    <hr>
-                                                    <br>
-                                                <?php }  ?>
-                                                <script>
-                                                    function copyToClipboard() {
-                                                        var copyText = document.getElementById("bootstrapCode");
-                                                        var textarea = document.createElement("textarea");
-                                                        textarea.value = copyText.textContent;
-                                                        document.body.appendChild(textarea);
-                                                        textarea.select();
-                                                        document.execCommand("copy");
-                                                        document.body.removeChild(textarea);
-                                                        alert("Copied to clipboard: " + copyText.textContent);
-                                                    }
-                                                </script>
-
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <?php }
+                                            <?php }
                                                                                                                                                                                                                                                                                                                                                                     $sql_start_repair_date = "SELECT * FROM repair_status 
                                 WHERE get_r_id = '$id_get_r' AND status_id = 19 OR status_id = 17 AND del_flg = 0 ORDER BY rs_date_time DESC LIMIT 1;";
                                                                                                                                                                                                                                                                                                                                                                     $result_start_repair_date  = mysqli_query($conn, $sql_start_repair_date);
@@ -638,11 +968,11 @@ ORDER BY rs.rs_date_time DESC
                                                                                                                                                                                                                                                                                                                                                                             // echo $formattedEndDate_conf;
 
 
-                                    ?>
-                                        <p style="color: gray" class="mb-0"><i class="fa fa-calendar-check-o"></i> กำหนดแล้วเสร็จวันที่ : <?= date('d F Y', strtotime($formattedEndDate_conf_C)) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($formattedEndDate_conf_C)); ?> <u style="color: #B90000;">(<?= $row_start_day['get_date_conf'] ?> วัน)</u></span>
-                                            <!-- <span style="color:red">*** นับจากวันที่รับอุปกรณ์</span> -->
-                                        </p>
-                                <?php }
+                                            ?>
+                                    <p style="color: gray" class="mb-0"><i class="fa fa-calendar-check-o"></i> กำหนดแล้วเสร็จวันที่ : <?= date('d F Y', strtotime($formattedEndDate_conf_C)) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($formattedEndDate_conf_C)); ?> <u style="color: #B90000;">(<?= $row_start_day['get_date_conf'] ?> วัน)</u></span>
+                                        <!-- <span style="color:red">*** นับจากวันที่รับอุปกรณ์</span> -->
+                                    </p>
+                            <?php }
                                                                                                                                                                                                                                                                                                                                                                     } ?>
                                 </div>
                             </div>
@@ -809,42 +1139,7 @@ ORDER BY rs.rs_date_time DESC
                                         <?php if ($row_c['get_t_id'] != NULL) { ?>
                                             <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_unique" aria-controls="offcanvasTop_unique"><u>หมายเลขพัสดุจากคุณ</u></a>
 
-                                            <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop_unique" aria-labelledby="offcanvasTopLabel" style="height: 70%">
-                                                <div class="offcanvas-header">
-                                                    <h5 id="offcanvasTopLabel">Offcanvas top</h5>
-                                                    <br>
-                                                    <br>
-                                                    <a type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></a>
-                                                </div>
-                                                <div class="offcanvas-body">
-                                                    <a type="button" class="btn-close text-reset d-flex justify-content-end ms-auto" data-bs-dismiss="offcanvas" aria-label="Close"></a>
-                                                    <h2><span class="badge bg-secondary">หมายเลขพัสดุของท่าน</span></h2>
-                                                    <br>
-                                                    <?php
-                                                    $sql_com_m = "SELECT * FROM get_detail
-                                                                    LEFT JOIN get_repair ON get_detail.get_r_id = get_repair.get_r_id 
-                                                                    LEFT JOIN tracking ON get_detail.get_t_id = tracking.t_id 
-                                                                    LEFT JOIN repair ON repair.r_id = get_detail.r_id WHERE get_repair.get_r_id = '$id_get_r' AND repair.del_flg = '0' AND get_detail.get_d_conf = '0'";
-                                                    $result_com_m = mysqli_query($conn, $sql_com_m);
 
-                                                    $count_com = 0;
-                                                    while ($row_com_m = mysqli_fetch_array($result_com_m)) {
-                                                        $count_com += 1;
-                                                    ?>
-                                                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="<?= $row_com_m['r_serial_number'] ?>">
-                                                            <div class="alert alert-secondary">
-                                                                <p>
-                                                                    <span class="badge bg-secondary"><?= $count_com ?> </span> :
-                                                                    <span class="inline"><?= $row_com_m['r_brand'] . ' ' . $row_com_m['r_model'] . ' - ' . $row_com_m['t_parcel'] ?></span>
-                                                                    <!-- <span id="tooltip"><?= $row_com_m['r_serial_number'] ?></span> -->
-                                                                </p>
-                                                            </div>
-                                                        </a>
-                                                    <?php
-                                                    }
-                                                    ?>
-                                                </div>
-                                            </div>
 
                                         <?php } ?>
                                     </div>
@@ -871,7 +1166,7 @@ ORDER BY rs.rs_date_time DESC
                                                     <br>
                                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo" style="background-color: #F1F1F1;">
                                                         <h5 class="auto-font-head">
-                                                            รวมการสั่งซ่อม <?= number_format($total_part_price + $row_2['get_wages'] + $row_2['get_add_price'] ) ?> บาท
+                                                            รวมการสั่งซ่อม <?= number_format($total_part_price + $row_2['get_wages'] + $row_2['get_add_price']) ?> บาท
                                                         </h5>
                                                     </button>
                                                 </h5>
@@ -932,283 +1227,7 @@ ORDER BY rs.rs_date_time DESC
 
                                                         <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">ดูรายการอะไหล่</button>
 
-                                                        <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel" style="height: 60%;">
-                                                            <div class="offcanvas-header">
-                                                                <h5 id="offcanvasTopLabel">Offcanvas top</h5>
-                                                                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvasone" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="offcanvasone-body" style="height: 1000px;">
-                                                                <br>
-                                                                <!-- Page Wrapper -->
-                                                                <div id="wrapper">
-                                                                    <!-- Content Wrapper -->
-                                                                    <div id="content-wrapper" class="d-flex flex-column">
 
-                                                                        <!-- Main Content -->
-                                                                        <div id="content">
-
-                                                                            <!-- Begin Page Content -->
-                                                                            <div class="container-fluid">
-
-                                                                                <!-- Page Heading -->
-                                                                                <br>
-                                                                                <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ข้อมูลอะไหล่ของคุณ</h1>
-                                                                                <!-- <a href="add_parts.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มอะไหล่หรือไม่?</a> -->
-                                                                                <br>
-                                                                                <br>
-
-                                                                                <!-- DataTales Example -->
-                                                                                <div class="card shadow mb-4">
-                                                                                    <div class="card-header py-3">
-                                                                                        <h6 class="m-0 font-weight-bold text-primary">ข้อมูลอะไหล่เครื่องเสียง</h6>
-                                                                                    </div>
-                                                                                    <div class="card-body">
-                                                                                        <div class="table-responsive">
-                                                                                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                                                                                <thead>
-                                                                                                    <tr>
-                                                                                                        <th>ลำดับ</th>
-                                                                                                        <th>หมายเลขอะไหล่</th>
-                                                                                                        <th>รหัสการซ่อม</th>
-                                                                                                        <th>ชื่อ</th>
-                                                                                                        <th>Brand</th>
-                                                                                                        <th>Model</th>
-                                                                                                        <!-- <th>Name</th> -->
-                                                                                                        <th>ประเภท</th>
-                                                                                                        <!-- <th>รายละเอียด</th> -->
-                                                                                                        <th>ราคา</th>
-                                                                                                        <th>จำนวน</th>
-                                                                                                        <th>ราคารวม</th>
-                                                                                                    </tr>
-                                                                                                </thead>
-                                                                                                <tbody>
-                                                                                                    <?php
-                                                                                                    $get_id = $id_get_r;
-                                                                                                    $sql_op = "SELECT
-                                                                                                    *,
-                                                                                                    repair_detail.p_id,
-                                                                                                    repair_detail.rd_value_parts,
-                                                                                                    repair_detail.get_d_id,
-                                                                                                    parts.p_brand,
-                                                                                                    parts.p_model,
-                                                                                                    parts.p_price,
-                                                                                                    parts_type.p_type_name,
-                                                                                                    repair_status.rs_id,
-                                                                                                    parts.p_pic
-                                                                                                FROM
-                                                                                                    `repair_detail`
-                                                                                                    LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
-                                                                                                    LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
-                                                                                                    LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
-                                                                                                    LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                                                                                                    JOIN parts ON parts.p_id = repair_detail.p_id
-                                                                                                    LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
-                                                                                                WHERE
-                                                                                                    get_repair.del_flg = 0 AND repair_detail.del_flg = 0
-                                                                                                    AND get_repair.get_r_id = '$get_id'
-                                                                                                GROUP BY
-                                                                                                    rd_id, get_detail.get_d_id
-                                                                                                    ;";
-                                                                                                    $result_op = mysqli_query($conn, $sql_op);
-                                                                                                    $count_part = 0;
-                                                                                                    while ($row_op = mysqli_fetch_array($result_op)) {
-                                                                                                        $count_part++;
-                                                                                                        $p_id = $row_op['p_id'];
-                                                                                                        $rs_id = $row_op['rs_id'];
-                                                                                                    ?>
-                                                                                                        <?php
-
-                                                                                                        $sql_count = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id' AND p_id = '$p_id'";
-                                                                                                        $result_count = mysqli_query($conn, $sql_count);
-                                                                                                        $row_count = mysqli_fetch_array($result_count);
-
-                                                                                                        ?>
-                                                                                                        <tr>
-                                                                                                            <td><?php
-                                                                                                                if ($count_part == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                    echo $count_part;
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-                                                                                                            <td><?php
-                                                                                                                if ($row_op['p_id'] == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                    echo $row_op['p_id'];
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-                                                                                                            <td><?php
-                                                                                                                if ($row_op['get_d_id'] == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                    echo $row_op['get_d_id'] . ' ' . '(' . $row_op['r_brand'] . ' ' . $row_op['r_model'] . ')';
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-
-                                                                                                            <td><?php
-                                                                                                                if ($row_op['p_pic'] == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                ?>
-                                                                                                                    <img src="<?= $row_op['p_pic'] ?>" width="50px" alt="Not Found">
-                                                                                                                <?php
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-
-
-                                                                                                            <!-- <td><?php
-                                                                                                                        if ($row_op['p_name'] == NULL) {
-                                                                                                                            echo "-";
-                                                                                                                        } else {
-                                                                                                                            echo $row_op['p_name'];
-                                                                                                                        }
-                                                                                                                        ?>
-                                        </td> -->
-                                                                                                            <td><?php
-                                                                                                                if ($row_op['p_brand'] == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                    echo $row_op['p_brand'];
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-                                                                                                            <td><?php
-                                                                                                                if ($row_op['p_model'] == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                    echo $row_op['p_model'];
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-                                                                                                            <td><?php
-                                                                                                                if ($row_op['p_type_name'] == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                    echo $row_op['p_type_name'];
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-                                                                                                            <td><?php
-                                                                                                                if ($row_op['p_price'] == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                    echo $row_op['p_price'];
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-                                                                                                            <td><?php
-                                                                                                                if ($row_op['rd_value_parts'] == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                    echo $row_op['rd_value_parts'];
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-                                                                                                            <td>
-                                                                                                                <?php
-                                                                                                                if ($row_op['p_price'] == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                    echo number_format($row_op['rd_value_parts'] * $row_op['p_price']);
-                                                                                                                    $total +=  $row_op['rd_value_parts'] * $row_op['p_price'];
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-                                                                                                        </tr>
-                                                                                                    <?php
-                                                                                                    }
-                                                                                                    ?>
-                                                                                                    <tr>
-                                                                                                        <td colspan="7">ยอดอะไหล่ทั้งหมด</td>
-                                                                                                        <td colspan="2">ราคารวม</td>
-                                                                                                        <td><?= number_format($total) ?></td>
-                                                                                                        <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
-                                                                                                    </tr>
-                                                                                                    <tr>
-                                                                                                        <?php
-                                                                                                        $sql_w = "SELECT get_wages FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
-                                                                                                        $result_w = mysqli_query($conn, $sql_w);
-                                                                                                        $row_w = mysqli_fetch_array($result_w);
-                                                                                                        ?>
-                                                                                                        <td colspan="7">ค่าแรงช่าง</td>
-                                                                                                        <td colspan="2">ค่าแรง</td>
-                                                                                                        <td><?= number_format($row_w['get_wages']) ?></td>
-                                                                                                        <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
-                                                                                                    </tr>
-                                                                                                    <?php
-                                                                                                    $sql_p = "SELECT get_deli , get_add_price FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
-                                                                                                    $result_p = mysqli_query($conn, $sql_p);
-                                                                                                    $row_p = mysqli_fetch_array($result_p);
-
-                                                                                                    if ($row_p['get_deli'] == 1) {
-                                                                                                        $total += $row_p['get_add_price'];
-                                                                                                    ?>
-                                                                                                        <tr>
-                                                                                                            <td colspan="7">ค่าจัดส่ง</td>
-                                                                                                            <td colspan="2">ราคาจัดส่ง</td>
-                                                                                                            <td><?= number_format($row_p['get_add_price']) ?></td>
-                                                                                                            <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
-                                                                                                        </tr>
-                                                                                                    <?php
-                                                                                                    }
-                                                                                                    ?>
-
-
-                                                                                                    <tr>
-                                                                                                        <td colspan="7"></td>
-                                                                                                        <td colspan="2">ราคารวมทั้งหมด</td>
-                                                                                                        <td>
-                                                                                                            <h5><?= number_format($total + $row_w['get_wages']) ?> </h5>
-                                                                                                        </td>
-                                                                                                        <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
-                                                                                                    </tr>
-                                                                                                </tbody>
-                                                                                            </table>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <center>
-                                                                                </center>
-                                                                                <!-- Place this in the <head> section of your HTML document -->
-                                                                                <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-                                                                                <!-- Place this before the closing </body> tag -->
-                                                                                <script>
-                                                                                    document.addEventListener('DOMContentLoaded', function() {
-                                                                                        document.getElementById('confirmButton').addEventListener('click', function() {
-                                                                                            Swal.fire({
-                                                                                                icon: 'question',
-                                                                                                title: 'ยืนยันการดำเนินการ',
-                                                                                                text: 'การ "ยืนยัน" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
-                                                                                                showCancelButton: true,
-                                                                                                confirmButtonText: 'ยืนยัน',
-                                                                                                cancelButtonText: 'ยกเลิก'
-                                                                                            }).then((willConfirm) => {
-                                                                                                if (willConfirm.isConfirmed) {
-                                                                                                    window.location.href = "action/conf_part.php?id=<?= $get_id ?>"; // Redirect to home.php
-                                                                                                }
-                                                                                            });
-                                                                                        });
-                                                                                    });
-                                                                                </script>
-
-
-                                                                            </div>
-                                                                            <!-- End of Main Content -->
-
-                                                                        </div>
-                                                                        <!-- End of Content Wrapper -->
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                 </div>
 
