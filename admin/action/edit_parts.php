@@ -18,6 +18,7 @@ $p_stock = $_POST['p_stock'];
 $p_price = $_POST['p_price'];
 $p_pic = $_FILES['p_pic']['name'];
 $id = $_SESSION['id'];
+$filename;
 
 $sql_p = "SELECT * FROM parts WHERE p_brand = '$p_brand'  
 AND p_model = '$p_model' 
@@ -37,7 +38,9 @@ if (!file_exists($folderName)) {
 }
 
 $target_dir = $folderName . "/";
-$target_file = $target_dir . basename($_FILES["p_pic"]["name"]);
+$file_extension = strtolower(pathinfo($_FILES["p_pic"]["name"], PATHINFO_EXTENSION));
+$filename = $p_brand . "_" . $p_model . "." . $file_extension; // New filename
+$target_file = $target_dir . $filename;
 $uploadOk = 1;
 $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
@@ -67,7 +70,7 @@ $result = mysqli_query($conn, $sql);
 $row_c = mysqli_fetch_array($result);
 
 if ($p_pic) {
-    $pic_path = "parts/$p_type_id/$p_pic";
+    $pic_path = "parts/$p_type_id/$filename ";
 
     $sql = "UPDATE parts SET `p_date_update` = NOW(), `p_type_id` = '$p_type_id', `p_brand` = '$p_brand', `p_model` = '$p_model', `p_name` = '$p_name', `p_detail` ='$p_detail', `p_price`= '$p_price', `p_pic`= '$pic_path' , p_stock = '$p_stock' WHERE p_id = $p_id";
 } else {

@@ -1,3 +1,44 @@
 body {
     font-family: sans-serif;
 }
+#bounce-item {
+    /* box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3); */
+    /* Add a gray shadow */
+    transition: transform 0.3s, box-shadow 0.3s;
+    /* Add transition for transform and box-shadow */
+}
+
+#bounce-item:hover {
+    transform: scale(1.1);
+    /* Increase size on hover */
+    /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); */
+    /* Increase shadow size and intensity on hover */
+
+}
+
+/* Default font size */
+.auto-font {
+    font-size: 16px;
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 768px) {
+    .auto-font {
+        font-size: 14px;
+    }
+}
+
+/* Media query for even smaller screens */
+@media screen and (max-width: 576px) {
+    .auto-font {
+        font-size: 12px;
+    }
+}
+
+.ln {
+    display: inline;
+}
+
+.shadow {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}

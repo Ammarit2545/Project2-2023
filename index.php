@@ -265,10 +265,11 @@ if ($_SESSION["log_login"] == 0) {
                   <div class="input-group">
                     <input type="email" class="input-field" id="email" name="email" onblur="checkEmail()" required>
                     <label for="email">Email</label>
-                    <span id="email-error" style="color: red; font-size: 12px; display: none;">
-                      <button class="btn btn-danger" style="font-size: 12px; padding : -2px">
-                        อีเมลนี้ถูกใช้งานแล้วโดยบัญชีอื่น
-                      </button>
+                    <!-- <span style="font-size: 12px; padding: -2px"> -->
+                    <span id="email-error" style="color: red; font-size: 12px; padding: -2px;display:none;">
+                      <!-- <button class="btn btn-danger" style="padding: 0;"> -->
+                      อีเมลนี้ถูกใช้งานแล้วโดยบัญชีอื่น
+                      <!-- </button> -->
                     </span>
 
                     <script>
@@ -312,6 +313,7 @@ if ($_SESSION["log_login"] == 0) {
                         emailInput.addEventListener('blur', checkEmail); // Trigger checkEmail() on blur event
                       });
                     </script>
+
                   </div>
 
                   <div class="input-group">
