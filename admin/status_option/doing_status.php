@@ -258,10 +258,14 @@
         <br>
         <div class="mb-3">
             <h6>อะไหล่</h6>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Parts">
+            เพิ่มอะไหล่
+            </button>
             <div id="cardContainer" style="display: none;">
                 <table class="table" id="cardSection"></table>
             </div>
-            <button type="button" class="btn btn-primary" onclick="showNextCard()">เพิ่มอะไหล่</button>
+            <!-- <button type="button" class="btn btn-primary" onclick="showNextCard()">เพิ่มอะไหล่</button> -->
         </div>
         <br>
         <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>

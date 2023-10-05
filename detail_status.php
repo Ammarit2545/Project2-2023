@@ -330,10 +330,10 @@ $part_check = 0;
             <br>
             <?php
             $id_get_r = $_GET['id'];
-            $sql_com_m = "SELECT * FROM get_detail
-                                                                    LEFT JOIN get_repair ON get_detail.get_r_id = get_repair.get_r_id 
-                                                                    LEFT JOIN tracking ON get_detail.get_t_id = tracking.t_id 
-                                                                    LEFT JOIN repair ON repair.r_id = get_detail.r_id WHERE get_repair.get_r_id = '$id_get_r' AND repair.del_flg = '0' AND get_detail.get_d_conf = '0'";
+            $sql_com_m = "  SELECT * FROM get_detail
+                            LEFT JOIN get_repair ON get_detail.get_r_id = get_repair.get_r_id 
+                            LEFT JOIN tracking ON get_detail.get_t_id = tracking.t_id 
+                            LEFT JOIN repair ON repair.r_id = get_detail.r_id WHERE get_repair.get_r_id = '$id_get_r' AND repair.del_flg = '0' AND get_detail.get_d_conf = '0'";
             $result_com_m = mysqli_query($conn, $sql_com_m);
 
             $count_com = 0;

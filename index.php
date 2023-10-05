@@ -700,7 +700,7 @@ if ($_SESSION["log_login"] == 0) {
           ?>
             <script>
               Swal.fire({
-                title: 'Line Login เสร็จสิ้น',
+                title: 'เข้าสู่ระบบเสร็จสิ้น',
                 text: 'กด Accept เพื่อออก',
                 icon: 'success',
                 confirmButtonText: 'Accept'

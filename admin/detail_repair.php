@@ -32,7 +32,7 @@ if (!isset($_SESSION['role_id'])) {
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 </head>
 <style>
@@ -176,8 +176,63 @@ if (!isset($_SESSION['role_id'])) {
 
     }
 </style>
+<style>
+    /* Style the search input */
+    #search-box {
+        width: 300px;
+        padding: 10px;
+    }
+
+    /* Style the autocomplete container */
+    .autocomplete {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Style the autocomplete list */
+    .autocomplete-items {
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        max-height: 150px;
+        overflow-y: auto;
+        z-index: 99;
+    }
+
+    /* Style each autocomplete item */
+    .autocomplete-item {
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    /* Highlight the selected autocomplete item */
+    .autocomplete-item:hover {
+        background-color: #e9e9e9;
+    }
+
+    <?php
+    // $get_r_id = $_GET['id'];
+    $parts_ar = array();
+    $sql_get_co = "SELECT p_id,p_brand, p_model FROM parts  WHERE parts.del_flg = 0";
+
+    $result_get_co = mysqli_query($conn, $sql_get_co);
+
+    while ($row_get_co = mysqli_fetch_array($result_get_co)) {
+        $brand = $row_get_co['p_brand'];
+        $model = $row_get_co['p_model'];
+        $p_id = $row_get_co['p_id'];
+        $part_str = "\"$brand $model\"";
+        $parts_ar[$p_id] = $part_str;
+    }
+
+    // Now $parts_ar contains an array of strings with brand and model enclosed in double quotes
+    ?>
+</style>
 
 <body id="page-top">
+
+
+    <!-- Modal -->
+    <!-- Your HTML content -->
 
 
     <!-- Page Wrapper -->
@@ -871,9 +926,6 @@ if (!isset($_SESSION['role_id'])) {
                                                 <span class="close" onclick="closeModal()">&times;</span>
                                                 <video id="modal-video" controls class="modal-video"></video>
                                             </div>
-
-
-
                                             <!-- <h2><?= $row_pic['rp_pic'] ?></h2> -->
                                         <?php
                                         } else { ?> <h2>ไม่มีข้อมูล</h2> <?php
@@ -1223,7 +1275,21 @@ if (!isset($_SESSION['role_id'])) {
                                                 </div>
                                             <?php
                                             }
+                                            $parts_ar = array();
+                                            $sql_get_co = "SELECT parts.p_id,parts.p_brand, parts.p_model,parts_type.p_type_name FROM parts 
+                                            LEFT JOIN parts_type ON parts.p_type_id = parts_type.p_type_id
+                                            WHERE parts.del_flg = 0";
 
+                                            $result_get_co = mysqli_query($conn, $sql_get_co);
+
+                                            while ($row_get_co = mysqli_fetch_array($result_get_co)) {
+                                                $p_id = $row_get_co['p_id'];
+                                                $brand = $row_get_co['p_brand'];
+                                                $model = $row_get_co['p_model'];
+                                                $type = $row_get_co['p_type_name'];
+                                                $part_str = "$p_id  - $brand $model : type - $type";
+                                                $parts_ar[] = $part_str;
+                                            }
                                             ?>
 
                                         </div>
@@ -1277,178 +1343,389 @@ if (!isset($_SESSION['role_id'])) {
                                             <div id="cardContainer" style="display: none;">
                                                 <table class="table" id="cardSection"></table>
                                             </div>
-                                            <button type="button" class="btn btn-primary" onclick="showNextCard()">เพิ่มอะไหล่</button>
-                                        </div>
+                                            <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Parts">
+                                                เพิ่มอะไหล่
+                                            </button> -->
+                                            <div class="accordion" id="accordionExample">
+                                                <?php
 
-                                        <br>
-                                        <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
-                                        <hr>
-                                        <label for="DetailFormControlTextarea" class="form-label">เพิ่มรูปภาพหรือวิดีโอ *ไม่จำเป็น (สูงสุด 4 ไฟล์):</label>
-                                        <a class="btn btn-primary" onclick="showInputDetail()">เพิ่มรูปภาพหรือวิดีโอ</a>
-                                        <br>
-                                        <div id="inputContainerDetail"></div>
 
-                                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-                                        <script>
-                                            var clickCount = 0;
+                                                $count = 0;
+                                                $get_r_id = $_GET['id'];
+                                                $sql_get_c = "SELECT * FROM get_detail 
+                                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                        WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
+                                                $result_get_c = mysqli_query($conn, $sql_get_c);
 
-                                            function showInputDetail() {
-                                                var textarea = document.getElementById('DetailFormControlTextarea');
-                                                var textValue = textarea.value.trim();
-                                                if (textValue === '') {
-                                                    return false; // Prevent form submission if there is no text input
+                                                while ($row_get_c = mysqli_fetch_array($result_get_c)) {
+                                                    $count++;
+                                                ?>
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header" id="headingOne<?= $row_get_c['r_id'] ?>">
+                                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne<?= $row_get_c['r_id'] ?>" aria-expanded="false" aria-controls="collapseOne<?= $row_get_c['r_id'] ?>">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" name="check_<?= $count ?>" type="checkbox" value="" id="flexCheckDefault<?= $row_get_c['r_id'] ?>">
+                                                                </div>
+                                                                <?= 'Brand : ' . $row_get_c['r_brand'] . ' - Model :' . $row_get_c['r_model'] . ' - Number' . $row_get_c['r_model_number'] ?>
+                                                            </button>
+                                                        </h2>
+                                                        <div id="collapseOne<?= $row_get_c['r_id'] ?>" class="accordion-collapse collapse" aria-labelledby="headingOne<?= $row_get_c['r_id'] ?>" data-bs-parent="#accordionExample">
+                                                            <div class="accordion-body">
+                                                                <div class="autocomplete">
+                                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Parts<?= $row_get_c['r_id'] ?>">
+                                                                        เพิ่มอะไหล่ให้กับอุปกรณ์นี้
+                                                                    </button>
+                                                                    <div class="modal fade" id="Parts<?= $row_get_c['r_id'] ?>" tabindex="-1" aria-labelledby="Parts<?= $row_get_c['r_id'] ?>" aria-hidden="true">
+                                                                        <div class="modal-dialog modal-dialog-centered modal-scrollable modal-xl">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <h5 class="modal-title" id="Parts<?= $row_get_c['r_id'] ?>">จัดการอะไหล่ </h5>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    <div class="row">
+
+                                                                                        <form id="partsForm<?= $row_get_c['r_id'] ?>" action="action/add_parts_repair.php" method="POST">
+                                                                                            <div class="col-md-3">
+                                                                                                <input type="text" name="session_repair" value="<?= $row_get_c['r_id'] ?>">
+                                                                                                <select class="form-select" aria-label="Default select example" id="partType<?= $row_get_c['r_id'] ?>">
+                                                                                                    <option selected>กรุณาเลือกประเภทของอะไหล่</option>
+                                                                                                    <?php
+                                                                                                    $sql_pt = "SELECT p_type_id, p_type_name FROM parts_type WHERE del_flg = 0";
+                                                                                                    $result_pt = mysqli_query($conn, $sql_pt);
+                                                                                                    while ($row_pt = mysqli_fetch_array($result_pt)) {
+                                                                                                        echo '<option value="' . $row_pt['p_type_id'] . '">' . $row_pt['p_type_name'] . '</option>';
+                                                                                                    }
+                                                                                                    ?>
+                                                                                                </select>
+                                                                                            </div>
+                                                                                            <div class="col-md mb-4">
+                                                                                                <input id="search-box<?= $row_get_c['r_id'] ?>" name="parts_name" class="form-control" type="text" onkeyup="searchFunction<?= $row_get_c['r_id'] ?>()" placeholder="ค้นหา...">
+                                                                                                <!-- <input  class="form-control" type="text" onkeyup="searchFunction<?= $row_get_c['r_id'] ?>()" value="" placeholder="Search..."> -->
+                                                                                                <div class="autocomplete-items" id="search-results<?= $row_get_c['r_id'] ?>"></div>
+
+
+                                                                                            </div>
+                                                                                            <div class="col-md-2 mb-4">
+                                                                                                <input class="form-control" type="number" name="value_parts" placeholder="จำนวน...">
+                                                                                            </div>
+
+
+                                                                                            <script>
+                                                                                                // Simulated data for demonstration purposes
+                                                                                                const data<?= $row_get_c['r_id'] ?> = <?= json_encode($parts_ar) ?>;
+
+                                                                                                function searchFunction<?= $row_get_c['r_id'] ?>() {
+                                                                                                    const input = document.getElementById('search-box<?= $row_get_c['r_id'] ?>');
+                                                                                                    const resultsContainer = document.getElementById('search-results<?= $row_get_c['r_id'] ?>');
+                                                                                                    const inputValue = input.value.toLowerCase();
+
+                                                                                                    // Clear previous results
+                                                                                                    resultsContainer.innerHTML = '';
+
+                                                                                                    // Get the selected part type from the dropdown
+                                                                                                    const partTypeSelect = document.getElementById('partType<?= $row_get_c['r_id'] ?>');
+                                                                                                    const selectedPartType = partTypeSelect.value.toLowerCase();
+
+                                                                                                    // Filter data based on input and selected part type
+                                                                                                    const filteredData = data<?= $row_get_c['r_id'] ?>.filter(item => {
+                                                                                                        const itemLower = item.toLowerCase();
+                                                                                                        return itemLower.includes(inputValue) && itemLower.includes(selectedPartType);
+                                                                                                    });
+
+                                                                                                    // Display matching results
+                                                                                                    filteredData.forEach(item => {
+                                                                                                        const resultItem = document.createElement('div');
+                                                                                                        resultItem.className = 'autocomplete-item';
+                                                                                                        resultItem.textContent = item;
+
+                                                                                                        // Handle item click event
+                                                                                                        resultItem.addEventListener('click', function() {
+                                                                                                            input.value = item;
+                                                                                                            resultsContainer.innerHTML = ''; // Clear results
+
+                                                                                                            // Set the session key
+                                                                                                            const sessionKey = '<?= $row_get_c['r_id'] ?>_' + <?= $count_order ?> + '_' + filteredData.indexOf(item);
+                                                                                                            sessionStorage.setItem(sessionKey, item);
+                                                                                                        });
+
+                                                                                                        resultItem.addEventListener('mouseenter', function() {
+                                                                                                            // Highlight the selected item on hover
+                                                                                                            resultItem.classList.add('hovered');
+                                                                                                        });
+
+                                                                                                        resultItem.addEventListener('mouseleave', function() {
+                                                                                                            // Remove the highlight when the mouse leaves
+                                                                                                            resultItem.classList.remove('hovered');
+                                                                                                        });
+
+                                                                                                        resultsContainer.appendChild(resultItem);
+                                                                                                    });
+                                                                                                }
+                                                                                            </script>
+
+                                                                                            <div class="modal-footer">
+                                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                                                <button type="button" class="btn btn-primary" onclick="submitForm<?= $row_get_c['r_id'] ?>()">Save changes</button>
+                                                                                            </div>
+
+                                                                                            <script>
+                                                                                                function submitForm<?= $row_get_c['r_id'] ?>() {
+                                                                                                    const form = document.getElementById('partsForm<?= $row_get_c['r_id'] ?>');
+                                                                                                    const formData = new FormData(form);
+
+                                                                                                    // Perform an AJAX request to submit the form
+                                                                                                    $.ajax({
+                                                                                                        url: form.action,
+                                                                                                        type: form.method,
+                                                                                                        data: formData,
+                                                                                                        processData: false,
+                                                                                                        contentType: false,
+                                                                                                        success: function(response) {
+                                                                                                            // Handle the response here (e.g., show a success message)
+                                                                                                            console.log('Form submitted successfully', response);
+
+                                                                                                            // Close the modal programmatically (adjust selector as needed)
+                                                                                                            $('#myModal').modal('hide');
+                                                                                                        },
+                                                                                                        error: function(xhr, status, error) {
+                                                                                                            // Handle errors here (e.g., display an error message)
+                                                                                                            console.error('Form submission failed', error);
+                                                                                                        }
+                                                                                                    });
+                                                                                                }
+                                                                                            </script>
+                                                                                        </form>
+                                                                                    </div>
+
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <script>
+                                                                        // Simulated data for demonstration purposes
+                                                                        const data<?= $row_get_c['r_id'] ?> = <?= json_encode($parts_ar) ?>;
+
+                                                                        function searchFunction<?= $row_get_c['r_id'] ?>() {
+                                                                            const input = document.getElementById('search-box<?= $row_get_c['r_id'] ?>');
+                                                                            const resultsContainer = document.getElementById('search-results<?= $row_get_c['r_id'] ?>');
+                                                                            const inputValue = input.value.toLowerCase();
+
+                                                                            // Clear previous results
+                                                                            resultsContainer.innerHTML = '';
+
+                                                                            // Filter data based on input
+                                                                            const filteredData = data<?= $row_get_c['r_id'] ?>.filter(item => item.toLowerCase().includes(inputValue));
+
+                                                                            // Display matching results
+                                                                            filteredData.forEach(item => {
+                                                                                const resultItem = document.createElement('div');
+                                                                                resultItem.className = 'autocomplete-item';
+                                                                                resultItem.textContent = item;
+
+                                                                                // Handle item click event
+                                                                                resultItem.addEventListener('click', function() {
+                                                                                    input.value = item;
+                                                                                    resultsContainer.innerHTML = ''; // Clear results
+
+                                                                                    // Set the session key
+                                                                                    const sessionKey = '<?= $row_get_c['r_id'] ?>_' + <?= $count_order ?> + '_' + filteredData.indexOf(item);
+                                                                                    sessionStorage.setItem(sessionKey, item);
+                                                                                });
+
+                                                                                resultItem.addEventListener('mouseenter', function() {
+                                                                                    // Highlight the selected item on hover
+                                                                                    resultItem.classList.add('hovered');
+                                                                                });
+
+                                                                                resultItem.addEventListener('mouseleave', function() {
+                                                                                    // Remove the highlight when the mouse leaves
+                                                                                    resultItem.classList.remove('hovered');
+                                                                                });
+
+                                                                                resultsContainer.appendChild(resultItem);
+                                                                            });
+                                                                        }
+                                                                    </script>
+
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <?php } ?>
+                                                    </div>
+                                            </div>
+
+                                            <br>
+                                            <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
+                                            <hr>
+                                            <label for="DetailFormControlTextarea" class="form-label">เพิ่มรูปภาพหรือวิดีโอ *ไม่จำเป็น (สูงสุด 4 ไฟล์):</label>
+                                            <a class="btn btn-primary" onclick="showInputDetail()">เพิ่มรูปภาพหรือวิดีโอ</a>
+                                            <br>
+                                            <div id="inputContainerDetail"></div>
+
+                                            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+                                            <script>
+                                                var clickCount = 0;
+
+                                                function showInputDetail() {
+                                                    var textarea = document.getElementById('DetailFormControlTextarea');
+                                                    var textValue = textarea.value.trim();
+                                                    if (textValue === '') {
+                                                        return false; // Prevent form submission if there is no text input
+                                                    }
+
+                                                    clickCount++;
+
+                                                    if (clickCount <= 4) {
+                                                        var inputElement = document.createElement('div');
+                                                        inputElement.classList.add('input-group', 'mb-3');
+
+                                                        var fileInput = document.createElement('input');
+                                                        fileInput.type = 'file';
+                                                        fileInput.name = 'file' + clickCount;
+                                                        fileInput.classList.add('form-control');
+                                                        fileInput.addEventListener('change', function(event) {
+                                                            showPreviewDetail(event.target);
+                                                        });
+
+                                                        var inputGroupText = document.createElement('span');
+                                                        inputGroupText.classList.add('input-group-text');
+                                                        inputGroupText.textContent = 'File ' + clickCount;
+
+                                                        var deleteButton = document.createElement('button');
+                                                        deleteButton.type = 'button';
+                                                        deleteButton.classList.add('btn', 'btn-danger');
+                                                        deleteButton.textContent = 'Delete';
+                                                        deleteButton.addEventListener('click', function() {
+                                                            inputElement.remove();
+                                                            removeFileInputValue(fileInput.name); // Remove corresponding value
+                                                        });
+
+                                                        var previewElement = document.createElement('div');
+                                                        previewElement.classList.add('preview');
+                                                        previewElement.style.marginTop = '10px';
+
+                                                        inputElement.appendChild(inputGroupText);
+                                                        inputElement.appendChild(fileInput);
+                                                        inputElement.appendChild(deleteButton);
+
+                                                        var inputContainer = document.getElementById('inputContainerDetail');
+                                                        inputContainer.appendChild(inputElement);
+                                                        inputContainer.appendChild(previewElement);
+                                                    }
+
+                                                    return false; // Prevent form submission
                                                 }
 
-                                                clickCount++;
+                                                function showPreviewDetail(input) {
+                                                    var preview = input.parentNode.nextSibling; // Get the next sibling (preview element)
+                                                    preview.innerHTML = '';
 
-                                                if (clickCount <= 4) {
-                                                    var inputElement = document.createElement('div');
-                                                    inputElement.classList.add('input-group', 'mb-3');
+                                                    if (input.files && input.files[0]) {
+                                                        var file = input.files[0];
+                                                        var fileType = file.type;
+                                                        var validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                                                        var validVideoTypes = ['video/mp4', 'video/webm', 'video/ogg'];
 
-                                                    var fileInput = document.createElement('input');
-                                                    fileInput.type = 'file';
-                                                    fileInput.name = 'file' + clickCount;
-                                                    fileInput.classList.add('form-control');
-                                                    fileInput.addEventListener('change', function(event) {
-                                                        showPreviewDetail(event.target);
-                                                    });
-
-                                                    var inputGroupText = document.createElement('span');
-                                                    inputGroupText.classList.add('input-group-text');
-                                                    inputGroupText.textContent = 'File ' + clickCount;
-
-                                                    var deleteButton = document.createElement('button');
-                                                    deleteButton.type = 'button';
-                                                    deleteButton.classList.add('btn', 'btn-danger');
-                                                    deleteButton.textContent = 'Delete';
-                                                    deleteButton.addEventListener('click', function() {
-                                                        inputElement.remove();
-                                                        removeFileInputValue(fileInput.name); // Remove corresponding value
-                                                    });
-
-                                                    var previewElement = document.createElement('div');
-                                                    previewElement.classList.add('preview');
-                                                    previewElement.style.marginTop = '10px';
-
-                                                    inputElement.appendChild(inputGroupText);
-                                                    inputElement.appendChild(fileInput);
-                                                    inputElement.appendChild(deleteButton);
-
-                                                    var inputContainer = document.getElementById('inputContainerDetail');
-                                                    inputContainer.appendChild(inputElement);
-                                                    inputContainer.appendChild(previewElement);
-                                                }
-
-                                                return false; // Prevent form submission
-                                            }
-
-                                            function showPreviewDetail(input) {
-                                                var preview = input.parentNode.nextSibling; // Get the next sibling (preview element)
-                                                preview.innerHTML = '';
-
-                                                if (input.files && input.files[0]) {
-                                                    var file = input.files[0];
-                                                    var fileType = file.type;
-                                                    var validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
-                                                    var validVideoTypes = ['video/mp4', 'video/webm', 'video/ogg'];
-
-                                                    if (validImageTypes.includes(fileType)) {
-                                                        var img = document.createElement('img');
-                                                        img.src = URL.createObjectURL(file);
-                                                        img.style.maxWidth = '200px';
-                                                        preview.appendChild(img);
-                                                    } else if (validVideoTypes.includes(fileType)) {
-                                                        var video = document.createElement('video');
-                                                        video.src = URL.createObjectURL(file);
-                                                        video.style.maxWidth = '200px';
-                                                        video.autoplay = true;
-                                                        video.loop = true;
-                                                        video.muted = true;
-                                                        preview.appendChild(video);
+                                                        if (validImageTypes.includes(fileType)) {
+                                                            var img = document.createElement('img');
+                                                            img.src = URL.createObjectURL(file);
+                                                            img.style.maxWidth = '200px';
+                                                            preview.appendChild(img);
+                                                        } else if (validVideoTypes.includes(fileType)) {
+                                                            var video = document.createElement('video');
+                                                            video.src = URL.createObjectURL(file);
+                                                            video.style.maxWidth = '200px';
+                                                            video.autoplay = true;
+                                                            video.loop = true;
+                                                            video.muted = true;
+                                                            preview.appendChild(video);
+                                                        }
                                                     }
                                                 }
-                                            }
 
-                                            function removeFileInputValue(inputName) {
-                                                var fileInput = document.querySelector('input[name="' + inputName + '"]');
-                                                if (fileInput) {
-                                                    fileInput.value = ''; // Clear the file input value
-                                                }
-                                            }
-
-                                            function confirm_cen(event) {
-                                                event.preventDefault(); // Prevent the form from being submitted
-
-                                                Swal.fire({
-                                                    title: 'คุณแน่ใจหรือไม่?',
-                                                    text: 'คุณต้องการส่งข้อมูลนี้หรือไม่',
-                                                    icon: 'question',
-                                                    showCancelButton: true,
-                                                    confirmButtonColor: '#3085d6',
-                                                    cancelButtonColor: '#d33',
-                                                    confirmButtonText: 'ใช่',
-                                                    cancelButtonText: 'ไม่'
-                                                }).then((result) => {
-                                                    if (result.isConfirmed) {
-                                                        // User confirmed, submit the form
-                                                        document.getElementById('detail_status_id').submit();
+                                                function removeFileInputValue(inputName) {
+                                                    var fileInput = document.querySelector('input[name="' + inputName + '"]');
+                                                    if (fileInput) {
+                                                        fileInput.value = ''; // Clear the file input value
                                                     }
-                                                });
-                                            }
-                                        </script>
-                                        <!-- <input type="file" name="p_picture[]" id="p_pic" multiple accept="image/*,video/*" max="4">
+                                                }
+
+                                                function confirm_cen(event) {
+                                                    event.preventDefault(); // Prevent the form from being submitted
+
+                                                    Swal.fire({
+                                                        title: 'คุณแน่ใจหรือไม่?',
+                                                        text: 'คุณต้องการส่งข้อมูลนี้หรือไม่',
+                                                        icon: 'question',
+                                                        showCancelButton: true,
+                                                        confirmButtonColor: '#3085d6',
+                                                        cancelButtonColor: '#d33',
+                                                        confirmButtonText: 'ใช่',
+                                                        cancelButtonText: 'ไม่'
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            // User confirmed, submit the form
+                                                            document.getElementById('detail_status_id').submit();
+                                                        }
+                                                    });
+                                                }
+                                            </script>
+                                            <!-- <input type="file" name="p_picture[]" id="p_pic" multiple accept="image/*,video/*" max="4">
                                         <h6>เพิ่มไฟล์</h6>
                                         <label for="p_pic" style="display: block; color: blue;">Choose file</label>
                                         <div id="media-container"></div> -->
 
-                                        <script>
-                                            function displayMedia(input) {
-                                                var container = document.getElementById("media-container");
-                                                container.innerHTML = ""; // Clear the container
+                                            <script>
+                                                function displayMedia(input) {
+                                                    var container = document.getElementById("media-container");
+                                                    container.innerHTML = ""; // Clear the container
 
-                                                // Loop through each selected file
-                                                for (var i = 0; i < input.files.length; i++) {
-                                                    var file = input.files[i];
+                                                    // Loop through each selected file
+                                                    for (var i = 0; i < input.files.length; i++) {
+                                                        var file = input.files[i];
 
-                                                    // Create a new media element for the file
-                                                    var media;
-                                                    if (file.type.startsWith("image/")) {
-                                                        media = document.createElement("img");
-                                                    } else if (file.type.startsWith("video/")) {
-                                                        media = document.createElement("video");
-                                                        media.controls = true; // Add video controls
-                                                    } else {
-                                                        continue; // Skip unsupported file types
+                                                        // Create a new media element for the file
+                                                        var media;
+                                                        if (file.type.startsWith("image/")) {
+                                                            media = document.createElement("img");
+                                                        } else if (file.type.startsWith("video/")) {
+                                                            media = document.createElement("video");
+                                                            media.controls = true; // Add video controls
+                                                        } else {
+                                                            continue; // Skip unsupported file types
+                                                        }
+
+                                                        media.style.maxWidth = "100%";
+                                                        media.style.maxHeight = "200px";
+
+                                                        // Use FileReader to read the contents of the file as a data URL
+                                                        var reader = new FileReader();
+                                                        reader.onload = function(event) {
+                                                            // Set the src attribute of the media element to the data URL
+                                                            media.src = event.target.result;
+                                                        };
+                                                        reader.readAsDataURL(file);
+
+                                                        // Append the media element to the container
+                                                        container.appendChild(media);
                                                     }
-
-                                                    media.style.maxWidth = "100%";
-                                                    media.style.maxHeight = "200px";
-
-                                                    // Use FileReader to read the contents of the file as a data URL
-                                                    var reader = new FileReader();
-                                                    reader.onload = function(event) {
-                                                        // Set the src attribute of the media element to the data URL
-                                                        media.src = event.target.result;
-                                                    };
-                                                    reader.readAsDataURL(file);
-
-                                                    // Append the media element to the container
-                                                    container.appendChild(media);
                                                 }
-                                            }
 
-                                            // Add an event listener to the file input to trigger the displayMedia function
-                                            var fileInput = document.getElementById("p_pic");
-                                            fileInput.addEventListener("change", function() {
-                                                displayMedia(this);
-                                            });
-                                        </script>
+                                                // Add an event listener to the file input to trigger the displayMedia function
+                                                var fileInput = document.getElementById("p_pic");
+                                                fileInput.addEventListener("change", function() {
+                                                    displayMedia(this);
+                                                });
+                                            </script>
 
 
-                                        <center>
-                                            <br>
-                                            <button class="btn btn-success" onclick="confirm_cen(event)">ยืนยัน</button>
-                                        </center>
+                                            <center>
+                                                <br>
+                                                <button class="btn btn-success" onclick="confirm_cen(event)">ยืนยัน</button>
+                                            </center>
                                     </form>
                                 </div>
 
