@@ -1384,7 +1384,8 @@ if (!isset($_SESSION['role_id'])) {
                                                                                 <div class="modal-body">
                                                                                     <div class="row">
 
-                                                                                        <form id="partsForm<?= $row_get_c['r_id'] ?>" action="action/add_parts_repair.php" method="POST">
+                                                                                        <!-- Your form -->
+                                                                                        <form id="partsForm<?= $row_get_c['r_id'] ?>" action="action/add_parts_repair.php" method="POST" onsubmit="submitForm<?= $row_get_c['r_id'] ?>(event)">
                                                                                             <div class="col-md-3">
                                                                                                 <input type="text" name="session_repair" value="<?= $row_get_c['r_id'] ?>">
                                                                                                 <select class="form-select" aria-label="Default select example" id="partType<?= $row_get_c['r_id'] ?>">
@@ -1400,21 +1401,46 @@ if (!isset($_SESSION['role_id'])) {
                                                                                             </div>
                                                                                             <div class="col-md mb-4">
                                                                                                 <input id="search-box<?= $row_get_c['r_id'] ?>" name="parts_name" class="form-control" type="text" onkeyup="searchFunction<?= $row_get_c['r_id'] ?>()" placeholder="ค้นหา...">
-                                                                                                <!-- <input  class="form-control" type="text" onkeyup="searchFunction<?= $row_get_c['r_id'] ?>()" value="" placeholder="Search..."> -->
                                                                                                 <div class="autocomplete-items" id="search-results<?= $row_get_c['r_id'] ?>"></div>
-
-
                                                                                             </div>
                                                                                             <div class="col-md-2 mb-4">
                                                                                                 <input class="form-control" type="number" name="value_parts" placeholder="จำนวน...">
                                                                                             </div>
+                                                                                            <div class="modal-footer">
+                                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                                                                            </div>
+                                                                                            <script>
+                                                                                                function submitForm<?= $formId ?>(event) {
+                                                                                                    event.preventDefault(); // Prevent the default form submission
 
+                                                                                                    // Get the form data
+                                                                                                    var formData = new FormData(document.getElementById("partsForm<?= $formId ?>"));
 
+                                                                                                    // Make an AJAX request to submit the form
+                                                                                                    $.ajax({
+                                                                                                        type: "POST",
+                                                                                                        url: "action/add_parts_repair.php",
+                                                                                                        data: formData,
+                                                                                                        processData: false,
+                                                                                                        contentType: false,
+                                                                                                        success: function(response) {
+                                                                                                            // Handle the success response here (e.g., show a success message)
+
+                                                                                                            // Close the modal (assuming you are using Bootstrap modal)
+                                                                                                            $('#myModal<?= $formId ?>').modal('hide');
+                                                                                                        },
+                                                                                                        error: function(xhr, status, error) {
+                                                                                                            // Handle the error response here (e.g., show an error message)
+                                                                                                        }
+                                                                                                    });
+                                                                                                }
+                                                                                            </script>
                                                                                             <script>
                                                                                                 // Simulated data for demonstration purposes
-                                                                                                const data<?= $row_get_c['r_id'] ?> = <?= json_encode($parts_ar) ?>;
+                                                                                               const data<?= $formId ?> = <?= json_encode($parts_ar) ?>;
 
-                                                                                                function searchFunction<?= $row_get_c['r_id'] ?>() {
+    function searchFunction<?= $formId ?>() {
                                                                                                     const input = document.getElementById('search-box<?= $row_get_c['r_id'] ?>');
                                                                                                     const resultsContainer = document.getElementById('search-results<?= $row_get_c['r_id'] ?>');
                                                                                                     const inputValue = input.value.toLowerCase();
@@ -1422,15 +1448,8 @@ if (!isset($_SESSION['role_id'])) {
                                                                                                     // Clear previous results
                                                                                                     resultsContainer.innerHTML = '';
 
-                                                                                                    // Get the selected part type from the dropdown
-                                                                                                    const partTypeSelect = document.getElementById('partType<?= $row_get_c['r_id'] ?>');
-                                                                                                    const selectedPartType = partTypeSelect.value.toLowerCase();
-
-                                                                                                    // Filter data based on input and selected part type
-                                                                                                    const filteredData = data<?= $row_get_c['r_id'] ?>.filter(item => {
-                                                                                                        const itemLower = item.toLowerCase();
-                                                                                                        return itemLower.includes(inputValue) && itemLower.includes(selectedPartType);
-                                                                                                    });
+                                                                                                    // Filter data based on input
+                                                                                                    const filteredData = data<?= $row_get_c['r_id'] ?>.filter(item => item.toLowerCase().includes(inputValue));
 
                                                                                                     // Display matching results
                                                                                                     filteredData.forEach(item => {
@@ -1462,94 +1481,12 @@ if (!isset($_SESSION['role_id'])) {
                                                                                                     });
                                                                                                 }
                                                                                             </script>
-
-                                                                                            <div class="modal-footer">
-                                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                                                <button type="button" class="btn btn-primary" onclick="submitForm<?= $row_get_c['r_id'] ?>()">Save changes</button>
-                                                                                            </div>
-
-                                                                                            <script>
-                                                                                                function submitForm<?= $row_get_c['r_id'] ?>() {
-                                                                                                    const form = document.getElementById('partsForm<?= $row_get_c['r_id'] ?>');
-                                                                                                    const formData = new FormData(form);
-
-                                                                                                    // Perform an AJAX request to submit the form
-                                                                                                    $.ajax({
-                                                                                                        url: form.action,
-                                                                                                        type: form.method,
-                                                                                                        data: formData,
-                                                                                                        processData: false,
-                                                                                                        contentType: false,
-                                                                                                        success: function(response) {
-                                                                                                            // Handle the response here (e.g., show a success message)
-                                                                                                            console.log('Form submitted successfully', response);
-
-                                                                                                            // Close the modal programmatically (adjust selector as needed)
-                                                                                                            $('#myModal').modal('hide');
-                                                                                                        },
-                                                                                                        error: function(xhr, status, error) {
-                                                                                                            // Handle errors here (e.g., display an error message)
-                                                                                                            console.error('Form submission failed', error);
-                                                                                                        }
-                                                                                                    });
-                                                                                                }
-                                                                                            </script>
                                                                                         </form>
                                                                                     </div>
-
-
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-
-                                                                    <script>
-                                                                        // Simulated data for demonstration purposes
-                                                                        const data<?= $row_get_c['r_id'] ?> = <?= json_encode($parts_ar) ?>;
-
-                                                                        function searchFunction<?= $row_get_c['r_id'] ?>() {
-                                                                            const input = document.getElementById('search-box<?= $row_get_c['r_id'] ?>');
-                                                                            const resultsContainer = document.getElementById('search-results<?= $row_get_c['r_id'] ?>');
-                                                                            const inputValue = input.value.toLowerCase();
-
-                                                                            // Clear previous results
-                                                                            resultsContainer.innerHTML = '';
-
-                                                                            // Filter data based on input
-                                                                            const filteredData = data<?= $row_get_c['r_id'] ?>.filter(item => item.toLowerCase().includes(inputValue));
-
-                                                                            // Display matching results
-                                                                            filteredData.forEach(item => {
-                                                                                const resultItem = document.createElement('div');
-                                                                                resultItem.className = 'autocomplete-item';
-                                                                                resultItem.textContent = item;
-
-                                                                                // Handle item click event
-                                                                                resultItem.addEventListener('click', function() {
-                                                                                    input.value = item;
-                                                                                    resultsContainer.innerHTML = ''; // Clear results
-
-                                                                                    // Set the session key
-                                                                                    const sessionKey = '<?= $row_get_c['r_id'] ?>_' + <?= $count_order ?> + '_' + filteredData.indexOf(item);
-                                                                                    sessionStorage.setItem(sessionKey, item);
-                                                                                });
-
-                                                                                resultItem.addEventListener('mouseenter', function() {
-                                                                                    // Highlight the selected item on hover
-                                                                                    resultItem.classList.add('hovered');
-                                                                                });
-
-                                                                                resultItem.addEventListener('mouseleave', function() {
-                                                                                    // Remove the highlight when the mouse leaves
-                                                                                    resultItem.classList.remove('hovered');
-                                                                                });
-
-                                                                                resultsContainer.appendChild(resultItem);
-                                                                            });
-                                                                        }
-                                                                    </script>
-
-
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2273,6 +2210,8 @@ if (!isset($_SESSION['role_id'])) {
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <!-- Core plugin JavaScript-->
         <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
         <!-- Custom scripts for all pages-->
         <script src="js/sb-admin-2.min.js"></script>

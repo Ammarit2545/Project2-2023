@@ -22,8 +22,8 @@ if(isset($_POST['parts_name']) && isset($_POST['value_parts'])){
     }
     $count -= 1;
     if($count == 0){
-        $_SESSION[$session_repair.'_'.$count] = $extracted_number;
-        $_SESSION[$session_repair.'_'.'vale_'.$count] = $value_parts;
+        $_SESSION[$session_repair.'_1'] = $extracted_number;
+        $_SESSION[$session_repair.'_'.'vale_1'] = $value_parts;
     }
     
 }
