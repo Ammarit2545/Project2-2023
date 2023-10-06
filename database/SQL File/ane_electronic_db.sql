@@ -10715,12 +10715,12 @@ CREATE TABLE IF NOT EXISTS `parts_type` (
   `p_type_name` varchar(255) DEFAULT NULL,
   `p_type_date_in` datetime DEFAULT NULL,
   `del_flg` tinyint(1) DEFAULT '0',
-  `pt_update` datetime DEFAULT NULL,
+  `p_type_update` datetime DEFAULT NULL,
   PRIMARY KEY (`p_type_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table ane_electronic.parts_type: ~8 rows (approximately)
-INSERT INTO `parts_type` (`p_type_id`, `p_type_name`, `p_type_date_in`, `del_flg`, `pt_update`) VALUES
+INSERT INTO `parts_type` (`p_type_id`, `p_type_name`, `p_type_date_in`, `del_flg`, `p_type_update`) VALUES
 	(1, 'Speakers', '2023-05-13 18:59:17', 0, '2023-05-16 20:42:59'),
 	(2, 'Jacks', '2023-05-14 19:27:08', 0, '2023-05-14 19:58:31'),
 	(3, 'Cables', '2023-05-14 19:59:53', 0, NULL),

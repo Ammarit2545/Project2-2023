@@ -192,15 +192,15 @@ if (!isset($_SESSION['role_id'])) {
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
-           
+
 
             <!-- Main Content -->
             <div id="content">
-                 <!-- Topbar -->
-            <?php
-            include('bar/topbar_admin.php');
-            ?>
-            <!-- End of Topbar -->
+                <!-- Topbar -->
+                <?php
+                include('bar/topbar_admin.php');
+                ?>
+                <!-- End of Topbar -->
 
 
 
@@ -349,9 +349,9 @@ if (!isset($_SESSION['role_id'])) {
                                                 $rp_pic = $row_pic['rp_pic'];
                                                 $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
                                                 ?> <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
-                                                    <a href="#"  id="bounce-item"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                    <a href="#" id="bounce-item"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
                                                 <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
-                                                    <a href="#" >
+                                                    <a href="#">
                                                         <video width="100px" autoplay muted onclick="openModalVideo(this)" src="../<?= $row_pic['rp_pic'] ?>">
                                                             <source src="../<?= $row_pic['rp_pic'] ?>" type="video/mp4">
                                                             <source src="../<?= $row_pic['rp_pic'] ?>" type="video/ogg">
@@ -686,18 +686,18 @@ if (!isset($_SESSION['role_id'])) {
                             <?php
                             if ($row_get_count[0] == 1) {
                             ?>
-                            <div class="row">
-                                <h6 for="inputPassword" class="col-1 col-form-label" style="margin-bottom: 0px;">Brand :</h6>
-                                <div class="col">
-                                    <p class="col-form-label" style="color: #2c2f34"><?= $row['r_brand']  ?></p>
+                                <div class="row">
+                                    <h6 for="inputPassword" class="col-1 col-form-label" style="margin-bottom: 0px;">Brand :</h6>
+                                    <div class="col">
+                                        <p class="col-form-label" style="color: #2c2f34"><?= $row['r_brand']  ?></p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <h6 for="inputPassword" class="col-1 col-form-label" style="margin-bottom: 0px;">Model :</h6>
-                                <div class="col">
-                                    <p class="col-form-label" style="color: #2c2f34"><?= $row['r_model']  ?></p>
+                                <div class="row">
+                                    <h6 for="inputPassword" class="col-1 col-form-label" style="margin-bottom: 0px;">Model :</h6>
+                                    <div class="col">
+                                        <p class="col-form-label" style="color: #2c2f34"><?= $row['r_model']  ?></p>
+                                    </div>
                                 </div>
-                            </div>
                             <?php
                             } else {
                             ?>
@@ -716,20 +716,20 @@ if (!isset($_SESSION['role_id'])) {
                                 <h6 for="inputPassword" class="col-1 col-form-label" style="margin-bottom: 0px;">บริษัท : </h6>
                                 <div class="col">
                                     <p class="col-form-label" style="color: #2c2f34"><?php
-                                                                if ($row['com_id'] == NULL) {
-                                                                    echo "ไม่มีข้อมูล";
-                                                                } else {
-                                                                    $com_id = $row['com_id'];
-                                                                    $sql_com = "SELECT * FROM company WHERE com_id = '$com_id'";
-                                                                    $result_com = mysqli_query($conn, $sql_com);
-                                                                    $row_com = mysqli_fetch_array($result_com);
+                                                                                        if ($row['com_id'] == NULL) {
+                                                                                            echo "ไม่มีข้อมูล";
+                                                                                        } else {
+                                                                                            $com_id = $row['com_id'];
+                                                                                            $sql_com = "SELECT * FROM company WHERE com_id = '$com_id'";
+                                                                                            $result_com = mysqli_query($conn, $sql_com);
+                                                                                            $row_com = mysqli_fetch_array($result_com);
 
-                                                                    echo $row_com['com_name'];
-                                                                }
-                                                                ?></p>
+                                                                                            echo $row_com['com_name'];
+                                                                                        }
+                                                                                        ?></p>
                                 </div>
                             </div>
-                        
+
                             <hr>
 
                             <div class="">
@@ -767,28 +767,28 @@ if (!isset($_SESSION['role_id'])) {
                                                                                                                                         }
                                                                                                                                         ?>
                                 </textarea> -->
-                                <div class="row">
-                                <label for="exampleFormControlTextarea1" class="col-1 col-form-label">รายละเอียดย์ :</label>
-                                <div class="col">
-                                <p class="col-form-label" style="color: #2c2f34"><?php
-                                                                if ($row['get_add'] == NULL) {
-                                                                    echo "ไม่มีข้อมูล";
-                                                                } else {
+                                    <div class="row">
+                                        <label for="exampleFormControlTextarea1" class="col-1 col-form-label">รายละเอียด :</label>
+                                        <div class="col">
+                                            <p class="col-form-label" style="color: #2c2f34"><?php
+                                                                                                if ($row['get_add'] == NULL) {
+                                                                                                    echo "ไม่มีข้อมูล";
+                                                                                                } else {
 
-                                                                    echo $obj->description;
-                                                                }
-                                                                ?></p>
-                                <?php
-                                } else {
-                                ?>
-                                    <center>
-                                        <h5>ไม่มีข้อมูลที่อยู่</h5>
-                                    </center>
-                                <?php
-                                }
-                                ?>
-                                </div>
-                                </div>
+                                                                                                    echo $obj->description;
+                                                                                                }
+                                                                                                ?></p>
+                                        <?php
+                                    } else {
+                                        ?>
+                                            <center>
+                                                <h5>ไม่มีข้อมูลที่อยู่</h5>
+                                            </center>
+                                        <?php
+                                    }
+                                        ?>
+                                        </div>
+                                    </div>
                             </div>
                             <hr>
 
@@ -1396,6 +1396,54 @@ if (!isset($_SESSION['role_id'])) {
                                                 });
                                             }
                                         </script>
+                                        <!-- <input type="file" name="p_picture[]" id="p_pic" multiple accept="image/*,video/*" max="4">
+                                        <h6>เพิ่มไฟล์</h6>
+                                        <label for="p_pic" style="display: block; color: blue;">Choose file</label>
+                                        <div id="media-container"></div> -->
+
+                                        <script>
+                                            function displayMedia(input) {
+                                                var container = document.getElementById("media-container");
+                                                container.innerHTML = ""; // Clear the container
+
+                                                // Loop through each selected file
+                                                for (var i = 0; i < input.files.length; i++) {
+                                                    var file = input.files[i];
+
+                                                    // Create a new media element for the file
+                                                    var media;
+                                                    if (file.type.startsWith("image/")) {
+                                                        media = document.createElement("img");
+                                                    } else if (file.type.startsWith("video/")) {
+                                                        media = document.createElement("video");
+                                                        media.controls = true; // Add video controls
+                                                    } else {
+                                                        continue; // Skip unsupported file types
+                                                    }
+
+                                                    media.style.maxWidth = "100%";
+                                                    media.style.maxHeight = "200px";
+
+                                                    // Use FileReader to read the contents of the file as a data URL
+                                                    var reader = new FileReader();
+                                                    reader.onload = function(event) {
+                                                        // Set the src attribute of the media element to the data URL
+                                                        media.src = event.target.result;
+                                                    };
+                                                    reader.readAsDataURL(file);
+
+                                                    // Append the media element to the container
+                                                    container.appendChild(media);
+                                                }
+                                            }
+
+                                            // Add an event listener to the file input to trigger the displayMedia function
+                                            var fileInput = document.getElementById("p_pic");
+                                            fileInput.addEventListener("change", function() {
+                                                displayMedia(this);
+                                            });
+                                        </script>
+
 
                                         <center>
                                             <br>
@@ -1864,7 +1912,7 @@ if (!isset($_SESSION['role_id'])) {
             <i class="fas fa-angle-up"></i>
         </a>
 
-        
+
 
         <!-- Sweet Alert Show Start -->
         <?php

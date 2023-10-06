@@ -230,7 +230,7 @@ if (!isset($_SESSION['role_id'])) {
                             <div id="image-container"></div>
                         </div>
                         <div class="text-center pt-4">
-                            <button type="submit" class="btn btn-success" onclick="confirmSend()">ยืนยัน</button>
+                            <a type="submit" class="btn btn-success" onclick="confirmSend()">ยืนยัน</a>
 
                             <script>
                                 function confirmSend() {
