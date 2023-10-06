@@ -1387,7 +1387,7 @@ if (!isset($_SESSION['role_id'])) {
                                                                                         <!-- Your form -->
                                                                                         <form id="partsForm<?= $row_get_c['r_id'] ?>" action="action/add_parts_repair.php" method="POST" onsubmit="submitForm<?= $row_get_c['r_id'] ?>(event)">
                                                                                             <div class="col-md-3">
-                                                                                                <input type="text" name="session_repair" value="<?= $row_get_c['r_id'] ?>">
+                                                                                                <input type="text" name="session_repair" value="<?= $row_get_c['r_id'] ?>" hidden>
                                                                                                 <select class="form-select" aria-label="Default select example" id="partType<?= $row_get_c['r_id'] ?>">
                                                                                                     <option selected>กรุณาเลือกประเภทของอะไหล่</option>
                                                                                                     <?php
@@ -1435,12 +1435,10 @@ if (!isset($_SESSION['role_id'])) {
                                                                                                         }
                                                                                                     });
                                                                                                 }
-                                                                                            </script>
-                                                                                            <script>
                                                                                                 // Simulated data for demonstration purposes
-                                                                                               const data<?= $formId ?> = <?= json_encode($parts_ar) ?>;
+                                                                                                const data<?= $formId ?> = <?= json_encode($parts_ar) ?>;
 
-    function searchFunction<?= $formId ?>() {
+                                                                                                function searchFunction<?= $formId ?>() {
                                                                                                     const input = document.getElementById('search-box<?= $row_get_c['r_id'] ?>');
                                                                                                     const resultsContainer = document.getElementById('search-results<?= $row_get_c['r_id'] ?>');
                                                                                                     const inputValue = input.value.toLowerCase();
@@ -1480,6 +1478,8 @@ if (!isset($_SESSION['role_id'])) {
                                                                                                         resultsContainer.appendChild(resultItem);
                                                                                                     });
                                                                                                 }
+                                                                                                $('#myModal<?= $formId ?>').modal('hide');
+                                                                                                $('#Parts<?= $row_get_c['r_id'] ?>').modal('hide');
                                                                                             </script>
                                                                                         </form>
                                                                                     </div>

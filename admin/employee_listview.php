@@ -81,9 +81,9 @@ if (!isset($_SESSION['role_id'])) {
                                             <th>ชื่อ-นามสกุล</th>
                                             <th>ตำแหน่ง</th>
                                             <th>เบอร์โทรศัพท์</th>
-                                            <th>ที่อยู่</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
+                                            <!-- <th>ที่อยู่</th> -->
+                                            <!-- <th>Start date</th> -->
+                                            <!-- <th>Salary</th> -->
                                             <th>ปุ่มดำเนินการ</th>
                                         </tr>
                                     </thead>
@@ -137,8 +137,8 @@ if (!isset($_SESSION['role_id'])) {
                                                     <?php
                                                     }
                                                     ?>
-                                                </td>
-                                                <td>
+                                                </td>   
+                                               <!-- <td>
                                                     <?php
                                                     if ($row['e_add'] == NULL) {
                                                         echo "-";
@@ -162,8 +162,8 @@ if (!isset($_SESSION['role_id'])) {
                                                     ?><p style="font-size : 80%"><?= 'จ.' . $row_p[0] . ' ,อ.' . $row_p[1] . ' ,ต.' . $row_p[2]; ?></p><?php
                                                                                                                                                     }
                                                                                                                                                         ?>
-                                                </td>
-                                                <td>
+                                                </td> -->
+                                                <!-- <td>
                                                     <?php
                                                     if ($row['e_date_in'] == NULL) {
                                                         echo "-";
@@ -173,8 +173,8 @@ if (!isset($_SESSION['role_id'])) {
                                                     <?php
                                                     }
                                                     ?>
-                                                </td>
-                                                <td>
+                                                </td> -->
+                                                <!-- <td>
                                                     <?php
                                                     if ($row['e_salary'] == NULL) {
                                                         echo "-";
@@ -184,7 +184,7 @@ if (!isset($_SESSION['role_id'])) {
                                                     <?php
                                                     }
                                                     ?>
-                                                </td>
+                                                </td> -->
                                                 <td>
                                                     <a href="action/del_employee.php?id=<?= $row['e_id'] ?>" class="btn btn-danger" onclick="return confirmDelete(event);">ลบ</a>&nbsp; &nbsp;
                                                     <!-- Include SweetAlert library -->
@@ -211,6 +211,7 @@ if (!isset($_SESSION['role_id'])) {
                                                             });
                                                         }
                                                     </script>
+                                                    <a class="btn btn-success" href="show_profile.php?id=<?= $row['e_id'] ?>">ดู</a>
                                                     <a class="btn btn-warning" href="edit_employee.php?id=<?= $row['e_id'] ?>">แก้ไข</a>
                                                 </td>
                                             </tr>
