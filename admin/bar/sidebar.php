@@ -80,7 +80,11 @@
             </div>
         </div>
     </li>
-
+    <li class="nav-item">
+        <a class="nav-link" href="search_repair.php">
+            <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
+            <span>ค้นหาอุปกรณ์</span></a>
+    </li>
     <!-- Nav Item - soundsystem Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsesoundsystem" aria-expanded="true" aria-controls="collapsesoundsystem">

@@ -292,8 +292,7 @@ if (!isset($_SESSION['role_id'])) {
                             ?>
                                 <h1 class="m-0 font-weight-bold text-success mb-2">Serial Number : <?= $row['r_serial_number'] ?></h1>
                             <?php
-                            } else {
-                            ?>
+                            } else { ?>
                                 <h1 class="m-0 font-weight-bold text-success mb-2">คำส่งซ่อมนี้มี <?= $row_get_count[0] ?> รายการ</h1>
                             <?php
                             }

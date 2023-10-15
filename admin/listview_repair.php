@@ -74,6 +74,97 @@ if (!isset($_SESSION['role_id'])) {
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">การส่งซ่อม</h1>
                     <br>
+                    <br>
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+                    <div class="row">
+                        <div class="col">
+                            <center>
+                                <ul class="nav nav-tabs" id="bar_under">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" aria-current="page" href="listview_repair.php?status_select=0    ">ทั้งหมด</a>
+                                    </li>
+                                    <?php
+                                    $sql_st = "SELECT status_type.status_id FROM status_type WHERE status_type.del_flg = 0";
+                                    $result_st = mysqli_query($conn, $sql_st);
+                                    $status_data = array(); // Array to store status data
+
+                                    while ($row_st_id = mysqli_fetch_array($result_st)) {
+                                        $status_id_data = $row_st_id['status_id'];
+
+                                        $sql_status_get = "SELECT * FROM repair_status
+                                                            WHERE repair_status.status_id = '$status_id_data'
+                                                            AND repair_status.del_flg = '0'";
+                                        $result_status_get = mysqli_query($conn, $sql_status_get);
+                                        $sql_count = 0; // Unique count for each status type
+
+                                        if ($result_status_get) {
+                                            while ($row_status_get = mysqli_fetch_array($result_status_get)) {
+                                                $get_r_id = $row_status_get['get_r_id'];
+                                                $sql_count_status = "SELECT repair_status.status_id, repair_status.get_r_id FROM get_repair 
+                                                   LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
+                                                   WHERE get_repair.get_r_id = '$get_r_id' AND repair_status.del_flg = '0' ORDER BY repair_status.rs_id DESC LIMIT 1";
+                                                $result_count_status = mysqli_query($conn, $sql_count_status);
+                                                $row_count_status = mysqli_fetch_array($result_count_status);
+
+                                                if ($row_count_status['status_id'] == $status_id_data) {
+                                                    $sql_count++;
+                                                }
+                                            }
+                                        }
+
+                                        if ($sql_count > 0) {
+                                            $sql_status = "SELECT status_name, status_id, status_color FROM status_type WHERE status_id = '$status_id_data' AND del_flg = '0'";
+                                            $result_status = mysqli_query($conn, $sql_status);
+                                            $row_status_1 = mysqli_fetch_array($result_status);
+                                            $status_data[] = array(
+                                                'status_name' => $row_status_1['status_name'],
+                                                'status_id' => $row_status_1['status_id'],
+                                                'status_color' => $row_status_1['status_color'],
+                                                'count' => $sql_count,
+                                            );
+                                        }
+                                    }
+
+                                    $counter = 0;
+                                    $numItems = count($status_data);
+                                    foreach ($status_data as $data) {
+                                        $counter++;
+                                        if ($counter <= 4) { ?>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="listview_repair.php?status_select=<?= $data['status_id'] ?>"><?= $data['status_name'] ?>
+                                                    <p style="display: inline-block; color:<?= $data['status_color'] ?>; ">(<?= $data['count'] ?>)</p>
+                                                </a>
+                                            </li>
+                                            <?php } else {
+                                            if ($counter == 5) {
+                                            ?>
+                                                <li class="nav-item dropdown">
+                                                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">อื่นๆ</a>
+                                                    <ul class="dropdown-menu">
+                                                    <?php
+                                                }
+                                                    ?>
+                                                    <li>
+                                                        <a class="dropdown-item" href="listview_repair.php?status_select=<?= $data['status_id'] ?>">
+                                                            <?= $data['status_name'] ?>
+                                                            <p style="display: inline-block; color:<?= $data['status_color'] ?>; ">(<?= $data['count'] ?>)</p>
+                                                        </a>
+                                                    </li>
+                                                    <?php
+                                                    if ($counter === $numItems) {
+                                                    ?>
+                                                    </ul>
+                                                </li>
+                                    <?php
+                                                    }
+                                                }
+                                            }
+                                    ?>
+                                </ul>
+                            </center>
+                        </div>
+                    </div>
+                    <br>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -101,21 +192,9 @@ if (!isset($_SESSION['role_id'])) {
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $i = 0;
-                                        if ($i > 0) {
-                                            $sql_nofi = "SELECT *
-                                                        FROM get_repair
-                                                        LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
-                                                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                                                        LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
-                                                        LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
-                                                        WHERE get_repair.del_flg = '0' AND  repair_status.status_id = '$i'AND AND get_detail.del_flg = '0'
-                                                        GROUP BY get_repair.get_r_id
-                                                        ORDER BY get_repair.get_r_id DESC
-                                        ;
-                                         ";
-                                        } else {
-                                            $sql_nofi = "SELECT get_repair.get_r_id, MAX(get_detail.get_d_id) AS get_d_id, MAX(repair.r_id) AS r_id, MAX(status_type.status_id) AS status_id, MAX(get_repair.get_deli) AS get_deli
+                                        $status_select = 0;
+
+                                        $sql_nofi = "SELECT get_repair.get_r_id, MAX(get_detail.get_d_id) AS get_d_id, MAX(repair.r_id) AS r_id, MAX(status_type.status_id) AS status_id, MAX(get_repair.get_deli) AS get_deli
                                                         FROM get_repair
                                                         LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
                                                         LEFT JOIN repair ON get_detail.r_id = repair.r_id   
@@ -124,13 +203,42 @@ if (!isset($_SESSION['role_id'])) {
                                                         WHERE get_repair.del_flg = '0' AND get_detail.del_flg = '0'
                                                         GROUP BY get_repair.get_r_id
                                                         ORDER BY get_repair.get_r_id DESC;";
-                                        }
-
                                         $result_nofi = mysqli_query($conn, $sql_nofi);
                                         $num_rows = mysqli_fetch_array($result_nofi_count);
                                         $i = 0;
                                         while ($row = mysqli_fetch_array($result_nofi)) {
+
                                             $get_r_id = $row['get_r_id'];
+
+                                            if (isset($_GET['status_select']) && $_GET['status_select'] != 0) {
+                                                $sql = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' ORDER BY rs_id DESC LIMIT 1";
+                                                $result_check = mysqli_query($conn, $sql);
+
+                                                $row_check = mysqli_fetch_array($result_check);
+
+                                                // Replace 'status_id' with the actual column name you want to compare
+                                                // If you want to compare it with a specific value like $_GET['status_select'], replace that too
+                                                if ($row_check['status_id'] != $_GET['status_select']) {
+                                                    // The condition is not met, and you can skip the current iteration of the loop
+                                                    continue;
+                                                }
+                                            } elseif (!isset($_GET['status_select'])) {
+                                                $sql = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' ORDER BY rs_id DESC LIMIT 1";
+                                                $result_check = mysqli_query($conn, $sql);
+                                            
+                                                $row_check = mysqli_fetch_array($result_check);
+                                            
+                                                // Replace 'status_id' with the actual column name you want to compare
+                                                // If you want to compare it with a specific value like $_GET['status_select'], replace that too
+                                                $excludedStatusIDs = [1, 25 ];
+                                                if (!in_array($row_check['status_id'], $excludedStatusIDs)) {
+                                                    // The condition is not met, and you can skip the current iteration of the loop
+                                                    continue;
+                                                }
+                                            }
+                                            
+
+
                                             $sql_date = "SELECT get_r_date_in FROM get_repair WHERE get_r_id = '$get_r_id' ";
                                             $result_date = mysqli_query($conn, $sql_date);
                                             $row_date = mysqli_fetch_array($result_date);

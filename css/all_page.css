@@ -99,6 +99,9 @@ body {
     white-space: nowrap;
     transition: opacity 0.3s, transform 0.3s;
 }
+.f-black-5{
+    color : black;
+}
 
 .f-red-5{
     color : red;
