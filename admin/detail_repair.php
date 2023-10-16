@@ -33,9 +33,21 @@ if (!isset($_SESSION['role_id'])) {
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 
 </head>
 <style>
+    body {
+        font-family: 'Kanit', sans-serif;
+    }
+
+    <?php include('../css/all_page.css'); ?>
+
     /* Your existing CSS classes */
     .picture_modal {
         margin-right: 20px;
@@ -192,25 +204,29 @@ if (!isset($_SESSION['role_id'])) {
     }
 
     #modal_ed {
-    display: none; /* Hidden by default */
-    position: fixed; /* Fixed position to cover the whole viewport */
-    z-index: 9999; /* Set a high z-index to make it appear on top of everything */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
-}
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Fixed position to cover the whole viewport */
+        z-index: 9999;
+        /* Set a high z-index to make it appear on top of everything */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        /* Semi-transparent background */
+    }
 
-.modal-video {
-    /* Add styles for the video element, e.g., width and height */
-    width: 80%;
-    height: auto;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
+    .modal-video {
+        /* Add styles for the video element, e.g., width and height */
+        width: 80%;
+        height: auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 
 
     /* Rest of your modal styles... */
@@ -339,41 +355,45 @@ if (!isset($_SESSION['role_id'])) {
                     $date = DateTime::createFromFormat('d-m-Y', $dateString);
                     $formattedDate = $date->format('F / d / Y');
                     ?>
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
+                    <div class="card-header py-3">
 
-                            <h1 class="m-0 font-weight-bold text-primary mb-2">หมายเลขแจ้งซ่อม : <?= $row['get_r_id'] ?></h1>
-                            <?php
-                            if ($row_get_count[0] == 1) {
-                            ?>
-                                <h1 class="m-0 font-weight-bold text-success mb-2">Serial Number : <?= $row['r_serial_number'] ?></h1>
-                            <?php
-                            } else { ?>
-                                <h1 class="m-0 font-weight-bold text-success mb-2">คำส่งซ่อมนี้มี <?= $row_get_count[0] ?> รายการ</h1>
-                            <?php
-                            }
-                            ?>
-                            <h2>สถานะล่าสุด : <button id="bounce-item" onclick="openModalStatus('quantitystatus')" style="background-color: <?= $row['status_color'] ?>; color : white;" class="btn btn"> <?= $row['status_name'] ?>
-                                    <?php
-                                    if ($row['status_id'] == 6) {
-                                        $get_r_id = $row['get_r_id'];
-                                        $carry_out_id = $row['status_id'];
-                                        $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = '$get_r_id' AND status_id = 6 AND del_flg = 0 ORDER BY rs_date_time DESC;";
-                                        $result_carry_out = mysqli_query($conn, $sql_cary_out);
-                                        $row_carry_out = mysqli_fetch_array($result_carry_out);
+                        <h1 class="m-0 font-weight-bold mb-2 f-black-5">หมายเลขแจ้งซ่อม : <?= $row['get_r_id'] ?></h1>
+                        <!-- <?php
+                                if ($row_get_count[0] == 1) {
+                                ?>
+    <h1 class="m-0 font-weight-bold text-success mb-2">Serial Number : <?= $row['r_serial_number'] ?></h1>
+<?php
+                                } else { ?>
+    <h1 class="m-0 font-weight-bold text-success mb-2">คำส่งซ่อมนี้มี <?= $row_get_count[0] ?> รายการ</h1>
+<?php
+                                }
+?> -->
+                        <h2>สถานะล่าสุด : <button id="bounce-item" onclick="openModalStatus('quantitystatus')" style="background-color: <?= $row['status_color'] ?>; color : white;" class="btn btn"> <?= $row['status_name'] ?>
+                                <?php
+                                if ($row['status_id'] == 6) {
+                                    $get_r_id = $row['get_r_id'];
+                                    $carry_out_id = $row['status_id'];
+                                    $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = '$get_r_id' AND status_id = 6 AND del_flg = 0 ORDER BY rs_date_time DESC;";
+                                    $result_carry_out = mysqli_query($conn, $sql_cary_out);
+                                    $row_carry_out = mysqli_fetch_array($result_carry_out);
 
-                                        if ($row_carry_out[0] > 1) {
-                                    ?>
-                                            #ครั้งที่ <?= $row_carry_out[0] ?>
+                                    if ($row_carry_out[0] > 1) {
+                                ?>
+                                        #ครั้งที่ <?= $row_carry_out[0] ?>
 
-                                    <?php
-                                        }
+                                <?php
                                     }
-                                    ?></h2></button>
+                                }
+                                ?></h2></button>
+                        <br>
+                        <h6>วันแรกที่ทำการแจ้ง : <?= $formattedDate ?></h6>
+                    </div>
+                    <div class="card shadow mb-4">
 
-
-                            <h6><?= $formattedDate ?></h6>
-                        </div>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                            <h5 style="margin-bottom: 0px;"> รายละเอียดอุปกรณ์ </h5>
+                        </button>
                         <br>
                         <div class="container">
                             <div class="row">
@@ -393,14 +413,12 @@ if (!isset($_SESSION['role_id'])) {
                                         <h4><a href="#" onclick="openModalPart('quantitypart')">จำนวนอะไหล่ <i class="fa fa-chevron-right" style="color: gray; font-size: 17px;"></i></a></h4>
                                     </center>
                                 </div>
+
                             </div>
                         </div>
 
                         <hr>
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                            <h5 style="margin-bottom: 0px;"> ดูรายการส่งซ่อมทั้งหมด </h5>
-                        </button>
+
 
                         <!-- Modal -->
                         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -410,60 +428,193 @@ if (!isset($_SESSION['role_id'])) {
                                         <h4 class="modal-title" id="staticBackdropLabel">รายการส่งซ่อมทั้งหมด</h4>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body">
-                                        <hr style="border:2px solid gray" class="my-4">
-                                        <?php
-                                        $count_get_no = 0;
-
-                                        $sql_get = "SELECT * FROM get_detail 
-LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                    <div class="modal-body" style="background-color: #E7E7E7;">
+                                        <br>
+                                        <div class="container">
+                                            <?php
+                                            $count_get_no = 0;
+                                            $sql_get = "SELECT * FROM get_detail
+                        LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
                         LEFT JOIN repair ON repair.r_id = get_detail.r_id
                         WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
-                                        $sql_get_count_track = "SELECT * FROM get_detail 
-                         LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
-                                                 LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                 WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
-                                        $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
-                                        $result_get = mysqli_query($conn, $sql_get);
-                                        $row_get_count_track = mysqli_fetch_array($result_get_count_track);
-                                        while ($row_get = mysqli_fetch_array($result_get)) {
-                                            $count_get_no++;
-                                        ?>
+                                            $sql_get_count_track = "SELECT * FROM get_detail
+                        LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                        WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
+                                            $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
+                                            $result_get = mysqli_query($conn, $sql_get);
+                                            $row_get_count_track = mysqli_fetch_array($result_get_count_track);
+                                            while ($row_get = mysqli_fetch_array($result_get)) {
+                                                $count_get_no++;
+                                            ?>
+                                                <div class="row alert alert-light shadow">
+                                                    <h1 style="text-align:start; color:blue" id="body_text">
+                                                        <span>รายการที่ <?= $count_get_no ?></span> :
+                                                        <span class="f-black-5">
+                                                            <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" class="un-scroll f-black-5" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item"><?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?><span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
+                                                            </a>
+                                                        </span>
+                                                    </h1>
+                                                    <hr>
+                                                    <div style=" color:#2c2f34" class="my-4">
+                                                        <div class="container">
+                                                            <div class="row">
+                                                                <div class="col-md alert alert-light shadow ml-1 bg-gray-1">
+                                                                    <h5 class="f-black-5">ข้อมูลอุปกรณ์</h5>
+                                                                    <hr>
+                                                                    <p class=" f-gray-5">
+                                                                        <?php if ($row_get['com_id'] != NULL) { ?><br>
+                                                                            <span class="badge bg-success">
+                                                                                ประกัน :
+                                                                                <span>
+                                                                                    <?php
+                                                                                    $com_id = $row_get['com_id'];
+                                                                                    $sql_com = "SELECT com_name FROM company WHERE com_id ='$com_id' AND del_flg = 0";
+                                                                                    $result_com = mysqli_query($conn, $sql_com);
+                                                                                    $row_com = mysqli_fetch_array($result_com);
+                                                                                    echo $row_com['com_name'];
+                                                                                    $row_get['r_id']
+                                                                                    ?>
+                                                                                </span>
+                                                                            </span>
+                                                                        <?php } ?>
+                                                                        <?php if ($row_get['r_guarantee'] != NULL) { ?><br>ระยะประกัน :
+                                                                            <span class="f-black-5"><?= $row_get['r_guarantee'] ?> ปี</span><?php } ?>
+                                                                        <?php if ($row_get['r_id'] != NULL) { ?><br>รหัสอุปกรณ์ในระบบ :
+                                                                            <span class="f-black-5"><?= $row_get['r_id'] ?></span>
+                                                                            <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item">
+                                                                                <i class="fa fa-question-circle"></i>
+                                                                                <span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
+                                                                            </a>
+                                                                        <?php } ?>
+                                                                        <?php if ($row_get['r_brand'] != NULL) { ?><br>ยี่ห้อ/แบรนด์ :
+                                                                            <span class="f-black-5"><?= $row_get['r_brand'] ?></span><?php } ?>
+                                                                        <?php if ($row_get['r_model'] != NULL) { ?><br>รุ่น :
+                                                                            <span class="f-black-5"><?= $row_get['r_model'] ?></span><?php } ?>
+                                                                        <?php if ($row_get['r_number_model'] != NULL) { ?><br>หมายเลขรุ่น :
+                                                                            <span class="f-black-5"><?= $row_get['r_number_model'] ?></span><?php } ?>
+                                                                        <?php if ($row_get['r_serial_number'] != NULL) { ?><br>หมายเลขประจำเครื่อง/Serial Number :
+                                                                            <span class="f-black-5"><?= $row_get['r_serial_number'] ?></span><?php } ?>
+                                                                        <?php if ($row_get['get_t_id'] != NULL) { ?><br>หมายเลขพัสดุ :
+                                                                            <span class="f-black-5"><?= $row_get['t_parcel'] ?></span>
+                                                                        <?php } ?>
+                                                                    </p>
+                                                                    <br>
+                                                                    <h5 class="mb-3" style="color:black">รายละเอียดอาการ</h5>
+                                                                    <hr>
+                                                                    <p><?= $row_get['get_d_detail'] ?></p>
+                                                                </div>
+                                                                <div class="col-md-1"></div>
+                                                                <?php
+                                                                $check_have_pic = 0;
+                                                                $get_d_id = $row_get['get_d_id'];
+                                                                $sql_pic = "SELECT * FROM repair_pic
+                                        LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
+                                        WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
+                                                                $result_pic = mysqli_query($conn, $sql_pic);
+                                                                if (mysqli_num_rows($result_pic)) {
+                                                                    $check_have_pic++;
+                                                                ?>
+                                                                    <div class="col-md-5 alert alert-light shadow bg-gray-1">
+                                                                        <h5 style="color:black" class="mb-3">รูปภาพ</h5>
+                                                                        <hr>
+                                                                        <br>
+                                                                        <?php }
+                                                                    while ($row_pic = mysqli_fetch_array($result_pic)) {
+                                                                        if ($row_pic[0] != NULL) {
+                                                                        ?>
+                                                                            <?php
+                                                                            $rp_pic = $row_pic['rp_pic'];
+                                                                            $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                                                            ?>
+                                                                            <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                                                                <a href="#" id="bounce-item"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                                            <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
+                                                                                <a href="#">
+                                                                                    <video width="100px" autoplay muted onclick="openModalVideo(this)" src="../<?= $row_pic['rp_pic'] ?>">
+                                                                                        <source src="../<?= $row_pic['rp_pic'] ?>" type="video/mp4">
+                                                                                        <source src="../<?= $row_pic['rp_pic'] ?>" type="video/ogg">
+                                                                                        Your browser does not support the video tag.
+                                                                                    </video>
+                                                                                </a>
+                                                                            <?php endif; ?>
+                                                                        <?php
+                                                                        }
+                                                                    }
+                                                                    if ($check_have_pic > 0) { ?>
+                                                                    </div>
+                                                                <?php  } ?>
 
-                                            <h4 style="text-align:start; color:#2c2f34" id="body_text"> <span class="btn btn-primary">รายการที่ <?= $count_get_no ?></span> <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?> | Model : <?= $row_get['r_number_model'] ?> | Serial Number : <?= $row_get['r_serial_number'] ?> </h4>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item" style="border: 1px solid #ffff; padding:15px;   ">
+                            <!-- <h2 class="accordion-header" style="margin-bottom: 0px;" id="headingOne">
+                                <a id="bounce-item" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="true" aria-controls="collapseOne">
+                                    <h5 style="margin-bottom: 0px;"> ดูรายการส่งซ่อมทั้งหมด </h5>
+                                </a>
+                            </h2> -->
+                            <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+
+                                <!-- <hr style="border:2px solid gray" class="my-4"> -->
+                                <div class="container">
+                                    <?php
+                                    $count_get_no = 0;
+
+                                    $sql_get = "SELECT * FROM get_detail 
+                                LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                        WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
+                                    $sql_get_count_track = "SELECT * FROM get_detail 
+                                                         LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                                                 LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                                                 WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
+                                    $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
+                                    $result_get = mysqli_query($conn, $sql_get);
+                                    $row_get_count_track = mysqli_fetch_array($result_get_count_track);
+                                    while ($row_get = mysqli_fetch_array($result_get)) {
+                                        $count_get_no++;
+                                    ?>
+
+                                        <div class="row alert-alert-secondary"">
+                                            <h4 style=" text-align:start; color:#2c2f34" id="body_text"> <span class="btn btn-primary">รายการที่ <?= $count_get_no ?></span> : <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?> | Model : <?= $row_get['r_number_model'] ?> | Serial Number : <?= $row_get['r_serial_number'] ?> </h4>
                                             <hr>
                                             <div style="margin-left: 40px; color:#2c2f34" class="my-4">
-                                                <?php if ($row_get['get_t_id'] != NULL) { ?><h5 class="mb-3" style="color:black">หมายเลขพัสดุ</h5>
+                                                <?php if ($row_get['get_t_id'] != NULL) { ?><button class="btn btn-outline-primary mb-3">หมายเลขพัสดุ</button>
                                                     <br>
                                                     <?= $row_get['t_parcel'] ?>
                                                     <br>
                                                     <hr><?php  }
                                                         ?>
-                                                <h5 class=" mb-3" style="color:black">รายละเอียด</h5>
+                                                <h4 class="mb-3">รายละเอียด</h4>
                                                 <!-- <h5 class="fw-bold">รายละเอียด</h5> -->
                                                 <br>
                                                 <?= $row_get['get_d_detail'] ?>
                                                 <br>
-
-
+                                                <hr>
+                                                <!-- <h5 class="fw-bold">รูปภาพ</h5> -->
+                                                <button class="btn btn-outline-primary mb-3">รูปภาพ</button>
+                                                <br>
                                                 <?php
 
                                                 $get_d_id = $row_get['get_d_id'];
                                                 // $sql_pic = "SELECT * FROM `repair_pic` WHERE get_r_id = '$get_r_id'";
                                                 // $result_pic = mysqli_query($conn, $sql_pic);
                                                 $sql_pic = "SELECT * FROM repair_pic 
-                                LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
-                                WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
+                                                                LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
+                                                                WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
                                                 $result_pic = mysqli_query($conn, $sql_pic);
-
-                                                if (mysqli_num_rows($result_pic)) {
-                                                ?>
-                                                    <hr>
-                                                    <!-- <h5 class="fw-bold">รูปภาพ</h5> -->
-                                                    <h5 style="color:black" class="mb-3">รูปภาพ</h5>
-                                                    <br>
-                                                    <?php
-                                                }
                                                 while ($row_pic = mysqli_fetch_array($result_pic)) {
                                                     if ($row_pic[0] != NULL) { ?>
                                                         <?php
@@ -471,7 +622,7 @@ LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
                                                         $rp_pic = $row_pic['rp_pic'];
                                                         $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
                                                         ?> <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
-                                                            <a href="#" id="bounce-item"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                            <a href="#"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
                                                         <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
                                                             <a href="#">
                                                                 <video width="100px" autoplay muted onclick="openModalVideo(this)" src="../<?= $row_pic['rp_pic'] ?>">
@@ -483,9 +634,9 @@ LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
                                                         <?php endif; ?>
                                                         <!-- Modal -->
                                                         <!-- <div id="modal_ed" class="modal_ed">
-                                                            <span class="close" onclick="closeModal()">&times;</span>
-                                                            <video id="modal-video" controls class="modal-video"></video>
-                                                        </div> -->
+                                                    <span class="close" onclick="closeModal()">&times;</span>
+                                                    <video id="modal-video" controls class="modal-video"></video>
+                                                </div> -->
 
 
 
@@ -493,111 +644,11 @@ LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
                                                 <?php
                                                     }
                                                 } ?>
-
-
-
-
                                             </div>
-                                            <hr style="border:2px solid gray" class="my-4">
-                                        <?php } ?>
-
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    </div>
+                                            <!-- <hr style="border:2px solid gray" class="my-4"> -->
+                                        </div>
+                                    <?php } ?>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item" style="border: 1px solid #ffff; padding:15px;   ">
-                            <!-- <h2 class="accordion-header" style="margin-bottom: 0px;" id="headingOne">
-                                <a id="bounce-item" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="true" aria-controls="collapseOne">
-                                    <h5 style="margin-bottom: 0px;"> ดูรายการส่งซ่อมทั้งหมด </h5>
-                                </a>
-                            </h2> -->
-                            <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-
-                                <hr style="border:2px solid gray" class="my-4">
-                                <?php
-                                $count_get_no = 0;
-
-                                $sql_get = "SELECT * FROM get_detail 
-                                LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
-                                                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                        WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
-                                $sql_get_count_track = "SELECT * FROM get_detail 
-                                                         LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
-                                                                                 LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                                                 WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
-                                $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
-                                $result_get = mysqli_query($conn, $sql_get);
-                                $row_get_count_track = mysqli_fetch_array($result_get_count_track);
-                                while ($row_get = mysqli_fetch_array($result_get)) {
-                                    $count_get_no++;
-                                ?>
-
-                                    <h4 style="text-align:start; color:#2c2f34" id="body_text"> <span class="btn btn-primary">รายการที่ <?= $count_get_no ?></span> : <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?> | Model : <?= $row_get['r_number_model'] ?> | Serial Number : <?= $row_get['r_serial_number'] ?> </h4>
-                                    <hr>
-                                    <div style="margin-left: 40px; color:#2c2f34" class="my-4">
-                                        <?php if ($row_get['get_t_id'] != NULL) { ?><button class="btn btn-outline-primary mb-3">หมายเลขพัสดุ</button>
-                                            <br>
-                                            <?= $row_get['t_parcel'] ?>
-                                            <br>
-                                            <hr><?php  }
-                                                ?>
-                                        <button class="btn btn-outline-primary mb-3">รายละเอียด</button>
-                                        <!-- <h5 class="fw-bold">รายละเอียด</h5> -->
-                                        <br>
-                                        <?= $row_get['get_d_detail'] ?>
-                                        <br>
-                                        <hr>
-                                        <!-- <h5 class="fw-bold">รูปภาพ</h5> -->
-                                        <button class="btn btn-outline-primary mb-3">รูปภาพ</button>
-                                        <br>
-                                        <?php
-
-                                        $get_d_id = $row_get['get_d_id'];
-                                        // $sql_pic = "SELECT * FROM `repair_pic` WHERE get_r_id = '$get_r_id'";
-                                        // $result_pic = mysqli_query($conn, $sql_pic);
-                                        $sql_pic = "SELECT * FROM repair_pic 
-                                                                LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
-                                                                WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
-                                        $result_pic = mysqli_query($conn, $sql_pic);
-                                        while ($row_pic = mysqli_fetch_array($result_pic)) {
-                                            if ($row_pic[0] != NULL) { ?>
-                                                <?php
-
-                                                $rp_pic = $row_pic['rp_pic'];
-                                                $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
-                                                ?> <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
-                                                    <a href="#"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
-                                                <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
-                                                    <a href="#">
-                                                        <video width="100px" autoplay muted onclick="openModalVideo(this)" src="../<?= $row_pic['rp_pic'] ?>">
-                                                            <source src="../<?= $row_pic['rp_pic'] ?>" type="video/mp4">
-                                                            <source src="../<?= $row_pic['rp_pic'] ?>" type="video/ogg">
-                                                            Your browser does not support the video tag.
-                                                        </video>
-                                                    </a>
-                                                <?php endif; ?>
-                                                <!-- Modal -->
-                                                <!-- <div id="modal_ed" class="modal_ed">
-                                                    <span class="close" onclick="closeModal()">&times;</span>
-                                                    <video id="modal-video" controls class="modal-video"></video>
-                                                </div> -->
-
-
-
-                                                <!-- <h2><?= $row_pic['rp_pic'] ?></h2> -->
-                                        <?php
-                                            }
-                                        } ?>
-
-
-
-
-                                    </div>
-                                    <hr style="border:2px solid gray" class="my-4">
-                                <?php } ?>
                             </div>
                         </div>
 
@@ -686,7 +737,7 @@ LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
                                 progressBar.appendChild(dot);
                             }
                         </script>
-                        <div class="card-body">
+                        <div class="card-body " style="background-color: #F6F6F6;">
                             <?php
                             if ($row['rs_conf'] == 1 && $row['status_id'] != 8 && $row['status_id'] != 24) {
                             ?>
@@ -743,7 +794,7 @@ LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
                                     </center>
                                 </div>
                                 <center>
-                                    <p style="color : red">*** การซ่อมดำเนินการเสร็จสิ้นแล้ว ***</p>
+                                    <p style="color : green">*** การซ่อมดำเนินการเสร็จสิ้นแล้ว ***</p>
                                 </center>
                                 <br>
                             <?php
@@ -883,152 +934,360 @@ LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
                             $result_p = mysqli_query($conn, $sql_p);
                             $row_p = mysqli_fetch_array($result_p);
                             ?>
-                            <button type="button" class="btn btn-outline-primary mb-3" style="display: inline-block;">ข้อมูลการติดต่อ</button>
-                            <p style="display: inline;">
-                                <?php if ($row['get_deli'] == 0) { ?>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6  alart alert-light shadow p-4">
+                                        <!-- <button type="button" class="btn btn-outline-primary mb-3" style="display: inline-block;">ข้อมูลการติดต่อ</button> -->
+                                        <p style="display: inline;">
+                                            <!-- <?php if ($row['get_deli'] == 0) { ?>
                                     <span class="btn btn-info  mb-3 ml-4">#รับที่ร้าน</span>
                                 <?php } else { ?>
                                     <span class="btn btn-info mb-3 ml-4">#จัดส่งโดยบริษัทขนส่ง</span>
-                                <?php } ?>
-                                <?php if ($row_get_count_track['get_t_id'] != NULL) { ?>
-                                    <a id="bounce-item" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="true" aria-controls="collapseOne">
-                                        <span class="btn btn-warning mb-3 ml-4"><i class="fa fa-check"></i>สมาชิกทำการส่งหมายเลขพัสดุ</span><?php  }
-                                                                                                                                            ?></a>
-                            </p>
+                                <?php } ?> -->
+                                            <?php if ($row_get_count_track['get_t_id'] != NULL) { ?>
+                                        <h5>
+                                            <span class="f-yellow-5"><i class="fa fa-check"></i> สมาชิกทำการส่งหมายเลขพัสดุ</span><?php  }
+                                                                                                                                    ?>
+                                        </h5>
+                                        </p>
+                                        <h5 style="color:black">ข้อมูลติดต่อ <i class="fa fa-address-book ln"></i></h5>
+                                        <p>
+                                            <?php
+                                            $m_id = $row['m_id'];
 
+                                            $sql_m = "SELECT * FROM member WHERE m_id = '$m_id'";
+                                            $result_m = mysqli_query($conn, $sql_m);
+                                            $row_m = mysqli_fetch_array($result_m);
+                                            if ($row_m['m_fname'] != NULL && $row_m['m_lname'] != NULL) {
+                                            ?>
+                                                ชื่อ : <span><?= $row_m['m_fname'] . ' ' . $row_m['m_lname'] ?></span>
+                                            <?php
+                                            }
+                                            ?>
+                                            <br>
+                                            <?php
+                                            if ($row['get_tel'] != NULL) {
+                                            ?>
+                                                เบอร์โทรติดต่อ :
+                                                <span style="color: black" id="PhoneNumber"><?= $row['get_tel'] ?>
+                                                    <a href="#" id="copyPhoneNumber" title="กดเพื่อคัดลอก"><i class='fas fa-copy'></i></a>
 
-                            <div class="row">
-                                <h6 for="staticEmail" class="col-1 col-form-label" style="margin-bottom: 0px;">ชื่อ : </h6>
-                                <div class="col">
-                                    <p class="col-form-label" style="color: #2c2f34"><?= $row['m_fname']  ?> <?= $row['m_lname']  ?></p>
+                                                </span>
+                                                <span id="copyConfirmationPhone" style="display: none; color: green;">คัดลอกแล้ว</span></span>
+                                                <script>
+                                                    document.getElementById("copyPhoneNumber").addEventListener("click", function() {
+                                                        // Get the serial number text
+                                                        const serialNumber = document.getElementById("PhoneNumber").textContent;
+
+                                                        // Create a textarea element to temporarily hold the text
+                                                        const tempTextarea = document.createElement("textarea");
+                                                        tempTextarea.value = serialNumber;
+                                                        document.body.appendChild(tempTextarea);
+
+                                                        // Select the text in the textarea and copy it to the clipboard
+                                                        tempTextarea.select();
+                                                        document.execCommand("copy");
+
+                                                        // Remove the temporary textarea
+                                                        document.body.removeChild(tempTextarea);
+
+                                                        // Display the copy confirmation message
+                                                        const copyConfirmation = document.getElementById("copyConfirmationPhone");
+                                                        copyConfirmation.style.display = "inline";
+
+                                                        // Hide the confirmation message after a few seconds
+                                                        setTimeout(function() {
+                                                            copyConfirmation.style.display = "none";
+                                                        }, 3000); // Display for 3 seconds
+                                                    });
+                                                </script>
+                                                <?php
+                                                if ($row_m['m_email'] != NULL) {
+                                                ?>
+                                                    <br>
+                                                    อีเมล :
+                                                    <span style="color: black" id="EmailMember"><?= $row_m['m_email'] ?>
+                                                        <a href="#" id="copyEmail" title="กดเพื่อคัดลอก"><i class='fas fa-copy'></i></a>
+
+                                                    </span>
+                                                    <span id="copyEmailnofi" style="display: none; color: green;">คัดลอกแล้ว</span></span>
+                                                    <?php if ($row['get_deli'] == 0) { ?>
+                                                        <br> รูปแบบการจัดส่งกลับ : <span class="f-green-5">รับที่ร้าน</span>
+                                                    <?php } else { ?>
+                                                        <br> รูปแบบการจัดส่งกลับ :<span class="f-green-5">จัดส่งโดยบริษัทขนส่ง</span>
+                                                    <?php } ?>
+                                                    <script>
+                                                        document.getElementById("copyEmail").addEventListener("click", function() {
+                                                            // Get the serial number text
+                                                            const serialNumber = document.getElementById("EmailMember").textContent;
+
+                                                            // Create a textarea element to temporarily hold the text
+                                                            const tempTextarea = document.createElement("textarea");
+                                                            tempTextarea.value = serialNumber;
+                                                            document.body.appendChild(tempTextarea);
+
+                                                            // Select the text in the textarea and copy it to the clipboard
+                                                            tempTextarea.select();
+                                                            document.execCommand("copy");
+
+                                                            // Remove the temporary textarea
+                                                            document.body.removeChild(tempTextarea);
+
+                                                            // Display the copy confirmation message
+                                                            const copyConfirmation = document.getElementById("copyEmailnofi");
+                                                            copyConfirmation.style.display = "inline";
+
+                                                            // Hide the confirmation message after a few seconds
+                                                            setTimeout(function() {
+                                                                copyConfirmation.style.display = "none";
+                                                            }, 3000); // Display for 3 seconds
+                                                        });
+                                                    </script>
+                                                <?php
+                                                }
+                                                ?>
+                                                <?php
+                                                if ($row_m['m_add'] != NULL) {
+                                                ?>
+
+                                                    <center>
+                                                        <hr style="width:95%">
+                                                    </center>
+                                                    <br>
+                                        <h5 style="color:black">ที่อยู่ <i class="fa fa-map"></i></h5>
+                                        <div class="row">
+                                            <p>
+                                                <?php
+
+                                                    $jsonobj = $row_m['m_add'];
+
+                                                    $obj = json_decode($jsonobj);
+
+                                                    $sql_p = "SELECT provinces.name_en, amphures.name_en, districts.name_en
+                                                            FROM provinces
+                                                            LEFT JOIN amphures ON provinces.id = amphures.province_id
+                                                            LEFT JOIN districts ON amphures.id = districts.amphure_id
+                                                            WHERE provinces.id = '$obj->province' AND amphures.id = '$obj->district' AND districts.id = '$obj->sub_district';";
+                                                    $result_p = mysqli_query($conn, $sql_p);
+                                                    $row_p = mysqli_fetch_array($result_p);
+                                                ?>
+                                                <?= $obj->description ?>
+                                                ตำบล<?= $row_p[2] ?> อำเภอ<?= $row_p[1] ?> จังหวัด<?= $row_p[0] ?>
+                                            <?php
+                                                }
+                                            ?>
+                                            </p>
+                                        </div>
+                                    <?php
+                                            }
+                                    ?></p>
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-4 alart alert-light shadow p-4">
+
+                                        <?php
+                                        // $get_r_id = $row['get_r_id'];
+                                        $status_id = $row['status_id'];
+                                        // $get_r_id = $_GET['id'];
+
+                                        $sql_s = "SELECT * FROM repair_status 
+                                                WHERE del_flg = '0' AND get_r_id = '$get_r_id'
+                                                ORDER BY rs_date_time DESC LIMIT 1";
+                                        $result_s = mysqli_query($conn, $sql_s);
+                                        $row_s = mysqli_fetch_array($result_s);
+                                        $rs_id = $row_s['rs_id'];
+                                        ?>
+                                        <div class="mb-3">
+                                            <h4 class="mb-3 f-black-5">รายละเอียด</h4>
+                                            <hr>
+                                            <!-- <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?= $row_s['rs_detail']  ?></textarea> -->
+                                            <p class="col-form-label" style="color: gray"><?= $row_s['rs_detail']  ?></p>
+
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <?php
-                            if ($row_get_count[0] == 1) {
-                            ?>
+                                <br>
                                 <div class="row">
-                                    <h6 for="inputPassword" class="col-1 col-form-label" style="margin-bottom: 0px;">Brand :</h6>
-                                    <div class="col">
-                                        <p class="col-form-label" style="color: #2c2f34"><?= $row['r_brand']  ?></p>
+                                    <div class="col-md alert alert-light shadow">
+                                        <div class="mb-3">
+                                            <?php
+                                            $sql_pic3 = "SELECT * FROM repair_pic WHERE rs_id = '$rs_id' AND del_flg = 0 ";
+                                            $result_pic3 = mysqli_query($conn, $sql_pic3);
+                                            $roe_c =  mysqli_fetch_array($result_pic3);
+                                            if (isset($roe_c[0]) == NULL) {
+                                            ?>
+                                                <hr>
+
+                                                <h5 style="display:none">รูปภาพประกอบ:</h5>
+                                            <?php
+                                            } else {
+                                            ?>
+                                                <h5>รูปภาพประกอบ </h5>
+                                            <?php
+                                            }
+                                            ?>
+                                            <!-- <label for="exampleFormControlTextarea1" class="col-form-label">รูปภาพประกอบ <?= $get_r_id ?>:</label> -->
+                                            <div class="row">
+                                                <?php
+
+
+                                                $sql_pic = "SELECT * FROM repair_pic WHERE rs_id = '$rs_id' AND del_flg = 0 ";
+                                                $result_pic = mysqli_query($conn, $sql_pic);
+
+
+                                                // $sql_pic = "SELECT * FROM `repair_pic` WHERE get_r_id = '$get_r_id'";
+                                                // $result_pic = mysqli_query($conn, $sql_pic);
+                                                while ($row_pic = mysqli_fetch_array($result_pic)) {
+
+                                                    if ($row_pic[0] != NULL) { ?>
+                                                        <?php
+                                                        $rp_pic = $row_pic['rp_pic'];
+                                                        $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                                        ?> <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                                            <a href="#" style="margin-left: 20px;"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                        <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
+                                                            <a href="#" style="margin-left: 20px;">
+                                                                <video width="100px" autoplay muted onclick="openModalVideo(this)" src="../<?= $row_pic['rp_pic'] ?>">
+                                                                    <source src="../<?= $row_pic['rp_pic'] ?>" type="video/mp4">
+                                                                    <source src="../<?= $row_pic['rp_pic'] ?>" type="video/ogg">
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                            </a>
+                                                        <?php endif; ?>
+
+                                                        <!-- <h2><?= $row_pic['rp_pic'] ?></h2> -->
+                                                    <?php
+                                                    } else { ?> <h2>ไม่มีข้อมูล</h2> <?php
+                                                                                    }
+                                                                                } ?>
+
+
+                                                <script src="script.js"></script>
+                                                <script>
+                                                    function openModalIMG(img) {
+                                                        var modal_ed = document.getElementById("modalimg");
+                                                        var modalImg = document.getElementById("modal-image");
+                                                        modal_ed.style.display = "block";
+                                                        modalImg.src = img.src;
+                                                        modalImg.style.width = "60%"; // Set the width to 1000 pixels
+                                                        modalImg.style.borderRadius = "2%"; // Set the border radius to 20%
+                                                        modal_ed.classList.add("show");
+                                                    }
+
+                                                    function closeModalIMG() {
+                                                        var modal_ed = document.getElementById("modalimg");
+                                                        modal_ed.style.display = "none";
+                                                    }
+                                                </script>
+                                                <script>
+                                                    function openModalVideo(element) {
+                                                        var modal_ed = document.getElementById('modal_ed');
+                                                        var modalVideo = document.getElementById('modal-video');
+                                                        modal_ed.style.display = 'block';
+                                                        modalVideo.src = element.src;
+                                                        modalVideo.style.height = '90%';
+                                                        modalVideo.style.borderRadius = '2%';
+                                                        modal_ed.classList.add('show');
+                                                    }
+
+                                                    function closeModal() {
+                                                        var modal_ed = document.getElementById('modal_ed');
+                                                        var modalVideo = document.getElementById('modal-video');
+                                                        modalVideo.pause();
+                                                        modalVideo.currentTime = 0;
+                                                        modalVideo.src = ""; // Reset the video source
+                                                        modal_ed.style.display = 'none';
+                                                    }
+
+                                                    window.addEventListener('click', function(event) {
+                                                        var modal_ed = document.getElementById('modal_ed');
+                                                        if (event.target === modal_ed) {
+                                                            closeModal();
+                                                        }
+                                                    });
+                                                </script>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <div class="col-md-1"></div>
                                 </div>
+                            </div>
+
+                            <div style="display: none;">
+                                <h4>ข้อมูลสมาชิก</h4>
                                 <div class="row">
-                                    <h6 for="inputPassword" class="col-1 col-form-label" style="margin-bottom: 0px;">Model :</h6>
-                                    <div class="col">
-                                        <p class="col-form-label" style="color: #2c2f34"><?= $row['r_model']  ?></p>
-                                    </div>
+                                    <p class="col-form-label" style="color: #2c2f34">ชื่อ : <?= $row['m_fname']  . ' ' . $row['m_lname']  ?>
+                                        <br>อีเมล์ : <?= $row['m_email']  ?>
+                                        <br> เบอร์โทรศัพท์ : <?= $row['get_tel']  ?>
+                                        <?php if ($row['get_deli'] == 0) { ?>
+                                            <br> รูปแบบการจัดส่งกลับ : <span class="f-green-5">รับที่ร้าน</span>
+                                        <?php } else { ?>
+                                            <br> รูปแบบการจัดส่งกลับ :<span class="f-green-5">จัดส่งโดยบริษัทขนส่ง</span>
+                                        <?php } ?>
+                                    </p>
                                 </div>
-                            <?php
-                            } else {
-                            ?>
+                                <hr>
 
-                            <?php
-                            }
-                            ?>
-
-                            <div class="row">
-                                <h6 for="inputPassword" class="col-1 col-form-label" style="margin-bottom: 0px;">เบอร์โทรศัพท์ : </h6>
-                                <div class="col">
-                                    <p class="col-form-label" style="color: #2c2f34"><?= $row['get_tel']  ?></p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <h6 for="inputPassword" class="col-1 col-form-label" style="margin-bottom: 0px;">บริษัท : </h6>
-                                <div class="col">
-                                    <p class="col-form-label" style="color: #2c2f34"><?php
-                                                                                        if ($row['com_id'] == NULL) {
-                                                                                            echo "ไม่มีข้อมูล";
-                                                                                        } else {
-                                                                                            $com_id = $row['com_id'];
-                                                                                            $sql_com = "SELECT * FROM company WHERE com_id = '$com_id'";
-                                                                                            $result_com = mysqli_query($conn, $sql_com);
-                                                                                            $row_com = mysqli_fetch_array($result_com);
-
-                                                                                            echo $row_com['com_name'];
-                                                                                        }
-                                                                                        ?></p>
-                                </div>
-                            </div>
-
-                            <hr>
-
-                            <div class="">
-                                <label for="exampleFormControlTextarea1" class="btn btn-outline-primary">ที่อยู่</label>
-                                <?php if ($row['get_add'] != NULL) {
-                                ?>
-                                    <div class="row">
-                                        <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">จังหวัด :</label>
-                                        <div class="col">
-                                            <!-- <input type="text" class="form-control" value="<?= $row_p[0] ?>" readonly> -->
-                                            <p class="col-form-label" style="color: #2c2f34"><?= $row_p[0] ?></p>
+                                <div class="">
+                                    <label for=" exampleFormControlTextarea1" class="btn btn-outline-primary">ที่อยู่</label>
+                                    <?php if ($row['get_add'] != NULL) {
+                                    ?>
+                                        <div class="row">
+                                            <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">จังหวัด :</label>
+                                            <div class="col">
+                                                <!-- <input type="text" class="form-control" value="<?= $row_p[0] ?>" readonly> -->
+                                                <p class="col-form-label" style="color: #2c2f34"><?= $row_p[0] ?></p>
+                                            </div>
+                                            <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">อำเภอ :</label>
+                                            <div class="col">
+                                                <!-- <input type="text" class="form-control" value="<?= $row_p[1] ?>" readonly> -->
+                                                <p class="col-form-label" style="color: #2c2f34"><?= $row_p[1] ?></p>
+                                            </div>
+                                            <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">ตำบล :</label>
+                                            <div class="col">
+                                                <!-- <input type="text" class="form-control" value="<?= $row_p[2] ?>" readonly> -->
+                                                <p class="col-form-label" style="color: #2c2f34"><?= $row_p[2] ?></p>
+                                            </div>
+                                            <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">รหัสไปรษณีย์ :</label>
+                                            <div class="col">
+                                                <!-- <input type="text" class="form-control" value="<?= $row_p[2] ?>" readonly> -->
+                                                <p class="col-form-label" style="color: #2c2f34"><?= $row_p[3] ?></p>
+                                            </div>
                                         </div>
-                                        <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">อำเภอ :</label>
-                                        <div class="col">
-                                            <!-- <input type="text" class="form-control" value="<?= $row_p[1] ?>" readonly> -->
-                                            <p class="col-form-label" style="color: #2c2f34"><?= $row_p[1] ?></p>
-                                        </div>
-                                        <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">ตำบล :</label>
-                                        <div class="col">
-                                            <!-- <input type="text" class="form-control" value="<?= $row_p[2] ?>" readonly> -->
-                                            <p class="col-form-label" style="color: #2c2f34"><?= $row_p[2] ?></p>
-                                        </div>
-                                        <label for="exampleFormControlTextarea1" class="col-sm-1 col-form-label">รหัสไปรษณีย์ :</label>
-                                        <div class="col">
-                                            <!-- <input type="text" class="form-control" value="<?= $row_p[2] ?>" readonly> -->
-                                            <p class="col-form-label" style="color: #2c2f34"><?= $row_p[3] ?></p>
-                                        </div>
-                                    </div>
-                                    <!-- <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?php
-                                                                                                                                        if ($row['get_add'] == NULL) {
-                                                                                                                                            echo "ไม่มีข้อมูล";
-                                                                                                                                        } else {
+                                        <!-- <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?php
+                                                                                                                                            if ($row['get_add'] == NULL) {
+                                                                                                                                                echo "ไม่มีข้อมูล";
+                                                                                                                                            } else {
 
-                                                                                                                                            echo $obj->description;
-                                                                                                                                        }
-                                                                                                                                        ?>
+                                                                                                                                                echo $obj->description;
+                                                                                                                                            }
+                                                                                                                                            ?>
                                 </textarea> -->
-                                    <div class="row">
-                                        <label for="exampleFormControlTextarea1" class="col-1 col-form-label">รายละเอียด :</label>
-                                        <div class="col">
-                                            <p class="col-form-label" style="color: #2c2f34"><?php
-                                                                                                if ($row['get_add'] == NULL) {
-                                                                                                    echo "ไม่มีข้อมูล";
-                                                                                                } else {
+                                        <div class="row">
+                                            <label for="exampleFormControlTextarea1" class="col-1 col-form-label">รายละเอียด :</label>
+                                            <div class="col">
+                                                <p class="col-form-label" style="color: #2c2f34"><?php
+                                                                                                    if ($row['get_add'] == NULL) {
+                                                                                                        echo "ไม่มีข้อมูล";
+                                                                                                    } else {
 
-                                                                                                    echo $obj->description;
-                                                                                                }
-                                                                                                ?></p>
-                                        <?php
-                                    } else {
-                                        ?>
-                                            <center>
-                                                <h5>ไม่มีข้อมูลที่อยู่</h5>
-                                            </center>
-                                        <?php
-                                    }
-                                        ?>
+                                                                                                        echo $obj->description;
+                                                                                                    }
+                                                                                                    ?></p>
+                                            <?php
+                                        } else {
+                                            ?>
+                                                <center>
+                                                    <h5>ไม่มีข้อมูลที่อยู่</h5>
+                                                </center>
+                                            <?php
+                                        }
+                                            ?>
+                                            </div>
                                         </div>
-                                    </div>
+                                </div>
                             </div>
-                            <hr>
 
-                            <?php
-                            // $get_r_id = $row['get_r_id'];
-                            $status_id = $row['status_id'];
-                            // $get_r_id = $_GET['id'];
-
-                            $sql_s = "SELECT * FROM repair_status 
-                            WHERE del_flg = '0' AND get_r_id = '$get_r_id'
-                            ORDER BY rs_date_time DESC LIMIT 1";
-                            $result_s = mysqli_query($conn, $sql_s);
-                            $row_s = mysqli_fetch_array($result_s);
-                            $rs_id = $row_s['rs_id'];
-                            ?>
-                            <div class="mb-3">
-                                <label for="exampleFormControlTextarea1" class="btn btn-outline-primary">รายละเอียด</label>
-                                <!-- <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?= $row_s['rs_detail']  ?></textarea> -->
-                                <p class="col-form-label" style="color: #2c2f34"><?= $row_s['rs_detail']  ?></p>
-                            </div>
 
                             <?php
                             if ($row_s['rs_cancel_detail'] != NULL) {
@@ -1042,104 +1301,8 @@ LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
                             <?php
                             }
                             ?>
-                            <hr>
-                            <div class="mb-3">
-                                <?php
-                                $sql_pic3 = "SELECT * FROM repair_pic WHERE rs_id = '$rs_id' AND del_flg = 0 ";
-                                $result_pic3 = mysqli_query($conn, $sql_pic3);
-                                $roe_c =  mysqli_fetch_array($result_pic3);
-                                if (isset($roe_c[0]) == NULL) {
-                                ?>
-                                    <label for="exampleFormControlTextarea1" class="btn btn-outline-primary" style="display:none">รูปภาพประกอบ:</label>
-                                <?php
-                                } else {
-                                ?>
-                                    <label for="exampleFormControlTextarea1" class="btn btn-outline-primary">รูปภาพประกอบ </label>
-                                <?php
-                                }
-                                ?>
-                                <!-- <label for="exampleFormControlTextarea1" class="col-form-label">รูปภาพประกอบ <?= $get_r_id ?>:</label> -->
-                                <div class="row">
-                                    <?php
 
 
-                                    $sql_pic = "SELECT * FROM repair_pic WHERE rs_id = '$rs_id' AND del_flg = 0 ";
-                                    $result_pic = mysqli_query($conn, $sql_pic);
-
-
-                                    // $sql_pic = "SELECT * FROM `repair_pic` WHERE get_r_id = '$get_r_id'";
-                                    // $result_pic = mysqli_query($conn, $sql_pic);
-                                    while ($row_pic = mysqli_fetch_array($result_pic)) {
-
-                                        if ($row_pic[0] != NULL) { ?>
-                                            <?php
-                                            $rp_pic = $row_pic['rp_pic'];
-                                            $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
-                                            ?> <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
-                                                <a href="#" style="margin-left: 20px;" ><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
-                                            <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
-                                                <a href="#" style="margin-left: 20px;">
-                                                    <video width="100px" autoplay muted onclick="openModalVideo(this)" src="../<?= $row_pic['rp_pic'] ?>">
-                                                        <source src="../<?= $row_pic['rp_pic'] ?>" type="video/mp4">
-                                                        <source src="../<?= $row_pic['rp_pic'] ?>" type="video/ogg">
-                                                        Your browser does not support the video tag.
-                                                    </video>
-                                                </a>
-                                            <?php endif; ?>
-
-                                            <!-- <h2><?= $row_pic['rp_pic'] ?></h2> -->
-                                        <?php
-                                        } else { ?> <h2>ไม่มีข้อมูล</h2> <?php
-                                                                        }
-                                                                    } ?>
-
-
-                                    <script src="script.js"></script>
-                                    <script>
-                                        function openModalIMG(img) {
-                                            var modal_ed = document.getElementById("modalimg");
-                                            var modalImg = document.getElementById("modal-image");
-                                            modal_ed.style.display = "block";
-                                            modalImg.src = img.src;
-                                            modalImg.style.width = "60%"; // Set the width to 1000 pixels
-                                            modalImg.style.borderRadius = "2%"; // Set the border radius to 20%
-                                            modal_ed.classList.add("show");
-                                        }
-
-                                        function closeModalIMG() {
-                                            var modal_ed = document.getElementById("modalimg");
-                                            modal_ed.style.display = "none";
-                                        }
-                                    </script>
-                                    <script>
-                                        function openModalVideo(element) {
-                                            var modal_ed = document.getElementById('modal_ed');
-                                            var modalVideo = document.getElementById('modal-video');
-                                            modal_ed.style.display = 'block';
-                                            modalVideo.src = element.src;
-                                            modalVideo.style.height = '90%';
-                                            modalVideo.style.borderRadius = '2%';
-                                            modal_ed.classList.add('show');
-                                        }
-
-                                        function closeModal() {
-                                            var modal_ed = document.getElementById('modal_ed');
-                                            var modalVideo = document.getElementById('modal-video');
-                                            modalVideo.pause();
-                                            modalVideo.currentTime = 0;
-                                            modalVideo.src = ""; // Reset the video source
-                                            modal_ed.style.display = 'none';
-                                        }
-
-                                        window.addEventListener('click', function(event) {
-                                            var modal_ed = document.getElementById('modal_ed');
-                                            if (event.target === modal_ed) {
-                                                closeModal();
-                                            }
-                                        });
-                                    </script>
-                                </div>
-                            </div>
                             <!-- สถานะ "ส่งเรื่องแล้ว" -->
                             <?php if ($row['value_code'] == "submit") {
                             ?>

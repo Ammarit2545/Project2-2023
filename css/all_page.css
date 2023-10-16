@@ -5,6 +5,11 @@ body {
     font-size: 2rem;
     /* Adjust the font size as needed */
 }
+
+.un-scroll {
+    text-decoration: none;
+  }
+
 .f-wh{
     color:white;
 }
@@ -102,13 +107,33 @@ body {
 .f-black-5{
     color : black;
 }
+.f-gray-5{
+    color : gray;
+}
 
 .f-red-5{
     color : red;
 }
 
+.f-yellow-5{
+    color : #92AD2D;
+}
+
+.f-green-5{
+    color : green;
+}
+
 .f-blue-5{
     color : blue;
+}
+
+.bg-gray-1{
+    background-color: #F5F5F5;
+}
+
+
+.bg-gray-2{
+    background-color: #F4F4F4;
 }
 
 #bounce-item:hover .tooltip {

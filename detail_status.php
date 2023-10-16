@@ -350,13 +350,16 @@ $part_check = 0;
                             </p>
                         </div>
                     </a>
-            <?php
+                <?php
                 }
             }
-            if($count_com == 0){
-                ?> <center><hr><br><h5 class="f-red-5">*** ไม่มีข้อมูล ***</h5></center> <?php
-            }
-            ?>
+            if ($count_com == 0) {
+                ?> <center>
+                    <hr><br>
+                    <h5 class="f-red-5">*** ไม่มีข้อมูล ***</h5>
+                </center> <?php
+                        }
+                            ?>
         </div>
     </div>
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
@@ -382,43 +385,45 @@ $part_check = 0;
                                                                         WHERE get_detail.get_r_id = '$id_get_r';";
                 $result_track = mysqli_query($conn, $sql_track);
                 while ($row_track = mysqli_fetch_array($result_track)) {
-                    if($row_track['t_parcel'] != NULL){
+                    if ($row_track['t_parcel'] != NULL) {
                         $count_my_parcel++;
 
-                    
+
                 ?>
-                    <div class="row">
-                        <h5><?= $row_track['r_brand'] . ' ' . $row_track['r_model'] ?></h5>
-                    </div>
-                    <!-- <div class="row"> -->
-                    <div class="row">
+                        <div class="row">
+                            <h5><?= $row_track['r_brand'] . ' ' . $row_track['r_model'] ?></h5>
+                        </div>
                         <!-- <div class="row"> -->
-                        <p style="font-size: 14px;">SN : <?= $row_track['r_serial_number'] ?></p>
-                        <!-- </div> -->
-                        <!-- <div class="row">
+                        <div class="row">
+                            <!-- <div class="row"> -->
+                            <p style="font-size: 14px;">SN : <?= $row_track['r_serial_number'] ?></p>
+                            <!-- </div> -->
+                            <!-- <div class="row">
                                                                 <h6><?= $row_track['r_serial_number']  ?></h6>
                                                             </div> -->
-                    </div>
-                    <div class="row">
-                        <div class="row">
-                            <p style="display: none;" id="bootstrapCode"><?= $row_track['t_parcel'] ?></p>
-                            <div class="col-12">
-                                หมายเลขพัสดุ : <button class="btn btn-primary" id="copyButton" onclick="copyToClipboard()" data-bs-toggle="tooltip" data-bs-placement="top" title="คลิ๊กเพื่อคัดลอก"><?= $row_track['t_parcel'] ?></button>
-
-                            </div>
                         </div>
+                        <div class="row">
+                            <div class="row">
+                                <p style="display: none;" id="bootstrapCode"><?= $row_track['t_parcel'] ?></p>
+                                <div class="col-12">
+                                    หมายเลขพัสดุ : <button class="btn btn-primary" id="copyButton" onclick="copyToClipboard()" data-bs-toggle="tooltip" data-bs-placement="top" title="คลิ๊กเพื่อคัดลอก"><?= $row_track['t_parcel'] ?></button>
 
-                    </div>
-                    <!-- </div> -->
-                    <hr>
-                    <br>
-                <?php }  
-               
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- </div> -->
+                        <hr>
+                        <br>
+                    <?php }
                 }
-                if($count_my_parcel == 0){
-                    ?> <center><hr><br><h5 class="f-red-5">*** ไม่มีข้อมูล ***</h5></center> <?php
-                }
-                ?>
+                if ($count_my_parcel == 0) {
+                    ?> <center>
+                        <hr><br>
+                        <h5 class="f-red-5">*** ไม่มีข้อมูล ***</h5>
+                    </center> <?php
+                            }
+                                ?>
                 <script>
                     function copyToClipboard() {
                         var copyText = document.getElementById("bootstrapCode");
