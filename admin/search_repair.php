@@ -727,7 +727,7 @@ if (!isset($_SESSION['role_id'])) {
                                                         <?php } else {  ?>
                                                             <center>
                                                                 <!-- <hr> -->
-                                                                <h5 class="shadow" style="background-color:#D8CB00;color:white">การซ่อมอยู่ระหว่างดำเนินการในขณะนี้ <span id="dot-animation<?= $row_get['get_d_id'] ?>"></span></h5>
+                                                                <h5 class="shadow" style="border-radius:3px;background-color:#D8CB00;color:white">การซ่อมอยู่ระหว่างดำเนินการในขณะนี้ <span id="dot-animation<?= $row_get['get_d_id'] ?>"></span></h5>
 
                                                                 <!-- <hr> -->
                                                                 <script>
