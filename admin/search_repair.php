@@ -594,7 +594,7 @@ ORDER BY repair.r_brand ASC;  ";
                             $count_round = 0;
                             $sql_get = "SELECT * FROM get_repair 
                              LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
-                             WHERE get_detail.r_id = '$r_id' ORDER BY get_repair.get_r_date_in DESC";
+                             WHERE get_detail.r_id = '$r_id' AND get_repair.del_flg = 0 ORDER BY get_repair.get_r_date_in DESC";
                             $result_get = mysqli_query($conn, $sql_get);
                             while ($row_get = mysqli_fetch_array($result_get)) {
                                 $count_round++;
@@ -607,7 +607,7 @@ ORDER BY repair.r_brand ASC;  ";
                                         $count_get = 0;
                                         $sql_get = "SELECT * FROM get_repair 
                                                     LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
-                                                    WHERE get_detail.r_id = '$r_id' ORDER BY get_repair.get_r_date_in DESC";
+                                                    WHERE get_detail.r_id = '$r_id' AND get_repair.del_flg = 0 ORDER BY get_repair.get_r_date_in DESC";
                                         $result_get = mysqli_query($conn, $sql_get);
                                         while ($row_get = mysqli_fetch_array($result_get)) {
                                             $count_get++;

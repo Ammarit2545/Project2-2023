@@ -37,7 +37,7 @@ if(!isset($_SESSION['id'])){
 
     <!-- navbar-->
     <?php
-    include('bar/topbar_invisible.php');
+    include('bar/topbar_user.php');
 
     $id = $_SESSION["id"];
 

@@ -261,7 +261,7 @@ $id_g = $_GET['id'];
     <?php
     $part_check = 0;
     if ($row1 > 0) {
-        include('bar/topbar_invisible.php');
+        include('bar/topbar_user.php');
     }
     $id_get_r = $_GET['id'];
     $sql = "SELECT * FROM get_repair

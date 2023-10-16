@@ -260,7 +260,7 @@ $get_add_price = $row1['get_add_price'];
     <?php
     $part_check = 0;
     if ($row1 > 0) {
-        include('bar/topbar_invisible.php');
+        include('bar/topbar_user.php');
     } ?>
     <form id="payment_data" action="action/add_payment.php" method="POST" enctype="multipart/form-data">
         <!-- <form id="payment_data" action="action/add_payment.php" method="POST" enctype="multipart/form-data" style="display: none;"> -->
