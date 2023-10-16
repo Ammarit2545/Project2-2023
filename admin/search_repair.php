@@ -198,7 +198,7 @@ if (!isset($_SESSION['role_id'])) {
                 <div class="background"></div>
 
 
-                <h1 class="pt-5 text-center">ค้นหาอุปกรณ์</h1>
+                <h1 class="pt-5 text-center f-black-5" >ค้นหาอุปกรณ์</h1>
                 <center>
                     <p>ค้นหาอุปกรณ์ในระบบของคุณ สามารถตรวจสอบสถานะของแต่ละอุปกรณ์ได้</p>
                 </center>
@@ -560,7 +560,7 @@ ORDER BY repair.r_brand ASC;  ";
                                                     <hr style="width:95%">
                                                 </center>
                                                 <br>
-                                    <h5 style="color:black">ที่อยู่ <i class="fa fa-paper-plane"></i></h5>
+                                    <h5 style="color:black">ที่อยู่ <i class="fa fa-map"></i></h5>
                                     <div class="row">
                                         <p>
                                             <?php

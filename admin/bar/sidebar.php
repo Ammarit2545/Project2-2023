@@ -26,7 +26,7 @@
     </div>
 
     <!-- Nav Item - employee Collapse Menu -->
-    <li class="nav-item">
+    <!-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo1" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-solid fa-envelope"></i>
             <span>การแจ้งเตือนการซ่อม</span>
@@ -35,20 +35,21 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">รายละเอียด :</h6>
                 <a class="collapse-item" href="listview_repair.php">รายการแจ้งซ่อม</a>
-                <!-- <a class="collapse-item" href="add_employee.php">เพิ่มข้อมูล</a> -->
-                <!-- <hr>
-                <h6 class="collapse-header">แผนกพนักงาน :</h6>
-                <a class="collapse-item" href="add_em_type.php">แผนก</a> -->
             </div>
         </div>
+    </li> -->
+    <li class="nav-item">
+        <a class="nav-link" href="listview_repair.php">
+        <i class="fas fa-solid fa-envelope"></i>
+            <span>รายการแจ้งซ่อม</span></a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="search_repair.php">
-            <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
+            <i class="fa fa-search"></i>
             <span>ค้นหาอุปกรณ์</span></a>
     </li>
     <br>
-    
+
     <div class="sidebar-heading">
         ข้อมูลทั่วไป
     </div>
@@ -86,7 +87,7 @@
             </div>
         </div>
     </li>
-   
+
     <!-- Nav Item - soundsystem Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsesoundsystem" aria-expanded="true" aria-controls="collapsesoundsystem">
@@ -98,7 +99,7 @@
                 <h6 class="collapse-header">รายละเอียด :</h6>
                 <a class="collapse-item" href="listview_parts.php">ข้อมูลอะไหล่</a>
                 <a class="collapse-item" href="add_parts.php">เพิ่มข้อมูลอะไหล่</a>
-               
+
                 <hr>
                 <h6 class="collapse-header">ประเภทอะไหล่ :</h6>
                 <a class="collapse-item" href="add_parts_type.php">ประเภทอะไหล่</a>

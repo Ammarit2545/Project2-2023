@@ -661,7 +661,7 @@ ORDER BY rs.rs_date_time DESC
 
 
     $get_add_price = $row_c['get_add_price']; ?>
-    <div style="background-color: <?= $row_2['status_color'] ?>;height:200px;padding:7%;color:white" class="auto-font">
+    <div style="background-color: <?= $row_2['status_color'] ?>;height:200px;padding:7%;color:white;" class="auto-font">
         <?php if ($row_2['status_id'] == 1) { ?>
             <h3><i class="fa fa-check-square-o"></i> คุณได้ทำการส่งเรื่องแล้ว</h3>
             <p>โปรดรอการตอบกลับ พนักงานจะทำการตอบกลับภายใน 2 วันทำการ<br>หากคุณต้องการยกเลิกคำสั่งซ่อมสามารถทำการ <span style="color:white">"ยกเลิก"</span> ได้</p>
