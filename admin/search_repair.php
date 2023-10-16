@@ -168,6 +168,7 @@ if (!isset($_SESSION['role_id'])) {
         }
     </style>
 
+
 </head>
 
 <body id="page-top">
@@ -201,6 +202,7 @@ if (!isset($_SESSION['role_id'])) {
                 <center>
                     <p>ค้นหาอุปกรณ์ในระบบของคุณ สามารถตรวจสอบสถานะของแต่ละอุปกรณ์ได้</p>
                 </center>
+
                 <div class="row">
 
                     <div class="col">
@@ -209,21 +211,67 @@ if (!isset($_SESSION['role_id'])) {
                             <form id="search-form">
                                 <div class="container">
                                     <div class="row">
-                                        <div class="col-10">
-                                            <input type="text" id="search-input" placeholder="Search...">
+                                        <div class="col">
+                                            <input type="text" id="search-input" placeholder="หาด้วยเลข Serial Number, ชื่อแบรนด์, ชื่อรุ่น ..." style="border:2px solid #75D3E5">
                                         </div>
-                                        <div class="col-2">
+                                        <!-- <div class="col-2">
                                             <button type="submit" id="search-button">Search</button>
-                                        </div>
-                                    </div>
-                                    <div class="row ">
+                                        </div> -->
+
                                         <div id="search-results">
                                             ค้นหาอุปกรณ์ที่คุณต้องการ....
                                         </div>
                                     </div>
+                                    <br>
+                                    <nav aria-label="Page navigation example">
+
+                                        <ul class="pagination justify-content-center ">
+                                            <li class="page-item">
+                                                <a class="page-link" href="search_repair.php" tabindex="-1" aria-disabled="true">ทั้งหมด</a>
+                                            </li>
+                                            <?php
+                                            $sql_f = "SELECT repair.r_brand
+FROM get_detail
+LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+LEFT JOIN repair ON get_detail.r_id = repair.r_id
+LEFT JOIN (
+    SELECT get_r_id, MAX(rs_date_time) AS max_date
+    FROM repair_status
+    GROUP BY get_r_id
+) AS subquery ON get_repair.get_r_id = subquery.get_r_id
+LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
+WHERE rs.status_id = '3' AND rs.rs_date_time = subquery.max_date AND get_repair.del_flg = 0 
+
+ORDER BY repair.r_brand ASC;  ";
+                                            $result_f = mysqli_query($conn, $sql_f);
+
+                                            $original = ''; // Initialize $original to an empty string
+                                            $first_char = ''; // Initialize $first_char to an empty string
+
+                                            while ($row_f = mysqli_fetch_array($result_f)) {
+                                                $first_char = $row_f['r_brand']; // Get the first character from the database result
+                                                $first_char = strtoupper($first_char[0]);
+
+                                                // Check if $first_char is not equal to $original
+                                                if ($first_char != $original) {
+                                                    $original = $first_char; // Update $original with the current $first_char
+                                            ?>
+                                                    <!-- <a href="repair_have.php?search=<?= $first_char ?>" style="color: black;"><?= $first_char ?></a> -->
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="search_repair.php?word=<?= $first_char ?>" tabindex="-1" aria-disabled="true"><?= $first_char ?></a>
+                                                    </li>
+                                            <?php
+                                                }
+                                            }
+                                            ?>
+                                        </ul>
+                                    </nav>
+
+
                                 </div>
                             </form>
                         </div>
+
                     </div>
                 </div>
 
@@ -586,7 +634,9 @@ if (!isset($_SESSION['role_id'])) {
 
                                                     <div class="container " style="background-color: #F7FCFF;">
                                                         <br>
-                                                        <h4 class="ln" style="color:blue">หมายเลขซ่อมที่ <?= $row_get['get_r_id'] ?></h4>
+                                                        <a class="btn btn-primary" id="bounce-item" href="detail_repair.php?id=<?= $row_get['get_r_id'] ?>">
+                                                            <h4 class="ln" style="color:white">หมายเลขซ่อมที่ <?= $row_get['get_r_id'] ?></h4>
+                                                        </a>
                                                         <hr>
                                                         <!-- <h5 id="bounce-item"><a href="detail_repair.php?id=<?= $row_get['get_r_id'] ?>" class="btn btn-primary" title="ไปที่หมายเลขซ่อมนี้">หมายเลขซ่อม <?= $row_get['get_r_id'] ?></a>
                                                            
@@ -624,6 +674,7 @@ if (!isset($_SESSION['role_id'])) {
 
                                                             if (mysqli_num_rows($result_date_out)) {
                                                                 $row_date_out = mysqli_fetch_array($result_date_out);
+                                                                $success = 1;
                                                             ?>
 
                                                                 <br>
@@ -724,7 +775,14 @@ if (!isset($_SESSION['role_id'])) {
                                                                     ?>
                                                                 </div>
                                                             </div>
-                                                        <?php } else {  ?>
+                                                        <?php
+                                                            $sql_p = "SELECT * FROM repair_detail
+                                                    LEFT JOIN get_detail ON repair_detail.get_d_id = get_detail.get_d_id
+                                                    LEFT JOIN parts ON repair_detail.p_id = parts.p_id
+                                                     WHERE get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0 AND repair_detail.del_flg = 0";
+                                                            $result_p = mysqli_query($conn, $sql_p);
+                                                            $row_p = mysqli_fetch_array($result_p);
+                                                        } elseif ($success != '1') {  ?>
                                                             <center>
                                                                 <!-- <hr> -->
                                                                 <h5 class="shadow" style="border-radius:3px;background-color:#D8CB00;color:white">การซ่อมอยู่ระหว่างดำเนินการในขณะนี้ <span id="dot-animation<?= $row_get['get_d_id'] ?>"></span></h5>
@@ -753,8 +811,15 @@ if (!isset($_SESSION['role_id'])) {
                                                                 <br>
                                                             </center>
                                                         <?php
-                                                        } ?>
-                                                        <?php
+                                                        } elseif ($success == '1') {  ?>
+                                                            <center>
+                                                                <!-- <hr> -->
+                                                                <h5 class="shadow" style="border-radius:3px;background-color:green;color:white">การซ่อมดำเนินการเสร็จสิ้นแล้ว </h5>
+
+                                                                <br>
+                                                            </center>
+                                                            <?php
+                                                        }
                                                         $sql2 = "SELECT rs.rs_id, rs.status_id, st.status_color, rs.rs_conf, rs.rs_date_time, rs.rs_detail,
                                                         gr.get_tel, gr.get_add, gr.get_wages, gr.get_add_price, gr.get_add_price
                                                     FROM get_repair gr
@@ -836,131 +901,131 @@ if (!isset($_SESSION['role_id'])) {
                                                             // Handle the error
                                                             echo "Error: " . mysqli_error($conn);
                                                         }
-                                                        ?><?php if ($row_2['get_add_price'] + $row_2['get_wages'] + $total_part_price > 0) {  ?>
+                                                            ?><?php if ($row_2['get_add_price'] + $row_2['get_wages'] + $total_part_price > 0) {  ?>
 
 
-                                                        <!-- Modal -->
-                                                        <div class="modal fade" id="exampleModal<?= $get_r_id ?>" tabindex="-1" aria-labelledby="exampleModalLabel<?= $get_r_id ?>" aria-hidden="true">
-                                                            <div class="modal-dialog  modal-dialog-centered">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 style="color:black" class="modal-title" id="exampleModalLabel<?= $get_r_id ?>">รายการซ่อมและค่าบริการ</h5>
-                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <br>
-                                                                        <div class="row">
-                                                                            <div class="col-md-6 d-flex  justify-content-start">
-                                                                                ค่าอะไหล่
-                                                                            </div>
-                                                                            <div class="col-md-6 d-flex  justify-content-end">
-                                                                                ฿ <?= number_format($total_part_price) ?>
-                                                                            </div>
+                                                            <!-- Modal -->
+                                                            <div class="modal fade" id="exampleModal<?= $get_r_id ?>" tabindex="-1" aria-labelledby="exampleModalLabel<?= $get_r_id ?>" aria-hidden="true">
+                                                                <div class="modal-dialog  modal-dialog-centered">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 style="color:black" class="modal-title" id="exampleModalLabel<?= $get_r_id ?>">รายการซ่อมและค่าบริการ</h5>
+                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                         </div>
-                                                                        <div class="row">
-                                                                            <div class="col-md-6 d-flex  justify-content-start">
-                                                                                ค่าแรง
-                                                                            </div>
-                                                                            <div class="col-md-6 d-flex  justify-content-end">
-                                                                                ฿ <?php
-                                                                                    if ($row_2['get_wages'] != NULL) {
-                                                                                        echo number_format($row_2['get_wages']);
-                                                                                    } else {
-                                                                                        echo '0';
-                                                                                    }
-                                                                                    ?>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="col-md-6 d-flex  justify-content-start">
-                                                                                ค่าจัดส่ง
-                                                                            </div>
-                                                                            <div class="col-md-6 d-flex  justify-content-end">
-                                                                                ฿ <?php
-                                                                                    if ($row_2['get_add_price'] != NULL) {
-                                                                                        echo number_format($row_2['get_add_price']);
-                                                                                    } else {
-                                                                                        echo '0';
-                                                                                    }
-                                                                                    ?>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <?php if ($total_part_price > 0) {   ?>
+                                                                        <div class="modal-body">
                                                                             <br>
                                                                             <div class="row">
-                                                                                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">ดูรายการอะไหล่</button>
+                                                                                <div class="col-md-6 d-flex  justify-content-start">
+                                                                                    ค่าอะไหล่
+                                                                                </div>
+                                                                                <div class="col-md-6 d-flex  justify-content-end">
+                                                                                    ฿ <?= number_format($total_part_price) ?>
+                                                                                </div>
                                                                             </div>
-                                                                        <?php   } ?>
+                                                                            <div class="row">
+                                                                                <div class="col-md-6 d-flex  justify-content-start">
+                                                                                    ค่าแรง
+                                                                                </div>
+                                                                                <div class="col-md-6 d-flex  justify-content-end">
+                                                                                    ฿ <?php
+                                                                                        if ($row_2['get_wages'] != NULL) {
+                                                                                            echo number_format($row_2['get_wages']);
+                                                                                        } else {
+                                                                                            echo '0';
+                                                                                        }
+                                                                                        ?>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="col-md-6 d-flex  justify-content-start">
+                                                                                    ค่าจัดส่ง
+                                                                                </div>
+                                                                                <div class="col-md-6 d-flex  justify-content-end">
+                                                                                    ฿ <?php
+                                                                                        if ($row_2['get_add_price'] != NULL) {
+                                                                                            echo number_format($row_2['get_add_price']);
+                                                                                        } else {
+                                                                                            echo '0';
+                                                                                        }
+                                                                                        ?>
+                                                                                </div>
+                                                                            </div>
 
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                            <?php if ($total_part_price > 0) {   ?>
+                                                                                <br>
+                                                                                <div class="row">
+                                                                                    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">ดูรายการอะไหล่</button>
+                                                                                </div>
+                                                                            <?php   } ?>
+
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="accordion accordion-flush auto-font" id="accordionFlushExample<?= $get_r_id ?>" style="background-color: #F1F1F1;">
-                                                            <div class="accordion-item" id="totalprice">
-                                                                <div>
-                                                                    <h5 class="accordion-header" id="flush-headingTwo">
-                                                                        <br>
-                                                                        <!-- Button trigger modal -->
-                                                                        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal<?= $get_r_id ?>">
+                                                            <div class="accordion accordion-flush auto-font" id="accordionFlushExample<?= $get_r_id ?>" style="background-color: #F1F1F1;">
+                                                                <div class="accordion-item" id="totalprice">
+                                                                    <div>
+                                                                        <h5 class="accordion-header" id="flush-headingTwo">
+                                                                            <br>
+                                                                            <!-- Button trigger modal -->
+                                                                            <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal<?= $get_r_id ?>">
                                                                             รวมการสั่งซ่อม <?= number_format($total_part_price + $row_2['get_wages'] + $row_2['get_add_price']) ?> บาท
                                                                         </button> -->
-                                                                        <button style="background-color: #F1F1F1;" class="accordion-button collapsed" data-bs-toggle="modal" data-bs-target="#exampleModal<?= $get_r_id ?>" type="button" data-bs-toggle="collapse<?= $get_r_id ?>" data-bs-target="#flush-collapseTwo<?= $get_r_id ?>" aria-expanded="false" aria-controls="flush-collapseTwo<?= $get_r_id ?>" style="background-color: #F1F1F1;">
-                                                                            <h6 class="auto-font-head">
-                                                                                รวมการสั่งซ่อม <?= number_format($total_part_price + $row_2['get_wages'] + $row_2['get_add_price']) ?> บาท
-                                                                            </h6>
-                                                                        </button>
-                                                                    </h5>
-                                                                </div>
+                                                                            <button style="background-color: #F1F1F1;" class="accordion-button collapsed" data-bs-toggle="modal" data-bs-target="#exampleModal<?= $get_r_id ?>" type="button" data-bs-toggle="collapse<?= $get_r_id ?>" data-bs-target="#flush-collapseTwo<?= $get_r_id ?>" aria-expanded="false" aria-controls="flush-collapseTwo<?= $get_r_id ?>" style="background-color: #F1F1F1;">
+                                                                                <h6 class="auto-font-head">
+                                                                                    รวมการสั่งซ่อม <?= number_format($total_part_price + $row_2['get_wages'] + $row_2['get_add_price']) ?> บาท
+                                                                                </h6>
+                                                                            </button>
+                                                                        </h5>
+                                                                    </div>
 
-                                                                <!-- <span class="tooltip">กดเพื่อดูรายละเอียดเพิ่มเติม</span> -->
+                                                                    <!-- <span class="tooltip">กดเพื่อดูรายละเอียดเพิ่มเติม</span> -->
 
-                                                                <div id="flush-collapseTwo<?= $get_r_id ?>" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo<?= $get_r_id ?>" data-bs-parent="#accordionFlushExample<?= $get_r_id ?>">
-                                                                    <div class="accordion-body" style="margin-left : 0%;color : gray">
-                                                                        <br>
-                                                                        <div class="row">
-                                                                            <div class="col-md-6 d-flex  justify-content-start">
-                                                                                ค่าอะไหล่
+                                                                    <div id="flush-collapseTwo<?= $get_r_id ?>" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo<?= $get_r_id ?>" data-bs-parent="#accordionFlushExample<?= $get_r_id ?>">
+                                                                        <div class="accordion-body" style="margin-left : 0%;color : gray">
+                                                                            <br>
+                                                                            <div class="row">
+                                                                                <div class="col-md-6 d-flex  justify-content-start">
+                                                                                    ค่าอะไหล่
+                                                                                </div>
+                                                                                <div class="col-md-6 d-flex  justify-content-end">
+                                                                                    <?= number_format($total_part_price) ?>
+                                                                                </div>
                                                                             </div>
-                                                                            <div class="col-md-6 d-flex  justify-content-end">
-                                                                                <?= number_format($total_part_price) ?>
+                                                                            <div class="row">
+                                                                                <div class="col-md-6 d-flex  justify-content-start">
+                                                                                    ค่าแรง
+                                                                                </div>
+                                                                                <div class="col-md-6 d-flex  justify-content-end">
+                                                                                    ฿ <?php
+                                                                                        if ($row_2['get_wages'] != NULL) {
+                                                                                            echo number_format($row_2['get_wages']);
+                                                                                        } else {
+                                                                                            echo '0';
+                                                                                        }
+                                                                                        ?>
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="col-md-6 d-flex  justify-content-start">
-                                                                                ค่าแรง
+                                                                            <div class="row">
+                                                                                <div class="col-md-6 d-flex  justify-content-start">
+                                                                                    ค่าจัดส่ง
+                                                                                </div>
+                                                                                <div class="col-md-6 d-flex  justify-content-end">
+                                                                                    ฿ <?php
+                                                                                        if ($row_2['get_add_price'] != NULL) {
+                                                                                            echo number_format($row_2['get_add_price']);
+                                                                                        } else {
+                                                                                            echo '0';
+                                                                                        }
+                                                                                        ?>
+                                                                                </div>
                                                                             </div>
-                                                                            <div class="col-md-6 d-flex  justify-content-end">
-                                                                                ฿ <?php
-                                                                                    if ($row_2['get_wages'] != NULL) {
-                                                                                        echo number_format($row_2['get_wages']);
-                                                                                    } else {
-                                                                                        echo '0';
-                                                                                    }
-                                                                                    ?>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="col-md-6 d-flex  justify-content-start">
-                                                                                ค่าจัดส่ง
-                                                                            </div>
-                                                                            <div class="col-md-6 d-flex  justify-content-end">
-                                                                                ฿ <?php
-                                                                                    if ($row_2['get_add_price'] != NULL) {
-                                                                                        echo number_format($row_2['get_add_price']);
-                                                                                    } else {
-                                                                                        echo '0';
-                                                                                    }
-                                                                                    ?>
-                                                                            </div>
-                                                                        </div>
-                                                                        <br>
-                                                                        <div class="row">
-                                                                            <!-- <div class="d-flex justify-content-center p-4">
+                                                                            <br>
+                                                                            <div class="row">
+                                                                                <!-- <div class="d-flex justify-content-center p-4">
                         
                         
                                                                                 <nav aria-label="breadcrumb">
@@ -969,23 +1034,23 @@ if (!isset($_SESSION['role_id'])) {
                                                                                     </ol>
                                                                                 </nav>
                                                                             </div> -->
-                                                                            <?php if ($count_part_check > 0) {   ?>
-                                                                                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">ดูรายการอะไหล่</button>
-                                                                            <?php   } ?>
+                                                                                <?php if ($count_part_check > 0) {   ?>
+                                                                                    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">ดูรายการอะไหล่</button>
+                                                                                <?php   } ?>
+                                                                            </div>
                                                                         </div>
+
                                                                     </div>
-
                                                                 </div>
-                                                            </div>
 
-                                                        </div>
-                                                    <?php
-                                                            } ?>
-                                                    <hr>
-                                                    <center>
-                                                        <a class="ln" href="detail_repair.php?id=<?= $row_get['get_r_id'] ?>" style="color:;text-decortion:none">ดูรายละเอียดต่างๆเพิ่มเติม</a>
-                                                    </center>
-                                                    <br>
+                                                            </div>
+                                                        <?php
+                                                                } ?>
+                                                        <hr>
+                                                        <center>
+                                                            <a class="ln" href="detail_repair.php?id=<?= $row_get['get_r_id'] ?>" style="color:;text-decortion:none">ดูรายละเอียดต่างๆเพิ่มเติม</a>
+                                                        </center>
+                                                        <br>
                                                     </div>
                                                 </div>
                                             </div>
@@ -998,6 +1063,190 @@ if (!isset($_SESSION['role_id'])) {
                             <?php } ?>
                         </div>
                     </div>
+                <?php
+                } else {
+                ?>
+                    <form action="action/add_repair_non_gua.php" method="POST">
+                        <div class="container">
+                            <div class="row">
+                                <?php
+                                if (!isset($_GET["search"])) {
+                                    $sql = "SELECT get_repair.get_r_id,repair.*
+                        FROM get_detail
+                        LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                        LEFT JOIN (
+                            SELECT get_r_id, MAX(rs_date_time) AS max_date
+                            FROM repair_status
+                            GROUP BY get_r_id
+                        ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
+                        LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
+                        WHERE  rs.status_id = '3' AND rs.rs_date_time = subquery.max_date AND get_repair.del_flg = 0 
+                        
+                        ORDER BY repair.r_brand ASC;  ";
+                                } else {
+                                    $sql = "SELECT get_repair.get_r_id,repair.*
+                        FROM get_detail
+                        LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                        LEFT JOIN (
+                            SELECT get_r_id, MAX(rs_date_time) AS max_date
+                            FROM repair_status
+                            GROUP BY get_r_id
+                        ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
+                        LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
+                        WHERE   rs.status_id = '3' AND rs.rs_date_time = subquery.max_date AND get_repair.del_flg = 0 AND (
+                                repair.r_brand LIKE '%$search%'
+                                OR repair.r_model LIKE '%$search%'
+                                OR repair.r_serial_number LIKE '%$search%'
+                                OR repair.r_number_model LIKE '%$search%'
+                                OR get_repair.get_r_id LIKE '%$search%'
+                                OR CONCAT(repair.r_brand, ' ', repair.r_model) LIKE '%$search%'
+                                OR CONCAT(repair.r_brand, '', repair.r_model) LIKE '%$search%'
+                            )
+                        
+                        ORDER BY repair.r_brand ASC;
+                                ";
+                                }
+
+                                $result = mysqli_query($conn, $sql);
+                                $i = 0;
+                                $found_data = false;
+                                $id_r;
+                                $remember_first = '';
+
+                                // while card get_repair id
+                                while ($row1 = mysqli_fetch_array($result)) {
+                                    if (isset($_GET['word'])) {
+                                        $word = $_GET['word'];
+                                        $string = $row1['r_brand'];
+                                        $firstChar = strtoupper($string[0]);
+
+                                        if ($word == $firstChar) {
+                                            // Check get_r_id is not as it was 
+                                            if ($id_r != $row1['get_r_id']) {
+                                                $i = $i + 1;
+                                                $id_r = $row1['get_r_id'];
+                                                $id_r_get = $row1['r_id'];
+
+
+                                                $sql_c = "SELECT COUNT(get_r_id) FROM get_detail WHERE get_r_id = '$id_r' AND del_flg = '0'";
+                                                $result_c = mysqli_query($conn, $sql_c);
+                                                $row_c = mysqli_fetch_array($result_c);
+
+                                                $id_g = $row_c[0];
+
+                                                $sql_s = "SELECT status_type.status_name,status_type.status_color,repair_status.status_id FROM repair_status 
+                                    LEFT JOIN status_type ON status_type.status_id = repair_status.status_id 
+                                    WHERE get_r_id = '$id_r' AND repair_status.del_flg = '0' ORDER BY rs_date_time DESC LIMIT 1;";
+                                                $result_s = mysqli_query($conn, $sql_s);
+                                                $row_status = mysqli_fetch_array($result_s);
+
+                                                // Check if data is found
+                                                if ($row_c) {
+                                                    $found_data = true;
+                                                    // Display data
+                                                }
+                                                if ($remember_first !== $firstChar) {
+                                                    $remember_first = $firstChar; ?>
+                                                    <h2><span class="badge bg-secondary mt-4"><?= $remember_first; ?></span></h2>
+                                                    <hr>
+                                                <?php
+                                                }
+                                                ?>
+                                                <style>
+                                                    .dsad {
+                                                        font-size: 100;
+                                                    }
+                                                </style>
+                                                <div id="bounce-item">
+                                                    <a href="search_repair.php?id=<?= $row1['r_id'] ?>" id="card_sent" data-bs-toggle="tooltip" data-bs-placement="top" title="Model: <?= $row1['r_number_model'] ?>">
+                                                        <div class="alert alert-light shadow" role="alert" style="color: black; background-color: #F5F5F5; border: 1px solid #F5F5F5;">
+                                                            <style>
+
+                                                            </style>
+                                                            <b class="ln auto-font"><?= $row1['r_brand'] ?></b><span class="ln auto-font"><?= ' - ' . $row1['r_model'] . '   '  ?></span>
+                                                            <h5 class="ln auto-font"><span class="badge bg-primary ln auto-font"><?= 'SH : ' . $row1['r_number_model'] ?></span></h5>
+                                                        </div>
+                                                    </a>
+                                                </div>
+
+
+                                                <?php }
+                                        }
+                                    } else { {
+
+                                            $string = $row1['r_brand'];
+                                            $firstChar = $string[0];
+                                            // Check get_r_id is not as it was 
+                                            if ($id_r != $row1['get_r_id']) {
+                                                $i = $i + 1;
+                                                $id_r = $row1['get_r_id'];
+                                                $id_r_get = $row1['r_id'];
+
+
+                                                $sql_c = "SELECT COUNT(get_r_id) FROM get_detail WHERE get_r_id = '$id_r' AND del_flg = '0'";
+                                                $result_c = mysqli_query($conn, $sql_c);
+                                                $row_c = mysqli_fetch_array($result_c);
+
+                                                $id_g = $row_c[0];
+
+                                                $sql_s = "SELECT status_type.status_name,status_type.status_color,repair_status.status_id FROM repair_status 
+                                        LEFT JOIN status_type ON status_type.status_id = repair_status.status_id 
+                                        WHERE get_r_id = '$id_r' AND repair_status.del_flg = '0' ORDER BY rs_date_time DESC LIMIT 1;";
+                                                $result_s = mysqli_query($conn, $sql_s);
+                                                $row_status = mysqli_fetch_array($result_s);
+
+                                                // Check if data is found
+                                                if ($row_c) {
+                                                    $found_data = true;
+                                                    // Display data
+                                                }
+                                                if ($remember_first !== $firstChar) {
+                                                    $remember_first = $firstChar;
+
+                                                ?><h2><span class="badge bg-secondary mt-4"><?= strtoupper($remember_first) ?></span></h2>
+                                                    <hr>
+                                                <?php
+                                                }
+                                                ?>
+                                                <style>
+                                                    .dsad {
+                                                        font-size: 100;
+                                                    }
+                                                </style>
+                                                <div id="bounce-item">
+                                                    <a href="search_repair.php?id=<?= $row1['r_id'] ?>" id="card_sent" data-bs-toggle="tooltip" data-bs-placement="top" title="Model: <?= $row1['r_number_model'] ?>">
+                                                        <div class="alert alert-light shadow" role="alert" style="color: black; background-color: #F5F5F5; border: 1px solid #F5F5F5;">
+                                                            <style>
+
+                                                            </style>
+                                                            <b class="ln auto-font"><?= $row1['r_brand'] ?></b><span class="ln auto-font"><?= ' - ' . $row1['r_model'] . '   '  ?></span>
+                                                            <h5 class="ln auto-font"><span class="badge bg-primary ln auto-font"><?= 'SH : ' . $row1['r_number_model'] ?></span></h5>
+                                                        </div>
+                                                    </a>
+                                                </div>
+
+
+                                    <?php }
+                                        }
+                                    }
+                                }
+                                // Display message if no data found
+                                if (!$found_data) { ?>
+                                    <center>
+                                        <br><br><br>
+                                        <h1>"ไม่พบข้อมูลในระบบ"</h1>
+                                    </center><?php } ?>
+                            </div>
+                            <?php if (isset($_GET["search"]) && $_GET["search"] != NULL) { ?>
+                                <center>
+                                    <p>*** หากคุณต้องการดูข้อมูล "การซ่อมทั้งหมด" *** </p>
+                                    <a href="search_repair.php" class="btn btn-primary">ข้อมูลทั้งหมด</a>
+                                </center>
+                            <?php  } ?>
+                        </div>
+                    </form>
                 <?php
                 }
                 ?>

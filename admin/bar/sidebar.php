@@ -42,7 +42,13 @@
             </div>
         </div>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="search_repair.php">
+            <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
+            <span>ค้นหาอุปกรณ์</span></a>
+    </li>
     <br>
+    
     <div class="sidebar-heading">
         ข้อมูลทั่วไป
     </div>
@@ -80,15 +86,11 @@
             </div>
         </div>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="search_repair.php">
-            <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
-            <span>ค้นหาอุปกรณ์</span></a>
-    </li>
+   
     <!-- Nav Item - soundsystem Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsesoundsystem" aria-expanded="true" aria-controls="collapsesoundsystem">
-            <i class="fas fa-solid fa-music"></i>
+            <i class="f	fa fa-cogs"></i>
             <span>อะไหล่</span>
         </a>
         <div id="collapsesoundsystem" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">

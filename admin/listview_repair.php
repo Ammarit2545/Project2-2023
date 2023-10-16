@@ -176,17 +176,17 @@ if (!isset($_SESSION['role_id'])) {
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th width="20px">ลำดับ</th>
-                                            <th width="20px">เลขที่ซ่อม</th>
-                                            <th width="20px">ประเภท</th>
-                                            <th>ยี่ห้อ</th>
-                                            <th>รุ่น</th>
-                                            <th>ครั้งที่</th>
+                                            <th>ลำดับ</th>
+                                            <th>สถานะ</th>
+                                            <th>หมายเลขซ่อม</th>
+                                            <th>ประเภท</th>
+                                            <!-- <th>ยี่ห้อ</th>
+                                            <th>รุ่น</th> -->
+                                            <!-- <th>ครั้งที่</th> -->
                                             <th>เลข serail</th>
                                             <!-- <th>ชื่อ</th> -->
                                             <th>จำนวน</th>
                                             <th>Date</th>
-                                            <th>สถานะ</th>
                                             <th>ปุ่ม</th>
                                         </tr>
                                     </thead>
@@ -225,18 +225,18 @@ if (!isset($_SESSION['role_id'])) {
                                             } elseif (!isset($_GET['status_select'])) {
                                                 $sql = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' ORDER BY rs_id DESC LIMIT 1";
                                                 $result_check = mysqli_query($conn, $sql);
-                                            
+
                                                 $row_check = mysqli_fetch_array($result_check);
-                                            
+
                                                 // Replace 'status_id' with the actual column name you want to compare
                                                 // If you want to compare it with a specific value like $_GET['status_select'], replace that too
-                                                $excludedStatusIDs = [1, 25 ];
+                                                $excludedStatusIDs = [1, 25];
                                                 if (!in_array($row_check['status_id'], $excludedStatusIDs)) {
                                                     // The condition is not met, and you can skip the current iteration of the loop
                                                     continue;
                                                 }
                                             }
-                                            
+
 
 
                                             $sql_date = "SELECT get_r_date_in FROM get_repair WHERE get_r_id = '$get_r_id' ";
@@ -280,6 +280,14 @@ if (!isset($_SESSION['role_id'])) {
                                         ?>
                                             <tr>
                                                 <td><?= $i ?></td>
+                                                <!-- สถานะล่าสุด -->
+                                                <td>
+                                                    <center>
+                                                        <u style="color: <?= $row_c['status_color'] ?>;">
+                                                            <h5 style="color: <?= $row_c['status_color'] ?>; margin-top:2%"><?= $row_c['status_name'] ?></h5>
+                                                        </u>
+                                                    </center>
+                                                </td>
                                                 <td>
                                                     <!-- หมายเลขซ่อม -->
                                                     <?php
@@ -309,9 +317,9 @@ if (!isset($_SESSION['role_id'])) {
                                                         echo "-";
                                                     } ?>
                                                 </td>
-                                                <td>
-                                                    <!-- ชื่อยี่ห้อ -->
+                                                <!-- <td>
                                                     <?php
+                                                    // ชื่อยี่ห้อ
                                                     if ($row_get_count[0] > 1) {
                                                     ?>
                                                         <p class="font-more-one-style">มากกว่า 1 ชิ้น</p>
@@ -325,8 +333,8 @@ if (!isset($_SESSION['role_id'])) {
                                                     } ?>
                                                 </td>
                                                 <td>
-                                                    <!-- ชื่อโมเดล -->
                                                     <?php
+                                                    // ชื่อโมเดล
                                                     if ($row_get_count[0] > 1) {
                                                     ?>
                                                         <p class="font-more-one-style">มากกว่า 1 ชิ้น</p>
@@ -338,10 +346,10 @@ if (!isset($_SESSION['role_id'])) {
                                                     } else {
                                                         echo "-";
                                                     } ?>
-                                                </td>
-                                                <td>
-                                                    <!-- ซ่อมครั้งที่เท่าไหร่ -->
+                                                </td> -->
+                                                <!-- <td>
                                                     <?php
+                                                    // ซ่อมครั้งที่เท่าไหร่
                                                     if ($row_get_count[0] > 1) {
                                                     ?>
                                                         <p class="font-more-one-style">มากกว่า 1 ชิ้น</p>
@@ -358,7 +366,7 @@ if (!isset($_SESSION['role_id'])) {
                                                     } else {
                                                         echo "-";
                                                     } ?>
-                                                </td>
+                                                </td> -->
                                                 <td>
                                                     <!-- หมายเลขประจำเครื่อง SN -->
                                                     <?php
@@ -400,12 +408,7 @@ if (!isset($_SESSION['role_id'])) {
                                                         echo "-";
                                                     } ?>
                                                 </td>
-                                                <!-- สถานะล่าสุด -->
-                                                <td>
-                                                    <center>
-                                                        <button style="background-color: <?= $row_c['status_color'] ?>; color:white" class="btn btn-light"><?= $row_c['status_name'] ?></button>
-                                                    </center>
-                                                </td>
+
                                                 <td>
                                                     <div class="text-center">
                                                         <a class="btn btn-primary" href="detail_repair.php?id=<?= $row['get_r_id'] ?>">ดู</a>
