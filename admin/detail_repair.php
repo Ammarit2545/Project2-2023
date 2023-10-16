@@ -175,6 +175,54 @@ if (!isset($_SESSION['role_id'])) {
         /* Increase shadow size and intensity on hover */
 
     }
+
+    #modalimg {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Fixed position to cover the whole viewport */
+        z-index: 9999;
+        /* Set a high z-index to make it appear on top of everything */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        /* Semi-transparent background */
+    }
+
+    #modal_ed {
+    display: none; /* Hidden by default */
+    position: fixed; /* Fixed position to cover the whole viewport */
+    z-index: 9999; /* Set a high z-index to make it appear on top of everything */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+}
+
+.modal-video {
+    /* Add styles for the video element, e.g., width and height */
+    width: 80%;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+    /* Rest of your modal styles... */
+
+    .close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        color: #fff;
+        font-size: 25px;
+        cursor: pointer;
+    }
 </style>
 <style>
     /* Style the search input */
@@ -229,7 +277,15 @@ if (!isset($_SESSION['role_id'])) {
 </style>
 
 <body id="page-top">
-
+    <div id="modalimg" class="modal_ed">
+        <span class="close" onclick="closeModalIMG()">&times;</span>
+        <img id="modal-image" src="" alt="Modal Photo">
+    </div>
+    <!-- Modal -->
+    <div id="modal_ed" class="modal_ed">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <video id="modal-video" controls class="modal-video"></video>
+    </div>
 
     <!-- Modal -->
     <!-- Your HTML content -->
@@ -341,13 +397,123 @@ if (!isset($_SESSION['role_id'])) {
                         </div>
 
                         <hr>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                            <h5 style="margin-bottom: 0px;"> ดูรายการส่งซ่อมทั้งหมด </h5>
+                        </button>
 
+                        <!-- Modal -->
+                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="staticBackdropLabel">รายการส่งซ่อมทั้งหมด</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <hr style="border:2px solid gray" class="my-4">
+                                        <?php
+                                        $count_get_no = 0;
+
+                                        $sql_get = "SELECT * FROM get_detail 
+LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                        WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
+                                        $sql_get_count_track = "SELECT * FROM get_detail 
+                         LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                 LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                 WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
+                                        $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
+                                        $result_get = mysqli_query($conn, $sql_get);
+                                        $row_get_count_track = mysqli_fetch_array($result_get_count_track);
+                                        while ($row_get = mysqli_fetch_array($result_get)) {
+                                            $count_get_no++;
+                                        ?>
+
+                                            <h4 style="text-align:start; color:#2c2f34" id="body_text"> <span class="btn btn-primary">รายการที่ <?= $count_get_no ?></span> <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?> | Model : <?= $row_get['r_number_model'] ?> | Serial Number : <?= $row_get['r_serial_number'] ?> </h4>
+                                            <hr>
+                                            <div style="margin-left: 40px; color:#2c2f34" class="my-4">
+                                                <?php if ($row_get['get_t_id'] != NULL) { ?><h5 class="mb-3" style="color:black">หมายเลขพัสดุ</h5>
+                                                    <br>
+                                                    <?= $row_get['t_parcel'] ?>
+                                                    <br>
+                                                    <hr><?php  }
+                                                        ?>
+                                                <h5 class=" mb-3" style="color:black">รายละเอียด</h5>
+                                                <!-- <h5 class="fw-bold">รายละเอียด</h5> -->
+                                                <br>
+                                                <?= $row_get['get_d_detail'] ?>
+                                                <br>
+
+
+                                                <?php
+
+                                                $get_d_id = $row_get['get_d_id'];
+                                                // $sql_pic = "SELECT * FROM `repair_pic` WHERE get_r_id = '$get_r_id'";
+                                                // $result_pic = mysqli_query($conn, $sql_pic);
+                                                $sql_pic = "SELECT * FROM repair_pic 
+                                LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
+                                WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
+                                                $result_pic = mysqli_query($conn, $sql_pic);
+
+                                                if (mysqli_num_rows($result_pic)) {
+                                                ?>
+                                                    <hr>
+                                                    <!-- <h5 class="fw-bold">รูปภาพ</h5> -->
+                                                    <h5 style="color:black" class="mb-3">รูปภาพ</h5>
+                                                    <br>
+                                                    <?php
+                                                }
+                                                while ($row_pic = mysqli_fetch_array($result_pic)) {
+                                                    if ($row_pic[0] != NULL) { ?>
+                                                        <?php
+
+                                                        $rp_pic = $row_pic['rp_pic'];
+                                                        $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                                        ?> <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                                            <a href="#" id="bounce-item"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                        <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
+                                                            <a href="#">
+                                                                <video width="100px" autoplay muted onclick="openModalVideo(this)" src="../<?= $row_pic['rp_pic'] ?>">
+                                                                    <source src="../<?= $row_pic['rp_pic'] ?>" type="video/mp4">
+                                                                    <source src="../<?= $row_pic['rp_pic'] ?>" type="video/ogg">
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                            </a>
+                                                        <?php endif; ?>
+                                                        <!-- Modal -->
+                                                        <!-- <div id="modal_ed" class="modal_ed">
+                                                            <span class="close" onclick="closeModal()">&times;</span>
+                                                            <video id="modal-video" controls class="modal-video"></video>
+                                                        </div> -->
+
+
+
+                                                        <!-- <h2><?= $row_pic['rp_pic'] ?></h2> -->
+                                                <?php
+                                                    }
+                                                } ?>
+
+
+
+
+                                            </div>
+                                            <hr style="border:2px solid gray" class="my-4">
+                                        <?php } ?>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="accordion-item" style="border: 1px solid #ffff; padding:15px;   ">
-                            <h2 class="accordion-header" style="margin-bottom: 0px;" id="headingOne">
+                            <!-- <h2 class="accordion-header" style="margin-bottom: 0px;" id="headingOne">
                                 <a id="bounce-item" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="true" aria-controls="collapseOne">
                                     <h5 style="margin-bottom: 0px;"> ดูรายการส่งซ่อมทั้งหมด </h5>
                                 </a>
-                            </h2>
+                            </h2> -->
                             <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
 
                                 <hr style="border:2px solid gray" class="my-4">
@@ -403,7 +569,7 @@ if (!isset($_SESSION['role_id'])) {
                                                 $rp_pic = $row_pic['rp_pic'];
                                                 $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
                                                 ?> <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
-                                                    <a href="#" id="bounce-item"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                    <a href="#"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
                                                 <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
                                                     <a href="#">
                                                         <video width="100px" autoplay muted onclick="openModalVideo(this)" src="../<?= $row_pic['rp_pic'] ?>">
@@ -414,10 +580,10 @@ if (!isset($_SESSION['role_id'])) {
                                                     </a>
                                                 <?php endif; ?>
                                                 <!-- Modal -->
-                                                <div id="modal_ed" class="modal_ed">
+                                                <!-- <div id="modal_ed" class="modal_ed">
                                                     <span class="close" onclick="closeModal()">&times;</span>
                                                     <video id="modal-video" controls class="modal-video"></video>
-                                                </div>
+                                                </div> -->
 
 
 
@@ -910,7 +1076,7 @@ if (!isset($_SESSION['role_id'])) {
                                             $rp_pic = $row_pic['rp_pic'];
                                             $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
                                             ?> <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
-                                                <a href="#" style="margin-left: 20px;" id="bounce-item"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                <a href="#" style="margin-left: 20px;" ><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
                                             <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
                                                 <a href="#" style="margin-left: 20px;">
                                                     <video width="100px" autoplay muted onclick="openModalVideo(this)" src="../<?= $row_pic['rp_pic'] ?>">
@@ -920,20 +1086,13 @@ if (!isset($_SESSION['role_id'])) {
                                                     </video>
                                                 </a>
                                             <?php endif; ?>
-                                            <!-- Modal -->
-                                            <div id="modal_ed" class="modal_ed">
-                                                <span class="close" onclick="closeModal()">&times;</span>
-                                                <video id="modal-video" controls class="modal-video"></video>
-                                            </div>
+
                                             <!-- <h2><?= $row_pic['rp_pic'] ?></h2> -->
                                         <?php
                                         } else { ?> <h2>ไม่มีข้อมูล</h2> <?php
                                                                         }
                                                                     } ?>
-                                    <div id="modalimg" class="modal_ed">
-                                        <span class="close" onclick="closeModalIMG()">&times;</span>
-                                        <img id="modal-image" src="" alt="Modal Photo">
-                                    </div>
+
 
                                     <script src="script.js"></script>
                                     <script>

@@ -216,6 +216,9 @@ $id_member = $_SESSION['id'];
                                             <button type="submit" id="search-button">Search</button>
                                         </div> -->
 
+
+                                    </div>
+                                    <div class="row">
                                         <div id="search-results">
                                             ค้นหาอุปกรณ์ที่คุณต้องการ....
                                         </div>
@@ -1260,7 +1263,7 @@ ORDER BY repair.r_brand ASC;  ";
     </div>
     <!-- End of Content Wrapper -->
 
-   
+
     </div>
     <!-- End of Page Wrapper -->
 
