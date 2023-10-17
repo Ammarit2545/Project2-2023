@@ -122,14 +122,11 @@ WHERE get_repair.del_flg = '0' AND repair_status.status_id = 1 AND repair_status
                         $count_check_num++;
                     }
                 }
-                ?>
-                <?php if ($count_check_num > 1) {
-                ?>
-                    <span class="badge badge-danger badge-counter"><?= $count_check_num-1 ?>
+                if ($count_check_num > 1) {  ?>
+                    <span class="badge badge-danger badge-counter"><?= $count_check_num - 1 ?>
                         +
                     </span>
-                <?php
-                } ?>
+                <?php  } ?>
             </a>
             <!-- Dropdown - Alerts -->
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
