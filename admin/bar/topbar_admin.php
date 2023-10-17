@@ -187,12 +187,15 @@
         <li class="nav-item dropdown no-arrow">
 
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-
-
                 <!-- <img src="../img brand/anelogo.jpg" style="margin-top : 10% ;  width : 2%" alt="">  -->
-                <h5><span class="badge bg-primary">Admin</span></h5> 
+                <?php
+                $role_id = $_SESSION["role_id"];
+                $sql_role = "SELECT * FROM role  WHERE role_id = '$role_id'";
+                $result_role = mysqli_query($conn, $sql_role);
+                $row_role = mysqli_fetch_array($result_role);
+                ?>
+                <h5><span class="badge bg-primary" style="color: white;"><?= $row_role['role_name'] ?></span></h5>
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small ml-2"><?= $_SESSION["fname"] . " " . $_SESSION["lname"]  ?></span>
-               
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

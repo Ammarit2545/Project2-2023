@@ -72,8 +72,23 @@ if (!isset($_SESSION['role_id'])) {
                 <div class="container-fluid">
                     <br>
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">การส่งซ่อม</h1>
+                   
+                    <h1 class="mb-2 "   style="color : black">หน้าการจัดการใบแจ้งซ่อม/เคลม  </h1>
                     <br>
+                   <h2>
+                   <?php if (isset($_GET['status_select'])) {
+                        $status_select = $_GET['status_select'];
+                        $sql_sel = "SELECT * FROM status_type WHERE status_id = '$status_select'";
+                        $result_sel = mysqli_query($conn, $sql_sel);
+                        $row_sel = mysqli_fetch_array($result_sel);
+?>
+                        <span >ค้นหาสถานะ : </span><span style="color : <?= $row_sel['status_color'] ?>"><?= $row_sel['status_name'] ?></span><?php
+                    } ?>
+                      <?php if (!isset($_GET['status_select'])) {
+?>
+                        <span >การแจ้งซ่อมใหม่ทั้งหมด</span><?php
+                    } ?>
+                   </h2>
                     <br>
                     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
                     <div class="row">
