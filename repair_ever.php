@@ -45,7 +45,7 @@ $row = mysqli_fetch_array($result);
     </script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
     <style>
-        .grid {
+        <?php include('css/all_page.css'); ?>.grid {
             margin-bottom: 3rem;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 600px));
@@ -80,6 +80,21 @@ $row = mysqli_fetch_array($result);
 
         .preview_pic {
             width: 0.02px;
+        }
+
+        #bounce-item {
+            /* box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3); */
+            /* Add a gray shadow */
+            transition: transform 0.3s, box-shadow 0.3s;
+            /* Add transition for transform and box-shadow */
+        }
+
+        #bounce-item:hover {
+            transform: scale(1.1);
+            /* Increase size on hover */
+            /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); */
+            /* Increase shadow size and intensity on hover */
+
         }
     </style>
 </head>
@@ -128,21 +143,21 @@ $row = mysqli_fetch_array($result);
                     <div class="grid">
                         <div class="grid-item">
                             <label for="borderinput1" class="form-label">ชื่อยี่ห้อ</label>
-                            <input type="text" class="form-control input" id="borderinput" name="name_brand" value="<?= $row1['r_brand'] ?>" placeholder="กรุณากรอกชื่อยี่ห้อ" required readonly>
-                            <input type="text" class="form-control input" id="borderinput" name="id_repair" readonly placeholder="ไอดี" value="<?= $id_r ?>" style="display:none">
-                            <input type="text" class="form-control input" id="borderinput" name="id_repair_ever" readonly placeholder="ไอดี" value="1" style="display:none">
+                            <input type="text" class="form-control input" id="borderinput" name="name_brand" value="<?= $row1['r_brand'] ?>" placeholder="กรุณากรอกชื่อยี่ห้อ" required disabled>
+                            <input type="text" class="form-control input" id="borderinput" name="id_repair" disabled placeholder="ไอดี" value="<?= $id_r ?>" style="display:none">
+                            <input type="text" class="form-control input" id="borderinput" name="id_repair_ever" disabled placeholder="ไอดี" value="1" style="display:none">
                         </div>
                         <div class="grid-item">
                             <label for="borderinput1" class="form-label">หมายเลข Serial Number</label>
-                            <input type="text" class="form-control input" id="borderinput" name="serial_number" value="<?= $row1['r_serial_number'] ?>" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)" readonly>
+                            <input type="text" class="form-control input" id="borderinput" name="serial_number" value="<?= $row1['r_serial_number'] ?>" placeholder="กรุณากรอก หมายเลข Serial Number  (ไม่จำเป็น)" disabled>
                         </div>
                         <div class="grid-item">
                             <label for="borderinput1" class="form-label">ชื่อรุ่น</label>
-                            <input type="text" class="form-control input" id="borderinput" name="name_model" value="<?= $row1['r_model']  ?>" placeholder="กรุณากรอกชื่อรุ่น" required readonly>
+                            <input type="text" class="form-control input" id="borderinput" name="name_model" value="<?= $row1['r_model']  ?>" placeholder="กรุณากรอกชื่อรุ่น" required disabled>
                         </div>
                         <div class="grid-item">
                             <label for="borderinput1" class="form-label">หมายเลขรุ่น</label>
-                            <input type="text" class="form-control input" id="borderinput" name="number_model" value="<?= $row1['r_number_model'] ?>" placeholder="กรุณากรอก หมายเลขรุ่น  (ไม่จำเป็น)" readonly>
+                            <input type="text" class="form-control input" id="borderinput" name="number_model" value="<?= $row1['r_number_model'] ?>" placeholder="กรุณากรอก หมายเลขรุ่น  (ไม่จำเป็น)" disabled>
                         </div>
                         <div class="grid-item">
                             <label for="borderinput1" class="form-label">ประเภทของการซ่อม</label>
@@ -180,7 +195,7 @@ $row = mysqli_fetch_array($result);
                                                                                             ?> style="display: none;" <?php
                                                                                                                     } ?>>
                             <label for="borderinput1" class="form-label">บริษัท</label>
-                            <select class="form-select" name="company" id="company" aria-label="Default select example" readonly>
+                            <select class="form-select" name="company" id="company" aria-label="Default select example" disabled>
                                 <?php
                                 $sql_c = "SELECT * FROM company WHERE com_id = '$company' AND del_flg = '0'";
                                 $result_c = mysqli_query($conn, $sql_c);
@@ -245,9 +260,9 @@ $row = mysqli_fetch_array($result);
                             $daysAgo = $interval->days;
                             ?>
 
-                            <?php if($daysAgo > 0){
-                                echo $daysAgo.' days ago';
-                            }else{
+                            <?php if ($daysAgo > 0) {
+                                echo $daysAgo . ' days ago';
+                            } else {
                                 echo '> 1 day';
                             } ?>
                         </div>
@@ -258,26 +273,298 @@ $row = mysqli_fetch_array($result);
             <br>
             <?php if (!isset($_SESSION['sn_check_success'])) { ?>
                 <div class="container">
-                    <label for="borderinput" class="form-label">เพิ่มรูปหรือวีดีโอที่ต้องการ (สูงสุด 4 ไฟล์) <p id="insert_bill" <?php if ($have_company == 1) {
-                                                                                                                                    ?> style="display: inline-block; color:red" <?php } else {
-                                                                                                                                                                                ?> style="display: none; color:red" <?php
-                                                                                                                                                                                                                } ?>>*** เพิ่มรูปใบเสร็จของท่านเพื่อเป็นการยืนยันอย่างน้อย 1 รูป ***</p></label>
-                    <!-- <a class="btn btn-primary" style="margin-left:10px;" onclick="addImage4()">+</a> -->
-                    <div class="row grid">
-                        <div class="col-3 grid-item">
-                            <input type="file" name="image1" onchange="previewImage('image-preview1', this)" id="input1">
+                    <div class="row">
+                        <div class="col-lg-3 mt-2">
+
+                            <div id="image-preview1">
+                                <div class="container">
+                                    <div class="row">
+                                        <!-- Add any desired content here -->
+                                    </div>
+                                </div>
+
+                                <?php
+                                $directory = "uploads/$id/Holder/$count_session/"; // Directory path where your files are located
+                                $files = glob($directory . "1" . "*"); // Get all files that start with index 1
+
+                                ?>
+
+                                <?php
+
+                                if (empty($files)) {
+                                    // Display a card or message when there are no files
+                                ?>
+                                    <center>
+                                        <div class="image-container">
+                                            <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview1',1)" title="Delete" id="deleteButton">&times;</button>
+                                            <script>
+                                                document.addEventListener('DOMContentLoaded', function() {
+                                                    var deleteButton = document.getElementById('deleteButton');
+                                                    deleteButton.click();
+                                                });
+                                            </script>
+                                            <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
+                                        </div>
+                                    </center>
+                                    <?php
+                                } else {
+                                    foreach ($files as $file) {
+                                    ?>
+                                        <div class="image-container">
+                                            <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview1',1)" title="Delete">&times;</button>
+                                            <?php
+                                            $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
+                                            if (in_array(strtolower($fileExtension), ['mp4', 'avi', 'mkv', 'mov'])) {
+                                                echo '<video src="' . $file . '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" autoplay muted controls></video>';
+                                            } else {
+                                                echo '<img src="' . $file . '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%">';
+                                            }
+                                            ?>
+
+                                        </div>
+                                <?php
+                                    }
+                                }
+                                ?>
+                            </div>
+                            <center>
+                                <div id="insert_pic_1" style="display: none;">
+                                    <a id="bounce-item">
+                                        <label id="plus_img_card">
+                                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" id="plus-button-1" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%;" alt="">
+                                            <p id="change-button-1" class="btn btn-primary" style="display : none" alt="">เปลี่ยนรูปภาพ</p>
+                                            <input type="file" name="image1" onchange="previewImage_NEW('image-preview1', this, 'preview-image-new-1',1)" id="fileToUpload" style="display: none;">
+                                        </label>
+                                    </a>
+                                    <div id="preview-image-new-1"></div>
+                                </div>
+                            </center>
                         </div>
-                        <div class="col-3 grid-item">
-                            <input type="file" name="image2" onchange="previewImage('image-preview2', this)" id="input2">
+
+                        <!-- img 2 -->
+                        <div class="col-lg-3 mt-2">
+                            <div id="image-preview2">
+                                <div class="container">
+                                    <div class="row">
+                                        <!-- Add any desired content here -->
+                                    </div>
+                                </div>
+
+                                <?php
+                                $files = glob($directory . "2" . "*"); // Get all files that start with index 2
+
+                                if (empty($files)) {
+                                    // Display a card or message when there are no files
+                                ?>
+                                    <center>
+                                        <div class="image-container">
+                                            <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview2',2)" title="Delete" id="deleteButton">&times;</button>
+                                            <script>
+                                                document.addEventListener('DOMContentLoaded', function() {
+                                                    var deleteButton = document.getElementById('deleteButton');
+                                                    deleteButton.click();
+                                                });
+                                            </script>
+                                            <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
+                                        </div>
+                                    </center>
+                                    <?php
+                                } else {
+                                    foreach ($files as $file) {
+                                    ?>
+                                        <div class="image-container">
+                                            <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview2' ,2)" title="Delete">&times;</button>
+                                            <?php
+                                            $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
+                                            if (in_array(strtolower($fileExtension), ['mp4', 'avi', 'mkv', 'mov'])) {
+                                                echo '<video src="' . $file . '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" autoplay muted controls></video>';
+                                            } else {
+                                                echo '<img src="' . $file . '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%">';
+                                            }
+                                            ?>
+                                        </div>
+                                <?php
+                                    }
+                                }
+                                ?>
+                            </div>
+                            <center>
+                                <div id="insert_pic_2" style="display: none;">
+                                    <a id="bounce-item">
+                                        <label id="plus_img_card">
+                                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" id="plus-button-2" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" alt="">
+                                            <p id="change-button-2" class="btn btn-primary" style="display : none" alt="">เปลี่ยนรูปภาพ</p>
+                                            <input type="file" name="image2" onchange="previewImage_NEW('image-preview2', this, 'preview-image-new-2',2)" id="fileToUpload" style="display: none;">
+                                        </label>
+                                    </a>
+                                    <div id="preview-image-new-2"></div>
+                                </div>
+                            </center>
                         </div>
-                        <div class="col-3 grid-item">
-                            <input type="file" name="image3" onchange="previewImage('image-preview3', this)" id="input3">
+
+                        <!-- img 3 -->
+                        <div class="col-lg-3 mt-2">
+                            <div id="image-preview3">
+                                <div class="container">
+                                    <div class="row">
+                                        <!-- Add any desired content here -->
+                                    </div>
+                                </div>
+
+                                <?php
+                                $files = glob($directory . "3" . "*"); // Get all files that start with index 3
+
+                                if (empty($files)) {
+                                    // Display a card or message when there are no files
+                                ?>
+                                    <center>
+                                        <div class="image-container">
+                                            <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview3',3)" title="Delete" id="deleteButton">&times;</button>
+                                            <script>
+                                                document.addEventListener('DOMContentLoaded', function() {
+                                                    var deleteButton = document.getElementById('deleteButton');
+                                                    deleteButton.click();
+                                                });
+                                            </script>
+                                            <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
+                                        </div>
+                                    </center>
+                                    <?php
+                                } else {
+                                    foreach ($files as $file) {
+                                    ?>
+                                        <div class="image-container">
+                                            <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview3',3)" title="Delete">&times;</button>
+                                            <?php
+                                            $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
+                                            if (in_array(strtolower($fileExtension), ['mp4', 'avi', 'mkv', 'mov'])) {
+                                                echo '<video src="' . $file . '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" autoplay muted controls></video>';
+                                            } else {
+                                                echo '<img src="' . $file . '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%">';
+                                            }
+                                            ?>
+                                        </div>
+                                <?php
+                                    }
+                                }
+                                ?>
+                            </div>
+                            <center>
+                                <div id="insert_pic_3" style="display: none;">
+                                    <a id="bounce-item">
+                                        <label id="plus_img_card">
+                                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" id="plus-button-3" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" alt="">
+                                            <p id="change-button-3" class="btn btn-primary" style="display : none" alt="">เปลี่ยนรูปภาพ</p>
+                                            <input type="file" name="image3" onchange="previewImage_NEW('image-preview3', this, 'preview-image-new-3',3)" id="fileToUpload" style="display: none;">
+                                        </label>
+                                    </a>
+                                    <div id="preview-image-new-3"></div>
+                                </div>
+                            </center>
                         </div>
-                        <div class="col-3 grid-item">
-                            <input type="file" name="image4" onchange="previewImage('image-preview4', this)" id="input1">
+                        <div class="col-lg-3 mt-2">
+                            <div id="image-preview4">
+                                <div class="container">
+                                    <div class="row">
+                                        <!-- Add any desired content here -->
+                                    </div>
+                                </div>
+
+                                <?php
+                                $files = glob($directory . "4" . "*"); // Get all files that start with index 4
+
+                                if (empty($files)) {
+                                    // Display a card or message when there are no files
+                                ?>
+                                    <center>
+                                        <div class="image-container">
+                                            <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview4',4)" title="Delete" id="deleteButton">&times;</button>
+                                            <script>
+                                                document.addEventListener('DOMContentLoaded', function() {
+                                                    var deleteButton = document.getElementById('deleteButton');
+                                                    deleteButton.click();
+                                                });
+                                            </script>
+                                            <img src="<?php echo $file; ?>" style="max-width: 200px; max-height: 200px;border: 1px solid gray;border-radius: 2%">
+                                        </div>
+                                    </center>
+                                    <?php
+                                } else {
+                                    foreach ($files as $file) {
+                                    ?>
+                                        <div class="image-container">
+                                            <button class="delete-icon" onclick="deleteImage('<?php echo $file; ?>', 'image-preview4',4)" title="Delete">&times;</button>
+                                            <?php
+                                            $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
+                                            if (in_array(strtolower($fileExtension), ['mp4', 'avi', 'mkv', 'mov'])) {
+                                                echo '<video src="' . $file . '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" autoplay muted controls></video>';
+                                            } else {
+                                                echo '<img src="' . $file . '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%">';
+                                            }
+                                            ?>
+                                        </div>
+                                <?php
+                                    }
+                                }
+                                ?>
+                            </div>
+                            <center>
+                                <div id="insert_pic_4" style="display: none;">
+                                    <a id="bounce-item">
+                                        <label id="plus_img_card">
+                                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" id="plus-button-4" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%" alt="">
+                                            <p id="change-button-4" class="btn btn-primary" style="display : none" alt="">เปลี่ยนรูปภาพ</p>
+                                            <input type="file" name="image4" onchange="previewImage_NEW('image-preview4', this, 'preview-image-new-4',4)" id="fileToUpload" style="display: none;">
+                                        </label>
+                                    </a>
+
+                                    <div id="preview-image-new-4"></div>
+                                </div>
+                            </center>
                         </div>
                     </div>
+
                 </div>
+
+                <script>
+                    function previewImage_NEW(previewContainerId, fileInput, previewImageId, count) {
+                        var previewContainer = document.getElementById(previewContainerId);
+                        var previewImage = document.getElementById(previewImageId);
+
+                        if (fileInput.files && fileInput.files[0]) {
+                            var reader = new FileReader();
+
+                            // Hide the plus button and show the change button
+                            document.getElementById('plus-button-' + count).style.display = 'none';
+                            document.getElementById('change-button-' + count).style.display = 'block';
+
+                            reader.onload = function(e) {
+                                if (fileInput.files[0].type.includes('video')) {
+                                    // If the file is a video, create a video element
+                                    previewImage.innerHTML = '<video src="' + e.target.result + '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%;" autoplay muted controls></video>';
+                                } else {
+                                    // If the file is an image, create an image element
+                                    previewImage.innerHTML = '<img src="' + e.target.result + '" style="max-width: 200px; max-height: 200px; border: 1px solid gray; border-radius: 2%">';
+                                }
+                            };
+
+                            reader.readAsDataURL(fileInput.files[0]);
+                            previewContainer.style.display = 'block';
+                        } else {
+                            previewImage.innerHTML = '';
+                            previewContainer.style.display = 'none';
+                        }
+                    }
+
+                    function deleteImage(file, previewId, numberPreview) {
+                        var imageContainer = document.getElementById(previewId);
+                        imageContainer.parentNode.removeChild(imageContainer);
+
+                        document.getElementById("insert_pic_" + numberPreview).style.display = 'block';
+                        // Perform additional logic for deleting the file from the server
+                        // You can use the 'file' parameter to send the necessary data to the server
+                    }
+                </script>
             <?php } ?>
             <script>
                 function switchInput() {
@@ -393,7 +680,7 @@ $row = mysqli_fetch_array($result);
             <?php if (!isset($_SESSION['sn_check_success'])) { ?>
                 <center>
                     <br>
-                    <a href="repair_have.php" class="btn btn-primary" style="color:white">เคยซ่อมแล้วหรือไม่?</a>
+                    <a href="listview_repair.php" class="btn btn-danger" style="color:white">ยกเลิก</a>
                     <button type="submit" class="btn btn-success" name="submit">ยืนยัน</button>
                 </center>
             <?php } else {  ?>

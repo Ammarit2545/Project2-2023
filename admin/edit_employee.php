@@ -123,7 +123,9 @@ if (!isset($_SESSION['role_id'])) {
                             <label for="inputPassword" class="col-sm-1 col-form-label">ตำแหน่ง</label>
                             <div class="col-sm-4">
                                 <!-- <input type="text" class="form-control" name="role_id" id="inputPassword" value="<?= $row['role_id'] ?>" placeholder="Accountant"> -->
-                                <select name="role_id" class="mt-2 form-select" aria-label="Default select example">
+                                <select name="role_id" class="mt-2 form-select" aria-label="Default select example" <?php if($row['role_id'] == '1'){
+                                    ?>disabled<?php
+                                } ?>>
                                     <?php
                                     $role_id = $row['role_id'];
                                     $sql_s1 = "SELECT * FROM role WHERE del_flg = '0' AND role_id = '$role_id'";

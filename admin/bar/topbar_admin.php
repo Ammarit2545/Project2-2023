@@ -190,9 +190,9 @@
 
 
                 <!-- <img src="../img brand/anelogo.jpg" style="margin-top : 10% ;  width : 2%" alt="">  -->
-
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?= $_SESSION["fname"] . " " . $_SESSION["lname"]  ?></span>
-                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                <h5><span class="badge bg-primary">Admin</span></h5> 
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small ml-2"><?= $_SESSION["fname"] . " " . $_SESSION["lname"]  ?></span>
+               
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

@@ -40,6 +40,14 @@ $row = mysqli_fetch_array($result);
 
         }
 
+        .same-date{
+            color:blue;
+        }
+
+        a:hover .same-date{
+            color:white;
+        }
+
         .grid-pic {
             margin-bottom: 3rem;
             display: grid;
@@ -152,7 +160,7 @@ $row = mysqli_fetch_array($result);
         <h1 class="pt-5 text-center">การบริการส่งซ่อม</h1>
         <center>
             <!-- <p>แบบไม่มีกับมีประกันทางร้าน</p> -->
-            <p>กรุณาใส่รายละเอียดการซ่อมของท่าน</p>
+            <p class="ln">กรุณาใส่รายละเอียดการซ่อมของท่าน</p>  
         </center>
         <br>
         <br>
@@ -611,8 +619,15 @@ $row = mysqli_fetch_array($result);
                     </div> -->
 
             <div class="text-center py-4">
-                <a class="btn btn-danger" onclick="cancel_edit()" id="bounce-item">ยกเลิก</a>
-                <button type="submit" class="btn btn-success" id="bounce-item">ยืนยัน</button>
+                <br>
+                <a href="repair_have.php" class="btn btn-outline-primary p-2"><p> กดที่นี่ : <u>หากท่านต้องการใช้ข้อมูลอุปกรณ์เดิม...</u> </p></a>
+                <br>
+                <a class="btn btn-danger mt-4" onclick="cancel_edit()" id="bounce-item">ยกเลิก</a>
+             
+                <button type="submit" class="btn btn-success mt-4" id="bounce-item">ยืนยัน</button>
+                <br>
+                
+                
             </div>
 
         </div>
