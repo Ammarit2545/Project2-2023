@@ -6,6 +6,10 @@ if (!isset($_SESSION["id"])) {
     header('Location:home.php');
 }
 
+if ($_GET["status_id"] == 3) {
+    header('Location:listview_status.php');
+}
+
 $id = $_SESSION["id"];
 
 $sql = "SELECT * FROM member WHERE m_id = '$id'";
@@ -252,7 +256,7 @@ if (isset($_GET["status_id"]) && $_GET["search"] == NULL) {
                                 <a class="nav-link active" aria-current="page" href="listview_status.php">ทั้งหมด</a>
                             </li>
                             <?php
-                            $sql_st = "SELECT status_type.status_id FROM status_type WHERE status_type.del_flg = 0";
+                            $sql_st = "SELECT status_type.status_id FROM status_type WHERE status_type.del_flg = 0 AND status_type.status_id != 3";
                             $result_st = mysqli_query($conn, $sql_st);
                             $status_data = array(); // Array to store status data
                             while ($row_st_id = mysqli_fetch_array($result_st)) {
@@ -413,14 +417,18 @@ if (isset($_GET["status_id"]) && $_GET["search"] == NULL) {
                     <?php
                     if (!isset($search) && !isset($status_id)) {
                         $sql = "SELECT
-                                get_repair.*,
-                                MAX(repair.m_id) AS m_id -- Assuming n_id is a column in the repair table
-                            FROM get_repair
-                            LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
-                            LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                            WHERE repair.m_id = '$id' AND get_repair.del_flg = 0
-                            GROUP BY get_repair.get_r_id
-                            ORDER BY MAX(get_repair.get_r_date_in) DESC;";
+                        get_repair.get_r_id,
+                        MAX(repair.m_id) AS m_id
+                    FROM get_repair
+                    LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
+                    LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                    LEFT JOIN repair_status AS rs ON get_repair.get_r_id = rs.get_r_id
+                    WHERE repair.m_id = '$id'  -- Assuming $id is a variable
+                        
+                        AND get_repair.del_flg = 0
+                    GROUP BY get_repair.get_r_id
+                    ORDER BY MAX(get_repair.get_r_date_in) DESC;
+                    ";
                     }
                     // elseif (isset($_GET['status_id']) && isset($_GET['status_id']) && $_GET['search'] != NULL && $_GET['status_id'] != NULL) {
                     //     $sql = "SELECT
@@ -453,7 +461,7 @@ if (isset($_GET["status_id"]) && $_GET["search"] == NULL) {
                                     GROUP BY get_r_id
                                 ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
                                 LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
-                                WHERE repair.m_id = '$id' AND rs.status_id = '$status_id' AND rs.rs_date_time = subquery.max_date AND get_repair.del_flg = 0 
+                                WHERE repair.m_id = '$id' AND rs.status_id = '$status_id' AND rs.status_id != 3 AND rs.rs_date_time = subquery.max_date AND get_repair.del_flg = 0 
                                 
                                 ORDER BY get_repair.get_r_date_in DESC;
                                 ";
@@ -464,7 +472,8 @@ if (isset($_GET["status_id"]) && $_GET["search"] == NULL) {
                      FROM get_repair
                      LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
                      LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                     WHERE repair.m_id = '$id' AND get_repair.del_flg = 0 AND (
+                     LEFT JOIN repair_status AS rs ON get_repair.get_r_id = rs.get_r_id
+                     WHERE repair.m_id = '$id' AND rs.status_id != 3 AND  get_repair.del_flg = 0 AND (
                                 repair.r_brand LIKE '%$search%'
                                 OR repair.r_model LIKE '%$search%'
                                 OR repair.r_serial_number LIKE '%$search%'
@@ -483,6 +492,7 @@ if (isset($_GET["status_id"]) && $_GET["search"] == NULL) {
 
                     // while card get_repair id
                     while ($row1 = mysqli_fetch_array($result)) {
+
                         // Check get_r_id is not as it was 
                         if ($id_r != $row1['get_r_id']) {
                             $i = $i + 1;
@@ -499,6 +509,10 @@ if (isset($_GET["status_id"]) && $_GET["search"] == NULL) {
                                     WHERE get_r_id = '$id_r' AND repair_status.del_flg = '0' ORDER BY rs_date_time DESC LIMIT 1;";
                             $result_s = mysqli_query($conn, $sql_s);
                             $row_status = mysqli_fetch_array($result_s);
+
+                            if ($row_status['status_id'] == 3) {
+                                continue;
+                            }
 
                             // Check if data is found
                             if ($row_c) {

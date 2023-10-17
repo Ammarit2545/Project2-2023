@@ -283,8 +283,13 @@ if ($row == NULL || isset($_POST['id_repair_ever']) || isset($_SESSION["id_repai
             // ever repair
             $id = $row['r_id'];
             $get_d_id = $row['get_d_id'];
+
+            $sql_get_r = "SELECT* FROM get_detail WHERE get_d_id = '$get_d_id' AND del_flg = 0 ORDER BY get_d_id DESC LIMIT 1";
+            $result_get_r = mysqli_query($conn, $sql_get_r);
+            $row_get_r = mysqli_fetch_array($result_get_r);
+            $get_r_id = $row_get_r['get_r_id'];
             $_SESSION['sn_check_success'] = 1;
-            header("location:../repair_ever.php?id=$id&get_d_id=$get_d_id");
+            header("location:../repair_ever.php?id=$id&get_d_id=$get_d_id&get_r_id=$get_r_id");
         } else {
             // never repair
             unset($_SESSION['sn_check_success']);

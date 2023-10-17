@@ -47,6 +47,8 @@ $id_g = $_GET['id'];
             font-family: sans-serif;
         }
 
+        <?php include('../css/all_page.css') ?>
+
         .file-upload {
             width: 600px;
             margin: 0 auto;
@@ -431,12 +433,12 @@ $id_g = $_GET['id'];
                                                 if ($row1['status_id'] != 8) {
                                                     if ($row1['status_id'] == 9 || $row1['status_id'] == 10) {
                                             ?>
-                                                        <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">จำนวนอะไหล่</a>
+                                                        <!-- <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">จำนวนอะไหล่</a> -->
                                                         <!-- <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">จำนวนอะไหล่</a> -->
                                                     <?php
                                                     } else {
                                                     ?>
-                                                        <a class="" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a>
+                                                        <!-- <a class="" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a> -->
                                                     <?php }
                                                 } else {
                                                     ?>
@@ -697,8 +699,27 @@ $id_g = $_GET['id'];
                                             if ($row[0] > 0) {
                                                 if ($row1['rs_conf'] == NULL) { ?>
                                                     <hr>
-                                                    <p style="color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
-                                                    <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน</a>
+                                                    <br>
+                                                    <h3>
+                                                        <span class="badge bg-warning p-2">
+                                                            รอการตอบกลับจากสมาชิก <span id="loadingDots">.....</span>
+                                                        </span>
+                                                    </h3>
+                                                    <script>
+                                                        const loadingDots = document.getElementById('loadingDots');
+
+                                                        function animateDots() {
+                                                            let dots = 0;
+                                                            setInterval(() => {
+                                                                dots = (dots + 1) % 4; // Adjust the number of dots as needed
+                                                                loadingDots.textContent = '.'.repeat(dots);
+                                                            }, 500); // Adjust the interval (in milliseconds) as needed
+                                                        }
+
+                                                        animateDots();
+                                                    </script>
+
+
 
                                                     <!-- Add your button href="action/conf_part.php?id=<?= $id_get_r ?>" -->
                                                     <!-- <a  class="btn btn-success" id="confirmButtonSuccess">ยืนยัน</a> -->
@@ -724,9 +745,6 @@ $id_g = $_GET['id'];
                                                             });
                                                         });
                                                     </script>
-                                                    <!-- Update the anchor tag to include PHP code for the dynamic link -->
-                                                    <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a>
-                                                    <br>
 
                                                     <div id="myDiv" style="display: none; margin: 20px 30px;">
                                                         <form id="canf_cancel" action="action/conf_cancel.php" method="POST">

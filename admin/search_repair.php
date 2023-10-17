@@ -198,7 +198,7 @@ if (!isset($_SESSION['role_id'])) {
                 <div class="background"></div>
 
 
-                <h1 class="pt-5 text-center f-black-5" >ค้นหาอุปกรณ์</h1>
+                <h1 class="pt-5 text-center f-black-5">ค้นหาอุปกรณ์</h1>
                 <center>
                     <p>ค้นหาอุปกรณ์ในระบบของคุณ สามารถตรวจสอบสถานะของแต่ละอุปกรณ์ได้</p>
                 </center>
@@ -591,13 +591,21 @@ ORDER BY repair.r_brand ASC;  ";
                                 </div>
                             </div>
                             <?php
+                            $cancel_conf = 0;
+                            $delete_conf = 0;
                             $count_round = 0;
-                            $sql_get = "SELECT * FROM get_repair 
+                            $sql_get = "SELECT get_detail.del_flg ,get_detail.get_d_conf FROM get_repair 
                              LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
                              WHERE get_detail.r_id = '$r_id' AND get_repair.del_flg = 0 ORDER BY get_repair.get_r_date_in DESC";
                             $result_get = mysqli_query($conn, $sql_get);
                             while ($row_get = mysqli_fetch_array($result_get)) {
                                 $count_round++;
+                                if ($row_get['get_d_conf'] == 1) {
+                                    $cancel_conf = 1;
+                                }
+                                if ($row_get['del_flg'] == 1) {
+                                    $delete_conf = 1;
+                                }
                             }
                             if ($count_round != 0) {
                             ?>
@@ -738,6 +746,25 @@ ORDER BY repair.r_brand ASC;  ";
 
 
                                                         <?php
+
+                                                        if ($delete_conf == 1) {
+                                                        ?>
+                                                            <center>
+                                                                <!-- <hr> -->
+                                                                <h5 class="shadow p-1" style="border-radius:3px;background-color:red;color:white">ไม่สามารถซ่อมได้</h5>
+                                                                <br>
+                                                            </center>
+                                                        <?php
+                                                        } elseif ($cancel_conf == 1) {
+                                                        ?>
+                                                            <center>
+                                                                <!-- <hr> -->
+                                                                <h5 class="shadow p-1" style="border-radius:3px;background-color:orange;color:white">อยู่ในระหว่างยื่นข้อเสนอ ไม่สามารถซ่อมได้</h5>
+                                                                <br>
+                                                            </center>
+                                                        <?php
+                                                        }
+
                                                         $count_part = 0;
                                                         $count_part_check = 0;
                                                         $get_d_id = $row_get['get_d_id'];
@@ -777,15 +804,15 @@ ORDER BY repair.r_brand ASC;  ";
                                                             </div>
                                                         <?php
                                                             $sql_p = "SELECT * FROM repair_detail
-                                                    LEFT JOIN get_detail ON repair_detail.get_d_id = get_detail.get_d_id
-                                                    LEFT JOIN parts ON repair_detail.p_id = parts.p_id
-                                                     WHERE get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0 AND repair_detail.del_flg = 0";
+                                                                    LEFT JOIN get_detail ON repair_detail.get_d_id = get_detail.get_d_id
+                                                                    LEFT JOIN parts ON repair_detail.p_id = parts.p_id
+                                                                    WHERE get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0 AND repair_detail.del_flg = 0";
                                                             $result_p = mysqli_query($conn, $sql_p);
                                                             $row_p = mysqli_fetch_array($result_p);
                                                         } elseif ($success != '1') {  ?>
                                                             <center>
                                                                 <!-- <hr> -->
-                                                                <h5 class="shadow" style="border-radius:3px;background-color:#D8CB00;color:white">การซ่อมอยู่ระหว่างดำเนินการในขณะนี้ <span id="dot-animation<?= $row_get['get_d_id'] ?>"></span></h5>
+                                                                <h5 class="shadow p-1" style="border-radius:3px;background-color:#D8CB00;color:white">การซ่อมอยู่ระหว่างดำเนินการในขณะนี้ <span id="dot-animation<?= $row_get['get_d_id'] ?>"></span></h5>
 
                                                                 <!-- <hr> -->
                                                                 <script>
@@ -814,7 +841,7 @@ ORDER BY repair.r_brand ASC;  ";
                                                         } elseif ($success == '1') {  ?>
                                                             <center>
                                                                 <!-- <hr> -->
-                                                                <h5 class="shadow" style="border-radius:3px;background-color:green;color:white">การซ่อมดำเนินการเสร็จสิ้นแล้ว </h5>
+                                                                <h5 class="shadow p-1" style="border-radius:3px;background-color:green;color:white">การซ่อมดำเนินการเสร็จสิ้นแล้ว </h5>
 
                                                                 <br>
                                                             </center>
