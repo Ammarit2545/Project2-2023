@@ -98,15 +98,38 @@
                 ORDER BY get_repair.get_r_id DESC
                 LIMIT 3;";
 
+
                 $result_nofi = mysqli_query($conn, $sql_nofi);
 
                 $sql_nofi_count = "SELECT COUNT(get_repair.get_r_id) FROM repair_status
-                LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id 
-                WHERE get_repair.del_flg = '0' AND repair_status.status_id = 1;";
+LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id 
+WHERE get_repair.del_flg = '0' AND repair_status.status_id = 1 AND repair_status.status_id = 1;";
                 $result_nofi_count = mysqli_query($conn, $sql_nofi_count);
                 $num_rows = mysqli_fetch_array($result_nofi_count);
+
+                $count_check_num = 0;
+
+                while ($row_nofi = mysqli_fetch_array($result_nofi)) {
+                    $dateString = date('d-m-Y', strtotime($row_nofi['get_r_date_in']));
+                    $date = DateTime::createFromFormat('d-m-Y', $dateString);
+                    $formattedDate = $date->format('F / d / Y');
+                    $get_r_id_nofi = $row_nofi['get_r_id'];
+                    $sql_check_nofi = "SELECT status_id FROM repair_status WHERE get_r_id =  '$get_r_id_nofi' AND del_flg = 0 ORDER BY rs_date_time DESC";
+                    $result_check_nofi = mysqli_query($conn, $sql_check_nofi);
+                    $row_check_nofi = mysqli_fetch_array($result_check_nofi);
+
+                    if ($row_check_nofi['status_id'] == 1) {
+                        $count_check_num++;
+                    }
+                }
                 ?>
-                <span class="badge badge-danger badge-counter"><?= $num_rows[0] - 1 ?>+</span>
+                <?php if ($count_check_num > 1) {
+                ?>
+                    <span class="badge badge-danger badge-counter"><?= $count_check_num-1 ?>
+                        +
+                    </span>
+                <?php
+                } ?>
             </a>
             <!-- Dropdown - Alerts -->
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
@@ -121,20 +144,27 @@
                     $dateString = date('d-m-Y', strtotime($row_nofi['get_r_date_in']));
                     $date = DateTime::createFromFormat('d-m-Y', $dateString);
                     $formattedDate = $date->format('F / d / Y');
+                    $get_r_id_nofi = $row_nofi['get_r_id'];
+                    $sql_check_nofi = "SELECT status_id FROM repair_status WHERE get_r_id =  '$get_r_id_nofi' AND del_flg = 0 ORDER BY rs_date_time DESC";
+                    $result_check_nofi = mysqli_query($conn, $sql_check_nofi);
+                    $row_check_nofi = mysqli_fetch_array($result_check_nofi);
+
+                    if ($row_check_nofi['status_id'] == 1) {
                 ?>
-                    <a class="dropdown-item d-flex align-items-center" href="detail_repair.php?id=<?= $row_nofi['get_r_id'] ?>">
-                        <div>
+                        <a class="dropdown-item d-flex align-items-center" href="detail_repair.php?id=<?= $row_nofi['get_r_id'] ?>">
+                            <div>
 
-                            <div class="small text-gray-500"><?= $formattedDate ?></div>
-                            <p class="font-weight-bold">หมายเลขแจ้งซ่อม : <button class="btn btn-primary" style="font-size: 15px;"><?= $row_nofi['get_r_id'] ?></button></p>
-                            <p class="font-weight-bold">Brand : <?= $row_nofi['r_brand'] ?> , Model : <?= $row_nofi['r_model'] ?></p>
-                            <span class="font-weight-bold" style="font-size : 12px"><?= $row_nofi['get_r_detail'] ?></span> <br />
+                                <div class="small text-gray-500"><?= $formattedDate ?></div>
+                                <p class="font-weight-bold">หมายเลขแจ้งซ่อม : <button class="btn btn-primary" style="font-size: 15px;"><?= $row_nofi['get_r_id'] ?></button></p>
+                                <p class="font-weight-bold">Brand : <?= $row_nofi['r_brand'] ?> , Model : <?= $row_nofi['r_model'] ?></p>
+                                <span class="font-weight-bold" style="font-size : 12px"><?= $row_nofi['get_r_detail'] ?></span> <br />
 
-                            <!-- <span class="font-weight-bold">ส่งซ่อม</span> -->
+                                <!-- <span class="font-weight-bold">ส่งซ่อม</span> -->
 
-                        </div>
-                    </a>
+                            </div>
+                        </a>
                 <?php
+                    }
                 }
                 ?>
 

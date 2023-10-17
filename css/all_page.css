@@ -126,6 +126,10 @@ body {
 .f-blue-5{
     color : blue;
 }
+.f-white-1{
+    color : white;
+}
+
 
 .bg-gray-1{
     background-color: #F5F5F5;
@@ -136,7 +140,34 @@ body {
     background-color: #F4F4F4;
 }
 
+.br-10{
+    border-radius: 10px;
+}
+
 #bounce-item:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-10px);
+    animation: tooltipFadeIn 0.3s, tooltipBounce 0.6s;
+}
+
+a:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-10px);
+    animation: tooltipFadeIn 0.3s, tooltipBounce 0.6s;
+}
+
+
+button:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-10px);
+    animation: tooltipFadeIn 0.3s, tooltipBounce 0.6s;
+}
+
+
+span:hover .tooltip {
     visibility: visible;
     opacity: 1;
     transform: translateX(-50%) translateY(-10px);
