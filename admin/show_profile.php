@@ -84,7 +84,7 @@ if (!isset($_SESSION['role_id'])) {
 
                         <!-- Page Heading -->
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                            <h1 class="h3 mb-0 text-gray-800">ข้อมูลพนักงานgi</h1>
+                            <h1 class="h3 mb-0 text-gray-800"><i class="fa fa-user" "></i> <span style="color:black">ข้อมูลพนักงาน | </span><span class="text-primary"><?= $row['e_fname'] ?> <?= $row['e_lname'] ?></span></h1>
                         </div>
                         <?php
 
@@ -153,7 +153,7 @@ if (!isset($_SESSION['role_id'])) {
                                 <hr>
                                 <!-- Page Heading -->
                                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                                    <h1 class="h3 mb-0 text-gray-800">รายละเอียดข้อมูลการติดต่อ</h1>
+                                    <h1 class="h3 mb-0 text-gray-800"> <i class="fa fa-map"></i> <span style="color:black">ที่อยู่</span></h1>
                                 </div>
                                 <!-- <label for="exampleFormControlTextarea1" class="form-label fw-bold">รายละเอียดข้อมูลการติดต่อ</label> -->
                                 <!-- <br> -->
@@ -249,7 +249,7 @@ if (!isset($_SESSION['role_id'])) {
                                 </div> -->
                             </div>
                             <div class="text-center pt-4">
-                                <a href="#" class="btn btn-success" onclick="showConfirmation()">ยืนยัน</a>
+                                <a href="employee_listview.php" class="btn btn-warning" >กลับ</a>
 
                                 <script>
                                     function showConfirmation() {

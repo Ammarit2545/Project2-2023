@@ -3,8 +3,16 @@ session_start();
 include('../database/condb.php');
 
 if (!isset($_SESSION['role_id'])) {
+
     header('Location:../home.php');
 }
+$disallowed_roles = array(1, 2, 3);
+
+if (!in_array($_SESSION['role_id'], $disallowed_roles)) {
+    header('Location: ../home.php');
+}
+
+
 
 ?>
 <!DOCTYPE html>
@@ -293,6 +301,7 @@ if (!isset($_SESSION['role_id'])) {
     }
 
     <?php
+    $repair_count = 0;
     // $get_r_id = $_GET['id'];
     $parts_ar = array();
     $sql_get_co = "SELECT p_id,p_brand, p_model FROM parts  WHERE parts.del_flg = 0";
@@ -450,6 +459,29 @@ if (!isset($_SESSION['role_id'])) {
                     <div class="card-header py-3">
 
                         <h1 class="m-0 font-weight-bold mb-2 f-black-5">หมายเลขใบแจ้งซ่อม #<?= $row['get_r_id'] ?></h1>
+                                <!-- <a class="btn btn-danger" href="action/delete_repair.php?get_r_id=<?= $row['get_r_id'] ?>" onclick="return confirmDelete(event);">ลบ</a>
+
+                                                       
+                                                        <script>
+                                                            function confirmDelete(event) {
+                                                                event.preventDefault(); // Prevent the default action of the link
+
+                                                                Swal.fire({
+                                                                    title: 'คุณแน่ใจหรือไม่?',
+                                                                    text: 'คุณต้องการลบข้อมูลนี้หรือไม่',
+                                                                    icon: 'warning',
+                                                                    showCancelButton: true,
+                                                                    confirmButtonColor: '#dc3545',
+                                                                    cancelButtonColor: '#6c757d',
+                                                                    confirmButtonText: 'Yes, delete it!'
+                                                                }).then((result) => {
+                                                                    if (result.isConfirmed) {
+                                                                        // If confirmed, continue with the deletion process
+                                                                        window.location.href = event.target.href; // Redirect to the deletion URL
+                                                                    }
+                                                                });
+                                                            }
+                                                        </script> -->
                         <!-- <?php
                                 if ($row_get_count[0] == 1) {
                                 ?>
@@ -484,10 +516,19 @@ if (!isset($_SESSION['role_id'])) {
 
                     </div>
                     <div class="card shadow bg-img-1 overlay">
-
+                        <?php
+                        $repair_count = 0;
+                        $sql_get_c1 = "SELECT * FROM get_detail
+                                                        LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                        WHERE get_detail.get_r_id =  '$get_r_id' AND get_detail.del_flg = 0";
+                        $result_get_c1 = mysqli_query($conn, $sql_get_c1);
+                        while ($row_get_c1 = mysqli_fetch_array($result_get_c1)) {
+                            $repair_count++;
+                        } ?>
                         <!-- Button trigger modal -->
                         <button id="bounce-item" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                            <h5 style="margin-bottom: 0px;"> รายละเอียดอุปกรณ์ </h5>
+                            <h5 style="margin-bottom: 0px;"> รายละเอียดอุปกรณ์ (มี <?= $repair_count ?> อุปกรณ์)</h5>
                             <span class="tooltip">รายการอะไหล่ที่ใช้</span>
                         </button>
                         <br>
@@ -523,43 +564,54 @@ if (!isset($_SESSION['role_id'])) {
                         <br>
                         <hr style="background-color: white;">
                         <?php
-                                            $repair_count = 0;
-                                            $sql_get = "SELECT * FROM get_detail
+                        $repair_count = 0;
+                        $sql_get_c = "SELECT * FROM get_detail
                                                         LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
                                                         LEFT JOIN repair ON repair.r_id = get_detail.r_id
                                                         WHERE get_detail.get_r_id =  '$get_r_id' AND get_detail.del_flg = 0";
-                                            $result_get = mysqli_query($conn, $sql_get);
-                                            while ($row_get = mysqli_fetch_array($result_get)) {
-                                                $repair_count++;
-                                            }?>
+                        $result_get_c = mysqli_query($conn, $sql_get_c);
+                        while ($row_get_c = mysqli_fetch_array($result_get_c)) {
+                            $repair_count++;
+                        } ?>
 
                         <!-- Modal -->
                         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-xl modal-dialog-scrollable">
                                 <div class="modal-content">
                                     <div class="modal-header"> :
-                                    <h4>รายการซ่อมในหมายเลขแจ้งซ่อม <?= $get_r_id  ?></h4>
+                                        <h4>รายการซ่อมในหมายเลขแจ้งซ่อม <?= $get_r_id  ?></h4>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body" style="background-color: #E7E7E7;">
                                         <br>
                                         <div class="container">
-                                          
 
-<?php
+
+                                            <?php
                                             $count_get_no = 0;
-                                            $sql_get = "SELECT * FROM get_detail
-                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
-                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                            WHERE get_detail.get_r_id =  '$get_r_id' AND get_detail.del_flg = 0 AND get_d_conf = 0";
+                                            $repair_count = 0;
+                                            $sql_get_c2 = "SELECT *
+                                            FROM get_detail
+                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                            WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0 AND (get_d_conf != 1 OR get_d_conf IS NULL);
+                                            ";
                                             $sql_get_count_track = "SELECT * FROM get_detail
                                                             LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
                                                             LEFT JOIN repair ON repair.r_id = get_detail.r_id
                                                             WHERE get_detail.get_r_id =  '$get_r_id' AND get_detail.del_flg = 0 AND get_d_conf = 0";
                                             $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
-                                            $result_get = mysqli_query($conn, $sql_get);
+                                            $result_get = mysqli_query($conn, $sql_get_c2);
                                             $row_get_count_track = mysqli_fetch_array($result_get_count_track);
-
+                                         
+                                            $sql_get_c = "SELECT * FROM get_detail
+                                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                                            WHERE get_detail.get_r_id =  '$get_r_id' AND get_detail.del_flg = 0";
+                                            $result_get_c = mysqli_query($conn, $sql_get_c);
+                                            while ($row_get_c = mysqli_fetch_array($result_get_c)) {
+                                                $repair_count++;
+                                            } 
                                             if ($repair_count > 0) {
                                             ?>
                                                 <h2>มีรายการซ่อมทั้งหมด <span class="badge bg-primary"><?= $repair_count ?></span> รายการ</h2>
@@ -633,8 +685,8 @@ if (!isset($_SESSION['role_id'])) {
                                                                 $check_have_pic = 0;
                                                                 $get_d_id = $row_get['get_d_id'];
                                                                 $sql_pic = "SELECT * FROM repair_pic
-                                        LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
-                                        WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
+                                                                            LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
+                                                                            WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
                                                                 $result_pic = mysqli_query($conn, $sql_pic);
                                                                 if (mysqli_num_rows($result_pic)) {
                                                                     $check_have_pic++;
@@ -676,7 +728,7 @@ if (!isset($_SESSION['role_id'])) {
                                             <?php } ?>
                                             <?php
                                             $count_get_no = 0;
-                                            $sql_get = "SELECT * FROM get_detail
+                                            $sql_get_c3 = "SELECT * FROM get_detail
                                                             LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
                                                             LEFT JOIN repair ON repair.r_id = get_detail.r_id
                                                             WHERE get_detail.get_r_id =  '$get_r_id' AND get_detail.del_flg = 0 AND get_d_conf = 1";
@@ -685,9 +737,9 @@ if (!isset($_SESSION['role_id'])) {
                                                             LEFT JOIN repair ON repair.r_id = get_detail.r_id
                                                             WHERE get_detail.get_r_id =  '$get_r_id' AND get_detail.del_flg = 0 AND get_d_conf = 1";
                                             $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
-                                            $result_get = mysqli_query($conn, $sql_get);
+                                            $result_get_c3 = mysqli_query($conn, $sql_get_c3);
                                             $row_get_count_track = mysqli_fetch_array($result_get_count_track);
-                                            if (mysqli_num_rows($result_get)) {
+                                            if (mysqli_num_rows($result_get_c3)) {
 
                                             ?><h1><span class="badge bg-warning">รายการที่ไม่สามารถซ่อมได้ (อยู่ในช่วงยื่นข้อเสนอ)</span></h1><?php
                                                                                                                                             }
@@ -1649,9 +1701,9 @@ if (!isset($_SESSION['role_id'])) {
                             <!-- สถานะ "ส่งเรื่องแล้ว" -->
                             <?php if ($row['value_code'] == "submit") {
                             ?>
-
+                                <!-- เปลี่ยนสถานะเป็น  -->
                                 <center>
-                                    <a class="btn btn-success" href="action/add_submit_repair.php?id=<?= $get_r_id ?>" onclick="confirmChangeStatus_received(event)">เปลี่ยนสถานะเป็น 'รับเรื่องแล้ว'</a>
+                                    <a class="btn btn-success" href="action/add_submit_repair.php?id=<?= $get_r_id ?>" onclick="confirmChangeStatus_received(event)">รับเรื่องแล้ว</a>
                                 </center>
 
                                 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
@@ -1683,7 +1735,7 @@ if (!isset($_SESSION['role_id'])) {
                             <?php if ($row['value_code'] == "received") { ?>
                                 <center>
                                     <button class="btn btn-danger" onclick="showCancelValue()">ปฏิเสธการซ่อม</button>
-                                    <button class="btn btn-success" onclick="showDetailValue()">เปลี่ยนสถานะเป็น 'รายละเอียด'</button>
+                                    <button class="btn btn-success" onclick="showDetailValue()">ทำรายละเอียด</button>
                                 </center>
 
                                 <div id="cancel_value_code" style="display: none;">
@@ -2720,14 +2772,14 @@ if (!isset($_SESSION['role_id'])) {
                     </div>
                 </div>
                 <br>
-             <center>
-                   <!-- /.container-fluid -->
-                   <!-- <button type="button" id="bounce-item" class="btn btn-primary shadow" data-bs-toggle="modal" data-bs-target="#statusOrRepairModal">
+                <center>
+                    <!-- /.container-fluid -->
+                    <!-- <button type="button" id="bounce-item" class="btn btn-primary shadow" data-bs-toggle="modal" data-bs-target="#statusOrRepairModal">
                                         ดำเนินการสถานะถัดไป
                                         <span class="tooltip">อัพเดตสถานะ</span>
                                     </button> -->
-             </center>
-             <br><br>
+                </center>
+                <br><br>
             </div>
             <!-- End of Main Content -->
 

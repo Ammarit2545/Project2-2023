@@ -1098,43 +1098,60 @@ ORDER BY repair.r_brand ASC;  ";
                             <div class="row">
                                 <?php
                                 if (!isset($_GET["search"])) {
-                                    $sql = "SELECT get_repair.get_r_id,repair.*
-                        FROM get_detail
-                        LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
-                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                        LEFT JOIN (
-                            SELECT get_r_id, MAX(rs_date_time) AS max_date
-                            FROM repair_status
-                            GROUP BY get_r_id
-                        ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
-                        LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
-                        WHERE  rs.status_id = '3' AND rs.rs_date_time = subquery.max_date AND get_repair.del_flg = 0 
-                        
-                        ORDER BY repair.r_brand ASC;  ";
+                                    $sql = "SELECT get_repair.get_r_id, repair.*
+                                        FROM get_detail
+                                        LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                                        LEFT JOIN (
+                                            SELECT get_r_id, MAX(rs_date_time) AS max_date
+                                            FROM repair_status
+                                            GROUP BY get_r_id
+                                        ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
+                                        LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
+                                        WHERE rs.rs_date_time = subquery.max_date AND get_repair.del_flg = 0 
+                                        ORDER BY repair.r_brand ASC; ";
                                 } else {
-                                    $sql = "SELECT get_repair.get_r_id,repair.*
-                        FROM get_detail
-                        LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
-                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                        LEFT JOIN (
-                            SELECT get_r_id, MAX(rs_date_time) AS max_date
-                            FROM repair_status
-                            GROUP BY get_r_id
-                        ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
-                        LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
-                        WHERE   rs.status_id = '3' AND rs.rs_date_time = subquery.max_date AND get_repair.del_flg = 0 AND (
-                                repair.r_brand LIKE '%$search%'
-                                OR repair.r_model LIKE '%$search%'
-                                OR repair.r_serial_number LIKE '%$search%'
-                                OR repair.r_number_model LIKE '%$search%'
-                                OR get_repair.get_r_id LIKE '%$search%'
-                                OR CONCAT(repair.r_brand, ' ', repair.r_model) LIKE '%$search%'
-                                OR CONCAT(repair.r_brand, '', repair.r_model) LIKE '%$search%'
-                            )
-                        
-                        ORDER BY repair.r_brand ASC;
-                                ";
+                                    $search = $_GET["search"]; // Assuming you've properly sanitized this input
+
+                                    $sql = "SELECT get_repair.get_r_id, repair.*
+                                        FROM get_detail
+                                        LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                                        LEFT JOIN (
+                                            SELECT get_r_id, MAX(rs_date_time) AS max_date
+                                            FROM repair_status
+                                            GROUP BY get_r_id
+                                        ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
+                                        LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
+                                        WHERE rs.rs_date_time = subquery.max_date AND get_repair.del_flg = 0 ";
+
+                                    if ($_SESSION['role_id'] == 2) {
+                                        $sql .= "AND rs.status_id IN (1, 2, 4, 5, 6, 10, 11, 12, 13, 14, 15, 17, 18, 19, 24) AND (
+                                                repair.r_brand LIKE '%$search%'
+                                                OR repair.r_model LIKE '%$search%'
+                                                OR repair.r_serial_number LIKE '%$search%'
+                                                OR repair.r_number_model LIKE '%$search%'
+                                                OR get_repair.get_r_id LIKE '%$search%'
+                                                OR CONCAT(repair.r_brand, ' ', repair.r_model) LIKE '%$search%'
+                                                OR CONCAT(repair.r_brand, '', repair.r_model) LIKE '%$search%'
+                                            )";
+                                    } elseif ($_SESSION['role_id'] == 3) {
+                                        $sql .= "AND rs.status_id IN (3, 8, 9, 25, 26) AND (
+                                                repair.r_brand LIKE '%$search%'
+                                                OR repair.r_model LIKE '%$search%'
+                                                OR repair.r_serial_number LIKE '%$search%'
+                                                OR repair.r_number_model LIKE '%$search%'
+                                                OR get_repair.get_r_id LIKE '%$search%'
+                                                OR CONCAT(repair.r_brand, ' ', repair.r_model) LIKE '%$search%'
+                                                OR CONCAT(repair.r_brand, '', repair.r_model) LIKE '%$search'
+                                            )";
+                                    }
+
+                                    $sql .= "ORDER BY repair.r_brand ASC;";
                                 }
+
+
+                                $status_data = array(); // Array to store status data
 
                                 $result = mysqli_query($conn, $sql);
                                 $i = 0;
@@ -1193,7 +1210,7 @@ ORDER BY repair.r_brand ASC;  ";
 
                                                             </style>
                                                             <b class="ln auto-font"><?= $row1['r_brand'] ?></b><span class="ln auto-font"><?= ' - ' . $row1['r_model'] . '   '  ?></span>
-                                                            <h5 class="ln auto-font"><span class="badge bg-primary ln auto-font"><?= 'SH : ' . $row1['r_number_model'] ?></span></h5>
+                                                            <h5 class="ln auto-font"><span class="badge bg-primary ln auto-font"><?= 'SN : ' . $row1['r_number_model'] ?></span></h5>
                                                         </div>
                                                     </a>
                                                 </div>

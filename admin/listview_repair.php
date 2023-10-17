@@ -5,6 +5,12 @@ include('../database/condb.php');
 if (!isset($_SESSION['role_id'])) {
     header('Location:../home.php');
 }
+// $disallowed_roles = array(2, 3);
+
+// if (in_array($_SESSION['role_id'], $disallowed_roles)) {
+//     header('Location: listview_repair_unadmin.php');
+// }
+
 
 ?>
 <!DOCTYPE html>
@@ -72,23 +78,23 @@ if (!isset($_SESSION['role_id'])) {
                 <div class="container-fluid">
                     <br>
                     <!-- Page Heading -->
-                   
-                    <h1 class="mb-2 "   style="color : black">หน้าการจัดการใบแจ้งซ่อม/เคลม  </h1>
+
+                    <h1 class="mb-2 " style="color : black">หน้าการจัดการใบแจ้งซ่อม/เคลม </h1>
                     <br>
-                   <h2>
-                   <?php if (isset($_GET['status_select'])) {
-                        $status_select = $_GET['status_select'];
-                        $sql_sel = "SELECT * FROM status_type WHERE status_id = '$status_select'";
-                        $result_sel = mysqli_query($conn, $sql_sel);
-                        $row_sel = mysqli_fetch_array($result_sel);
-?>
-                        <span >ค้นหาสถานะ : </span><span style="color : <?= $row_sel['status_color'] ?>"><?= $row_sel['status_name'] ?></span><?php
-                    } ?>
-                      <?php if (!isset($_GET['status_select'])) {
-?>
-                        <span >การแจ้งซ่อมใหม่ทั้งหมด</span><?php
-                    } ?>
-                   </h2>
+                    <h2>
+                        <?php if (isset($_GET['status_select'])) {
+                            $status_select = $_GET['status_select'];
+                            $sql_sel = "SELECT * FROM status_type WHERE status_id = '$status_select'";
+                            $result_sel = mysqli_query($conn, $sql_sel);
+                            $row_sel = mysqli_fetch_array($result_sel);
+                        ?>
+                            <span>ค้นหาสถานะ : </span><span style="color : <?= $row_sel['status_color'] ?>"><?= $row_sel['status_name'] ?></span><?php
+                                                                                                                                                } ?>
+                        <?php if (!isset($_GET['status_select'])) {
+                        ?>
+                            <span>การแจ้งซ่อมใหม่ทั้งหมด</span><?php
+                                                            } ?>
+                    </h2>
                     <br>
                     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
                     <div class="row">
@@ -100,8 +106,17 @@ if (!isset($_SESSION['role_id'])) {
                                     </li>
                                     <?php
                                     $sql_st = "SELECT status_type.status_id FROM status_type WHERE status_type.del_flg = 0";
+
+                                    if ($_SESSION['role_id'] == 2) {
+                                        $sql_st .= " AND status_type.status_id IN (1, 2, 4, 5, 6, 10, 11, 12, 13, 14, 15, 17, 18, 19, 24)";
+                                    } elseif ($_SESSION['role_id'] == 3) {
+                                        $sql_st .= " AND status_type.status_id IN (3, 8, 9, 25, 26)";
+                                    }
+
+                                    // If $_SESSION['role_id'] is not 2 or 3, the default SQL query will be executed.
                                     $result_st = mysqli_query($conn, $sql_st);
                                     $status_data = array(); // Array to store status data
+
 
                                     while ($row_st_id = mysqli_fetch_array($result_st)) {
                                         $status_id_data = $row_st_id['status_id'];
@@ -191,9 +206,13 @@ if (!isset($_SESSION['role_id'])) {
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>ลำดับ</th>
+                                            <!-- <th>ลำดับ</th> -->
+                                            <th>
+                                                <center>
+                                                    หมายเลขซ่อม
+                                                </center>
+                                            </th>
                                             <th>สถานะ</th>
-                                            <th>หมายเลขซ่อม</th>
                                             <th>ประเภท</th>
                                             <!-- <th>ยี่ห้อ</th>
                                             <th>รุ่น</th> -->
@@ -294,7 +313,18 @@ if (!isset($_SESSION['role_id'])) {
                                             }
                                         ?>
                                             <tr>
-                                                <td><?= $i ?></td>
+                                                <!-- <td><?= $i ?></td> -->
+                                                <td>
+                                                    <!-- หมายเลขซ่อม -->
+                                                    <?php
+                                                    if ($row['get_r_id'] != NULL) {
+                                                    ?><center>
+                                                            <h5 style="color:black"><a href="detail_repair.php?id=<?= $row['get_r_id'] ?>"> <?= $row['get_r_id'] ?></a> </h5>
+                                                        </center><?php
+                                                                } else {
+                                                                    echo "-";
+                                                                } ?>
+                                                </td>
                                                 <!-- สถานะล่าสุด -->
                                                 <td>
                                                     <center>
@@ -303,15 +333,7 @@ if (!isset($_SESSION['role_id'])) {
                                                         </u>
                                                     </center>
                                                 </td>
-                                                <td>
-                                                    <!-- หมายเลขซ่อม -->
-                                                    <?php
-                                                    if ($row['get_r_id'] != NULL) {
-                                                        echo $row['get_r_id'];
-                                                    } else {
-                                                        echo "-";
-                                                    } ?>
-                                                </td>
+
                                                 <td>
                                                     <!-- วิธีการรับ/ส่งอุปกรณ์ -->
                                                     <?php
@@ -426,13 +448,11 @@ if (!isset($_SESSION['role_id'])) {
 
                                                 <td>
                                                     <div class="text-center">
-                                                        <a class="btn btn-primary" href="detail_repair.php?id=<?= $row['get_r_id'] ?>">ดู</a>
-                                                        <a class="btn btn-danger" href="action/delete_repair.php?get_r_id=<?= $row['get_r_id'] ?>" onclick="return confirmDelete(event);">ลบ</a>
-
-                                                        <!-- Include SweetAlert library -->
                                                         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+                                                        <a class="btn btn-primary" href="detail_repair.php?id=<?= $row['get_r_id'] ?>">ดู</a>
+                                                        <!-- <a class="btn btn-danger" href="action/delete_repair.php?get_r_id=<?= $row['get_r_id'] ?>" onclick="return confirmDelete(event);">ลบ</a>
 
-                                                        <!-- JavaScript function for confirmation -->
+                                                       
                                                         <script>
                                                             function confirmDelete(event) {
                                                                 event.preventDefault(); // Prevent the default action of the link
@@ -452,7 +472,7 @@ if (!isset($_SESSION['role_id'])) {
                                                                     }
                                                                 });
                                                             }
-                                                        </script>
+                                                        </script> -->
 
                                                     </div>
                                                 </td>

@@ -53,7 +53,9 @@
     <div class="sidebar-heading">
         ข้อมูลทั่วไป
     </div>
-    <!-- Nav Item - employee Collapse Menu -->
+   <?php
+   if($_SESSION['role_id'] == 1){ 
+    ?> <!-- Nav Item - employee Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-solid fa-users"></i>
@@ -70,8 +72,12 @@
                 <a class="collapse-item" href="add_em_type.php">แผนก</a>
             </div>
         </div>
-    </li>
-
+    </li><?php
+   }
+   ?>
+<?php
+   if($_SESSION['role_id'] == 1){ 
+    ?> 
     <!-- Nav Item - customer Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsecustomer" aria-expanded="true" aria-controls="collapsecustomer">
@@ -87,6 +93,7 @@
             </div>
         </div>
     </li>
+    <?php } ?>
 
     <!-- Nav Item - soundsystem Collapse Menu -->
     <li class="nav-item">
@@ -125,7 +132,9 @@
             </div>
         </div>
     </li>
-
+    <?php
+   if($_SESSION['role_id'] == 1){ 
+    ?> <
     <!-- Nav Item - company Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsestatus" aria-expanded="true" aria-controls="collapsestatus">
@@ -139,6 +148,7 @@
             </div>
         </div>
     </li>
+    <?php } ?>
     <br>
     <div class="sidebar-heading">
         บันทึกด้วยตัวเอง
