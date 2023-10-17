@@ -459,7 +459,7 @@ if (!in_array($_SESSION['role_id'], $disallowed_roles)) {
                     <div class="card-header py-3">
 
                         <h1 class="m-0 font-weight-bold mb-2 f-black-5">หมายเลขใบแจ้งซ่อม #<?= $row['get_r_id'] ?></h1>
-                                <!-- <a class="btn btn-danger" href="action/delete_repair.php?get_r_id=<?= $row['get_r_id'] ?>" onclick="return confirmDelete(event);">ลบ</a>
+                        <!-- <a class="btn btn-danger" href="action/delete_repair.php?get_r_id=<?= $row['get_r_id'] ?>" onclick="return confirmDelete(event);">ลบ</a>
 
                                                        
                                                         <script>
@@ -603,7 +603,7 @@ if (!in_array($_SESSION['role_id'], $disallowed_roles)) {
                                             $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
                                             $result_get = mysqli_query($conn, $sql_get_c2);
                                             $row_get_count_track = mysqli_fetch_array($result_get_count_track);
-                                         
+
                                             $sql_get_c = "SELECT * FROM get_detail
                                                                             LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
                                                                             LEFT JOIN repair ON repair.r_id = get_detail.r_id
@@ -611,7 +611,7 @@ if (!in_array($_SESSION['role_id'], $disallowed_roles)) {
                                             $result_get_c = mysqli_query($conn, $sql_get_c);
                                             while ($row_get_c = mysqli_fetch_array($result_get_c)) {
                                                 $repair_count++;
-                                            } 
+                                            }
                                             if ($repair_count > 0) {
                                             ?>
                                                 <h2>มีรายการซ่อมทั้งหมด <span class="badge bg-primary"><?= $repair_count ?></span> รายการ</h2>
