@@ -162,10 +162,10 @@
       <div class="navbar-nav ps-5">
         <a class="nav-link active" aria-current="page" href="home.php">หน้าหลัก</a>
         <!-- <a class="nav-link" href="home_repair.php">ส่งซ่อม</a> -->
-        <a class="nav-link" href="listview_repair.php">ส่งซ่อม</a>
-        <a class="nav-link" href="listview_status.php">ติดตาม</a>
-        <a  class="nav-link" href="history_main.php" tabindex="-1" aria-disabled="true">ประวัติอุปกรณ์</a>
-        <a style="color:green" class="nav-link" href="history_main_old.php" tabindex="-1" aria-disabled="true">สำเร็จ <i class="fa fa-check-square"></i> </a>
+        <a class="nav-link" href="listview_repair.php" title="ส่งซ่อมอุปกรณ์ของคุฯ">ส่งซ่อม</a>
+        <a class="nav-link" href="listview_status.php" title="ติดตามหมายเลขซ่อม สถานะต่างๆ"> ติดตาม</i></a>
+        <a  class="nav-link" href="history_main.php" tabindex="-1" aria-disabled="true" title="ดูอุปกรณ์ที่เคยซ่อมในระบบของคุณ">ประวัติอุปกรณ์<i class="fa fa-history"></i></a>
+        <a style="color:green" class="nav-link" href="history_main_old.php" tabindex="-1" aria-disabled="true" title="หมายเลขซ่อมที่สำเร็จของคุณ">สำเร็จ <i class="fa fa-check-square"></i> </a>
       </div>
     </div>
     <div class="dropdown col-md-3 text-end">
