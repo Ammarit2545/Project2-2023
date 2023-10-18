@@ -18,7 +18,7 @@ $parts = array();
 $cardCount = $_POST['cardCount']; // Assuming you're passing the card count as a hidden input field
 for ($i = 1; $i <= $cardCount; $i++) {
     $partId = $_POST['p_id' . $i];
-    $quantity = $_POST['value_p' . $i];
+    $quantity = $_POST['' . $i];
     $parts[] = array(
         'partId' => $partId,
         'quantity' => $quantity

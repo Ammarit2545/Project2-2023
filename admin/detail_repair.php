@@ -1544,7 +1544,7 @@ $get_r_id = $_GET['id'];
                                                                         ?> <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
                                                                             <a id="bounce-item" href="#" style="margin-left: 20px;"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal shadow" alt="" onclick="openModalIMG(this)"><span class="tooltip">คลิกเพื่อดู</span></a>
                                                                         <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
-                                                                            <a id="bounce-item"  href="#" style="margin-left: 20px;" class="shadow">
+                                                                            <a id="bounce-item" href="#" style="margin-left: 20px;" class="shadow">
                                                                                 <video width="100px" autoplay muted onclick="openModalVideo(this)" src="../<?= $row_pic['rp_pic'] ?>">
                                                                                     <source src="../<?= $row_pic['rp_pic'] ?>" type="video/mp4">
                                                                                     <source src="../<?= $row_pic['rp_pic'] ?>" type="video/ogg">
@@ -1629,11 +1629,15 @@ $get_r_id = $_GET['id'];
 
                                     if (in_array($row['status_id'], $statusIds) || $row['value_code'] == "received" || $row_s['rs_cancel_detail'] != NULL || $row['value_code'] == "submit" || $row['value_code'] == "succ" || $row['value_code'] == "cancel" || $row['value_code'] == "submit" || $row['value_code'] == "received" || $row['status_id'] == "11" || $row['status_id'] == "4" || $row1['status_id'] != "3" || $row1['status_id'] != '17' || $row1['status_id'] != '5') {
                                     ?>
-                                        <button type="button" id="bounce-item" class="btn btn-primary shadow" data-bs-toggle="modal" data-bs-target="#statusOrRepairModal">
-                                            ดำเนินการสถานะถัดไป
-                                            <span class="tooltip">อัพเดตสถานะ</span>
-                                        </button>
-                                    <?php } ?>
+                                        <?php if ($row['status_id'] != 3) {
+                                        ?>
+                                            <button type="button" id="bounce-item" class="btn btn-primary shadow" data-bs-toggle="modal" data-bs-target="#statusOrRepairModal">
+                                                ดำเนินการสถานะถัดไป
+                                                <span class="tooltip">อัพเดตสถานะ</span>
+                                            </button>
+                                    <?php
+                                        }
+                                    } ?>
                                 </div>
                             </div>
 
