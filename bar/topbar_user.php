@@ -155,7 +155,8 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <a class="navbar-brand" href="#" style="color: #000141;">
-      <h4>Anan Electronic</h4>
+     <!-- <h4>Anan Electronic</h4> -->
+      <img src="img brand/anelogo.png" alt="" width="100px">
     </a>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav ps-5">
