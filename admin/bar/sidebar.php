@@ -187,6 +187,7 @@
                 <a class="collapse-item" href="report_parts.php">ยอดอะไหล่</a>
                 <a class="collapse-item" href="report_employee.php">ยอดบุคลากร</a>
                 <a class="collapse-item" href="report_repair.php">ยอดการซ่อม</a>
+                <a class="collapse-item" href="report_profit.php">ยอดรายได้การซ่อม</a>
             </div>
         </div>
     </li>
