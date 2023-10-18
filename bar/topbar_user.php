@@ -155,7 +155,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <a class="navbar-brand" href="#" style="color: #000141;">
-     <!-- <h4>Anan Electronic</h4> -->
+      <!-- <h4>Anan Electronic</h4> -->
       <img src="img brand/anelogo.png" alt="" width="100px">
     </a>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
@@ -164,7 +164,9 @@
         <!-- <a class="nav-link" href="home_repair.php">ส่งซ่อม</a> -->
         <a class="nav-link" href="listview_repair.php" title="ส่งซ่อมอุปกรณ์ของคุฯ">ส่งซ่อม</a>
         <a class="nav-link" href="listview_status.php" title="ติดตามหมายเลขซ่อม สถานะต่างๆ"> ติดตาม</i></a>
-        <a  class="nav-link" href="history_main.php" tabindex="-1" aria-disabled="true" title="ดูอุปกรณ์ที่เคยซ่อมในระบบของคุณ">ประวัติอุปกรณ์<i class="fa fa-history"></i></a>
+        <a class="nav-link" href="history_main.php" tabindex="-1" aria-disabled="true" title="ดูอุปกรณ์ที่เคยซ่อมในระบบของคุณ">ประวัติอุปกรณ์
+        <!--  <i class="fa fa-history"></i> -->
+        </a>
         <a style="color:green" class="nav-link" href="history_main_old.php" tabindex="-1" aria-disabled="true" title="หมายเลขซ่อมที่สำเร็จของคุณ">สำเร็จ <i class="fa fa-check-square"></i> </a>
       </div>
     </div>
