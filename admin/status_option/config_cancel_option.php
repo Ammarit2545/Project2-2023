@@ -1,9 +1,9 @@
 <center>
     <!-- <?php
-    $sql = "SELECT * FROM status_type WHERE status_id = '17'";
-    $result = mysqli_query($conn, $sql);
-    $row_q_c = mysqli_fetch_array($result);
-    ?>
+            $sql = "SELECT * FROM status_type WHERE status_id = '17'";
+            $result = mysqli_query($conn, $sql);
+            $row_q_c = mysqli_fetch_array($result);
+            ?>
     <button class="btn btn-danger" style="background-color:<?= $row_q_c['status_color'] ?>; border : <?= $row_q_c['status_color'] ?>" onclick="showCancelValue()"><?= $row_q_c['status_name'] ?></button> -->
 
     <?php
@@ -12,7 +12,7 @@
     $row_conf = mysqli_fetch_array($result);
     ?>
     <button class="btn btn-success" style="background-color:<?= $row_conf['status_color'] ?>; border : <?= $row_conf['status_color'] ?>" onclick="show_conf_status('<?php echo $row_conf['id']; ?>')">
-        เปลี่ยนเป็นสถานะ "<?= $row_conf['status_name'] ?>"
+        <?= $row_conf['status_name'] ?>
     </button>
 
     <?php
@@ -453,7 +453,7 @@
 <div id="status_doing" style="display: none;">
     <hr>
     <br>
-    <h1 class="m-0 font-weight-bold text-danger" ><?= $row_conf['status_name'] ?> </h1>
+    <h1 class="m-0 font-weight-bold text-danger"><?= $row_conf['status_name'] ?> </h1>
     <br>
     <form id="cancel_status_id_conf_get" action="action/status/add_conf_cancel.php" method="POST" enctype="multipart/form-data">
         <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_conf['status_color'] ?>"> <?= $row_conf['status_name'] ?></p> :</label>
@@ -465,8 +465,8 @@
         <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
         <!-- <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่</label> -->
         <!-- <div class="input-group mb-3"> -->
-            <!-- <input type="text" name="status_id" value="<?= $row['rs_id'] ?>" hidden> -->
-            <!-- <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
+        <!-- <input type="text" name="status_id" value="<?= $row['rs_id'] ?>" hidden> -->
+        <!-- <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
             <input name="get_wages" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="<?= $row['get_wages'] ?>" required>
         </div> -->
 

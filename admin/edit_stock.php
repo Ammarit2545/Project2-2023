@@ -842,14 +842,14 @@ if (!isset($_SESSION['role_id'])) {
             if ($_SESSION['add_data_alert'] == 0) {
                 // $id = 123; // Replace 123 with the actual ID you want to pass to the deletion action
         ?>
-                <script>
+                <!-- <script>
                 Swal.fire({
                     title: 'ข้อมูลของคุณได้ถูกบันทึกแล้ว',
                     text: 'กด Accept เพื่อออก',
                     icon: 'success',
                     confirmButtonText: 'Accept'
                 });
-            </script>
+            </script> -->
             <?php
                 unset($_SESSION['add_data_alert']);
             } else if ($_SESSION['add_data_alert'] == 1) {

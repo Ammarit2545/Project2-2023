@@ -1,14 +1,14 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
 <script>
     function checkRecords() {
-        // Get the current domain dynamically
-        const currentDomain = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-        console.log(currentDomain);
-
         $.ajax({
-            url: currentDomain + '/Project2023/Project2-2023/admin/action/check_records.php',
+            url: 'action/check_records.php',
             dataType: 'json',
             success: function(data) {
+                console.log('Response data:', data);
+
                 if (data.length > 0) {
                     // Handle the response, e.g., display a notification or update the UI
                     for (let i = 0; i < data.length; i++) {
@@ -24,6 +24,7 @@
                 }
             },
             error: function() {
+                console.error('An error occurred while making the Ajax request.');
                 // Handle errors, and call the function again after a delay
                 setTimeout(checkRecords, 5000); // 5 seconds (5000 milliseconds)
             }
@@ -43,20 +44,6 @@
     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
         <i class="fa fa-bars"></i>
     </button>
-
-    <!-- Topbar Search
-<form
-    class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-    <div class="input-group">
-        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-            aria-label="Search" aria-describedby="basic-addon2">
-        <div class="input-group-append">
-            <button class="btn btn-primary" type="button">
-                <i class="fas fa-search fa-sm"></i>
-            </button>
-        </div>
-    </div>
-</form> -->
 
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
@@ -101,12 +88,31 @@
                 $result_nofi = mysqli_query($conn, $sql_nofi);
 
                 $sql_nofi_count = "SELECT COUNT(get_repair.get_r_id) FROM repair_status
-                LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id 
-                WHERE get_repair.del_flg = '0' AND repair_status.status_id = 1;";
+                                    LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id 
+                                    WHERE get_repair.del_flg = '0' AND repair_status.status_id = 1 AND repair_status.status_id = 1;";
                 $result_nofi_count = mysqli_query($conn, $sql_nofi_count);
                 $num_rows = mysqli_fetch_array($result_nofi_count);
-                ?>
-                <span class="badge badge-danger badge-counter"><?= $num_rows[0] - 1 ?>+</span>
+
+                $count_check_num = 0;
+
+                while ($row_nofi = mysqli_fetch_array($result_nofi)) {
+                    $dateString = date('d-m-Y', strtotime($row_nofi['get_r_date_in']));
+                    $date = DateTime::createFromFormat('d-m-Y', $dateString);
+                    $formattedDate = $date->format('F / d / Y');
+                    $get_r_id_nofi = $row_nofi['get_r_id'];
+                    $sql_check_nofi = "SELECT status_id FROM repair_status WHERE get_r_id =  '$get_r_id_nofi' AND del_flg = 0 ORDER BY rs_date_time DESC";
+                    $result_check_nofi = mysqli_query($conn, $sql_check_nofi);
+                    $row_check_nofi = mysqli_fetch_array($result_check_nofi);
+
+                    if ($row_check_nofi['status_id'] == 1) {
+                        $count_check_num++;
+                    }
+                }
+                if ($count_check_num > 1) {  ?>
+                    <span class="badge badge-danger badge-counter"><?= $count_check_num - 1 ?>
+                        +
+                    </span>
+                <?php  } ?>
             </a>
             <!-- Dropdown - Alerts -->
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
@@ -121,20 +127,27 @@
                     $dateString = date('d-m-Y', strtotime($row_nofi['get_r_date_in']));
                     $date = DateTime::createFromFormat('d-m-Y', $dateString);
                     $formattedDate = $date->format('F / d / Y');
+                    $get_r_id_nofi = $row_nofi['get_r_id'];
+                    $sql_check_nofi = "SELECT status_id FROM repair_status WHERE get_r_id =  '$get_r_id_nofi' AND del_flg = 0 ORDER BY rs_date_time DESC";
+                    $result_check_nofi = mysqli_query($conn, $sql_check_nofi);
+                    $row_check_nofi = mysqli_fetch_array($result_check_nofi);
+
+                    if ($row_check_nofi['status_id'] == 1) {
                 ?>
-                    <a class="dropdown-item d-flex align-items-center" href="detail_repair.php?id=<?= $row_nofi['get_r_id'] ?>">
-                        <div>
+                        <a class="dropdown-item d-flex align-items-center" href="detail_repair.php?id=<?= $row_nofi['get_r_id'] ?>">
+                            <div>
 
-                            <div class="small text-gray-500"><?= $formattedDate ?></div>
-                            <p class="font-weight-bold">หมายเลขแจ้งซ่อม : <button class="btn btn-primary" style="font-size: 15px;"><?= $row_nofi['get_r_id'] ?></button></p>
-                            <p class="font-weight-bold">Brand : <?= $row_nofi['r_brand'] ?> , Model : <?= $row_nofi['r_model'] ?></p>
-                            <span class="font-weight-bold" style="font-size : 12px"><?= $row_nofi['get_r_detail'] ?></span> <br />
+                                <div class="small text-gray-500"><?= $formattedDate ?></div>
+                                <p class="font-weight-bold">หมายเลขแจ้งซ่อม : <button class="btn btn-primary" style="font-size: 15px;"><?= $row_nofi['get_r_id'] ?></button></p>
+                                <p class="font-weight-bold">Brand : <?= $row_nofi['r_brand'] ?> , Model : <?= $row_nofi['r_model'] ?></p>
+                                <span class="font-weight-bold" style="font-size : 12px"><?= $row_nofi['get_r_detail'] ?></span> <br />
 
-                            <!-- <span class="font-weight-bold">ส่งซ่อม</span> -->
+                                <!-- <span class="font-weight-bold">ส่งซ่อม</span> -->
 
-                        </div>
-                    </a>
+                            </div>
+                        </a>
                 <?php
+                    }
                 }
                 ?>
 
@@ -175,12 +188,15 @@
         <li class="nav-item dropdown no-arrow">
 
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-
-
                 <!-- <img src="../img brand/anelogo.jpg" style="margin-top : 10% ;  width : 2%" alt="">  -->
-
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?= $_SESSION["fname"] . " " . $_SESSION["lname"]  ?></span>
-                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                <?php
+                $role_id = $_SESSION["role_id"];
+                $sql_role = "SELECT * FROM role  WHERE role_id = '$role_id'";
+                $result_role = mysqli_query($conn, $sql_role);
+                $row_role = mysqli_fetch_array($result_role);
+                ?>
+                <h5><span class="badge bg-primary" style="color: white;"><?= $row_role['role_name'] ?></span></h5>
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small ml-2"><?= $_SESSION["fname"] . " " . $_SESSION["lname"]  ?></span>
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
