@@ -4,6 +4,8 @@ include('database/condb.php');
 $id = $_SESSION['id'];
 $status_id = 0;
 
+$get_id = $_GET['id'];
+
 $sql1 = "SELECT m_fname,m_lname FROM member WHERE m_id = '$id'";
 $result1 = mysqli_query($conn, $sql1);
 $row1 = mysqli_fetch_array($result1);
@@ -95,7 +97,7 @@ $part_check = 0;
                                             </thead>
                                             <tbody>
                                                 <?php
-                                                $get_id = $_GET['id'];
+
                                                 $sql_op = "SELECT
                                                                                                     *,
                                                                                                     repair_detail.p_id,
@@ -466,7 +468,7 @@ FROM get_repair gr
 LEFT JOIN repair_status rs ON gr.get_r_id = rs.get_r_id 
 LEFT JOIN status_type st ON rs.status_id = st.status_id 
 WHERE gr.get_r_id = ? AND rs.del_flg = '0' 
-ORDER BY rs.rs_date_time DESC
+ORDER BY rs.rs_date_time DESC 
            ";
 
     // Use prepared statements
@@ -786,7 +788,11 @@ ORDER BY rs.rs_date_time DESC
         <?php  } elseif ($row_2['status_id'] == 5) { ?>
             <h3> <i class="fa fa-check-square-o"></i> ได้รับการยืนยันแล้ว</h3>
             <p>ขอให้ท่านดำเนินการส่งอุปกรณ์ไปที่ร้านด้วย <u>ตนเอง</u> หรือ <u>ทำการส่งหมายเลข "Tracking Number"</u> หากท่านส่งด้วยผู้ให้บริการขนส่ง เพื่อให้พนักงานสามารถตรวจสอบข้อมูลของท่านอย่างรวดเร็ว</p>
-        <?php  } ?>
+        <?php  }
+
+
+        ?>
+
     </div>
 
 
@@ -934,43 +940,204 @@ ORDER BY rs.rs_date_time DESC
                     <br>
                     <hr>
                 <?php
-                } ?>
+                }
+                if ($row_2['status_id'] == 25) { ?>
+                    <div class="alert alert-info" role="alert">
+                        <i class="	fa fa-spinner"></i> โปรดรอการตรวจสอบจากพนักงาน ภายใน 1 วันทำการ
+                    </div>
+                <?php }
+                if ($row_2['status_id'] == 8 || $row_2['status_id'] == 26) {
+
+                ?>
+
+                    <div class="alert alert-warning">
+                        <div class="alert alert-secondary" role="alert">
+                            <h5> <i class="fa fa-credit-card"></i> กรุณาทำการชำระเงิน
+                                <?php
+                                $sql = "SELECT rs.rs_id,
+                                          rs.status_id,
+                                          st.status_name,
+                                          st.status_color,
+                                          rs.rs_conf,
+                                          rs.rs_date_time,
+                                          rs.rs_detail,
+                                          rs.rs_conf_date,
+                                          gr.get_tel,
+                                          gr.get_add,
+                                          gr.get_wages,
+                                          gr.get_add_price,
+                                          gr.get_add_price
+                                          FROM get_repair gr
+                                          LEFT JOIN repair_status rs ON gr.get_r_id = rs.get_r_id 
+                                          LEFT JOIN status_type st ON rs.status_id = st.status_id 
+                                          WHERE gr.get_r_id = ? AND rs.del_flg = '0' 
+                                          ORDER BY rs.rs_date_time DESC LIMIT 1
+                                  ";
+
+                                // Use prepared statements
+                                $stmt = mysqli_prepare($conn, $sql);
+
+                                if ($stmt) {
+                                    // Bind the parameter
+                                    mysqli_stmt_bind_param($stmt, "s", $get_id);
+
+                                    // Execute the statement
+                                    mysqli_stmt_execute($stmt);
+
+                                    // Get the result
+                                    $result_pay = mysqli_stmt_get_result($stmt);
+                                    $row1_pay = mysqli_fetch_array($result_pay);
+                                }
+                                if ($row1_pay['status_id'] == 8 || $row1_pay['status_id'] == 26  && $row1_pay['rs_conf'] == NULL) {
+                                    if ($row1_pay['status_id'] == 26) {
+                                ?>
+                                        <a href="form_pay.php?id=<?= $get_id  ?>" class="btn btn-primary">ส่งหลักฐานการชำระเงิน<span class="tooltip">กดเพื่อชำระเงิน</span></a>
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <a href="form_pay.php?id=<?= $get_id  ?>" class="btn btn-primary">ทำการชำระเงิน<span class="tooltip">กดเพื่อชำระเงิน</span></a>
+                                <?php
+                                    }
+                                }
+                                ?>
+
+                            </h5>
+                        </div>
+                        <div class="collapse" id="collapseExample">
+                            <div class="card card-body">
+                                <form action="action/add_tracking.php?id=<?= $id_get_r ?>" method="POST" id="trackingForm">
+                                    <?php
+                                    $count_com = 0;
+                                    $sql_count_repair = "SELECT gd.get_d_id, rp.r_serial_number, rp.r_model, rp.r_brand 
+                                                        FROM get_detail gd
+                                                        LEFT JOIN repair rp ON gd.r_id = rp.r_id
+                                                        WHERE gd.get_r_id = ? AND gd.del_flg = 0;";
+                                    $stmt = $conn->prepare($sql_count_repair);
+                                    $stmt->bind_param("s", $id_get_r);
+                                    $stmt->execute();
+                                    $result_count_repair = $stmt->get_result();
+
+                                    while ($row_count_repair = $result_count_repair->fetch_assoc()) {
+                                        $count_com++;
+                                    ?>
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <h5><span class="badge bg-secondary"><?= $count_com ?></span><?= ' ' . $row_count_repair['r_brand'] . ' ' . $row_count_repair['r_model'] . ' ' ?><span class="badge bg-primary"><?= ' ' . $row_count_repair['r_serial_number'] ?></span></h5>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+
+                                            <div class="col-md-4 mb-3">
+                                                <label for="formGroupExampleInput" class="form-label">กรุณาเลือกผู้ให้บริการ</label>
+                                                <select class="form-select" aria-label="Default select example" name="com_t_id_<?= $count_com ?>" required>
+                                                    <option value="" disabled selected>เลือกบริษัทขนส่ง</option>
+                                                    <?php
+                                                    $sql_com = "SELECT * FROM company_transport WHERE del_flg = 0";
+                                                    $result_com = mysqli_query($conn, $sql_com);
+                                                    while ($row_com = mysqli_fetch_array($result_com)) {
+                                                    ?>
+                                                        <option value="<?= $row_com['com_t_id'] ?>"><?= $row_com['com_t_name'] ?></option>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <label for="formGroupExampleInput" class="form-label">จัดส่งด้วยผู้ให้บริการ</label>
+                                                <input type="text" class="form-control" id="formGroupExampleInput" name="tracking_number_<?= $count_com ?>" placeholder="กรุณาใส่เลข Tracking Number" required>
+                                                <input type="text" name="get_d_id_<?= $count_com ?>" value="<?= $row_count_repair['get_d_id'] ?>" hidden>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                    <?php
+                                    }
+                                    $stmt->close();
+                                    ?>
+
+                                    <center>
+
+                                        <button class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">ยกเลิก</button>
+                                        <button type="button" class="btn btn-success" onclick="showConfirmationTracking()">ยืนยัน</button>
+                                    </center>
+                                </form>
+
+                                <!-- Include SweetAlert library -->
+                                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+                                <script>
+                                    function showConfirmationTracking() {
+                                        Swal.fire({
+                                            title: 'ยืนยันการส่งข้อมูล',
+                                            text: 'คุณต้องการยืนยันการส่งข้อมูลหรือไม่?',
+                                            icon: 'question',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'ยืนยัน',
+                                            cancelButtonText: 'ยกเลิก'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                document.getElementById('trackingForm').submit(); // Submit the form
+                                            }
+                                        });
+                                    }
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <hr>
+                <?php
+
+                }
+                ?>
             </div>
             <div class="row">
                 <div class="col-md">
                     <div class="container px-md-4 py-5 mx-auto">
                         <div class="card" id="process-status">
                             <div class="row p-4">
+
                                 <div class="d-flex auto-font">
                                     <h5>หมายเลขส่งซ่อมที่ <span class="text-primary font-weight-bold">#<?= $id_get_r ?></span></h5>
                                 </div>
                                 <div class="d-flex flex-column text-sm-right">
                                     <?php
+
+                                    // เอาค่า get_r_id ออกมาหาค่าวัน
                                     $sql_start_day = "SELECT * FROM `get_repair` WHERE get_r_id = '$id_get_r' AND del_flg = '0';";
                                     $result_start_day = mysqli_query($conn, $sql_start_day);
                                     $row_start_day = mysqli_fetch_array($result_start_day);
+
+                                    // เช็คว่ามีเลขไปรษณีย์จากทางร้านหรือไม่
+                                    $sql_tracking = "SELECT t_id FROM get_repair
+                                    LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id 
+                                    WHERE get_repair.get_r_id = '$id_get_r' AND get_repair.del_flg = '0' ;";
+                                    $result_tracking = mysqli_query($conn, $sql_tracking);
+                                    $row_tracking = mysqli_fetch_array($result_tracking);
+                                    $row_trackin = 0;
+                                    if ($row_tracking['t_id'] != NULL) {
+                                        $row_trackin++;
+                                    }
                                     ?>
-                                    <p style="color: gray" class="mb-0"><i class="	fa fa-calendar"></i> วันที่ยื่นเรื่อง : <?= date('d F Y', strtotime($row_start_day['get_r_date_in'])) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_start_day['get_r_date_in'])); ?></span> <?php if ($row_2['status_id'] == 24 || $row_2['status_id'] == 3) { ?>
+                                    <p style="color: gray" class="mb-0"><i class="	fa fa-calendar"></i> วันที่ยื่นเรื่อง : <?= date('d F Y', strtotime($row_start_day['get_r_date_in'])) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_start_day['get_r_date_in'])); ?></span>
+                                        <?php if ($row_2['status_id'] == 24 || $row_2['status_id'] == 3 &&  $row_trackin > 0) { ?>
                                             <!-- <a href="">หมายเลขอุปกรณ์ของท่าน</a> -->
-                                            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">หมายเลขอุปกรณ์ของท่าน</button>
-
-
+                                            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">หมายเลขพัสดุจากทางร้าน</button>
                                             <?php }
-                                                                                                                                                                                                                                                                                                                                                                    $sql_start_repair_date = "SELECT * FROM repair_status 
+                                        $sql_start_repair_date = "SELECT * FROM repair_status 
                                 WHERE get_r_id = '$id_get_r' AND status_id = 19 OR status_id = 17 AND del_flg = 0 ORDER BY rs_date_time DESC LIMIT 1;";
-                                                                                                                                                                                                                                                                                                                                                                    $result_start_repair_date  = mysqli_query($conn, $sql_start_repair_date);
-                                                                                                                                                                                                                                                                                                                                                                    $row_start_repair_date = mysqli_fetch_array($result_start_repair_date);
-                                                                                                                                                                                                                                                                                                                                                                    if ($row_start_repair_date['rs_date_time']) {
-                                                                                                                                                                                                                                                                                                                                                                        $startRepairDate_C = $row_start_repair_date['rs_date_time'];
-                                                                                                                                                                                                                                                                                                                                                                        if ($row_start_day['get_date_conf']) {
-                                                                                                                                                                                                                                                                                                                                                                            $daysToAdd_C = $row_start_day['get_date_conf'];
+                                        $result_start_repair_date  = mysqli_query($conn, $sql_start_repair_date);
+                                        $row_start_repair_date = mysqli_fetch_array($result_start_repair_date);
+                                        if ($row_start_repair_date['rs_date_time']) {
+                                            $startRepairDate_C = $row_start_repair_date['rs_date_time'];
+                                            if ($row_start_day['get_date_conf']) {
+                                                $daysToAdd_C = $row_start_day['get_date_conf'];
 
-                                                                                                                                                                                                                                                                                                                                                                            $startDate_C = new DateTime($startRepairDate_C);
-                                                                                                                                                                                                                                                                                                                                                                            $endDate_C = clone $startDate_C;
-                                                                                                                                                                                                                                                                                                                                                                            $endDate_C->add(new DateInterval('P' . $daysToAdd_C . 'D'));
+                                                $startDate_C = new DateTime($startRepairDate_C);
+                                                $endDate_C = clone $startDate_C;
+                                                $endDate_C->add(new DateInterval('P' . $daysToAdd_C . 'D'));
 
-                                                                                                                                                                                                                                                                                                                                                                            $formattedEndDate_conf_C = $endDate_C->format('d F Y H:i:s');
-                                                                                                                                                                                                                                                                                                                                                                            // echo $formattedEndDate_conf;
+                                                $formattedEndDate_conf_C = $endDate_C->format('d F Y H:i:s');
+                                                // echo $formattedEndDate_conf;
 
 
                                             ?>
@@ -978,7 +1145,14 @@ ORDER BY rs.rs_date_time DESC
                                         <!-- <span style="color:red">*** นับจากวันที่รับอุปกรณ์</span> -->
                                     </p>
                             <?php }
-                                                                                                                                                                                                                                                                                                                                                                    } ?>
+                                        } ?>
+                            <?php if ($row_2['status_id'] == 9 || $row_2['status_id'] == 3) {
+                                // success_pay_status
+                            ?>
+                                <!-- <div class="alert alert-success"> -->
+                                <p style="color: gray"> พิมพ์บิลใบเสร็จ : <a href="#" style="color: blue">บิลใบเสร็จ <span class="tooltip">กดเพื่อดูใบเสร็จในหมายเลขซ่อมนี้</span></a></p>
+                                <!-- </div> -->
+                            <?php } ?>
                                 </div>
                             </div>
 
@@ -1054,6 +1228,7 @@ ORDER BY rs.rs_date_time DESC
                                         </ul>
 
                                     </div>
+
                                 </div>
                                 <!-- <div class="row d-flex justify-content-center">
                                     <div class="col-12">
@@ -1355,7 +1530,7 @@ ORDER BY rs.rs_date_time DESC
                                                 <div class="alert alert-success" role="alert">
                                                     <i class="fa fa-check-square"></i> ดำเนินการซ่อมเสร็จสิ้น
                                                 </div>
-                                            <?php } ?>
+                                            <?php }  ?>
                                             <div class="row">
                                                 <div class="col">
                                                     <ul class="timeline-3">
@@ -1431,11 +1606,16 @@ ORDER BY rs.rs_date_time DESC
                                                                     }
                                                                 }
                                                                 if ($row1['status_id'] == 8 || $row1['status_id'] == 26  && $row1['rs_conf'] == NULL) {
+
+                                                                    $sql_check_pay = "SELECT * FROM repair_status WHERE del_flg = 0 AND get_r_id = $id_get_r  ORDER BY rs_id DESC LIMIT 1";
+                                                                    $result_check_pay = mysqli_query($conn, $sql_check_pay);
+                                                                    $row_check_pay = mysqli_fetch_array($result_check_pay);
+
                                                                     if ($row1['status_id'] == 26) {
                                                                         ?>
                                                                         <a href="form_pay.php?id=<?= $id_get_r ?>" class="btn btn-primary">ส่งหลักฐานการชำระเงิน</a>
                                                                     <?php
-                                                                    } else {
+                                                                    } elseif ($row_check_pay['status_id'] == 8) {
                                                                     ?>
                                                                         <a href="form_pay.php?id=<?= $id_get_r ?>" class="btn btn-primary">ทำการชำระเงิน</a>
                                                                     <?php

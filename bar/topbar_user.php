@@ -163,7 +163,8 @@
         <!-- <a class="nav-link" href="home_repair.php">ส่งซ่อม</a> -->
         <a class="nav-link" href="listview_repair.php">ส่งซ่อม</a>
         <a class="nav-link" href="listview_status.php">ติดตาม</a>
-        <a class="nav-link" href="history_main.php" tabindex="-1" aria-disabled="true">ประวัติ</a>
+        <a  class="nav-link" href="history_main.php" tabindex="-1" aria-disabled="true">ประวัติอุปกรณ์</a>
+        <a style="color:green" class="nav-link" href="history_main_old.php" tabindex="-1" aria-disabled="true">สำเร็จ <i class="fa fa-check-square"></i> </a>
       </div>
     </div>
     <div class="dropdown col-md-3 text-end">

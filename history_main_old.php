@@ -231,7 +231,7 @@ if (isset($_GET["status_id"])) {
         <?php } ?>
         <br>
         <br>
-        <form class="search-form" action="history_main.php" method="GET">
+        <form class="search-form" action="history_main_old.php" method="GET">
             <input type="text" name="search" id="search" placeholder="หาด้วยเลข Serial Number, ชื่อแบรนด์, ชื่อรุ่น, หมายเลขแจ้งซ่อม..." onkeyup="showResults(this.value)">
             <input type="text" name="status_id" placeholder="หาด้วยเลข Serial Number, ชื่อแบรนด์, ชื่อรุ่น, หมายเลขแจ้งซ่อม. . ." value="<?= isset($status_id) ? $status_id : '' ?>" style="display: none">
             <button type="submit">Search</button>
@@ -517,7 +517,7 @@ if (isset($_GET["status_id"])) {
                 <?php if (isset($_GET["search"])) { ?>
                     <center>
                         <p>*** หากคุณต้องการดูข้อมูล "การซ่อมที่เสร็จสิ้นทั้งหมด" ทั้งหมด *** </p>
-                        <a href="history_main.php" class="btn btn-primary">ข้อมูลทั้งหมด</a>
+                        <a href="history_main_old.php" class="btn btn-primary">ข้อมูลทั้งหมด</a>
                     </center>
                 <?php  } ?>
             </div>

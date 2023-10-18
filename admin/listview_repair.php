@@ -107,9 +107,10 @@ if (!isset($_SESSION['role_id'])) {
                             <center>
                                 <ul class="nav nav-tabs" id="bar_under">
                                     <li class="nav-item">
-                                        <a class="nav-link active" aria-current="page" href="listview_repair.php?status_select=0    ">ทั้งหมด</a>
+                                        <a class="nav-link active" aria-current="page" href="listview_repair.php?status_select=0 ">ทั้งหมด</a>
                                     </li>
                                     <?php
+                                    $get_r_id_old = 0;
                                     $sql_st = "SELECT status_type.status_id FROM status_type WHERE status_type.del_flg = 0";
 
                                     if ($_SESSION['role_id'] == 2) {
@@ -135,14 +136,20 @@ if (!isset($_SESSION['role_id'])) {
                                         if ($result_status_get) {
                                             while ($row_status_get = mysqli_fetch_array($result_status_get)) {
                                                 $get_r_id = $row_status_get['get_r_id'];
+
                                                 $sql_count_status = "SELECT repair_status.status_id, repair_status.get_r_id FROM get_repair 
-                                                   LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
-                                                   WHERE get_repair.get_r_id = '$get_r_id' AND repair_status.del_flg = '0' ORDER BY repair_status.rs_id DESC LIMIT 1";
+                                                                    LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
+                                                                    WHERE get_repair.get_r_id = '$get_r_id' AND repair_status.del_flg = '0' ORDER BY repair_status.rs_id DESC LIMIT 1";
                                                 $result_count_status = mysqli_query($conn, $sql_count_status);
                                                 $row_count_status = mysqli_fetch_array($result_count_status);
 
                                                 if ($row_count_status['status_id'] == $status_id_data) {
-                                                    $sql_count++;
+                                                    if ($get_r_id_old == $get_r_id) {
+                                                        continue;
+                                                    } else {
+                                                        $sql_count++;
+                                                        $get_r_id_old = $get_r_id;
+                                                    }
                                                 }
                                             }
                                         }

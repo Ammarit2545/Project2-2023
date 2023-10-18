@@ -13,12 +13,13 @@ if ($id == NULL) {
 }
 
 $id_g = $_GET['id'];
-$sql1 = "SELECT * FROM get_repair 
+$sql1 = "SELECT get_repair.get_r_id, MAX(get_repair.get_r_date_in) AS max_date
+FROM get_repair 
 LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
 LEFT JOIN repair ON repair.r_id = get_detail.r_id
 WHERE repair.m_id = '$id' AND get_repair.get_r_id = '$id_g' 
 GROUP BY get_repair.get_r_id
-ORDER BY get_r_date_in DESC;";
+ORDER BY max_date DESC;";
 $result1 = mysqli_query($conn, $sql1);
 $row1 = mysqli_fetch_array($result1);
 

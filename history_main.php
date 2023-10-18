@@ -224,7 +224,7 @@ $id_member = $_SESSION['id'];
                                         </div>
                                     </div>
                                     <br>
-                                    <nav aria-label="Page navigation example">
+                                    <!-- <nav aria-label="Page navigation example">
 
                                         <ul class="pagination justify-content-center ">
                                             <li class="page-item">
@@ -232,18 +232,18 @@ $id_member = $_SESSION['id'];
                                             </li>
                                             <?php
                                             $sql_f = "SELECT repair.r_brand
-FROM get_detail
-LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
-LEFT JOIN repair ON get_detail.r_id = repair.r_id
-LEFT JOIN (
-    SELECT get_r_id, MAX(rs_date_time) AS max_date
-    FROM repair_status
-    GROUP BY get_r_id
-) AS subquery ON get_repair.get_r_id = subquery.get_r_id
-LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
-WHERE repair.m_id = '$id_member' AND rs.status_id = '3' AND rs.rs_date_time = subquery.max_date AND get_repair.del_flg = 0 
+                                                        FROM get_detail
+                                                        LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                                                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                                                        LEFT JOIN (
+                                                            SELECT get_r_id, MAX(rs_date_time) AS max_date
+                                                            FROM repair_status
+                                                            GROUP BY get_r_id
+                                                        ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
+                                                        LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
+                                                        WHERE repair.m_id = '$id_member' AND rs.status_id = '3' AND rs.rs_date_time = subquery.max_date AND get_repair.del_flg = 0 
 
-ORDER BY repair.r_brand ASC;  ";
+                                                        ORDER BY repair.r_brand ASC;  ";
                                             $result_f = mysqli_query($conn, $sql_f);
 
                                             $original = ''; // Initialize $original to an empty string
@@ -257,7 +257,6 @@ ORDER BY repair.r_brand ASC;  ";
                                                 if ($first_char != $original) {
                                                     $original = $first_char; // Update $original with the current $first_char
                                             ?>
-                                                    <!-- <a href="repair_have.php?search=<?= $first_char ?>" style="color: black;"><?= $first_char ?></a> -->
                                                     <li class="page-item">
                                                         <a class="page-link" href="history_main.php?word=<?= $first_char ?>" tabindex="-1" aria-disabled="true"><?= $first_char ?></a>
                                                     </li>
@@ -266,7 +265,7 @@ ORDER BY repair.r_brand ASC;  ";
                                             }
                                             ?>
                                         </ul>
-                                    </nav>
+                                    </nav> -->
 
 
                                 </div>

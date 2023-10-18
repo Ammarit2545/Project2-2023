@@ -54,6 +54,7 @@ session_start();
         <a class="nav-link" href="#">ส่งซ่อม</a>
         <a class="nav-link" href="#">ติดตาม</a>
         <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">ประวัติ</a>
+        <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">สำเร็จ</a>
       </div>
     </div>
     <div class="col-md-3 text-end">

@@ -1,14 +1,14 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
 <script>
     function checkRecords() {
-        // Get the current domain dynamically
-        const currentDomain = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-        console.log(currentDomain);
-
         $.ajax({
-            url: currentDomain + '/Project2023/Project2-2023/admin/action/check_records.php',
+            url: 'action/check_records.php',
             dataType: 'json',
             success: function(data) {
+                console.log('Response data:', data);
+
                 if (data.length > 0) {
                     // Handle the response, e.g., display a notification or update the UI
                     for (let i = 0; i < data.length; i++) {
@@ -24,6 +24,7 @@
                 }
             },
             error: function() {
+                console.error('An error occurred while making the Ajax request.');
                 // Handle errors, and call the function again after a delay
                 setTimeout(checkRecords, 5000); // 5 seconds (5000 milliseconds)
             }

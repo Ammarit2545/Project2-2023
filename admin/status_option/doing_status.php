@@ -20,28 +20,11 @@
     $row_conf = mysqli_fetch_array($result);
     ?>
     <button class="btn btn-success" style="background-color:<?= $row_conf['status_color'] ?>; border : <?= $row_conf['status_color'] ?>" onclick="show_conf_status('<?php echo $row_conf['id']; ?>')">
-        เปลี่ยนเป็นสถานะ "<?= $row_conf['status_name'] ?>"
+        <?= $row_conf['status_name'] ?>
     </button>
 </center>
 
-<script>
-    function show_conf_status(id) {
-        Swal.fire({
-            title: 'Confirmation',
-            text: 'คุณต้องการเปลี่ยนเป็นสถานะดำเนินการใช่หรือไม่?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = 'action/status/doing_status.php?id=' + <?= $row['get_r_id'] ?>;
-            }
-        });
-    }
-</script>
+
 
 <!-- --------------------------------------------------------------------------- -->
 
@@ -179,7 +162,7 @@
 </div>
 
 <!-- ------------------------------------------------------------------ -->
-<div id="offer_status" style="display: block;">
+<div id="offer_value_code" style="display: none;">
     <hr>
     <br>
     <h1 class="m-0 font-weight-bold text-primary">หากคุณต้องการยื่นข้อเสนอ </h1>
@@ -260,7 +243,7 @@
             <h6>อะไหล่</h6>
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Parts">
-            เพิ่มอะไหล่
+                เพิ่มอะไหล่
             </button>
             <div id="cardContainer" style="display: none;">
                 <table class="table" id="cardSection"></table>
@@ -396,19 +379,37 @@
     function showCancelValue() {
         document.getElementById('cancel_value_code').style.display = 'block';
         document.getElementById('status_doing').style.display = 'none';
-        document.getElementById('offer_status').style.display = 'none';
+        document.getElementById('offer_value_code').style.display = 'none';
 
     }
 
     function show_doing_status() {
         document.getElementById('cancel_value_code').style.display = 'none';
         document.getElementById('status_doing').style.display = 'block';
-        document.getElementById('offer_status').style.display = 'none';
+        document.getElementById('offer_value_code').style.display = 'none';
     }
 
     function showofferValue() {
         document.getElementById('cancel_value_code').style.display = 'none';
         document.getElementById('status_doing').style.display = 'none';
-        document.getElementById('offer_status').style.display = 'block';
+        document.getElementById('offer_value_code').style.display = 'block';
+    }
+</script>
+<script>
+    function show_conf_status(id) {
+        Swal.fire({
+            title: 'Confirmation',
+            text: 'คุณต้องการเปลี่ยนเป็นสถานะดำเนินการใช่หรือไม่?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'action/status/doing_status.php?id=' + <?= $row['get_r_id'] ?>;
+            }
+        });
     }
 </script>

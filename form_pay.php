@@ -13,12 +13,13 @@ if ($id == NULL) {
 }
 
 $id_g = $_GET['id'];
-$sql1 = "SELECT * FROM get_repair 
+$sql1 = "SELECT get_repair.get_r_id, MAX(get_repair.get_r_date_in) AS max_date
+FROM get_repair 
 LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
 LEFT JOIN repair ON repair.r_id = get_detail.r_id
 WHERE repair.m_id = '$id' AND get_repair.get_r_id = '$id_g' 
 GROUP BY get_repair.get_r_id
-ORDER BY get_r_date_in DESC;";
+ORDER BY max_date DESC;";
 $result1 = mysqli_query($conn, $sql1);
 $row1 = mysqli_fetch_array($result1);
 
@@ -265,7 +266,7 @@ $get_add_price = $row1['get_add_price'];
     <form id="payment_data" action="action/add_payment.php" method="POST" enctype="multipart/form-data">
         <!-- <form id="payment_data" action="action/add_payment.php" method="POST" enctype="multipart/form-data" style="display: none;"> -->
 
-        <div class="card" style="width: 100%;">
+        <div class="card" style="width: 100%;border:2px solid white">
             <div class="card-body">
                 <br>
                 <br>
@@ -278,7 +279,7 @@ $get_add_price = $row1['get_add_price'];
                         <h1 class="alert alert-primary" role="alert">ชำระเงิน หมายเลขส่งซ่อมที่ : <?= $id_g ?></h1>
                         <br>
                         <br>
-                        <div style="display:none">
+                        <div style="display: none">
                             <h3 class="alert alert-secondary"><a class="btn btn-primary">ขั้นตอนที่ 1</a> : ดูข้อมูลส่วนตัวของท่านให้ครบถ้วน <span style="color:red; font-size:18px">*** หากไม่ถูกต้องกรุณาทำการแก้ไขที่ "หน้าแก้ไขข้อมูล" ***</span></h3>
                             <br>
                             <div class="row alert alert-light" style="background-color: white; padding : 10px;">
@@ -314,45 +315,43 @@ $get_add_price = $row1['get_add_price'];
 
                         <h3 class="alert alert-secondary"><a class="btn btn-success">ขั้นตอนที่ 1</a> : เลือกวิธีการจัดส่งและชำระค่าบริการ</h3>
                         <br>
-                        <div class="row">
-                            <div class="col-12">
-                                <center>
-                                    <!-- <h5>เลือกวิธีการจัดส่งที่ท่านต้องการ</h5> -->
-                                </center>
-                                <br>
-                            </div>
-                            <?php 
-                            $sql_c = "SELECT * FROM get_repair WHERE get_r_id = '$id_g' AND del_flg = '0'";
-                            $result_c = mysqli_query($conn ,$sql_c);
-                            $row_c = mysqli_fetch_array($result_c);
-                            
-                            if ($row_c['get_deli'] == 0) { ?>
-                                <div class="col-6 d-flex justify-content-start">
-                                    <a class="btn btn-success" onclick="showAddress()" id="add_button_pay">ดูรายละเอียดของท่าน</a>
-                                    <a class="btn btn-danger" id="cancel_pay_button" style="display:none" onclick="showPayClose()">ยกเลิก</a>
-                                </div> <?php
-                                    } else { ?>
+                        <span style="display: <?php if ($row1['get_add_price'] != NULL) {  ?>block<?php  } else {     ?>none<?php } ?>">
+                            <div class="row">
+                                <div class="col-12">
+                                    <center>
+                                        <h5>เลือกวิธีการจัดส่งที่ท่านต้องการ </h5>
+                                    </center>
+                                    <br>
+                                </div>
                                 <div class="col-6 d-flex justify-content-end">
-                                    <a class="btn btn-primary" id="non_add_button" onclick="showPay()">ดูรายละเอียดของท่าน</a>
+                                    <a class="btn btn-primary" id="non_add_button" onclick="showPay()">มารับที่ร้าน</a>
                                     <a class="btn btn-danger" id="cancel_add_button" style="display:none" onclick="showAddressClose()">ยกเลิก</a>
                                 </div>
-                            <?php
-                                    } ?>
-                            <!-- <div class="col-6 d-flex justify-content-end">
-                                <a class="btn btn-primary" id="non_add_button" onclick="showPay()">มารับที่ร้าน</a>
-                                <a class="btn btn-danger" id="cancel_add_button" style="display:none" onclick="showAddressClose()">ยกเลิก</a>
+                                <div class="col-6 d-flex justify-content-start">
+                                    <center>
+                                        <?php if ($row1['get_add_price'] != NULL) {
+                                        ?>
+                                            <a class="btn btn-success" onclick="showAddress()" id="add_button_pay">จัดส่งผ่านไปรษณีย์</a>
+                                        <?php
+                                        } ?>
+                                        <a class="btn btn-danger" id="cancel_pay_button" style="display:none" onclick="showPayClose()">ยกเลิก</a>
+                                    </center>
+                                </div>
                             </div>
-                            <div class="col-6 d-flex justify-content-start">
-                                <a class="btn btn-success" onclick="showAddress()" id="add_button_pay">จัดส่งผ่านไปรษณีย์</a>
-                                <a class="btn btn-danger" id="cancel_pay_button" style="display:none" onclick="showPayClose()">ยกเลิก</a>
-                            </div> -->
-                        </div>
-
-                        <br>
-                        <hr>
+                            <br>
+                            <hr>
+                        </span>
                         <div class="row">
-                            <div class="mb-3" style="display: none" id="show_pay">
-                                <div class="alert alert-primary" role="alert">
+                            <div class="mb-3" style="display: <?php if ($row1['get_add_price'] != NULL) {
+                                                                ?>none<?php
+                                                                    } else {
+                                                                        ?>block<?php
+                                                                            } ?>" id="show_pay">
+                                <div class="alert alert-warning" role="alert" style="display: <?php if ($row1['get_add_price'] != NULL) {
+                                                                                                ?>none<?php
+                                                                                                } else {
+                                                                        ?>block<?php
+                                                                                                } ?>">
                                     <h5>มารับอุปกรณ์ที่ร้านด้วยตัวเอง</h5>
                                 </div>
                                 <br>
@@ -404,7 +403,8 @@ $get_add_price = $row1['get_add_price'];
                                             <input type="text" name="action" value="0" id="action-to-form" required hidden>
                                             <input type="text" name="get_r_id" value="<?= $id_g ?>" required hidden>
                                             <!-- <a class="btn btn-success" onclick="confirmPayment_Add()">ชำระเงินแล้ว</a> -->
-                                            <a class="btn btn-danger" onclick="confirmPayment()">ชำระเงินแล้ว</a>
+                                            <p style="color:red">*** ตรวจสอบข้อมูลของท่านให้ถูกต้องก่อนทำการส่งหลักฐาน ***</p>
+                                            <a class="btn btn-success" onclick="confirmPayment()">ชำระเงินแล้ว</a>
                                         </center>
                                     </div>
                                 </div>
@@ -438,7 +438,7 @@ $get_add_price = $row1['get_add_price'];
 
                 ?>
                 <form id="addressForm" action="action/add_address.php" method="POST">
-                    <div class="form-group" style="display:none">
+                    <div class="form-group" style="display:block">
                         <label for="sel1">จังหวัด:</label>
                         <select class="form-control" name="Ref_prov_id" id="provinces">
                             <option value="" selected disabled>-กรุณาเลือกจังหวัด-</option>
@@ -468,17 +468,15 @@ $get_add_price = $row1['get_add_price'];
                     </div>
 
                     <?php include('script.php'); ?>
-                    <br>
                     <center>
-                        <!-- <h5 style="color:red">*** เมื่อใส่รายละเอียดที่อยู่แล้ว ทางร้านจะทำการประเมินราคาค่าจัดส่งมาให้อักครั้งภายใน 1-2 วัน ***</h5> -->
-                        <br>
+                        <h5 style="color:red">*** กรุณาดูรายละเอียดเพื่อชำระเงิน ***</h5>
                         <a class="btn btn-primary" style="margin-left: 20px" type="submi" onclick="openModalPay('payadd')">ดูบิลใบเสร็จเพื่อชำระค่าบริการ</a>
-                        <!-- <a onclick="confirmPayment_Add()" class="btn btn-success" type="submit" style="margin-left: 20px;">ยืนยัน</a> -->
+                        <a onclick="confirmPayment_Add()" class="btn btn-success" type="submit" style="margin-left: 20px;">ยืนยัน</a>
                     </center>
 
                 </form>
                 <div class="row">
-                    <div class="mb-3" id="show_pay" style="display:block">
+                    <div class="mb-3" id="show_pay">
                         <br>
                         <hr>
                         <br>
@@ -496,30 +494,29 @@ $get_add_price = $row1['get_add_price'];
                         <div class="row">
                             <!-- Image Here -->
                             <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-                            <form id="deli_add" action="action/add_payment.php" method="POST" enctype="multipart/form-data">
-                                <div class="file-upload">
-                                    <!-- <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">แนบหลักฐานการชำระเงิน</button> -->
-                                    <div class="image-upload-wrap">
-                                        <input class="file-upload-input" type='file' name="conf_img" onchange="readURL(this);" accept="image/*" />
-                                        <div class="drag-text">
-                                            <h3>Drag and drop a file or select add Image</h3>
-                                        </div>
+                            <div class="file-upload">
+                                <!-- <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">แนบหลักฐานการชำระเงิน</button> -->
+
+                                <div class="image-upload-wrap">
+                                    <input class="file-upload-input" type='file' name="conf_img" onchange="readURL(this);" accept="image/*" />
+                                    <div class="drag-text">
+                                        <h3>Drag and drop a file or select add Image</h3>
                                     </div>
-                                    <div class="file-upload-content">
-                                        <img class="file-upload-image" src="#" alt="your image" onclick="openModal(this)" />
-                                        <div class="image-title-wrap">
-                                            <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
-                                        </div>
-                                    </div>
-                                    <br><br>
-                                    <center>
-                                        <input type="text" name="action" value="0" id="action-to-form" required hidden>
-                                        <input type="text" name="get_r_id" value="<?= $id_g ?>" required hidden>
-                                        <!-- <a class="btn btn-success" onclick="confirmPayment_Add()">ชำระเงินแล้ว</a> -->
-                                        <a class="btn btn-success" onclick="confirmPayment_deli_add()">ชำระเงินแล้ว</a>
-                                    </center>
                                 </div>
-                            </form>
+                                <div class="file-upload-content">
+                                    <img class="file-upload-image" src="#" alt="your image" onclick="openModal(this)" />
+                                    <div class="image-title-wrap">
+                                        <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+                                    </div>
+                                </div>
+                                <br><br>
+                                <center>
+                                    <input type="text" name="action" value="0" id="action-to-form" required hidden>
+                                    <input type="text" name="get_r_id" value="<?= $id_g ?>" required hidden>
+                                    <!-- <a class="btn btn-success" onclick="confirmPayment_Add()">ชำระเงินแล้ว</a> -->
+                                    <a class="btn btn-success" onclick="confirmPayment()">ชำระเงินแล้ว</a>
+                                </center>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -528,6 +525,7 @@ $get_add_price = $row1['get_add_price'];
             </div>
         </div>
     </div>
+    <?php include('footer/footer.php'); ?>
     <script>
         function readURL(input) {
             if (input.files && input.files[0]) {
@@ -584,24 +582,6 @@ $get_add_price = $row1['get_add_price'];
             });
         }
 
-        function confirmPayment_deli_add() {
-            Swal.fire({
-                title: 'ยืนยันการชำระเงิน',
-                // text: 'คุณแน่ใจหรือไม่ที่ต้องการที่จะทำการชำระเงินแล้ว?',
-                text: 'โปรดตรวจสอบข้อมูลทั้งหมดของคุณว่าถูกต้องแล้ว1?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'ใช่, ชำระเงินแล้ว',
-                cancelButtonText: 'ไม่, ยกเลิก',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // User confirmed, submit the form
-                    document.getElementById('deli_add').submit();
-                }
-            });
-        }
-
         function confirmPayment_Add() {
             Swal.fire({
                 title: 'ยืนยันที่อยู่ในการจัดส่งของคุณ',
@@ -627,7 +607,7 @@ $get_add_price = $row1['get_add_price'];
                 text: 'พนักงานจะทำการคำนวณค่าจัดส่ง และจะตอบกลับท่านภายใน 1-2 วัน?',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'ใช่, ส่งข้อมูล',
+                confirmButtonText: 'ใช่, ชำระเงินแล้ว',
                 cancelButtonText: 'ไม่, ยกเลิก',
                 reverseButtons: true
             }).then((result) => {
