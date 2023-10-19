@@ -1986,7 +1986,7 @@ ORDER BY rs.rs_date_time DESC
                                     <div class="col-6 text-end">
                                         <p class="ln" style="width: 100%; text-align: right;"> <!-- Add text-align: right; here -->
                                         <h5>
-                                            <a id="bounce-item" class="text-primary" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >
+                                            <a id="bounce-item" class="text-primary" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                 รายละเอียดอุปกรณ์ (มี <?= $repair_count ?> อุปกรณ์)
                                             </a>
                                         </h5>
@@ -2460,7 +2460,8 @@ ORDER BY rs.rs_date_time DESC
                                                         ?>
                                                             <li>
                                                                 <hr style="border: 3px solid black;">
-                                                                <h5 style="display:inline"><button class="btn btn-outline-secondary" style="color : white; background-color : <?= $row1['status_color'] ?>; border : 2px solid <?= $row1['status_color'] ?>;"><?= $row1['status_name'] ?>
+                                                                <h4 style="display:inline">
+                                                                    <h4 style="color : <?= $row1['status_color'] ?>;"><?= $row1['status_name'] ?>
                                                                         <?php if ($row1['status_id'] == 6) {
 
                                                                             // $carry_out_id = $row['status_id'];
@@ -2472,9 +2473,12 @@ ORDER BY rs.rs_date_time DESC
                                                                                 #ครั้งที่<?= $row_carry_out[0] - $count_carry_out ?>
                                                                         <?php }
                                                                             $count_carry_out += 1;
-                                                                        } ?></button></h5>
+                                                                        } ?></h4>
+                                                                </h4>
+
                                                                 <h6 style="display:inline;"><i class="uil uil-book"></i>&nbsp;<?= $formattedDate ?></h6>
                                                                 <p style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row1['rs_date_time'])); ?></p>
+                                                                <br>
                                                                 <?php
                                                                 $rs_id = $row1['rs_id'];
                                                                 $sql_check_p = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id' AND del_flg = '0'";
@@ -2587,7 +2591,7 @@ ORDER BY rs.rs_date_time DESC
                                                                 <?php
                                                                 } ?>
                                                                 <hr>
-                                                                <h5 class="btn btn-outline-primary">รายละเอียด</h5>
+                                                                <h5 class="f-gray-5">รายละเอียด</h5>
                                                                 <p class="mt-2" style="margin-left: 30px;"><?= $row1['rs_detail'] ?></p>
                                                                 <?php
                                                                 if ($row1['status_id'] == 5  && $row1['rs_conf'] == NULL) {
@@ -2656,8 +2660,8 @@ ORDER BY rs.rs_date_time DESC
 
                                                                 if ($row_pic_check[0] > 0) { ?>
                                                                     <hr>
-                                                                    <h6 class="btn btn-outline-secondary">รูปภาพประกอบ</h6>
-                                                                    <br><br>
+                                                                    <h5 class="f-gray-5">รูปภาพประกอบ</h5>
+                                                                    <br>
                                                                 <?php
                                                                 }
                                                                 $status_id = $row1['status_id'];
@@ -2879,21 +2883,30 @@ ORDER BY rs.rs_date_time DESC
                                                                 <br>
                                                                 <?php
                                                             }
+                                                            $sql_c_offer = "SELECT * FROM repair_status WHERE status_id = '19' AND del_flg = '0' AND get_r_id = $id_get_r ORDER BY rs_date_time DESC LIMIT 1";
+                                                            $result_c_offer = mysqli_query($conn, $sql_c_offer);
+                                                            $row_c_offer = mysqli_fetch_array($result_c_offer);
+
+                                                            $sql_conf = "SELECT * FROM repair_status WHERE del_flg = '0' AND get_r_id = $id_get_r ORDER BY rs_date_time DESC LIMIT 1";
+                                                            $result_conf = mysqli_query($conn, $sql_conf);
+                                                            $row_conf = mysqli_fetch_array($result_conf);
                                                             if ($row[0] > 0 || $status_id == 1) {
                                                                 if ($row1['rs_conf'] == NULL) { ?>
                                                                     <?php if ($status_id == 1 && !isset($cancel_id)) {
                                                                     ?>
                                                                         <p style="margin-left: 2%; color:red">*** หากต้องการยกเลิกคำส่งซ่อม ***</p>
                                                                         <a class="btn btn-danger" style="margin-left: 2%" onclick="showDivCancel()">ยกเลิก</a>
-                                                                    <?php
+                                                                        <?php
                                                                     } else if ($status_id != 1 && isset($cancel_id) && $row_2['status_id'] != 14) {
-                                                                    ?>
-                                                                        <hr>
-                                                                        <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
-                                                                        <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน/ยื่นข้อเสนอ</a>
-                                                                        <!-- <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a> -->
-                                                                        <a class="btn btn-success" id="confirmButtonSuccess0" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
+                                                                        if ($row_conf['rs_conf'] == NULL) {
+                                                                        ?>
+                                                                            <hr>
+                                                                            <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
+                                                                            <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน/ยื่นข้อเสนอ</a>
+                                                                            <!-- <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a> -->
+                                                                            <a class="btn btn-success" id="confirmButtonSuccess0" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
                                                                     <?php
+                                                                        }
                                                                     } ?>
 
 
@@ -3171,14 +3184,23 @@ ORDER BY rs.rs_date_time DESC
                                 </div>
                             </div>
 
-                        <?php } elseif ($status_id_last  == 4 && $row_2['rs_conf'] == NULL) { ?>
-                            <!-- <hr> -->
-                            <!-- <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p> -->
-                            <center>
-                                <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยัน</a>
-                                <a class="btn btn-success" id="confirmButtonSuccess1" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
-                            </center>
-                        <?php } elseif ($status_id_last  == 24) { ?>
+                            <?php
+
+                        } elseif ($status_id_last  == 4) {
+                            $sql_null = "SELECT * FROM repair_status WHERE get_r_id ='$get_r_id' AND del_flg = 0 ORDER BY rs_id DESC LIMIT 1";
+                            $result_null = mysqli_query($conn, $sql_null);
+                            $row_null = mysqli_fetch_array($result_null);
+                            if ($row_null['rs_conf'] == NULL) {
+                            ?>
+                                <!-- <hr> -->
+                                <!-- <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p> -->
+                                <center>
+                                    <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยันหห</a>
+                                    <a class="btn btn-success" id="confirmButtonSuccess1" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
+                                </center>
+                            <?php
+                            }
+                        } elseif ($status_id_last  == 24) { ?>
                             <!-- <hr> -->
                             <center>
                                 <p style="margin-left: 2%; color:red">*** ตรวจเช็คความปกติของอุปกรณ์ของท่านว่าใช้ได้หรือไม่ก่อนทำการยืนยันเสร็จสิ้นการซ่อม ***</p>
@@ -3194,7 +3216,11 @@ ORDER BY rs.rs_date_time DESC
                             $result_c_offer = mysqli_query($conn, $sql_c_offer);
                             $row_c_offer = mysqli_fetch_array($result_c_offer);
 
-                            if ($row_c_offer[0] > 0) {
+                            $sql_conf = "SELECT * FROM repair_status WHERE del_flg = '0' AND get_r_id = $id_get_r ORDER BY rs_date_time DESC LIMIT 1";
+                            $result_conf = mysqli_query($conn, $sql_conf);
+                            $row_conf = mysqli_fetch_array($result_conf);
+
+                            if ($row_c_offer[0] > 0 && $row_conf['rs_conf'] == NULL) {
 
                             ?>
                                 <center>
@@ -3202,14 +3228,46 @@ ORDER BY rs.rs_date_time DESC
                                     <a class="btn btn-success" id="confirmButtonCheck" style="display:inline-block" onclick="sendValuetoArrived(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม6</a>
 
                                 </center>
-                            <?php
+                                <?php
                             } else {
-                            ?> <center>
-                                    <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยัน</a>
-                                    <a class="btn btn-success" id="confirmButtonSuccess1" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม5</a>
+                                if ($row_conf['rs_conf'] == NULL) {
+                                ?> <center>
+                                        <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยัน</a>
+                                        <a class="btn btn-success" id="confirmButtonSuccess1" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม5</a>
 
-                                </center>
+                                    </center>
                             <?php }
+                            }
+                        } elseif ($status_id_last  == 9) {
+                            ?>
+                            <center>
+                                <a style="margin-left: 2%" href="send_config.php?id=<?= $get_id ?>" class="btn btn-danger">ส่งคำร้อง</a>
+                                <button class="btn btn-success" href="action/add_only_status.php?id=<?= $id_get_r ?>&status_id=3" style="display:inline-block" onclick="showConfirmation()">ยืนยันและตรวจสอบอุปกรณ์แล้ว</button>
+
+ 
+
+                                <script>
+                                    function showConfirmation() {
+                                        Swal.fire({
+                                            title: 'ยืนยันและตรวจสอบอุปกรณ์แล้ว?',
+                                            text: 'คุณต้องการยืนยันและตรวจสอบอุปกรณ์แล้วหรือไม่?',
+                                            icon: 'question',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#28a745', // Green color
+                                            cancelButtonColor: '#6c757d', // Gray color
+                                            confirmButtonText: 'ยืนยัน',
+                                            cancelButtonText: 'ยกเลิก'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                // If confirmed, proceed with the link redirection
+                                                window.location.href = "action/add_only_status.php?id=<?= $id_get_r ?>&status_id=3";
+                                            }
+                                        });
+                                    }
+                                </script>
+
+                            </center>
+                        <?php
                         } elseif ($status_id_last  == 4 && $row_2['rs_conf'] != NULL) { ?>
                             <div class="d-flex justify-content-center">
                                 <div class="accordion accordion-flush" id="accordionFlushExample">
@@ -3322,52 +3380,53 @@ ORDER BY rs.rs_date_time DESC
                             ?>
                                 <li>
                                     <hr style="border: 5px solid black;">
-                                    <h5 style="display:inline"><button class="btn btn-outline-secondary" style="color : white; background-color : <?= $row1['status_color'] ?>; border : 2px solid <?= $row1['status_color'] ?>;"><?= $row1['status_name'] ?>
-                                            <?php
-                                            if ($row1['status_id'] == 6) {
+                                    <h4 style="display:inline">
+                                        <h4 style="color : <?= $row1['status_color'] ?>;"><?= $row1['status_name'] ?>
+                                            <?php if ($row1['status_id'] == 6) {
 
-                                                $carry_out_id = $row['status_id'];
-                                                $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = 155 AND status_id = 6 ORDER BY rs_date_time DESC;";
-                                                $result_carry_out = mysqli_query($conn, $sql_cary_out);
-                                                $row_carry_out = mysqli_fetch_array($result_carry_out);
+                                                // $carry_out_id = $row['status_id'];
+                                                // $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = 155 AND status_id = 6 ORDER BY rs_date_time DESC;";
+                                                // $result_carry_out = mysqli_query($conn, $sql_cary_out);
+                                                // $row_carry_out = mysqli_fetch_array($result_carry_out);
 
-                                                if ($row_carry_out[0] > 1) {
-                                            ?> #ครั้งที่<?= $row_carry_out[0] - $count_carry_out ?>
-                                            <?php
-                                                }
+                                                if ($row_carry_out[0] > 1) { ?>
+                                                    #ครั้งที่<?= $row_carry_out[0] - $count_carry_out ?>
+                                            <?php }
                                                 $count_carry_out += 1;
-                                            } ?></button></h5>
+                                            } ?></h4>
+                                    </h4>
+
                                     <h6 style="display:inline;"><i class="uil uil-book"></i>&nbsp;<?= $formattedDate ?></h6>
                                     <p style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row1['rs_date_time'])); ?></p>
-                                    <?php
-                                    $rs_id = $row1['rs_id'];
-                                    $sql_check_p = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id' AND del_flg = '0'";
-                                    $result_check_p = mysqli_query($conn, $sql_check_p);
-                                    $row = mysqli_fetch_array($result_check_p);
+                                    <br><?php
+                                        $rs_id = $row1['rs_id'];
+                                        $sql_check_p = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id' AND del_flg = '0'";
+                                        $result_check_p = mysqli_query($conn, $sql_check_p);
+                                        $row = mysqli_fetch_array($result_check_p);
 
-                                    $sql_check_p = "SELECT rd_id
+                                        $sql_check_p = "SELECT rd_id
                                 FROM repair_detail
                                 LEFT JOIN get_repair ON get_repair.get_r_id = repair_detail.get_r_id
                                 LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
                                 WHERE repair_status.get_r_id = '$id_get_r' AND repair_detail.del_flg = '0';";
-                                    $result_check_p = mysqli_query($conn, $sql_check_p);
-                                    $row_check_part = mysqli_fetch_array($result_check_p);
+                                        $result_check_p = mysqli_query($conn, $sql_check_p);
+                                        $row_check_part = mysqli_fetch_array($result_check_p);
 
-                                    if ($row_p['rs_id'] == $row1['rs_id'] && $row_check_part['rd_id'] != NULL) {
-                                        if ($row1['status_id'] != 8) {
-                                            if ($row1['status_id'] == 9 || $row1['status_id'] == 10) {  ?>
+                                        if ($row_p['rs_id'] == $row1['rs_id'] && $row_check_part['rd_id'] != NULL) {
+                                            if ($row1['status_id'] != 8) {
+                                                if ($row1['status_id'] == 9 || $row1['status_id'] == 10) {  ?>
                                                 <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">จำนวนอะไหล่</a>
                                             <?php
-                                            } else {
+                                                } else {
                                             ?>
                                                 <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a>
                                         <?php }
+                                            }
                                         }
-                                    }
-                                    if ($row1['status_id'] == 8 && $row1['rs_conf'] == NULL) { ?>
+                                        if ($row1['status_id'] == 8 && $row1['rs_conf'] == NULL) { ?>
                                         <a href="form_pay.php?id=<?= $id_get_r ?>" class="btn btn-primary">ทำการชำระเงิน</a>
                                     <?php
-                                    } ?>
+                                        } ?>
                                     <?php if ($row1['get_track'] != NULL && $row1['status_id'] == 24) {
                                     ?>
                                         <hr>
@@ -3437,7 +3496,7 @@ ORDER BY rs.rs_date_time DESC
                                         </div>
                                     <?php  } ?>
                                     <hr>
-                                    <h5 class="btn btn-outline-primary">รายละเอียด</h5>
+                                    <h5 class="f-gray-5">รูปภาพประกอบ</h5>
                                     <p class="mt-2" style="margin-left: 30px;"><?= $row1['rs_detail'] ?></p>
                                     <?php
                                     if ($row1['status_id'] == 5  && $row1['rs_conf'] == NULL) {

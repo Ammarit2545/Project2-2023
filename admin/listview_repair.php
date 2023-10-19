@@ -241,14 +241,15 @@ if (!isset($_SESSION['role_id'])) {
                                         $status_select = 0;
 
                                         $sql_nofi = "SELECT get_repair.get_r_id, MAX(get_detail.get_d_id) AS get_d_id, MAX(repair.r_id) AS r_id, MAX(status_type.status_id) AS status_id, MAX(get_repair.get_deli) AS get_deli
-                                                        FROM get_repair
-                                                        LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
-                                                        LEFT JOIN repair ON get_detail.r_id = repair.r_id   
-                                                        LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
-                                                        LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
-                                                        WHERE get_repair.del_flg = '0' AND get_detail.del_flg = '0'
-                                                        GROUP BY get_repair.get_r_id
-                                                        ORDER BY get_repair.get_r_id DESC;";
+                                                            FROM get_repair
+                                                            LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
+                                                            LEFT JOIN repair ON get_detail.r_id = repair.r_id   
+                                                            LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
+                                                            LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
+                                                            WHERE get_repair.del_flg = '0' AND get_detail.del_flg = '0'
+                                                            GROUP BY get_repair.get_r_id
+                                                            ORDER BY get_repair.get_r_id DESC;"; // Change ASC to DESC here
+
                                         $result_nofi = mysqli_query($conn, $sql_nofi);
                                         $num_rows = mysqli_fetch_array($result_nofi_count);
                                         $i = 0;
@@ -282,9 +283,6 @@ if (!isset($_SESSION['role_id'])) {
                                                     continue;
                                                 }
                                             }
-
-
-
                                             $sql_date = "SELECT get_r_date_in FROM get_repair WHERE get_r_id = '$get_r_id' ";
                                             $result_date = mysqli_query($conn, $sql_date);
                                             $row_date = mysqli_fetch_array($result_date);
