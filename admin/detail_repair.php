@@ -403,7 +403,17 @@ $get_r_id = $_GET['id'];
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-
+                                    <?php
+                                    if ($row_s['rs_cancel_detail'] != NULL) {
+                                        $rs_cancel_detail_data = $row_s['rs_cancel_detail']; //rs_cancel_detail_data คือ บอกว่าเหตุผลที่ไม่เอาคืออะไร
+                                    ?>
+                                        <div class="mb-3 alert alert-danger">
+                                            <p class="f-red-5">เหตุผลไม่ยืนยันการซ่อม : <span class="f-black-5"><?= $row_s['rs_cancel_detail']  ?></span></p>
+                                        </div>
+                                        <hr>
+                                    <?php
+                                    }
+                                    ?>
                                     <center>
                                         <h5>กดการดำเนินการที่ท่านต้องการ</h5>
                                         <hr style="width:50%">
@@ -1105,10 +1115,20 @@ $get_r_id = $_GET['id'];
                                 <div class="alert alert-danger" role="alert">
                                     <center>
                                         <h4 class="py-2" style="margin-bottom: 0px;">ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
+                                        <?php
+                                        if ($rs_cancel_detail_data != '' || $rs_cancel_detail_data != NULL) { //$rs_cancel_detail_data เช็คว่าไม่มีค่าว่างจากขางบนที่ส่งมา
+                                        ?>
+                                        <hr>
+                                            <p class="f-red-5">เหตุผลไม่ยืนยันการซ่อม : <span class="f-black-5"><u><?= $rs_cancel_detail_data  ?></u></span></p>
+                                        <?php
+                                        }
+                                        ?>
                                     </center>
                                 </div>
                                 <center>
                                     <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะไปที่สมาชิก ***</p>
+                                    <p>
+                                    </p>
                                 </center>ะเงินแล้ว
                                 <br>
                             <?php
@@ -1544,7 +1564,7 @@ $get_r_id = $_GET['id'];
                                                                         ?> <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
                                                                             <a id="bounce-item" href="#" style="margin-left: 20px;"><img src="../<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal shadow" alt="" onclick="openModalIMG(this)"><span class="tooltip">คลิกเพื่อดู</span></a>
                                                                         <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
-                                                                            <a id="bounce-item"  href="#" style="margin-left: 20px;" class="shadow">
+                                                                            <a id="bounce-item" href="#" style="margin-left: 20px;" class="shadow">
                                                                                 <video width="100px" autoplay muted onclick="openModalVideo(this)" src="../<?= $row_pic['rp_pic'] ?>">
                                                                                     <source src="../<?= $row_pic['rp_pic'] ?>" type="video/mp4">
                                                                                     <source src="../<?= $row_pic['rp_pic'] ?>" type="video/ogg">
@@ -1629,11 +1649,15 @@ $get_r_id = $_GET['id'];
 
                                     if (in_array($row['status_id'], $statusIds) || $row['value_code'] == "received" || $row_s['rs_cancel_detail'] != NULL || $row['value_code'] == "submit" || $row['value_code'] == "succ" || $row['value_code'] == "cancel" || $row['value_code'] == "submit" || $row['value_code'] == "received" || $row['status_id'] == "11" || $row['status_id'] == "4" || $row1['status_id'] != "3" || $row1['status_id'] != '17' || $row1['status_id'] != '5') {
                                     ?>
-                                        <button type="button" id="bounce-item" class="btn btn-primary shadow" data-bs-toggle="modal" data-bs-target="#statusOrRepairModal">
-                                            ดำเนินการสถานะถัดไป
-                                            <span class="tooltip">อัพเดตสถานะ</span>
-                                        </button>
-                                    <?php } ?>
+                                        <?php if ($row['status_id'] != 3) {
+                                        ?>
+                                            <button type="button" id="bounce-item" class="btn btn-primary shadow" data-bs-toggle="modal" data-bs-target="#statusOrRepairModal">
+                                                ดำเนินการสถานะถัดไป
+                                                <span class="tooltip">อัพเดตสถานะ</span>
+                                            </button>
+                                    <?php
+                                        }
+                                    } ?>
                                 </div>
                             </div>
 

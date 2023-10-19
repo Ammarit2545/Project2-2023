@@ -24,17 +24,42 @@ $image4 = $_POST['image4'];
 
 $id = $_SESSION["id"];
 
-// Retrieve the parts data
+// // Retrieve the parts data Old
+// $parts = array();
+// $cardCount = $_POST['cardCount']; // Assuming you're passing the card count as a hidden input field
+// for ($i = 1; $i <= $cardCount; $i++) {
+//     $partId = $_POST['p_id' . $i];
+//     $quantity = $_POST['value_p' . $i];
+//     $parts[] = array(
+//         'partId' => $partId,
+//         'quantity' => $quantity
+//     );
+// }
+
 $parts = array();
-$cardCount = $_POST['cardCount']; // Assuming you're passing the card count as a hidden input field
-for ($i = 1; $i <= $cardCount; $i++) {
-    $partId = $_POST['p_id' . $i];
-    $quantity = $_POST['value_p' . $i];
-    $parts[] = array(
-        'partId' => $partId,
-        'quantity' => $quantity
-    );
+
+for ($i = 1; $i <= 20; $i++) {
+    if (isset($_POST['check_' . $i])) {
+        $get_d = $_POST['get_d_id' . $i];
+        $partIds = $_POST['p_id_' . $i];
+        $quantities = $_POST['value_p_' . $i];
+
+        foreach ($partIds as $count_for => $partId) {
+            $quantity = $quantities[$count_for];
+            $parts[] = array(
+                'get_d_id' => $get_d,
+                'partId' => $partId,
+                'quantity' => $quantity
+            );
+
+            // Assuming $_POST['value_p' . $i] is an array, you can access its elements like this:
+            echo $quantity;
+        }
+    }
 }
+
+print_r($parts);
+
 if ($m_id != NULL) {
     $sql_member = "SELECT * FROM member WHERE m_id = $m_id  AND del_flg = 0";
     $result_member = mysqli_query($conn, $sql_member);
@@ -96,6 +121,7 @@ if ($row_serial[0] > 0) {
     if ($result3) {
         // Process parts data
         foreach ($parts as $part) {
+            $get_d_id = $part['get_d_id'];
             $partId = $part['partId'];
             $quantity = $part['quantity'];
 

@@ -6,6 +6,7 @@
 -->
 
 <center>
+    <!-- 12,13,6 -->
     <?php
     $sql = "SELECT * FROM status_type WHERE status_id = '12'";
     $result = mysqli_query($conn, $sql);

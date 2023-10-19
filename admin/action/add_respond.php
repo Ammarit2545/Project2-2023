@@ -23,17 +23,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $rs_detail = $_POST['rs_detail'];
     $status_id = $_POST['status_id'];
 
-    // Retrieve the parts data
+    // // Retrieve the parts data Old
+    // $parts = array();
+    // $cardCount = $_POST['cardCount']; // Assuming you're passing the card count as a hidden input field
+    // for ($i = 1; $i <= $cardCount; $i++) {
+    //     $partId = $_POST['p_id' . $i];
+    //     $quantity = $_POST['value_p' . $i];
+    //     $parts[] = array(
+    //         'partId' => $partId,
+    //         'quantity' => $quantity
+    //     );
+    // }
+
     $parts = array();
-    $cardCount = $_POST['cardCount']; // Assuming you're passing the card count as a hidden input field
-    for ($i = 1; $i <= $cardCount; $i++) {
-        $partId = $_POST['p_id' . $i];
-        $quantity = $_POST['value_p' . $i];
-        $parts[] = array(
-            'partId' => $partId,
-            'quantity' => $quantity
-        );
+
+for ($i = 1; $i <= 20; $i++) {
+    if (isset($_POST['check_' . $i])) {
+        $get_d = $_POST['get_d_id' . $i];
+        $partIds = $_POST['p_id_' . $i];
+        $quantities = $_POST['value_p_' . $i];
+
+        foreach ($partIds as $count_for => $partId) {
+            $quantity = $quantities[$count_for];
+            $parts[] = array(
+                'get_d_id' => $get_d,
+                'partId' => $partId,
+                'quantity' => $quantity
+            );
+
+            // Assuming $_POST['value_p' . $i] is an array, you can access its elements like this:
+            echo $quantity;
+        }
     }
+}
+
+print_r($parts);
 
     $get_r_id = $_POST['get_r_id'];
     $get_wages = $_POST['get_wages'];
@@ -145,6 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result3) {
             // Process parts data
             foreach ($parts as $part) {
+                $get_d_id = $part['get_d_id'];
                 $partId = $part['partId'];
                 $quantity = $part['quantity'];
 

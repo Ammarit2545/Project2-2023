@@ -1,14 +1,22 @@
  <!-- search 11-17 status -->
  <center>
+     <!-- 8,17,6 -->
      <?php
-        $id_get = $_GET['id'];
-        $sql = "SELECT * FROM status_type WHERE status_id = '8'";
-        $result = mysqli_query($conn, $sql);
-        $row_conf = mysqli_fetch_array($result);
-        ?>
-     <button class="btn btn-light" onclick="showCancelValue()" style="background-color: <?= $row_conf['status_color'] ?>;color:white"><?= $row_conf['status_name'] ?></button>
+        $sql_conf = "SELECT * FROM repair_status WHERE del_flg = '0' AND get_r_id = $get_r_id ORDER BY rs_date_time DESC LIMIT 1";
+        $result_conf = mysqli_query($conn, $sql_conf);
+        $row_conf = mysqli_fetch_array($result_conf);
 
-     <?php
+        if ($row_conf['rs_conf'] == NULL) {
+       
+         $id_get = $_GET['id'];
+         $sql = "SELECT * FROM status_type WHERE status_id = '8'";
+         $result = mysqli_query($conn, $sql);
+         $row_conf = mysqli_fetch_array($result);
+         ?>
+         <button class="btn btn-light" onclick="showCancelValue()" style="background-color: <?= $row_conf['status_color'] ?>;color:white"><?= $row_conf['status_name'] ?></button>
+         <?php   }
+   
+        
         $sql = "SELECT * FROM status_type WHERE status_id = '17'";
         $result = mysqli_query($conn, $sql);
         $row_offer = mysqli_fetch_array($result);

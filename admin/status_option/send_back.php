@@ -1,7 +1,8 @@
  <!-- search 11-17 status -->
  <center>
+     <!-- 8,17 -->
      <?php
-     $id_get = $_GET['id'];
+        $id_get = $_GET['id'];
         $sql = "SELECT * FROM status_type WHERE status_id = '8'";
         $result = mysqli_query($conn, $sql);
         $row_conf = mysqli_fetch_array($result);
@@ -39,7 +40,7 @@
                  <label for="basic-url" class="form-label">ค่าตรวจเช็คอุปกรณ์</label>
                  <div class="input-group mb-3">
                      <!-- <span class="input-group-text" id="basic-addon3"></span> -->
-                     <input type="text" name="price_check" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณาระบุราคาค่าตรวจเช็คอุปกรณ์" >
+                     <input type="text" name="price_check" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณาระบุราคาค่าตรวจเช็คอุปกรณ์">
                  </div>
              </div>
          </div>
@@ -174,7 +175,7 @@
      <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
      <br>
      <form id="offers_status_id" action="action/status/insert_new_part_non_del.php" method="POST" enctype="multipart/form-data">
-         <div>
+         <!-- <div>
              <br>
              <label for="basic-url" class="form-label">กรุณาเลือกอุปกรณ์ที่ต้องการทำการซ่อม</label>
              <?php
@@ -199,12 +200,16 @@
 
                 ?>
 
-         </div>
+         </div> -->
 
          <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
          <input type="text" name="status_id" value="17" hidden>
          <input type="hidden" name="cardCount" id="cardCountInput" value="0">
          <br>
+         <div class="alert alert-primary">
+             <h5 class="ln f-black-5">ขั้นตอนที่ 1 : </h5>
+             <p class="ln">กรอกค่าแรงและรายละเอียด</p>
+         </div>
          <div class="row">
              <div class="col-md">
                  <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่</label>
@@ -241,18 +246,28 @@
          <br>
          <label for="DetailFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการส่ง <p style="display:inline; color : gray"> รายละเอียด</p> :</label>
          <textarea class="form-control" name="rs_detail" id="DetailFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">อะไหล่ที่ต้องใช้มีดังนี้</textarea>
-
-
+         ิ<br>
+         <div class="alert alert-primary">
+             <!-- <h5>ขั้นตอนที่ 2 : จัดการอะไหล่และเลือกอุปกรณ์</h5> -->
+             <h5 class="ln f-black-5">ขั้นตอนที่ 2 : </h5>
+             <p class="ln">จัดการอะไหล่และเลือกอุปกรณ์</p>
+         </div>
 
          <br>
          <div class="mb-3">
              <h6>อะไหล่</h6>
-             <div id="cardContainer" style="display: none;">
+             <!-- <div id="cardContainer" style="display: none;">
                  <table class="table" id="cardSection"></table>
              </div>
-             <button type="button" class="btn btn-primary" onclick="showNextCard()">เพิ่มอะไหล่</button>
+             <button type="button" class="btn btn-primary" onclick="showNextCard()">เพิ่มอะไหล่</button> -->
+             <?php include('func_parts/func_parts.php'); ?>
          </div>
          <br>
+         <div class="alert alert-primary">
+             <!-- <h5>ขั้นตอนที่ 3 : ใส่รูปภาพประกอบ <span class="f-red-5">*ไม่จำเป็น</span></h5> -->
+             <h5 class="ln f-black-5">ขั้นตอนที่ 3 : </h5>
+             <p class="ln">ใส่รูปภาพประกอบ <span class="f-red-5">*ไม่จำเป็น</span></p>
+         </div>
          <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
          <hr>
          <label for="DetailFormControlTextarea" class="form-label">เพิ่มรูปภาพหรือวิดีโอ *ไม่จำเป็น (สูงสุด 4 ไฟล์):</label>

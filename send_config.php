@@ -6,6 +6,10 @@ if (!isset($_SESSION['id'])) {
     header('Location:home.php');
 }
 
+if (!isset($_GET['id'])) {
+    header('Location:home.php');
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -119,7 +123,7 @@ if (!isset($_SESSION['id'])) {
                     ?>
                     <label for="basic-url" class="form-label">หมายเลขแจ้งซ่อมของคุณ</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" name="get_r_id" value="<?= $get_r_id ?>" placeholder="กรุณาใส่หมายเลขแจ้งซ่อมของท่าน">
+                        <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" name="get_r_id" value="<?= $get_r_id ?>" placeholder="กรุณาใส่หมายเลขแจ้งซ่อมของท่าน" disabled>
                     </div>
 
                     <label for="basic-url" class="form-label">จาก</label>

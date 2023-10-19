@@ -1,15 +1,4 @@
-<?php
-if ($row_s['rs_cancel_detail'] != NULL) {
-?>
-    <hr>
-    <div class="mb-3">
-        <label for="exampleFormControlTextarea1" class="col-form-label btn btn-danger">เหตุผลไม่ยืนยันการซ่อม</label>
-        <br><br>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?= $row_s['rs_cancel_detail']  ?></textarea>
-    </div>
-<?php
-}
-?>
+
 
 
 <!-- สถานะ "ส่งเรื่องแล้ว" -->
@@ -57,113 +46,115 @@ if ($row_s['rs_cancel_detail'] != NULL) {
         <br>
         <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
         <br>
-        <form id="cancel_status_id" action="action/status/status_non_del_part.php" method="POST" enctype="multipart/form-data">
-            <label for="cancelFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : red"> ปฏิเสธการซ่อม</p> :</label>
-            <textarea class="form-control" name="rs_detail" id="cancelFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการปฏิเสธการซ่อม"></textarea>
-            <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
-            <input type="text" name="status_id" value="11" hidden>
-            <br>
-            <!-- <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
+        <div class="alert alert-secondary shadow">
+            <form id="cancel_status_id" action="action/status/status_non_del_part.php" method="POST" enctype="multipart/form-data">
+                <label for="cancelFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : red"> ปฏิเสธการซ่อม</p> :</label>
+                <textarea class="form-control" name="rs_detail" id="cancelFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการปฏิเสธการซ่อม"></textarea>
+                <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
+                <input type="text" name="status_id" value="11" hidden>
+                <br>
+                <!-- <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
             <hr>
             <label for="cancelFormControlTextarea" class="form-label">เพิ่มรูปภาพหรือวิดีโอ *ไม่จำเป็น (สูงสุด 4 ไฟล์):</label>
             <a class="btn btn-primary" onclick="showInput()">เพิ่มรูปภาพหรือวิดีโอ</a>
             <br>
             <div id="inputContainer"></div> -->
 
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-            <center>
-                <br>
-                <button class="btn btn-success" onclick="confirm_cen(event)">ยืนยัน</button>
-            </center>
-        </form>
-        <script>
-            var clickCount = 0;
+                <center>
+                    <br>
+                    <button class="btn btn-success" onclick="confirm_cen(event)">ยืนยัน</button>
+                </center>
+            </form>
+            <script>
+                var clickCount = 0;
 
-            function showInput() {
-                var textarea = document.getElementById('cancelFormControlTextarea');
-                var textValue = textarea.value.trim();
-                if (textValue === '') {
-                    return false; // Prevent form submission if there is no text input
+                function showInput() {
+                    var textarea = document.getElementById('cancelFormControlTextarea');
+                    var textValue = textarea.value.trim();
+                    if (textValue === '') {
+                        return false; // Prevent form submission if there is no text input
+                    }
+
+                    clickCount++;
+
+                    if (clickCount <= 4) {
+                        var inputElement = document.createElement('div');
+                        inputElement.classList.add('input-group', 'mb-3');
+
+                        var fileInput = document.createElement('input');
+                        fileInput.type = 'file';
+                        fileInput.name = 'file' + clickCount;
+                        fileInput.classList.add('form-control');
+                        fileInput.addEventListener('change', function(event) {
+                            showPreview(event.target);
+                        });
+
+                        var inputGroupText = document.createElement('span');
+                        inputGroupText.classList.add('input-group-text');
+                        inputGroupText.textContent = 'File ' + clickCount;
+
+                        var deleteButton = document.createElement('button');
+                        deleteButton.type = 'button';
+                        deleteButton.classList.add('btn', 'btn-danger');
+                        deleteButton.textContent = 'Delete';
+                        deleteButton.addEventListener('click', function() {
+                            inputElement.remove();
+                            removeFileInputValue(fileInput.name); // Remove corresponding value
+                        });
+
+                        var previewElement = document.createElement('div');
+                        previewElement.classList.add('preview');
+                        previewElement.style.marginTop = '10px';
+
+                        inputElement.appendChild(inputGroupText);
+                        inputElement.appendChild(fileInput);
+                        inputElement.appendChild(deleteButton);
+
+                        var inputContainer = document.getElementById('inputContainer');
+                        inputContainer.appendChild(inputElement);
+                        inputContainer.appendChild(previewElement);
+                    }
+
+                    return false; // Prevent form submission
                 }
 
-                clickCount++;
+                function showPreview(input) {
+                    var preview = input.parentNode.nextSibling; // Get the next sibling (preview element)
+                    preview.innerHTML = '';
 
-                if (clickCount <= 4) {
-                    var inputElement = document.createElement('div');
-                    inputElement.classList.add('input-group', 'mb-3');
+                    if (input.files && input.files[0]) {
+                        var file = input.files[0];
+                        var fileType = file.type;
+                        var validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                        var validVideoTypes = ['video/mp4', 'video/webm', 'video/ogg'];
 
-                    var fileInput = document.createElement('input');
-                    fileInput.type = 'file';
-                    fileInput.name = 'file' + clickCount;
-                    fileInput.classList.add('form-control');
-                    fileInput.addEventListener('change', function(event) {
-                        showPreview(event.target);
-                    });
-
-                    var inputGroupText = document.createElement('span');
-                    inputGroupText.classList.add('input-group-text');
-                    inputGroupText.textContent = 'File ' + clickCount;
-
-                    var deleteButton = document.createElement('button');
-                    deleteButton.type = 'button';
-                    deleteButton.classList.add('btn', 'btn-danger');
-                    deleteButton.textContent = 'Delete';
-                    deleteButton.addEventListener('click', function() {
-                        inputElement.remove();
-                        removeFileInputValue(fileInput.name); // Remove corresponding value
-                    });
-
-                    var previewElement = document.createElement('div');
-                    previewElement.classList.add('preview');
-                    previewElement.style.marginTop = '10px';
-
-                    inputElement.appendChild(inputGroupText);
-                    inputElement.appendChild(fileInput);
-                    inputElement.appendChild(deleteButton);
-
-                    var inputContainer = document.getElementById('inputContainer');
-                    inputContainer.appendChild(inputElement);
-                    inputContainer.appendChild(previewElement);
-                }
-
-                return false; // Prevent form submission
-            }
-
-            function showPreview(input) {
-                var preview = input.parentNode.nextSibling; // Get the next sibling (preview element)
-                preview.innerHTML = '';
-
-                if (input.files && input.files[0]) {
-                    var file = input.files[0];
-                    var fileType = file.type;
-                    var validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
-                    var validVideoTypes = ['video/mp4', 'video/webm', 'video/ogg'];
-
-                    if (validImageTypes.includes(fileType)) {
-                        var img = document.createElement('img');
-                        img.src = URL.createObjectURL(file);
-                        img.style.maxWidth = '200px';
-                        preview.appendChild(img);
-                    } else if (validVideoTypes.includes(fileType)) {
-                        var video = document.createElement('video');
-                        video.src = URL.createObjectURL(file);
-                        video.style.maxWidth = '200px';
-                        video.autoplay = true;
-                        video.loop = true;
-                        video.muted = true;
-                        preview.appendChild(video);
+                        if (validImageTypes.includes(fileType)) {
+                            var img = document.createElement('img');
+                            img.src = URL.createObjectURL(file);
+                            img.style.maxWidth = '200px';
+                            preview.appendChild(img);
+                        } else if (validVideoTypes.includes(fileType)) {
+                            var video = document.createElement('video');
+                            video.src = URL.createObjectURL(file);
+                            video.style.maxWidth = '200px';
+                            video.autoplay = true;
+                            video.loop = true;
+                            video.muted = true;
+                            preview.appendChild(video);
+                        }
                     }
                 }
-            }
 
-            function removeFileInputValue(inputName) {
-                var fileInput = document.querySelector('input[name="' + inputName + '"]');
-                if (fileInput) {
-                    fileInput.value = ''; // Clear the file input value
+                function removeFileInputValue(inputName) {
+                    var fileInput = document.querySelector('input[name="' + inputName + '"]');
+                    if (fileInput) {
+                        fileInput.value = ''; // Clear the file input value
+                    }
                 }
-            }
-        </script>
+            </script>
+        </div>
     </div>
 
     <!-- ------------------------------------------------------------------ -->
@@ -171,12 +162,12 @@ if ($row_s['rs_cancel_detail'] != NULL) {
     <div id="detail_value_code" style="display: none;">
         <hr>
         <br>
-        <h1 class="m-0 font-weight-bold text-secondary">รายละเอียด </h1>
+        <h1 class="m-0 font-weight-bold text-primary">รายละเอียด </h1>
         <br>
         <form id="detail_status_id" action="action/status/insert_new_part_non_del.php" method="POST" enctype="multipart/form-data">
             <div>
                 <br>
-                <label for="basic-url" class="form-label">กรุณาเลือกอุปกรณ์ที่ต้องการทำการซ่อม</label>
+                <!-- <label for="basic-url" class="form-label">กรุณาเลือกอุปกรณ์ที่ต้องการทำการซ่อม</label> -->
                 <?php
                 $count_conf = 0;
                 $sql_get_c = "SELECT * FROM get_detail 
@@ -187,13 +178,13 @@ if ($row_s['rs_cancel_detail'] != NULL) {
                     $count_conf++;
                 ?>
 
-                    <div class="alert alert-primary" role="alert">
+                    <!-- <div class="alert alert-primary" role="alert">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" name="check_<?= $row_get_c['get_d_id'] ?>" type="checkbox" id="inlineCheckbox1" value="option1" checked>
                             <label class="form-check-label" for="inlineCheckbox1"><?= $count_conf ?></label>
                         </div>
                         <?= $row_get_c['r_brand'] . " " . $row_get_c['r_model'] . " - Model : " . $row_get_c['r_number_model'] . " - Serial Number : " . $row_get_c['r_serial_number']  ?>
-                    </div>
+                    </div> -->
                     <div class="col-4">
                         <?php
                         $sql1 = "SELECT * FROM member WHERE del_flg = 0";
@@ -294,396 +285,268 @@ if ($row_s['rs_cancel_detail'] != NULL) {
             <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
             <input type="text" name="status_id" value="4" hidden>
             <input type="hidden" name="cardCount" id="cardCountInput" value="0">
-            <br>
+            <div class="container alert alert-light bg-gray-2 shadow">
+                <div class="alert alert-primary">
+                    <h5 class="ln f-black-5">ขั้นตอนที่ 1 : </h5><p class="ln">กรอกค่าแรงและรายละเอียด</p>
+                </div>
 
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4">
-                        <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่</label>
-                        <div class="input-group mb-3">
-
-                            <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
-                            <input name="get_wages" type="text" value="<?= $row['get_wages'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกค่าแรงช่าง" required>
-                            <span class="input-group-text">฿</span>
-                        </div>
-                    </div>
-
-                    <?php
-                    if ($row['get_deli'] == 1) { ?>
-                        <div class="col-md-4">
-                            <label for="basic-url" class="form-label">ค่าจัดส่ง *แยกกับราคาอะไหล่</label>
+                <div class="container ">
+                    <div class="row">
+                        <div class="col-md">
+                            <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่</label>
                             <div class="input-group mb-3">
-                                <span class="input-group-text" id="basic-addon3">ค่าจัดส่ง</span>
-                                <input name="get_add_price" type="text" value="<?= $row['get_add_price'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกค่าส่งอุปกรณ์" required>
+
+                                <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
+                                <input name="get_wages" type="number" value="<?= $row['get_wages'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกค่าแรงช่าง" required>
                                 <span class="input-group-text">฿</span>
                             </div>
                         </div>
-                    <?php
-                    }
-                    ?>
-                    <div class="col-md-4">
-                        <label for="basic-url" class="form-label">ระยะเวลาซ่อม</label>
-                        <div class="input-group mb-3">
 
-                            <input name="get_date_conf" type="text" value="<?= $row['get_date_conf'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกระยะเวลาซ่อม" required>
-                            <span class="input-group-text">วัน</span>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <label for="DetailFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการส่ง <p style="display:inline; color : gray"> รายละเอียด</p> :</label>
-                <textarea class="form-control" name="rs_detail" id="DetailFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">อะไหล่ที่ต้องใช้มีดังนี้</textarea>
-
-            </div>
-
-
-            <br>
-            <div class="mb-3">
-                <h6>อะไหล่</h6>
-                <div id="cardContainer" style="display: none;">
-                    <table class="table" id="cardSection"></table>
-                </div>
-                <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Parts">
-                                                เพิ่มอะไหล่
-                                            </button> -->
-                <div class="accordion" id="accordionExample">
-                    <?php
-
-
-                    $count = 0;
-                    $get_r_id = $_GET['id'];
-                    $sql_get_c = "SELECT * FROM get_detail 
-                                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                        WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0";
-                    $result_get_c = mysqli_query($conn, $sql_get_c);
-
-                    while ($row_get_c = mysqli_fetch_array($result_get_c)) {
-                        $count++;
-                    ?>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingOne<?= $row_get_c['r_id'] ?>">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne<?= $row_get_c['r_id'] ?>" aria-expanded="false" aria-controls="collapseOne<?= $row_get_c['r_id'] ?>">
-                                    <div class="form-check">
-                                        <input class="form-check-input" name="check_<?= $count ?>" type="checkbox" value="" id="flexCheckDefault<?= $row_get_c['r_id'] ?>">
-                                    </div>
-                                    <?= 'Brand : ' . $row_get_c['r_brand'] . ' - Model :' . $row_get_c['r_model'] . ' - Number' . $row_get_c['r_model_number'] ?>
-                                </button>
-                            </h2>
-                            <div id="collapseOne<?= $row_get_c['r_id'] ?>" class="accordion-collapse collapse" aria-labelledby="headingOne<?= $row_get_c['r_id'] ?>" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    <div class="autocomplete">
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Parts<?= $row_get_c['r_id'] ?>">
-                                            เพิ่มอะไหล่ให้กับอุปกรณ์นี้
-                                        </button>
-                                        <div class="modal fade" id="Parts<?= $row_get_c['r_id'] ?>" tabindex="-1" aria-labelledby="Parts<?= $row_get_c['r_id'] ?>" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-scrollable modal-xl">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="Parts<?= $row_get_c['r_id'] ?>">จัดการอะไหล่ </h5>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="row">
-
-                                                            <!-- Your form -->
-                                                            <form id="partsForm<?= $row_get_c['r_id'] ?>" action="action/add_parts_repair.php" method="POST" onsubmit="submitForm<?= $row_get_c['r_id'] ?>(event)">
-                                                                <div class="col-md-3">
-                                                                    <input type="text" name="session_repair" value="<?= $row_get_c['r_id'] ?>" hidden>
-                                                                    <select class="form-select" aria-label="Default select example" id="partType<?= $row_get_c['r_id'] ?>">
-                                                                        <option selected>กรุณาเลือกประเภทของอะไหล่</option>
-                                                                        <?php
-                                                                        $sql_pt = "SELECT p_type_id, p_type_name FROM parts_type WHERE del_flg = 0";
-                                                                        $result_pt = mysqli_query($conn, $sql_pt);
-                                                                        while ($row_pt = mysqli_fetch_array($result_pt)) {
-                                                                            echo '<option value="' . $row_pt['p_type_id'] . '">' . $row_pt['p_type_name'] . '</option>';
-                                                                        }
-                                                                        ?>
-                                                                    </select>
-                                                                </div>
-                                                                <div class="col-md mb-4">
-                                                                    <input id="search-box<?= $row_get_c['r_id'] ?>" name="parts_name" class="form-control" type="text" onkeyup="searchFunction<?= $row_get_c['r_id'] ?>()" placeholder="ค้นหา...">
-                                                                    <div class="autocomplete-items" id="search-results<?= $row_get_c['r_id'] ?>"></div>
-                                                                </div>
-                                                                <div class="col-md-2 mb-4">
-                                                                    <input class="form-control" type="number" name="value_parts" placeholder="จำนวน...">
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                    <button type="submit" class="btn btn-primary">Save changes</button>
-                                                                </div>
-                                                                <script>
-                                                                    function submitForm<?= $formId ?>(event) {
-                                                                        event.preventDefault(); // Prevent the default form submission
-
-                                                                        // Get the form data
-                                                                        var formData = new FormData(document.getElementById("partsForm<?= $formId ?>"));
-
-                                                                        // Make an AJAX request to submit the form
-                                                                        $.ajax({
-                                                                            type: "POST",
-                                                                            url: "action/add_parts_repair.php",
-                                                                            data: formData,
-                                                                            processData: false,
-                                                                            contentType: false,
-                                                                            success: function(response) {
-                                                                                // Handle the success response here (e.g., show a success message)
-
-                                                                                // Close the modal (assuming you are using Bootstrap modal)
-                                                                                $('#myModal<?= $formId ?>').modal('hide');
-                                                                            },
-                                                                            error: function(xhr, status, error) {
-                                                                                // Handle the error response here (e.g., show an error message)
-                                                                            }
-                                                                        });
-                                                                    }
-                                                                    // Simulated data for demonstration purposes
-                                                                    const data<?= $formId ?> = <?= json_encode($parts_ar) ?>;
-
-                                                                    function searchFunction<?= $formId ?>() {
-                                                                        const input = document.getElementById('search-box<?= $row_get_c['r_id'] ?>');
-                                                                        const resultsContainer = document.getElementById('search-results<?= $row_get_c['r_id'] ?>');
-                                                                        const inputValue = input.value.toLowerCase();
-
-                                                                        // Clear previous results
-                                                                        resultsContainer.innerHTML = '';
-
-                                                                        // Filter data based on input
-                                                                        const filteredData = data<?= $row_get_c['r_id'] ?>.filter(item => item.toLowerCase().includes(inputValue));
-
-                                                                        // Display matching results
-                                                                        filteredData.forEach(item => {
-                                                                            const resultItem = document.createElement('div');
-                                                                            resultItem.className = 'autocomplete-item';
-                                                                            resultItem.textContent = item;
-
-                                                                            // Handle item click event
-                                                                            resultItem.addEventListener('click', function() {
-                                                                                input.value = item;
-                                                                                resultsContainer.innerHTML = ''; // Clear results
-
-                                                                                // Set the session key
-                                                                                const sessionKey = '<?= $row_get_c['r_id'] ?>_' + <?= $count_order ?> + '_' + filteredData.indexOf(item);
-                                                                                sessionStorage.setItem(sessionKey, item);
-                                                                            });
-
-                                                                            resultItem.addEventListener('mouseenter', function() {
-                                                                                // Highlight the selected item on hover
-                                                                                resultItem.classList.add('hovered');
-                                                                            });
-
-                                                                            resultItem.addEventListener('mouseleave', function() {
-                                                                                // Remove the highlight when the mouse leaves
-                                                                                resultItem.classList.remove('hovered');
-                                                                            });
-
-                                                                            resultsContainer.appendChild(resultItem);
-                                                                        });
-                                                                    }
-                                                                    $('#myModal<?= $formId ?>').modal('hide');
-                                                                    $('#Parts<?= $row_get_c['r_id'] ?>').modal('hide');
-                                                                </script>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <?php
+                        if ($row['get_deli'] == 1) { ?>
+                            <div class="col-md">
+                                <label for="basic-url" class="form-label">ค่าจัดส่ง *แยกกับราคาอะไหล่</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon3">ค่าจัดส่ง</span>
+                                    <input name="get_add_price" type="number" value="<?= $row['get_add_price'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกค่าส่งอุปกรณ์" required>
+                                    <span class="input-group-text">฿</span>
                                 </div>
                             </div>
-                        <?php } ?>
+                        <?php
+                        }
+                        ?>
+                        <div class="col-md-4">
+                            <label for="basic-url" class="form-label">ระยะเวลาซ่อม</label>
+                            <div class="input-group mb-3">
+
+                                <input name="get_date_conf" type="number" value="<?= $row['get_date_conf'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกระยะเวลาซ่อม" required>
+                                <span class="input-group-text">วัน</span>
+                            </div>
                         </div>
+                    </div>
+                    <br>
+                    <label for="DetailFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการส่ง <p style="display:inline; color : gray"> รายละเอียด</p> :</label>
+                    <textarea class="form-control" name="rs_detail" id="DetailFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">อะไหล่ที่ต้องใช้มีดังนี้</textarea>
+
                 </div>
 
                 <br>
-                <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
                 <hr>
-                <label for="DetailFormControlTextarea" class="form-label">เพิ่มรูปภาพหรือวิดีโอ *ไม่จำเป็น (สูงสุด 4 ไฟล์) : </label>
-                <a class="btn btn-primary" onclick="showInputDetail()">เพิ่มรูปภาพหรือวิดีโอ</a>
                 <br>
-                <div id="inputContainerDetail"></div>
+                <div class="alert alert-primary">
+                    <!-- <h5>ขั้นตอนที่ 2 : จัดการอะไหล่และเลือกอุปกรณ์</h5> -->
+                    <h5 class="ln f-black-5">ขั้นตอนที่ 2 : </h5><p class="ln">จัดการอะไหล่และเลือกอุปกรณ์</p>
+                </div>
 
-                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-                <script>
-                    var clickCount = 0;
+                <div class="mb-3">
+                    <h6>จัดการอะไหล่และเลือกอุปกรณ์</h6>
+                    <div id="cardContainer" style="display: none;">
+                        <table class="table" id="cardSection"></table>
+                    </div>
+                    <?php include('func_parts/func_parts.php'); ?>
 
-                    function showInputDetail() {
-                        var textarea = document.getElementById('DetailFormControlTextarea');
-                        var textValue = textarea.value.trim();
-                        if (textValue === '') {
-                            return false; // Prevent form submission if there is no text input
+                    <br>
+                    <hr>
+                    <br>
+                    <div class="alert alert-primary">
+                        <!-- <h5>ขั้นตอนที่ 3 : ใส่รูปภาพประกอบ <span class="f-red-5">*ไม่จำเป็น</span></h5> -->
+                        <h5 class="ln f-black-5">ขั้นตอนที่ 3 : </h5><p class="ln">ใส่รูปภาพประกอบ <span class="f-red-5">*ไม่จำเป็น</span></p>
+                    </div>
+
+                    <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
+                    <hr>
+                    <label for="DetailFormControlTextarea" class="form-label">เพิ่มรูปภาพหรือวิดีโอ *ไม่จำเป็น (สูงสุด 4 ไฟล์) : </label>
+                    <a class="btn btn-primary" onclick="showInputDetail()">เพิ่มรูปภาพหรือวิดีโอ</a>
+                    <br><br>
+                    <div id="inputContainerDetail"></div>
+
+                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+                    <script>
+                        var clickCount = 0;
+
+                        function showInputDetail() {
+                            var textarea = document.getElementById('DetailFormControlTextarea');
+                            var textValue = textarea.value.trim();
+                            if (textValue === '') {
+                                return false; // Prevent form submission if there is no text input
+                            }
+
+                            clickCount++;
+
+                            if (clickCount <= 4) {
+                                var inputElement = document.createElement('div');
+                                inputElement.classList.add('input-group', 'mb-3');
+
+                                var fileInput = document.createElement('input');
+                                fileInput.type = 'file';
+                                fileInput.name = 'file' + clickCount;
+                                fileInput.classList.add('form-control');
+                                fileInput.addEventListener('change', function(event) {
+                                    showPreviewDetail(event.target);
+                                });
+
+                                var inputGroupText = document.createElement('span');
+                                inputGroupText.classList.add('input-group-text');
+                                inputGroupText.textContent = 'File ' + clickCount;
+
+                                var deleteButton = document.createElement('button');
+                                deleteButton.type = 'button';
+                                deleteButton.classList.add('btn', 'btn-danger');
+                                deleteButton.textContent = 'Delete';
+                                deleteButton.addEventListener('click', function() {
+                                    inputElement.remove();
+                                    removeFileInputValue(fileInput.name); // Remove corresponding value
+                                });
+
+                                var previewElement = document.createElement('div');
+                                previewElement.classList.add('preview');
+                                previewElement.style.marginTop = '10px';
+
+                                inputElement.appendChild(inputGroupText);
+                                inputElement.appendChild(fileInput);
+                                inputElement.appendChild(deleteButton);
+
+                                var inputContainer = document.getElementById('inputContainerDetail');
+                                inputContainer.appendChild(inputElement);
+                                inputContainer.appendChild(previewElement);
+                            }
+
+                            return false; // Prevent form submission
                         }
 
-                        clickCount++;
+                        function showPreviewDetail(input) {
+                            var preview = input.parentNode.nextSibling; // Get the next sibling (preview element)
+                            preview.innerHTML = '';
 
-                        if (clickCount <= 4) {
-                            var inputElement = document.createElement('div');
-                            inputElement.classList.add('input-group', 'mb-3');
+                            if (input.files && input.files[0]) {
+                                var file = input.files[0];
+                                var fileType = file.type;
+                                var validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                                var validVideoTypes = ['video/mp4', 'video/webm', 'video/ogg'];
 
-                            var fileInput = document.createElement('input');
-                            fileInput.type = 'file';
-                            fileInput.name = 'file' + clickCount;
-                            fileInput.classList.add('form-control');
-                            fileInput.addEventListener('change', function(event) {
-                                showPreviewDetail(event.target);
+                                if (validImageTypes.includes(fileType)) {
+                                    var img = document.createElement('img');
+                                    img.src = URL.createObjectURL(file);
+                                    img.style.maxWidth = '200px';
+                                    preview.appendChild(img);
+                                } else if (validVideoTypes.includes(fileType)) {
+                                    var video = document.createElement('video');
+                                    video.src = URL.createObjectURL(file);
+                                    video.style.maxWidth = '200px';
+                                    video.autoplay = true;
+                                    video.loop = true;
+                                    video.muted = true;
+                                    preview.appendChild(video);
+                                }
+                            }
+                        }
+
+                        function removeFileInputValue(inputName) {
+                            var fileInput = document.querySelector('input[name="' + inputName + '"]');
+                            if (fileInput) {
+                                fileInput.value = ''; // Clear the file input value
+                            }
+                        }
+
+                        function confirm_cen(event) {
+                            event.preventDefault(); // Prevent the form from being submitted
+
+                            Swal.fire({
+                                title: 'คุณแน่ใจหรือไม่?',
+                                text: 'คุณต้องการส่งข้อมูลนี้หรือไม่',
+                                icon: 'question',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'ใช่',
+                                cancelButtonText: 'ไม่'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // User confirmed, submit the form
+                                    document.getElementById('cancel_status_id').submit();
+                                }
                             });
+                        }
 
-                            var inputGroupText = document.createElement('span');
-                            inputGroupText.classList.add('input-group-text');
-                            inputGroupText.textContent = 'File ' + clickCount;
+                        function confirm_detail(event) {
+                            event.preventDefault(); // Prevent the form from being submitted
 
-                            var deleteButton = document.createElement('button');
-                            deleteButton.type = 'button';
-                            deleteButton.classList.add('btn', 'btn-danger');
-                            deleteButton.textContent = 'Delete';
-                            deleteButton.addEventListener('click', function() {
-                                inputElement.remove();
-                                removeFileInputValue(fileInput.name); // Remove corresponding value
+                            Swal.fire({
+                                title: 'คุณแน่ใจหรือไม่?',
+                                text: 'คุณต้องการส่งข้อมูลนี้หรือไม่',
+                                icon: 'question',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'ใช่',
+                                cancelButtonText: 'ไม่'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // User confirmed, submit the form
+                                    document.getElementById('detail_status_id').submit();
+                                }
                             });
-
-                            var previewElement = document.createElement('div');
-                            previewElement.classList.add('preview');
-                            previewElement.style.marginTop = '10px';
-
-                            inputElement.appendChild(inputGroupText);
-                            inputElement.appendChild(fileInput);
-                            inputElement.appendChild(deleteButton);
-
-                            var inputContainer = document.getElementById('inputContainerDetail');
-                            inputContainer.appendChild(inputElement);
-                            inputContainer.appendChild(previewElement);
                         }
-
-                        return false; // Prevent form submission
-                    }
-
-                    function showPreviewDetail(input) {
-                        var preview = input.parentNode.nextSibling; // Get the next sibling (preview element)
-                        preview.innerHTML = '';
-
-                        if (input.files && input.files[0]) {
-                            var file = input.files[0];
-                            var fileType = file.type;
-                            var validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
-                            var validVideoTypes = ['video/mp4', 'video/webm', 'video/ogg'];
-
-                            if (validImageTypes.includes(fileType)) {
-                                var img = document.createElement('img');
-                                img.src = URL.createObjectURL(file);
-                                img.style.maxWidth = '200px';
-                                preview.appendChild(img);
-                            } else if (validVideoTypes.includes(fileType)) {
-                                var video = document.createElement('video');
-                                video.src = URL.createObjectURL(file);
-                                video.style.maxWidth = '200px';
-                                video.autoplay = true;
-                                video.loop = true;
-                                video.muted = true;
-                                preview.appendChild(video);
-                            }
-                        }
-                    }
-
-                    function removeFileInputValue(inputName) {
-                        var fileInput = document.querySelector('input[name="' + inputName + '"]');
-                        if (fileInput) {
-                            fileInput.value = ''; // Clear the file input value
-                        }
-                    }
-
-                    function confirm_cen(event) {
-                        event.preventDefault(); // Prevent the form from being submitted
-
-                        Swal.fire({
-                            title: 'คุณแน่ใจหรือไม่?',
-                            text: 'คุณต้องการส่งข้อมูลนี้หรือไม่',
-                            icon: 'question',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'ใช่',
-                            cancelButtonText: 'ไม่'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                // User confirmed, submit the form
-                                document.getElementById('cancel_status_id').submit();
-                            }
-                        });
-                    }
-
-                    function confirm_detail(event) {
-                        event.preventDefault(); // Prevent the form from being submitted
-
-                        Swal.fire({
-                            title: 'คุณแน่ใจหรือไม่?',
-                            text: 'คุณต้องการส่งข้อมูลนี้หรือไม่',
-                            icon: 'question',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'ใช่',
-                            cancelButtonText: 'ไม่'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                // User confirmed, submit the form
-                                document.getElementById('detail_status_id').submit();
-                            }
-                        });
-                    }
-                </script>
-                <!-- <input type="file" name="p_picture[]" id="p_pic" multiple accept="image/*,video/*" max="4">
+                    </script>
+                    <!-- <input type="file" name="p_picture[]" id="p_pic" multiple accept="image/*,video/*" max="4">
                                         <h6>เพิ่มไฟล์</h6>
                                         <label for="p_pic" style="display: block; color: blue;">Choose file</label>
                                         <div id="media-container"></div> -->
 
-                <script>
-                    function displayMedia(input) {
-                        var container = document.getElementById("media-container");
-                        container.innerHTML = ""; // Clear the container
+                    <script>
+                        function displayMedia(input) {
+                            var container = document.getElementById("media-container");
+                            container.innerHTML = ""; // Clear the container
 
-                        // Loop through each selected file
-                        for (var i = 0; i < input.files.length; i++) {
-                            var file = input.files[i];
+                            // Loop through each selected file
+                            for (var i = 0; i < input.files.length; i++) {
+                                var file = input.files[i];
 
-                            // Create a new media element for the file
-                            var media;
-                            if (file.type.startsWith("image/")) {
-                                media = document.createElement("img");
-                            } else if (file.type.startsWith("video/")) {
-                                media = document.createElement("video");
-                                media.controls = true; // Add video controls
-                            } else {
-                                continue; // Skip unsupported file types
+                                // Create a new media element for the file
+                                var media;
+                                if (file.type.startsWith("image/")) {
+                                    media = document.createElement("img");
+                                } else if (file.type.startsWith("video/")) {
+                                    media = document.createElement("video");
+                                    media.controls = true; // Add video controls
+                                } else {
+                                    continue; // Skip unsupported file types
+                                }
+
+                                media.style.maxWidth = "100%";
+                                media.style.maxHeight = "200px";
+
+                                // Use FileReader to read the contents of the file as a data URL
+                                var reader = new FileReader();
+                                reader.onload = function(event) {
+                                    // Set the src attribute of the media element to the data URL
+                                    media.src = event.target.result;
+                                };
+                                reader.readAsDataURL(file);
+
+                                // Append the media element to the container
+                                container.appendChild(media);
                             }
-
-                            media.style.maxWidth = "100%";
-                            media.style.maxHeight = "200px";
-
-                            // Use FileReader to read the contents of the file as a data URL
-                            var reader = new FileReader();
-                            reader.onload = function(event) {
-                                // Set the src attribute of the media element to the data URL
-                                media.src = event.target.result;
-                            };
-                            reader.readAsDataURL(file);
-
-                            // Append the media element to the container
-                            container.appendChild(media);
                         }
-                    }
 
-                    // Add an event listener to the file input to trigger the displayMedia function
-                    var fileInput = document.getElementById("p_pic");
-                    fileInput.addEventListener("change", function() {
-                        displayMedia(this);
-                    });
-                </script>
+                        // Add an event listener to the file input to trigger the displayMedia function
+                        var fileInput = document.getElementById("p_pic");
+                        fileInput.addEventListener("change", function() {
+                            displayMedia(this);
+                        });
+                    </script>
 
 
-                <center>
-                    <br>
-                    <button class="btn btn-success" onclick="confirm_detail(event)">ยืนยัน</button>
-                </center>
+                    <center>
+                        <hr>
+                        <center>
+                            <p class="f-black-5">--- ตรวจสอบข้อมูลก่อนการยืนยัน ---</p>
+                        </center>
+                        <button class="btn btn-danger" type="reset">ล้างแบบฟอร์ม</button>
+                        <button class="btn btn-success" onclick="confirm_detail(event)">ยืนยัน</button>
+                    </center>
         </form>
+    </div>
     </div>
     </div>
 
