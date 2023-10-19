@@ -1,15 +1,4 @@
-<?php
-if ($row_s['rs_cancel_detail'] != NULL) {
-?>
-    <hr>
-    <div class="mb-3">
-        <label for="exampleFormControlTextarea1" class="col-form-label btn btn-danger">เหตุผลไม่ยืนยันการซ่อม</label>
-        <br><br>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?= $row_s['rs_cancel_detail']  ?></textarea>
-    </div>
-<?php
-}
-?>
+
 
 
 <!-- สถานะ "ส่งเรื่องแล้ว" -->

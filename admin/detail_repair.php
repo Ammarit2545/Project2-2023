@@ -403,7 +403,17 @@ $get_r_id = $_GET['id'];
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-
+                                    <?php
+                                    if ($row_s['rs_cancel_detail'] != NULL) {
+                                        $rs_cancel_detail_data = $row_s['rs_cancel_detail']; //rs_cancel_detail_data คือ บอกว่าเหตุผลที่ไม่เอาคืออะไร
+                                    ?>
+                                        <div class="mb-3 alert alert-danger">
+                                            <p class="f-red-5">เหตุผลไม่ยืนยันการซ่อม : <span class="f-black-5"><?= $row_s['rs_cancel_detail']  ?></span></p>
+                                        </div>
+                                        <hr>
+                                    <?php
+                                    }
+                                    ?>
                                     <center>
                                         <h5>กดการดำเนินการที่ท่านต้องการ</h5>
                                         <hr style="width:50%">
@@ -1105,10 +1115,20 @@ $get_r_id = $_GET['id'];
                                 <div class="alert alert-danger" role="alert">
                                     <center>
                                         <h4 class="py-2" style="margin-bottom: 0px;">ไม่ได้รับการยืนยันการซ่อมจากสมาชิก</h4>
+                                        <?php
+                                        if ($rs_cancel_detail_data != '' || $rs_cancel_detail_data != NULL) { //$rs_cancel_detail_data เช็คว่าไม่มีค่าว่างจากขางบนที่ส่งมา
+                                        ?>
+                                        <hr>
+                                            <p class="f-red-5">เหตุผลไม่ยืนยันการซ่อม : <span class="f-black-5"><u><?= $rs_cancel_detail_data  ?></u></span></p>
+                                        <?php
+                                        }
+                                        ?>
                                     </center>
                                 </div>
                                 <center>
                                     <p style="color : red">*** โปรดตรวจสอบข้อมูลและทำการแจ้งสถานะไปที่สมาชิก ***</p>
+                                    <p>
+                                    </p>
                                 </center>ะเงินแล้ว
                                 <br>
                             <?php

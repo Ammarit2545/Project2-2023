@@ -1,5 +1,6 @@
  <!-- search 11-17 status -->
  <center>
+     <!-- 8,17,6 -->
      <?php
         $id_get = $_GET['id'];
         $sql = "SELECT * FROM status_type WHERE status_id = '8'";

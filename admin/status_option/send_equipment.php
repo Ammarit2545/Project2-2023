@@ -2,7 +2,7 @@
 
 
 
-
+ <!-- 12,10,3 -->
 
     <?php
     $sql_c = "SELECT * FROM get_repair WHERE get_r_id = '$get_r_id' AND del_flg = '0'";

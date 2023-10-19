@@ -90,7 +90,7 @@ $result_1 = mysqli_query($conn, $sql_1);
 //         echo "the : " . $get_d_id . "update 111 success";
 //     }
 // }
-
+$count_c = 1;
 while (isset($_POST['get_d_id' . $count_c])) {
     $get_d_id =  $_POST['get_d_id' . $count_c];
     if (isset($_POST['check_' . $count_c])) {

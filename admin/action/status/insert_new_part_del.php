@@ -82,7 +82,7 @@ if ($status_id == 17) {
                     if ($result_u_rd) {
                         $sql_check_pu = "SELECT * FROM parts_use WHERE rs_id = '$rs_id'";
                         $result_check_pu = mysqli_query($conn, $sql_check_pu);
-                        
+
                         if (mysqli_num_rows($result_check_pu) == 0) {
                             $sql_e = "INSERT INTO parts_use (rs_id, pu_date, st_id, e_id) VALUES ('$rs_id', NOW(), '4', '$e_id')";
                             $result_e = mysqli_query($conn, $sql_e);
@@ -99,8 +99,8 @@ if ($status_id == 17) {
             }
         }
     }
-    
-  
+
+
     $sql_c = "SELECT * FROM repair_status 
         LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
         WHERE get_repair.get_r_id = '$get_r_id' AND repair_status.del_flg = '0' AND repair_status.status_id = '5' AND get_repair.del_flg = '0'";
@@ -221,7 +221,7 @@ if ($status_id == 19) {
             }
         }
     }
-    
+
 
     $sql_c = "SELECT * FROM repair_status 
                 LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
@@ -296,7 +296,7 @@ if ($status_id == 19) {
     }
     //    ตัดของออกจาก Stock 
 }
-
+$count_c = 1;
 while (isset($_POST['get_d_id' . $count_c])) {
     $get_d_id =  $_POST['get_d_id' . $count_c];
     if (isset($_POST['check_' . $count_c])) {
@@ -323,19 +323,29 @@ if (isset($_POST['get_date_conf'])) {
 
 if (isset($_POST['get_add_price']) && isset($_POST['get_wages'])) {
     $get_add_price = $_POST['get_add_price'];
-    $get_wages = $_POST['get_wages'];
+    $get_wages = $_POST[''];
     $sql_up = "UPDATE `get_repair` SET `get_wages`='$get_wages',`get_add_price`='$get_add_price' WHERE get_r_id = '$get_r_id'";
     $result_up = mysqli_query($conn, $sql_up);
+} else {
+    $get_add_price = $_POST['get_add_price'];
+    $get_wages = $_POST['get_wages'];
+    if (isset($_POST['get_add_price'])) {
+        $sql_up = "UPDATE `get_repair` SET `get_add_price`='$get_add_price' WHERE get_r_id = '$get_r_id'";
+        $result_up = mysqli_query($conn, $sql_up);
+    }
+    if (isset($_POST['get_wages'])) {
+        $sql_up = "UPDATE `get_repair` SET `get_wages`='$get_wages' WHERE get_r_id = '$get_r_id'";
+        $result_up = mysqli_query($conn, $sql_up);
+    }
 }
 echo '------ Arm Here ----';
-    
+
 if ($status_id != 17 && $status_id != 5) {
     $sql = "SELECT * FROM repair_status 
         LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
         WHERE repair_status.get_r_id = '$get_r_id' AND repair_status.rs_detail = '$rs_detail' AND repair_status.status_id = '$status_id'";
 
     $result = mysqli_query($conn, $sql);
-    
 }
 
 if ($row[0] > 0) {
