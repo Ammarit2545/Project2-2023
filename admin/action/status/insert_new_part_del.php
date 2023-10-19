@@ -15,57 +15,76 @@ $e_id = $_SESSION["id"];
 
 
 
-// Retrieve the parts data
+// // Retrieve the parts data Old
+// $parts = array();
+// $cardCount = $_POST['cardCount']; // Assuming you're passing the card count as a hidden input field
+// for ($i = 1; $i <= $cardCount; $i++) {
+//     $partId = $_POST['p_id' . $i];
+//     $quantity = $_POST['value_p' . $i];
+//     $parts[] = array(
+//         'partId' => $partId,
+//         'quantity' => $quantity
+//     );
+// }
+
 $parts = array();
-$cardCount = $_POST['cardCount']; // Assuming you're passing the card count as a hidden input field
-for ($i = 1; $i <= $cardCount; $i++) {
-    $partId = $_POST['p_id' . $i];
-    $quantity = $_POST['' . $i];
-    $parts[] = array(
-        'partId' => $partId,
-        'quantity' => $quantity
-    );
+
+for ($i = 1; $i <= 20; $i++) {
+    if (isset($_POST['check_' . $i])) {
+        $get_d = $_POST['get_d_id' . $i];
+        $partIds = $_POST['p_id_' . $i];
+        $quantities = $_POST['value_p_' . $i];
+
+        foreach ($partIds as $count_for => $partId) {
+            $quantity = $quantities[$count_for];
+            $parts[] = array(
+                'get_d_id' => $get_d,
+                'partId' => $partId,
+                'quantity' => $quantity
+            );
+
+            // Assuming $_POST['value_p' . $i] is an array, you can access its elements like this:
+            echo $quantity;
+        }
+    }
 }
 
+print_r($parts);
 if ($status_id == 17) {
     $sql_c = "SELECT * FROM repair_status 
-    LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
-    WHERE get_repair.get_r_id = '$get_r_id' AND repair_status.del_flg = '0' AND repair_status.status_id = '17' AND get_repair.del_flg = '0';";
+        LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
+        WHERE get_repair.get_r_id = '$get_r_id' AND repair_status.del_flg = '0' AND repair_status.status_id = '17' AND get_repair.del_flg = '0'";
     $result_c = mysqli_query($conn, $sql_c);
 
     if (mysqli_num_rows($result_c) > 0) {
         while ($row_c = mysqli_fetch_array($result_c)) {
             $get_r_id = $row_c['get_r_id'];
 
-            // เอาคืนสต๊อก เอาค่าจาก $get_r_id
             $sql_ch = "SELECT * FROM repair_detail 
-                    LEFT JOIN get_detail ON get_detail.get_d_id = repair_detail.get_d_id
-                    LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
-                    WHERE get_detail.get_r_id = '$get_r_id' AND repair_detail.del_flg = '0' AND get_repair.del_flg = '0';";
+                LEFT JOIN get_detail ON get_detail.get_d_id = repair_detail.get_d_id
+                LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                WHERE get_detail.get_r_id = '$get_r_id' AND repair_detail.del_flg = '0' AND get_repair.del_flg = '0'";
             $result_ch = mysqli_query($conn, $sql_ch);
             while ($row_ch = mysqli_fetch_array($result_ch)) {
                 $rs_id = $row_ch['rs_id'];
                 $rd_id = $row_ch['rd_id'];
                 $p_id = $row_ch['p_id'];
                 $rd_value_parts = $row_ch['rd_value_parts'];
-                $pu_id;
+                $pu_id = null; // Initialize $pu_id
 
-                // Update parts stock in the parts table
                 $sql_u = "UPDATE `parts` SET `p_stock` = `p_stock` + '$rd_value_parts', `p_date_update` = NOW() WHERE `p_id` = '$p_id'";
                 $result_u = mysqli_query($conn, $sql_u);
 
                 if ($result_u) {
-                    // Update the repair_detail table to indicate that the part has been used
                     $sql_u_rd = "UPDATE `repair_detail` SET `del_flg` = '1' WHERE `rd_id` = '$rd_id'";
                     $result_u_rd = mysqli_query($conn, $sql_u_rd);
 
                     if ($result_u_rd) {
-                        // Check if parts_use entry already exists for this repair
                         $sql_check_pu = "SELECT * FROM parts_use WHERE rs_id = '$rs_id'";
                         $result_check_pu = mysqli_query($conn, $sql_check_pu);
+                        
                         if (mysqli_num_rows($result_check_pu) == 0) {
-                            // If it does not already have data, insert into parts_use table
-                            $sql_e = "INSERT INTO parts_use (rs_id, pu_date,st_id,e_id) VALUES ('$rs_id', NOW(),'4','$e_id')";
+                            $sql_e = "INSERT INTO parts_use (rs_id, pu_date, st_id, e_id) VALUES ('$rs_id', NOW(), '4', '$e_id')";
                             $result_e = mysqli_query($conn, $sql_e);
                             $pu_id = mysqli_insert_id($conn);
                         } else {
@@ -73,7 +92,6 @@ if ($status_id == 17) {
                             $pu_id = $row_pu['pu_id'];
                         }
 
-                        // Insert data into parts_use table
                         $sql_e = "INSERT INTO parts_use_detail (pu_id, p_id, pu_value, pu_date) VALUES ('$pu_id', '$p_id', '$rd_value_parts', NOW())";
                         $result_e = mysqli_query($conn, $sql_e);
                     }
@@ -82,79 +100,72 @@ if ($status_id == 17) {
         }
     }
     
-
+  
     $sql_c = "SELECT * FROM repair_status 
-                LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
-                WHERE get_repair.get_r_id = '$get_r_id' AND repair_status.del_flg = '0' AND repair_status.status_id = '5' AND get_repair.del_flg = '0';";
+        LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
+        WHERE get_repair.get_r_id = '$get_r_id' AND repair_status.del_flg = '0' AND repair_status.status_id = '5' AND get_repair.del_flg = '0'";
     $result_c = mysqli_query($conn, $sql_c);
 
     if (mysqli_num_rows($result_c) > 0) {
-
-        // เอาคืนสต๊อก เอาค่าจาก $get_r_id
         $sql_ch = "SELECT * FROM repair_detail 
-                LEFT JOIN get_detail ON get_detail.get_d_id = repair_detail.get_d_id
-                LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
-                WHERE get_detail.get_r_id = '$get_r_id' AND repair_detail.del_flg = '0' AND get_repair.del_flg = '0';";
+            LEFT JOIN get_detail ON get_detail.get_d_id = repair_detail.get_d_id
+            LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+            WHERE get_detail.get_r_id = '$get_r_id' AND repair_detail.del_flg = '0' AND get_repair.del_flg = '0' AND repair_detail.del_flg = '0'
+            GROUP BY repair_detail.rd_id";
         $result_ch = mysqli_query($conn, $sql_ch);
         while ($row_ch = mysqli_fetch_array($result_ch)) {
             $rd_id = $row_ch['rd_id'];
             $p_id = $row_ch['p_id'];
             $rd_value_parts = $row_ch['rd_value_parts'];
 
-            // Update parts stock in the parts table
             $sql_u = "UPDATE `parts` SET `p_stock` = `p_stock` + '$rd_value_parts', `p_date_update` = NOW() WHERE `p_id` = '$p_id'";
             $result_u = mysqli_query($conn, $sql_u);
 
-            // Update parts stock in the parts table
-            $sql_u_rd = "UPDATE `repair_detail` SET `del_flg` = `1` WHERE `rd_id` = '$rd_id'";
+            $sql_u_rd = "UPDATE `repair_detail` SET `del_flg` = '1' WHERE `rd_id` = '$rd_id'";
             $result_u_rd = mysqli_query($conn, $sql_u_rd);
         }
     }
 
     $sql_c = "SELECT * FROM repair_status 
-    LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
-    WHERE get_repair.get_r_id = '$get_r_id' AND repair_status.del_flg = '0' AND repair_status.status_id = '19' AND get_repair.del_flg = '0';";
+        LEFT JOIN get_repair ON get_repair.get_r_id = repair_status.get_r_id
+        WHERE get_repair.get_r_id = '$get_r_id' AND repair_status.del_flg = '0' AND repair_status.status_id = '19' AND get_repair.del_flg = '0'";
     $result_c = mysqli_query($conn, $sql_c);
     $row_c_status = mysqli_fetch_array($result_c);
 
     if ($row_c_status[0] < 0) {
-        // เอาคืนสต๊อก เอาค่าจาก $get_r_id
         $sql_c = "SELECT * FROM repair_detail 
             LEFT JOIN get_detail ON get_detail.get_d_id = repair_detail.get_d_id
             LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
-            WHERE get_detail.get_r_id = '$get_r_id' AND repair_detail.del_flg = '0' AND get_repair.del_flg = '0';";
+            WHERE get_detail.get_r_id = '$get_r_id' AND repair_detail.del_flg = '0' AND get_repair.del_flg = '0'";
         $result_c = mysqli_query($conn, $sql_c);
         while ($row_c = mysqli_fetch_array($result_c)) {
             $p_id = $row_c['p_id'];
             $rd_value_parts = $row_c['rd_value_parts'];
 
-            // Update parts stock in the parts table
             $sql_u = "UPDATE `parts` SET `p_stock` = `p_stock` + '$rd_value_parts', `p_date_update` = NOW() WHERE `p_id` = '$p_id'";
             $result_u = mysqli_query($conn, $sql_u);
         }
     }
 
-    //    ตัดของออกจาก Stock หลังจากยืนยัน
     $sql_check_p = "SELECT *
-                    FROM repair_detail
-                    LEFT JOIN get_repair ON get_repair.get_r_id = repair_detail.get_r_id
-                    LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
-                    WHERE repair_status.get_r_id = '$get_r_id' AND repair_detail.del_flg = '0';";
+        FROM repair_detail
+        LEFT JOIN get_repair ON get_repair.get_r_id = repair_detail.get_r_id
+        LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
+        WHERE repair_status.get_r_id = '$get_r_id' AND repair_detail.del_flg = '0'";
     $result_check_p = mysqli_query($conn, $sql_check_p);
 
     while ($row_check_part = mysqli_fetch_array($result_check_p)) {
-
         $rd_id = $row_check_part['rd_id'];
         $p_id = $row_check_part['p_id'];
         $value_parts = $row_check_part['rd_value_parts'];
 
-        $sql_update_detail = "UPDATE repair_detail SET del_flg = '1' , rd_update = NOW() WHERE rd_id = '$rd_id'";
+        $sql_update_detail = "UPDATE repair_detail SET del_flg = '1', rd_update = NOW() WHERE rd_id = '$rd_id'";
         $result_update_detail = mysqli_query($conn, $sql_update_detail);
         if ($result_update_detail) {
             echo $row_check_part['rd_id'];
         }
     }
-    //    ตัดของออกจาก Stock 
+    // ตัดของออกจาก Stock
 }
 if ($status_id == 19) {
     $sql_c = "SELECT * FROM repair_status 
@@ -286,21 +297,20 @@ if ($status_id == 19) {
     //    ตัดของออกจาก Stock 
 }
 
-$sql_1 = "SELECT * FROM get_detail WHERE get_r_id = '$get_r_id' AND del_flg = 0";
-
-$result_1 = mysqli_query($conn, $sql_1);
-
-while ($row = mysqli_fetch_array($result_1)) {
-    $get_d_id = $row['get_d_id'];
-    if (isset($_POST['check_' . $get_d_id])) {
+while (isset($_POST['get_d_id' . $count_c])) {
+    $get_d_id =  $_POST['get_d_id' . $count_c];
+    if (isset($_POST['check_' . $count_c])) {
+        echo 'have' . $count_c;
+        $count_check++;
         $sql = "UPDATE `get_detail` SET `get_d_conf`='0' WHERE get_d_id = '$get_d_id'";
         $result = mysqli_query($conn, $sql);
-        echo "the : " . $get_d_id . "update 000 success";
+        echo "<br>the : " . $get_d_id . "update 000 success";
     } else {
         $sql = "UPDATE `get_detail` SET `get_d_conf`='1' WHERE get_d_id = '$get_d_id'";
         $result = mysqli_query($conn, $sql);
-        echo "the : " . $get_d_id . "update 111 success";
+        echo "<br>the : " . $get_d_id . "update 111 success";
     }
+    $count_c++;
 }
 
 if (isset($_POST['get_date_conf'])) {
@@ -311,20 +321,21 @@ if (isset($_POST['get_date_conf'])) {
 }
 
 
-if (isset($_POST['get_add_price']) || isset($_POST['get_wages'])) {
+if (isset($_POST['get_add_price']) && isset($_POST['get_wages'])) {
     $get_add_price = $_POST['get_add_price'];
     $get_wages = $_POST['get_wages'];
-    $sql = "UPDATE `get_repair` SET `get_wages`='$get_wages',`get_add_price`='$get_add_price' WHERE get_r_id = '$get_r_id'";
-    $result = mysqli_query($conn, $sql);
+    $sql_up = "UPDATE `get_repair` SET `get_wages`='$get_wages',`get_add_price`='$get_add_price' WHERE get_r_id = '$get_r_id'";
+    $result_up = mysqli_query($conn, $sql_up);
 }
-
+echo '------ Arm Here ----';
+    
 if ($status_id != 17 && $status_id != 5) {
     $sql = "SELECT * FROM repair_status 
         LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
         WHERE repair_status.get_r_id = '$get_r_id' AND repair_status.rs_detail = '$rs_detail' AND repair_status.status_id = '$status_id'";
 
     $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_array($result);
+    
 }
 
 if ($row[0] > 0) {
@@ -407,6 +418,7 @@ if ($row[0] > 0) {
             // Process parts data
             $i = 1;
             foreach ($parts as $part) {
+                $get_d_id = $part['get_d_id'];
                 $partId = $part['partId'];
                 $quantity = $part['quantity'];
 
@@ -419,7 +431,7 @@ if ($row[0] > 0) {
                     $p_stock = $row_s['p_stock'] - $quantity;
                     $total_s = $row_s['p_price'] * $quantity;
 
-                    $get_d_id = $_POST['get_d_id_' . $i];
+                    // $get_d_id = $_POST['get_d_id_' . $i];
 
                     $sql3 = "INSERT INTO repair_detail (`p_id`, `rd_value_parts`, `rd_parts_price`, `rs_id`, `rd_date_in`, `get_d_id`)
                             VALUES ('$partId', '$quantity', '$total_s', '$rs_id', NOW(), '$get_d_id')";

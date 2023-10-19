@@ -190,9 +190,25 @@ $sql_1 = "SELECT * FROM get_detail  WHERE get_r_id = '$get_r_id' AND del_flg = 0
 
 $result_1 = mysqli_query($conn, $sql_1);
 
-while ($row = mysqli_fetch_array($result_1)) {
-    $get_d_id = $row['get_d_id'];
-    if (isset($_POST['check_' . $get_d_id])) {
+// while ($row = mysqli_fetch_array($result_1)) {
+//     $get_d_id = $row['get_d_id'];
+//     if (isset($_POST['check_' . $get_d_id])) {
+//         $sql = "UPDATE `get_detail` SET `get_d_conf`='0' WHERE get_d_id = '$get_d_id'";
+//         $result = mysqli_query($conn, $sql);
+//         echo "<br>the : " . $get_d_id . "update 000 success";
+//     } else {
+//         $sql = "UPDATE `get_detail` SET `get_d_conf`='1' WHERE get_d_id = '$get_d_id'";
+//         $result = mysqli_query($conn, $sql);
+//         echo "<br>the : " . $get_d_id . "update 111 success";
+//     }
+// }
+
+
+while (isset($_POST['get_d_id' . $count_c])) {
+    $get_d_id =  $_POST['get_d_id' . $count_c];
+    if (isset($_POST['check_' . $count_c])) {
+        echo 'have' . $count_c;
+        $count_check++;
         $sql = "UPDATE `get_detail` SET `get_d_conf`='0' WHERE get_d_id = '$get_d_id'";
         $result = mysqli_query($conn, $sql);
         echo "<br>the : " . $get_d_id . "update 000 success";
@@ -201,7 +217,9 @@ while ($row = mysqli_fetch_array($result_1)) {
         $result = mysqli_query($conn, $sql);
         echo "<br>the : " . $get_d_id . "update 111 success";
     }
+    $count_c++;
 }
+
 
 // อัพวันที่คาดการณ์จะเสร็จ get_date_conf
 if (isset($_POST['get_date_conf'])) {
@@ -392,8 +410,6 @@ if ($rs_id > 0) {
 
                 $p_stock = $row_s['p_stock'] - $quantity;
                 $total_s = $row_s['p_price'] * $quantity;
-
-                
 
                 $sql3 = "INSERT INTO repair_detail (`p_id`, `rd_value_parts`, `rd_parts_price`, `rs_id`, `rd_date_in`, `get_d_id`)
                             VALUES ('$partId', '$quantity', '$total_s', '$rs_id', NOW(), '$get_d_id')";

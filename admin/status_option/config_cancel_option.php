@@ -1,4 +1,5 @@
 <center>
+    <!-- 17,12,6 -->
     <!-- <?php
             $sql = "SELECT * FROM status_type WHERE status_id = '17'";
             $result = mysqli_query($conn, $sql);
