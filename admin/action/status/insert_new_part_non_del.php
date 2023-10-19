@@ -2,28 +2,67 @@
 session_start();
 include('../../../database/condb.php');
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    foreach ($_POST as $key => $value) {
-        echo $key . ': ' . $value . '<br>';
-    }
-}
 
 $get_r_id = $_POST['get_r_id'];
 $rs_detail = $_POST['rs_detail'];
 $status_id = $_POST['status_id'];
 $e_id = $_SESSION["id"];
 
-// Retrieve the parts data
-$parts = array();
-$cardCount = $_POST['cardCount']; // Assuming you're passing the card count as a hidden input field
-for ($i = 1; $i <= $cardCount; $i++) {
-    $partId = $_POST['p_id' . $i];
-    $quantity = $_POST['value_p' . $i];
-    $parts[] = array(
-        'partId' => $partId,
-        'quantity' => $quantity
-    );
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    foreach ($_POST as $key => $value) {
+        echo $key . ': ' . $value . '<br>';
+    }
 }
+
+$count_c = 1;
+$count_check = 0;
+
+while (isset($_POST['get_d_id' . $count_c])) {
+
+    if (isset($_POST['check_' . $count_c])) {
+        echo 'have' . $count_c;
+        $count_check++;
+    }
+    $count_c++;
+}
+
+$parts = array();
+
+for ($i = 1; $i <= 20; $i++) {
+    if (isset($_POST['check_' . $i])) {
+        $get_d = $_POST['get_d_id' . $i];
+        $partIds = $_POST['p_id_' . $i];
+        $quantities = $_POST['value_p_' . $i];
+
+        foreach ($partIds as $count_for => $partId) {
+            $quantity = $quantities[$count_for];
+            $parts[] = array(
+                'get_d_id' => $get_d,
+                'partId' => $partId,
+                'quantity' => $quantity
+            );
+
+            // Assuming $_POST['value_p' . $i] is an array, you can access its elements like this:
+            echo $quantity;
+        }
+    }
+}
+
+print_r($parts);
+
+
+
+// // Old Retrieve the parts data
+// $parts = array();
+// $cardCount = $_POST['cardCount']; // Assuming you're passing the card count as a hidden input field
+// for ($i = 1; $i <= $cardCount; $i++) {
+//     $partId = $_POST['p_id' . $i];
+//     $quantity = $_POST['value_p' . $i];
+//     $parts[] = array(
+//         'partId' => $partId,
+//         'quantity' => $quantity
+//     );
+// }
 
 if ($status_id == 17) {
     echo '<br>status = 17';
@@ -337,7 +376,10 @@ if ($rs_id > 0) {
     if ($result_e) {
         // Process parts data
         $i = 1;
+        $get_d_id_parts = 0;
+
         foreach ($parts as $part) {
+            $get_d_id = $part['get_d_id'];
             $partId = $part['partId'];
             $quantity = $part['quantity'];
 
@@ -351,7 +393,7 @@ if ($rs_id > 0) {
                 $p_stock = $row_s['p_stock'] - $quantity;
                 $total_s = $row_s['p_price'] * $quantity;
 
-                $get_d_id = $_POST['get_d_id_' . $i];
+                
 
                 $sql3 = "INSERT INTO repair_detail (`p_id`, `rd_value_parts`, `rd_parts_price`, `rs_id`, `rd_date_in`, `get_d_id`)
                             VALUES ('$partId', '$quantity', '$total_s', '$rs_id', NOW(), '$get_d_id')";
@@ -398,4 +440,3 @@ if ($rs_id > 0) {
         header("Location: ../../detail_repair.php?id=$get_r_id");
     }
 }
-// }

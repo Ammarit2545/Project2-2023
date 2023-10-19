@@ -211,7 +211,6 @@ $get_r_id = 151; // Start Value Required !!!!
                     while ($row_detail = mysqli_fetch_array($result_detail)) {
                         $get_d_id = $row_detail['get_d_id'];
                     ?>
-                       
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="panelsStayOpen-headingOne<?= $get_d_id ?>">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne<?= $get_d_id ?>" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne<?= $get_d_id ?>">
@@ -288,9 +287,7 @@ $get_r_id = 151; // Start Value Required !!!!
                                     partImage.src = 'parts/default-image.jpg';
                                 }
                             }
-                        </script>
- -->
-
+                        </script> -->
                     <?php
                     }
                     ?>

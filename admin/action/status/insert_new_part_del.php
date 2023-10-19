@@ -13,6 +13,8 @@ $rs_detail = $_POST['rs_detail'];
 $status_id = $_POST['status_id'];
 $e_id = $_SESSION["id"];
 
+
+
 // Retrieve the parts data
 $parts = array();
 $cardCount = $_POST['cardCount']; // Assuming you're passing the card count as a hidden input field

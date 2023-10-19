@@ -97,35 +97,40 @@ $part_check = 0;
                                             </thead>
                                             <tbody>
                                                 <?php
-
+                                                $total_part_price = 0;
                                                 $sql_op = "SELECT
-                                                                                                    *,
-                                                                                                    repair_detail.p_id,
-                                                                                                    repair_detail.rd_value_parts,
-                                                                                                    repair_detail.get_d_id,
-                                                                                                    parts.p_brand,
-                                                                                                    parts.p_model,
-                                                                                                    parts.p_price,
-                                                                                                    parts_type.p_type_name,
-                                                                                                    repair_status.rs_id,
-                                                                                                    parts.p_pic
-                                                                                                FROM
-                                                                                                    `repair_detail`
-                                                                                                    LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
-                                                                                                    LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
-                                                                                                    LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
-                                                                                                    LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                                                                                                    JOIN parts ON parts.p_id = repair_detail.p_id
-                                                                                                    LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
-                                                                                                WHERE
-                                                                                                    get_repair.del_flg = 0 AND repair_detail.del_flg = 0
-                                                                                                    AND get_repair.get_r_id = '$get_id'
-                                                                                                GROUP BY
-                                                                                                    rd_id, get_detail.get_d_id
-                                                                                                    ;";
+                                                repair_detail.p_id,
+                                                MAX(repair_detail.p_id) AS r_brand,
+                                                MAX(repair_detail.p_id) AS r_model,
+                                                   MAX(repair_detail.p_id) AS p_id,
+                                                   MAX(repair_detail.rd_value_parts) AS rd_value_parts,
+                                                   MAX(repair_detail.get_d_id) AS get_d_id,
+                                                   MAX(parts.p_brand) AS p_brand,
+                                                   MAX(parts.p_model) AS p_model,
+                                                   MAX(parts.p_price) AS p_price,
+                                                   MAX(parts_type.p_type_name) AS p_type_name,
+                                                   MAX(repair_status.rs_id) AS rs_id,
+                                                   MAX(parts.p_pic) AS p_pic,
+                                                   MAX(repair.r_brand) AS r_brand,
+                                                   MAX(repair.r_model) AS r_model
+                                               FROM
+                                                   `repair_detail`
+                                                   LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
+                                                   LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
+                                                   LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
+                                                   LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                                                   JOIN parts ON parts.p_id = repair_detail.p_id
+                                                   LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
+                                               WHERE
+                                                   get_repair.del_flg = 0 AND repair_detail.del_flg = 0
+                                                   AND get_repair.get_r_id = '$get_id'
+                                               GROUP BY
+                                                   repair_detail.rd_id;
+                                               ";
                                                 $result_op = mysqli_query($conn, $sql_op);
                                                 $count_part = 0;
                                                 while ($row_op = mysqli_fetch_array($result_op)) {
+
                                                     $count_part++;
                                                     $p_id = $row_op['p_id'];
                                                     $rs_id = $row_op['rs_id'];
@@ -240,7 +245,7 @@ $part_check = 0;
                                                 <tr>
                                                     <td colspan="7">ยอดอะไหล่ทั้งหมด</td>
                                                     <td colspan="2">ราคารวม</td>
-                                                    <td><?= number_format($total) ?></td>
+                                                    <td><?php $total_part_price = $total; ?><?= number_format($total) ?></td>
                                                     <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
                                                 </tr>
                                                 <tr>
@@ -571,56 +576,63 @@ ORDER BY rs.rs_date_time DESC
 
     // check parts of Get_r_id
     // Assuming $id_get_r is your parameterized value
-    $sql_c_part = "SELECT
-                    *,
-                    repair_detail.p_id,
-                    repair_detail.rd_value_parts,
-                    repair_detail.get_d_id,
-                    parts.p_brand,
-                    parts.p_model,
-                    parts.p_price,
-                    parts_type.p_type_name,
-                    repair_status.rs_id,
-                    parts.p_pic
-                    FROM
-                    `repair_detail`
-                    LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
-                    LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
-                    LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
-                    LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                    JOIN parts ON parts.p_id = repair_detail.p_id
-                    LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
-                    WHERE
-                    get_repair.del_flg = 0 AND repair_detail.del_flg = 0
-                    AND get_repair.get_r_id = ?
-                    GROUP BY
-                    rd_id, get_detail.get_d_id;";
+    // $sql_c_part = "SELECT
+    // MAX(repair_detail.p_id) AS p_id,
+    // MAX(repair_detail.rd_value_parts) AS rd_value_parts,
+    // MAX(repair_detail.get_d_id) AS get_d_id,
+    // MAX(parts.p_brand) AS p_brand,
+    // MAX(parts.p_model) AS p_model,
+    // MAX(parts.p_price) AS p_price,
+    // MAX(parts_type.p_type_name) AS p_type_name,
+    // MAX(repair_status.rs_id) AS rs_id,
+    // MAX(parts.p_pic) AS p_pic,
+    // MAX(repair.r_brand) AS r_brand,
+    // MAX(repair.r_model) AS r_model
+    // FROM
+    // `repair_detail`
+    // LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
+    // LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
+    // LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
+    // LEFT JOIN repair ON get_detail.r_id = repair.r_id
+    // JOIN parts ON parts.p_id = repair_detail.p_id
+    // LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
+    // WHERE
+    // get_repair.del_flg = 0 AND repair_detail.del_flg = 0
+    // AND get_repair.get_r_id = ?
+    // GROUP BY
+    // repair_detail.rd_id";
 
-    // Use prepared statements
-    $stmt_c_part = mysqli_prepare($conn, $sql_c_part);
+    // // Use prepared statements
+    // $stmt_c_part = mysqli_prepare($conn, $sql_c_part);
 
-    if ($stmt_c_part) {
-        // Bind the parameter
-        mysqli_stmt_bind_param($stmt_c_part, "s", $id_get_r);
+    // if ($stmt_c_part) {
+    //     // Bind the parameter
+    //     mysqli_stmt_bind_param($stmt_c_part, "s", $id_get_r);
 
-        // Execute the statement
-        mysqli_stmt_execute($stmt_c_part);
+    //     // Execute the statement
+    //     mysqli_stmt_execute($stmt_c_part);
 
-        // Get the result
-        $result_c_part = mysqli_stmt_get_result($stmt_c_part);
+    //     // Get the result
+    //     $result_c_part = mysqli_stmt_get_result($stmt_c_part);
 
-        // Fetch data as needed
-        while ($row_c_part = mysqli_fetch_assoc($result_c_part)) {
-            // Process the row data
-            $total_part_price +=  $row_c_part['rd_parts_price'];
-        }
+    //     // Initialize a total part price variable
+    //     $total_part_price = 0;
 
-        // Close the statement
-        mysqli_stmt_close($stmt_c_part);
-    } else {
-        // Handle the error
-        echo "Error: " . mysqli_error($conn);
-    }
+    //     // Fetch data as needed
+    //     while ($row_c_part = mysqli_fetch_assoc($result_c_part)) {
+    //         // Calculate the total part price based on your selected columns
+    //         $total_part_price += $row_c_part['p_price']; // Adjust based on your requirements
+    //     }
+
+    //     // Close the statement
+    //     mysqli_stmt_close($stmt_c_part);
+    // } else {
+    //     // Handle the error
+    //     echo "Error: " . mysqli_error($conn);
+    // }
+
+    // Use $total_part_price as needed in your code
+
 
     // check status Process Bar
     $process_dot = 0;
@@ -682,7 +694,7 @@ ORDER BY rs.rs_date_time DESC
 
                                                                                 echo $newDate;
                                                                                 ?>)</h3>
-            <p>ทางร้านต้องขอแจ้งให้ทราบว่าคุณไม่ได้ชำระเงินตามระยะเวลาที่กำหนด (ระยะเวลาเก็บอุปกรณ์ของท่านคือ 1 ปี) ดังนั้นเราขอทำการเก็บอุปกณ์ของท่านเป็นทรัพย์สินของทางร้าน โปรดทราบว่าเราจะไม่มีการดำเนินการคืนเงินหรือรับผิดชอบแต่อย่างใดต่อของท่านในกรณีนี้</p>
+            <p>ทางร้านต้องขอแจ้งให้ทราบว่าคุณไม่ได้ชำระเงินตามระยะเวลาที่กำหนด (ระยะเวลาเก็บอุปกรณ์ของท่านคือ 1 ปี) ดังนั้นเราจึงทำการเก็บอุปกณ์ของท่านเป็นทรัพย์สินของทางร้าน โปรดทราบว่าเราจะไม่มีการดำเนินการคืนเงินหรือรับผิดชอบแต่อย่างใดต่อของท่านในกรณีนี้</p>
         <?php  } ?>
         <?php if ($row_2['status_id'] == 10) { ?>
             <h3><i class="fa fa-paper-plane-o"></i> กำลังดำเนินการส่งอุปกรณ์ให้คุณ</h3>
