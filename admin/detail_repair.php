@@ -619,11 +619,13 @@ $get_r_id = $_GET['id'];
                                             $sql_get_c2 = "SELECT *
                                             FROM get_detail
                                             LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                            LEFT JOIN company_transport ON  tracking.t_c_id = company_transport.com_t_id
                                             LEFT JOIN repair ON repair.r_id = get_detail.r_id
                                             WHERE get_detail.get_r_id = '$get_r_id' AND get_detail.del_flg = 0 AND (get_d_conf != 1 OR get_d_conf IS NULL);
                                             ";
                                             $sql_get_count_track = "SELECT * FROM get_detail
                                                             LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            LEFT JOIN company_transport ON  tracking.t_c_id = company_transport.com_t_id
                                                             LEFT JOIN repair ON repair.r_id = get_detail.r_id
                                                             WHERE get_detail.get_r_id =  '$get_r_id' AND get_detail.del_flg = 0 AND get_d_conf = 0";
                                             $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
@@ -632,6 +634,8 @@ $get_r_id = $_GET['id'];
 
                                             $sql_get_c = "SELECT * FROM get_detail
                                                                             LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                                            
+                                                            LEFT JOIN company_transport ON  tracking.t_c_id = company_transport.com_t_id
                                                                             LEFT JOIN repair ON repair.r_id = get_detail.r_id
                                                                             WHERE get_detail.get_r_id =  '$get_r_id' AND get_detail.del_flg = 0";
                                             $result_get_c = mysqli_query($conn, $sql_get_c);
@@ -697,8 +701,11 @@ $get_r_id = $_GET['id'];
                                                                             <span class="f-black-5"><?= $row_get['r_number_model'] ?></span><?php } ?>
                                                                         <?php if ($row_get['r_serial_number'] != NULL) { ?><br>หมายเลขประจำเครื่อง/Serial Number :
                                                                             <span class="f-black-5"><?= $row_get['r_serial_number'] ?></span><?php } ?>
-                                                                        <?php if ($row_get['get_t_id'] != NULL) { ?><br>หมายเลขพัสดุ :
+                                                                        <?php if ($row_get['t_parcel'] != NULL) { ?><br>หมายเลขพัสดุ :
                                                                             <span class="f-black-5"><?= $row_get['t_parcel'] ?></span>
+                                                                        <?php }
+                                                                        if ($row_get['com_t_name'] != NULL) { ?><br>ชื่อบริษัท :
+                                                                            <span class="f-black-5"><?= $row_get['com_t_name'] ?></span>
                                                                         <?php } ?>
                                                                     </p>
                                                                     <br>
@@ -756,6 +763,8 @@ $get_r_id = $_GET['id'];
                                             $count_get_no = 0;
                                             $sql_get_c3 = "SELECT * FROM get_detail
                                                             LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            
+                                                            LEFT JOIN company_transport ON  tracking.t_c_id = company_transport.com_t_id
                                                             LEFT JOIN repair ON repair.r_id = get_detail.r_id
                                                             WHERE get_detail.get_r_id =  '$get_r_id' AND get_detail.del_flg = 0 AND get_d_conf = 1";
                                             $sql_get_count_track = "SELECT * FROM get_detail
@@ -882,10 +891,13 @@ $get_r_id = $_GET['id'];
 
                                             $sql_get = "SELECT * FROM get_detail
                                                             LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            
+                                                            LEFT JOIN company_transport ON  tracking.t_c_id = company_transport.com_t_id
                                                             LEFT JOIN repair ON repair.r_id = get_detail.r_id
                                                             WHERE get_detail.get_r_id =  '$get_r_id' AND get_detail.del_flg = 1";
                                             $sql_get_count_track = "SELECT * FROM get_detail
                                                             LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            LEFT JOIN company_transport ON  tracking.t_c_id = company_transport.com_t_id
                                                             LEFT JOIN repair ON repair.r_id = get_detail.r_id
                                                             WHERE get_detail.get_r_id =  '$get_r_id' AND get_detail.del_flg = 1";
                                             $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
@@ -949,6 +961,9 @@ $get_r_id = $_GET['id'];
                                                                             <span class="f-black-5"><?= $row_get['r_serial_number'] ?></span><?php } ?>
                                                                         <?php if ($row_get['get_t_id'] != NULL) { ?><br>หมายเลขพัสดุ :
                                                                             <span class="f-black-5"><?= $row_get['t_parcel'] ?></span>
+                                                                        <?php } ?>
+                                                                        <?php if ($row_get['com_t_name'] != NULL) { ?><br>จากบริษัท :
+                                                                            <span class="f-black-5"><?= $row_get['com_t_name'] ?></span>
                                                                         <?php } ?>
                                                                     </p>
                                                                     <br>
@@ -1118,7 +1133,7 @@ $get_r_id = $_GET['id'];
                                         <?php
                                         if ($rs_cancel_detail_data != '' || $rs_cancel_detail_data != NULL) { //$rs_cancel_detail_data เช็คว่าไม่มีค่าว่างจากขางบนที่ส่งมา
                                         ?>
-                                        <hr>
+                                            <hr>
                                             <p class="f-red-5">เหตุผลไม่ยืนยันการซ่อม : <span class="f-black-5"><u><?= $rs_cancel_detail_data  ?></u></span></p>
                                         <?php
                                         }

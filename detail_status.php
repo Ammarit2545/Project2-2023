@@ -451,7 +451,94 @@ $part_check = 0;
             </div>
         </div>
     </div>
+   <!-- Modal -->
+   <div class="modal fade" id="exampleModalUnique" tabindex="-1" aria-labelledby="exampleModalLabelUnique" aria-hidden="true">
+                                                                        <div class="modal-dialog">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <span style="color:white">
+                                                                                        <h4 style="color: red">โปรดระบุเหตุผล</h4>
+                                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                                    </span>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    <br>
+                                                                                    <form id="canf_cancel" action="action/conf_cancel.php" method="POST">
+                                                                                        <hr>
 
+
+                                                                                        <input type="text" name="get_r_id" value="<?= $id_get_r ?>" hidden>
+                                                                                        <input type="text" name="status_id" value="<?= $status_id ?>" hidden>
+                                                                                        <span style="color:white">
+                                                                                            <label>
+                                                                                                <input class="form-check-input" type="checkbox" name="checkbox1" value="ต้องการยกเลิกคำสั่งซ่อม" onclick="uncheckOtherCheckboxes('checkbox1')">
+                                                                                                ต้องการยกเลิกคำสั่งซ่อม
+                                                                                            </label><br>
+
+                                                                                            <label>
+                                                                                                <input class="form-check-input" type="checkbox" name="checkbox2" value="ไม่อยากใช้อะไหล่ข้างต้น" onclick="uncheckOtherCheckboxes('checkbox2')">
+                                                                                                ไม่อยากใช้อะไหล่ข้างต้น
+                                                                                            </label><br>
+
+                                                                                            <label>
+                                                                                                <input class="form-check-input" type="checkbox" name="checkbox3" value="อยากได้อะไหล่ที่ถูกกว่านี้" onclick="uncheckOtherCheckboxes('checkbox3')">
+                                                                                                อยากได้อะไหล่ที่ถูกกว่านี้
+                                                                                            </label><br>
+
+                                                                                            <label>
+                                                                                                <input class="form-check-input" type="checkbox" name="checkbox4" onclick="showTextarea(); uncheckOtherCheckboxes('checkbox4')">
+                                                                                                อื่นๆ (หรือยื่นข้อเสนอ)
+                                                                                            </label><br>
+
+                                                                                            <textarea id="myTextarea" name="detail_cancel" style="display: none;" placeholder="โปรดระบุสาเหตุ"></textarea>
+
+                                                                                        </span>
+                                                                                        <br>
+                                                                                        <!-- <a class="btn btn-danger" onclick="hideDiv()">ยกเลิก</a>
+                                                                                        <a class="btn btn-success" id="confirmButtoncancel">ยืนยัน</a> -->
+
+                                                                                        <script>
+                                                                                            document.addEventListener('DOMContentLoaded', function() {
+                                                                                                var id_get_r = <?php echo json_encode($id_get_r); ?>; // Pass PHP variable to JavaScript
+                                                                                                var dialogShown = false; // Flag variable to track if the dialog is already displayed
+
+                                                                                                document.getElementById('confirmButtoncancel').addEventListener('click', function() {
+                                                                                                    if (dialogShown) {
+                                                                                                        return; // Exit if the dialog is already shown
+                                                                                                    }
+
+                                                                                                    dialogShown = true; // Set the flag to true to indicate that the dialog is displayed
+
+                                                                                                    Swal.fire({
+                                                                                                        icon: 'warning',
+                                                                                                        title: 'ยืนยันดำเนินการส่งซ่อม',
+                                                                                                        text: 'การ "ยืนยันเพื่อยกเลิก" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
+                                                                                                        showCancelButton: true,
+                                                                                                        confirmButtonText: 'ยืนยัน',
+                                                                                                        cancelButtonText: 'ยกเลิก'
+                                                                                                    }).then((willConfirm) => {
+                                                                                                        if (willConfirm.isConfirmed) {
+                                                                                                            var form = document.getElementById('canf_cancel');
+                                                                                                            form.submit(); // Submit the form
+                                                                                                        }
+
+                                                                                                        dialogShown = false; // Reset the flag when the dialog is closed
+                                                                                                    });
+                                                                                                });
+                                                                                            });
+                                                                                        </script>
+
+                                                                                   
+                                                                                    <br><br>
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                                                                                    <a class="btn btn-success" id="confirmButtoncancel">ยืนยัน</a>
+                                                                                     </form>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
     <!-- Modal 1 -->
     <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
         <div class="modal-dialog">
@@ -2902,7 +2989,10 @@ ORDER BY rs.rs_date_time DESC
                                                                         ?>
                                                                             <hr>
                                                                             <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
-                                                                            <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน/ยื่นข้อเสนอ</a>
+                                                                            <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModalUnique">
+                                                                                ไม่ทำการยืนยัน/ยื่นข้อเสนอ
+                                                                            </a>
+                                                                            <!-- <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน/ยื่นข้อเสนอ</a> -->
                                                                             <!-- <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a> -->
                                                                             <a class="btn btn-success" id="confirmButtonSuccess0" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
                                                                     <?php
@@ -2937,74 +3027,11 @@ ORDER BY rs.rs_date_time DESC
 
 
 
+                                                                 
+
 
                                                                     <div id="myDiv" style="display: none; margin: 20px 30px;">
-                                                                        <br>
-                                                                        <form id="canf_cancel" action="action/conf_cancel.php" method="POST">
-                                                                            <hr>
 
-                                                                            <h4 style="color: red">โปรดระบุเหตุผล</h4>
-                                                                            <input type="text" name="get_r_id" value="<?= $id_get_r ?>" hidden>
-                                                                            <input type="text" name="status_id" value="<?= $status_id ?>" hidden>
-                                                                            <label>
-                                                                                <input class="form-check-input" type="checkbox" name="checkbox1" value="ต้องการยกเลิกคำสั่งซ่อม" onclick="uncheckOtherCheckboxes('checkbox1')">
-                                                                                ต้องการยกเลิกคำสั่งซ่อม
-                                                                            </label><br>
-
-                                                                            <label>
-                                                                                <input class="form-check-input" type="checkbox" name="checkbox2" value="ไม่อยากใช้อะไหล่ข้างต้น" onclick="uncheckOtherCheckboxes('checkbox2')">
-                                                                                ไม่อยากใช้อะไหล่ข้างต้น
-                                                                            </label><br>
-
-                                                                            <label>
-                                                                                <input class="form-check-input" type="checkbox" name="checkbox3" value="อยากได้อะไหล่ที่ถูกกว่านี้" onclick="uncheckOtherCheckboxes('checkbox3')">
-                                                                                อยากได้อะไหล่ที่ถูกกว่านี้
-                                                                            </label><br>
-
-                                                                            <label>
-                                                                                <input class="form-check-input" type="checkbox" name="checkbox4" onclick="showTextarea(); uncheckOtherCheckboxes('checkbox4')">
-                                                                                อื่นๆ (หรือยื่นข้อเสนอ)
-                                                                            </label><br>
-
-                                                                            <textarea id="myTextarea" name="detail_cancel" style="display: none;" placeholder="โปรดระบุสาเหตุ"></textarea>
-
-                                                                            <br>
-                                                                            <a class="btn btn-danger" onclick="hideDiv()">ยกเลิก</a>
-                                                                            <a class="btn btn-success" id="confirmButtoncancel">ยืนยัน</a>
-
-                                                                            <script>
-                                                                                document.addEventListener('DOMContentLoaded', function() {
-                                                                                    var id_get_r = <?php echo json_encode($id_get_r); ?>; // Pass PHP variable to JavaScript
-                                                                                    var dialogShown = false; // Flag variable to track if the dialog is already displayed
-
-                                                                                    document.getElementById('confirmButtoncancel').addEventListener('click', function() {
-                                                                                        if (dialogShown) {
-                                                                                            return; // Exit if the dialog is already shown
-                                                                                        }
-
-                                                                                        dialogShown = true; // Set the flag to true to indicate that the dialog is displayed
-
-                                                                                        Swal.fire({
-                                                                                            icon: 'warning',
-                                                                                            title: 'ยืนยันดำเนินการส่งซ่อม',
-                                                                                            text: 'การ "ยืนยันเพื่อยกเลิก" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
-                                                                                            showCancelButton: true,
-                                                                                            confirmButtonText: 'ยืนยัน',
-                                                                                            cancelButtonText: 'ยกเลิก'
-                                                                                        }).then((willConfirm) => {
-                                                                                            if (willConfirm.isConfirmed) {
-                                                                                                var form = document.getElementById('canf_cancel');
-                                                                                                form.submit(); // Submit the form
-                                                                                            }
-
-                                                                                            dialogShown = false; // Reset the flag when the dialog is closed
-                                                                                        });
-                                                                                    });
-                                                                                });
-                                                                            </script>
-
-                                                                        </form>
-                                                                        <br><br>
                                                                     </div>
 
                                                                     <div id="cancel_status_1" style="display: none; margin: 20px 30px;">
@@ -3224,16 +3251,18 @@ ORDER BY rs.rs_date_time DESC
 
                             ?>
                                 <center>
-                                    <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยัน</a>
-                                    <a class="btn btn-success" id="confirmButtonCheck" style="display:inline-block" onclick="sendValuetoArrived(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม6</a>
+                                    <a style="margin-left: 2%" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModalUnique">
+                                        ไม่ทำการยืนยัน/ยื่นข้อเสนอ
+                                    </a><a class="btn btn-success" id="confirmButtonCheck" style="display:inline-block" onclick="sendValuetoArrived(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม6</a>
 
                                 </center>
                                 <?php
                             } else {
                                 if ($row_conf['rs_conf'] == NULL) {
                                 ?> <center>
-                                        <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยัน</a>
-                                        <a class="btn btn-success" id="confirmButtonSuccess1" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม5</a>
+                                        <a style="margin-left: 2%" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModalUnique">
+                                            ไม่ทำการยืนยัน/ยื่นข้อเสนอ
+                                        </a> <a class="btn btn-success" id="confirmButtonSuccess1" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม5</a>
 
                                     </center>
                             <?php }
@@ -3244,7 +3273,7 @@ ORDER BY rs.rs_date_time DESC
                                 <a style="margin-left: 2%" href="send_config.php?id=<?= $get_id ?>" class="btn btn-danger">ส่งคำร้อง</a>
                                 <button class="btn btn-success" href="action/add_only_status.php?id=<?= $id_get_r ?>&status_id=3" style="display:inline-block" onclick="showConfirmation()">ยืนยันและตรวจสอบอุปกรณ์แล้ว</button>
 
- 
+
 
                                 <script>
                                     function showConfirmation() {
@@ -3795,7 +3824,11 @@ ORDER BY rs.rs_date_time DESC
                                         ?>
                                             <hr>
                                             <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
-                                            <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน/ยื่นข้อเสนอ</a>
+                                            <!-- Button trigger modal -->
+                                            <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModalUnique">
+                                                ไม่ทำการยืนยัน/ยื่นข้อเสนอ
+                                            </a>
+                                            <!-- <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน/ยื่นข้อเสนอ</a> -->
                                             <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a>
                                         <?php
                                         } ?>
