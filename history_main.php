@@ -106,7 +106,7 @@ $id_member = $_SESSION['id'];
         }
     </style>
     <style>
-        <?php include('../css/all_page.css') ?>body {
+        body {
             font-family: Arial, sans-serif;
         }
 

@@ -396,7 +396,8 @@
 <header class="header fixed-top d-flex align-items-center sticked">
   <div class="container d-flex align-items-center justify-content-between">
     <a href="index.html" class="logo d-flex align-items-center me-auto me-lg-0" style="text-decoration: none;">
-      <h1>Anan Electronic</h1>
+
+      <img src="img brand/anelogo.png" width="100px" alt="">
     </a>
     <nav id="navbar" class="navbar">
       <ul>
