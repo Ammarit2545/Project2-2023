@@ -32,9 +32,27 @@ if (!isset($_SESSION["id"])) {
 <body>
 
     <!-- navbar-->
+    <!-- navbar-->
     <?php
+    include('database/condb.php');
+    $id = $_SESSION['id'];
 
-    include('bar/topbar_user.php');
+    $sql1 = "SELECT * FROM member WHERE m_id = '$id '";
+    $result1 = mysqli_query($conn, $sql1);
+    $row1 = mysqli_fetch_array($result1);
+
+
+    if ($row1 > 0) {
+        include('bar/topbar_user.php');
+    }
+
+    if ($id == NULL) {
+        include('bar/topbar.php');
+    }
+
+    ?>
+    <!-- end navbar-->
+    <?php
 
     $id = $_SESSION["id"];
 
