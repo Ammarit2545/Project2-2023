@@ -51,6 +51,417 @@ $part_check = 0;
 </head>
 
 <body>
+    
+    <!-- Modal -->
+    <div class="modal fade " id="staticBackdropss" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header"> :
+                    <h4 style="color:white">รายการซ่อมในหมายเลขแจ้งซ่อม <?= $id_get_r  ?></h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="background-color: #E7E7E7;">
+                    <br>
+                    <div class="container">
+
+
+                        <?php
+                        $count_get_no = 0;
+                        $repair_count = 0;
+                        $sql_get_c2 = "SELECT *
+                                            FROM get_detail
+                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                            WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.del_flg = 0 AND (get_d_conf != 1 OR get_d_conf IS NULL);
+                                            ";
+                        $sql_get_count_track = "SELECT * FROM get_detail
+                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 0 AND get_d_conf = 0";
+                        $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
+                        $result_get = mysqli_query($conn, $sql_get_c2);
+                        $row_get_count_track = mysqli_fetch_array($result_get_count_track);
+
+                        $sql_get_c = "SELECT * FROM get_detail
+                                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 0";
+                        $result_get_c = mysqli_query($conn, $sql_get_c);
+                        while ($row_get_c = mysqli_fetch_array($result_get_c)) {
+                            $repair_count++;
+                        }
+                        if ($repair_count > 0) {
+                        ?>
+                            <h2>มีรายการซ่อมทั้งหมด <span class="badge bg-primary"><?= $repair_count ?></span> รายการ</h2>
+                            <hr>
+                            <br>
+                        <?php
+                        }
+
+                        while ($row_get = mysqli_fetch_array($result_get)) {
+                            $count_get_no++;
+                        ?>
+                            <div class="row alert alert-light shadow">
+                                <h1 style="text-align:start; color:blue" id="body_text">
+                                    <span>รายการที่ <?= $count_get_no ?></span> :
+                                    <span class="f-black-5">
+                                        <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?>
+
+                                    </span>
+                                </h1>
+                                <hr>
+                                <div style=" color:#2c2f34" class="my-4">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md alert alert-light shadow ml-1 bg-gray-1">
+                                                <h5 class="f-black-5">ข้อมูลอุปกรณ์</h5>
+                                                <hr>
+                                                <p class=" f-gray-5">
+                                                    <?php if ($row_get['com_id'] != NULL) { ?><br>
+                                                        <span class="badge bg-success">
+                                                            ประกัน :
+                                                            <span>
+                                                                <?php
+                                                                $com_id = $row_get['com_id'];
+                                                                $sql_com = "SELECT com_name FROM company WHERE com_id ='$com_id' AND del_flg = 0";
+                                                                $result_com = mysqli_query($conn, $sql_com);
+                                                                $row_com = mysqli_fetch_array($result_com);
+                                                                echo $row_com['com_name'];
+                                                                $row_get['r_id']
+                                                                ?>
+                                                            </span>
+                                                        </span>
+                                                    <?php } ?>
+                                                    <?php if ($row_get['r_guarantee'] != NULL) { ?><br>ระยะประกัน :
+                                                        <span class="f-black-5"><?= $row_get['r_guarantee'] ?> ปี</span><?php } ?>
+                                                    <?php if ($row_get['r_id'] != NULL) { ?><br>รหัสอุปกรณ์ในระบบ :
+                                                        <span class="f-black-5"><?= $row_get['r_id'] ?></span>
+                                                        <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item">
+                                                            <i class="fa fa-question-circle"></i>
+                                                            <span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
+                                                        </a>
+                                                    <?php } ?>
+                                                    <?php if ($row_get['r_brand'] != NULL) { ?><br>ยี่ห้อ/แบรนด์ :
+                                                        <span class="f-black-5"><?= $row_get['r_brand'] ?></span><?php } ?>
+                                                    <?php if ($row_get['r_model'] != NULL) { ?><br>รุ่น :
+                                                        <span class="f-black-5"><?= $row_get['r_model'] ?></span><?php } ?>
+                                                    <?php if ($row_get['r_number_model'] != NULL) { ?><br>หมายเลขรุ่น :
+                                                        <span class="f-black-5"><?= $row_get['r_number_model'] ?></span><?php } ?>
+                                                    <?php if ($row_get['r_serial_number'] != NULL) { ?><br>หมายเลขประจำเครื่อง/Serial Number :
+                                                        <span class="f-black-5"><?= $row_get['r_serial_number'] ?></span><?php } ?>
+                                                    <?php if ($row_get['get_t_id'] != NULL) { ?><br>หมายเลขพัสดุ :
+                                                        <span class="f-black-5"><?= $row_get['t_parcel'] ?></span>
+                                                    <?php } ?>
+                                                </p>
+                                                <br>
+                                                <h5 class="mb-3" style="color:black">รายละเอียดอาการ</h5>
+                                                <hr>
+                                                <p><?= $row_get['get_d_detail'] ?></p>
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                            <?php
+                                            $check_have_pic = 0;
+                                            $get_d_id = $row_get['get_d_id'];
+                                            $sql_pic = "SELECT * FROM repair_pic
+                                                                            LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
+                                                                            WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
+                                            $result_pic = mysqli_query($conn, $sql_pic);
+                                            if (mysqli_num_rows($result_pic)) {
+                                                $check_have_pic++;
+                                            ?>
+                                                <div class="col-md-5 alert alert-light shadow bg-gray-1">
+                                                    <h5 style="color:black" class="mb-3">รูปภาพ</h5>
+                                                    <hr>
+                                                    <br>
+                                                    <?php }
+                                                while ($row_pic = mysqli_fetch_array($result_pic)) {
+                                                    if ($row_pic[0] != NULL) {
+                                                    ?>
+                                                        <?php
+                                                        $rp_pic = $row_pic['rp_pic'];
+                                                        $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                                        ?>
+                                                        <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                                            <a href="#" id="bounce-item"><img src="<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                        <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
+                                                            <a href="#">
+                                                                <video width="100px" autoplay muted onclick="openModalVideo(this)" src="<?= $row_pic['rp_pic'] ?>">
+                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/mp4">
+                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/ogg">
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                            </a>
+                                                        <?php endif; ?>
+                                                    <?php
+                                                    }
+                                                }
+                                                if ($check_have_pic > 0) { ?>
+                                                </div>
+                                            <?php  } ?>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+                        <?php
+                        $count_get_no = 0;
+                        $sql_get_c3 = "SELECT * FROM get_detail
+                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 0 AND get_d_conf = 1";
+                        $sql_get_count_track = "SELECT * FROM get_detail
+                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 0 AND get_d_conf = 1";
+                        $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
+                        $result_get_c3 = mysqli_query($conn, $sql_get_c3);
+                        $row_get_count_track = mysqli_fetch_array($result_get_count_track);
+                        if (mysqli_num_rows($result_get_c3)) {
+
+                        ?><h1><span class="badge bg-warning">รายการที่ไม่สามารถซ่อมได้ (อยู่ในช่วงยื่นข้อเสนอ)</span></h1><?php
+                                                                                                                        }
+
+                                                                                                                        while ($row_get = mysqli_fetch_array($result_get)) {
+                                                                                                                            $count_get_no++;
+                                                                                                                            ?>
+                            <div class="row alert alert-warning shadow">
+                                <h1 style="text-align:start; color:blue" id="body_text">
+                                    <span>รายการที่ <?= $count_get_no ?></span> :
+                                    <span class="f-black-5">
+                                        <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" class="un-scroll f-black-5" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item"><?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?><span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
+                                        </a>
+                                    </span>
+                                </h1>
+                                <hr>
+                                <div style=" color:#2c2f34" class="my-4">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md alert alert-light shadow ml-1 bg-gray-1">
+                                                <h5 class="f-black-5">ข้อมูลอุปกรณ์</h5>
+                                                <hr>
+                                                <p class=" f-gray-5">
+                                                    <?php if ($row_get['com_id'] != NULL) { ?><br>
+                                                        <span class="badge bg-success">
+                                                            ประกัน :
+                                                            <span>
+                                                                <?php
+                                                                                                                                $com_id = $row_get['com_id'];
+                                                                                                                                $sql_com = "SELECT com_name FROM company WHERE com_id ='$com_id' AND del_flg = 0";
+                                                                                                                                $result_com = mysqli_query($conn, $sql_com);
+                                                                                                                                $row_com = mysqli_fetch_array($result_com);
+                                                                                                                                echo $row_com['com_name'];
+                                                                                                                                $row_get['r_id']
+                                                                ?>
+                                                            </span>
+                                                        </span>
+                                                    <?php } ?>
+                                                    <?php if ($row_get['r_guarantee'] != NULL) { ?><br>ระยะประกัน :
+                                                        <span class="f-black-5"><?= $row_get['r_guarantee'] ?> ปี</span><?php } ?>
+                                                    <?php if ($row_get['r_id'] != NULL) { ?><br>รหัสอุปกรณ์ในระบบ :
+                                                        <span class="f-black-5"><?= $row_get['r_id'] ?></span>
+                                                        <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item">
+                                                            <i class="fa fa-question-circle"></i>
+                                                            <span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
+                                                        </a>
+                                                    <?php } ?>
+                                                    <?php if ($row_get['r_brand'] != NULL) { ?><br>ยี่ห้อ/แบรนด์ :
+                                                        <span class="f-black-5"><?= $row_get['r_brand'] ?></span><?php } ?>
+                                                    <?php if ($row_get['r_model'] != NULL) { ?><br>รุ่น :
+                                                        <span class="f-black-5"><?= $row_get['r_model'] ?></span><?php } ?>
+                                                    <?php if ($row_get['r_number_model'] != NULL) { ?><br>หมายเลขรุ่น :
+                                                        <span class="f-black-5"><?= $row_get['r_number_model'] ?></span><?php } ?>
+                                                    <?php if ($row_get['r_serial_number'] != NULL) { ?><br>หมายเลขประจำเครื่อง/Serial Number :
+                                                        <span class="f-black-5"><?= $row_get['r_serial_number'] ?></span><?php } ?>
+                                                    <?php if ($row_get['get_t_id'] != NULL) { ?><br>หมายเลขพัสดุ :
+                                                        <span class="f-black-5"><?= $row_get['t_parcel'] ?></span>
+                                                    <?php } ?>
+                                                </p>
+                                                <br>
+                                                <h5 class="mb-3" style="color:black">รายละเอียดอาการ</h5>
+                                                <hr>
+                                                <p><?= $row_get['get_d_detail'] ?></p>
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                            <?php
+                                                                                                                            $check_have_pic = 0;
+                                                                                                                            $get_d_id = $row_get['get_d_id'];
+                                                                                                                            $sql_pic = "SELECT * FROM repair_pic
+                                        LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
+                                        WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
+                                                                                                                            $result_pic = mysqli_query($conn, $sql_pic);
+                                                                                                                            if (mysqli_num_rows($result_pic)) {
+                                                                                                                                $check_have_pic++;
+                                            ?>
+                                                <div class="col-md-5 alert alert-light shadow bg-gray-1">
+                                                    <h5 style="color:black" class="mb-3">รูปภาพ</h5>
+                                                    <hr>
+                                                    <br>
+                                                    <?php }
+                                                                                                                            while ($row_pic = mysqli_fetch_array($result_pic)) {
+                                                                                                                                if ($row_pic[0] != NULL) {
+                                                    ?>
+                                                        <?php
+                                                                                                                                    $rp_pic = $row_pic['rp_pic'];
+                                                                                                                                    $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                                        ?>
+                                                        <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                                            <a href="#" id="bounce-item"><img src="<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                        <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
+                                                            <a href="#">
+                                                                <video width="100px" autoplay muted onclick="openModalVideo(this)" src="<?= $row_pic['rp_pic'] ?>">
+                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/mp4">
+                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/ogg">
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                            </a>
+                                                        <?php endif; ?>
+                                                    <?php
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                            if ($check_have_pic > 0) { ?>
+                                                </div>
+                                            <?php  } ?>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+                        <?php
+                        $count_get_no = 0;
+
+
+                        $sql_get = "SELECT * FROM get_detail
+                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 1";
+                        $sql_get_count_track = "SELECT * FROM get_detail
+                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 1";
+                        $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
+                        $result_get = mysqli_query($conn, $sql_get);
+                        $row_get_count_track = mysqli_fetch_array($result_get_count_track);
+                        if (mysqli_num_rows($result_get)) {
+
+                        ?><h1><span class="badge bg-danger">รายการที่ไม่สามารถซ่อมได้</span></h1><?php
+                                                                                                }
+
+                                                                                                while ($row_get = mysqli_fetch_array($result_get)) {
+                                                                                                    $count_get_no++;
+                                                                                                    ?>
+                            <div class="row alert alert-danger shadow">
+                                <h1 style="text-align:start; color:blue" id="body_text">
+                                    <span>รายการที่ <?= $count_get_no ?></span> :
+                                    <span class="f-black-5">
+                                        <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" class="un-scroll f-black-5" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item"><?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?><span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
+                                        </a>
+                                    </span>
+                                </h1>
+                                <hr>
+                                <div style=" color:#2c2f34" class="my-4">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md alert alert-light shadow ml-1 bg-gray-1">
+                                                <h5 class="f-black-5">ข้อมูลอุปกรณ์</h5>
+                                                <hr>
+                                                <p class=" f-gray-5">
+                                                    <?php if ($row_get['com_id'] != NULL) { ?><br>
+                                                        <span class="badge bg-success">
+                                                            ประกัน :
+                                                            <span>
+                                                                <?php
+                                                                                                        $com_id = $row_get['com_id'];
+                                                                                                        $sql_com = "SELECT com_name FROM company WHERE com_id ='$com_id' AND del_flg = 0";
+                                                                                                        $result_com = mysqli_query($conn, $sql_com);
+                                                                                                        $row_com = mysqli_fetch_array($result_com);
+                                                                                                        echo $row_com['com_name'];
+                                                                                                        $row_get['r_id']
+                                                                ?>
+                                                            </span>
+                                                        </span>
+                                                    <?php } ?>
+                                                    <?php if ($row_get['r_guarantee'] != NULL) { ?><br>ระยะประกัน :
+                                                        <span class="f-black-5"><?= $row_get['r_guarantee'] ?> ปี</span><?php } ?>
+                                                    <?php if ($row_get['r_id'] != NULL) { ?><br>รหัสอุปกรณ์ในระบบ :
+                                                        <span class="f-black-5"><?= $row_get['r_id'] ?></span>
+                                                        <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item">
+                                                            <i class="fa fa-question-circle"></i>
+                                                            <span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
+                                                        </a>
+                                                    <?php } ?>
+                                                    <?php if ($row_get['r_brand'] != NULL) { ?><br>ยี่ห้อ/แบรนด์ :
+                                                        <span class="f-black-5"><?= $row_get['r_brand'] ?></span><?php } ?>
+                                                    <?php if ($row_get['r_model'] != NULL) { ?><br>รุ่น :
+                                                        <span class="f-black-5"><?= $row_get['r_model'] ?></span><?php } ?>
+                                                    <?php if ($row_get['r_number_model'] != NULL) { ?><br>หมายเลขรุ่น :
+                                                        <span class="f-black-5"><?= $row_get['r_number_model'] ?></span><?php } ?>
+                                                    <?php if ($row_get['r_serial_number'] != NULL) { ?><br>หมายเลขประจำเครื่อง/Serial Number :
+                                                        <span class="f-black-5"><?= $row_get['r_serial_number'] ?></span><?php } ?>
+                                                    <?php if ($row_get['get_t_id'] != NULL) { ?><br>หมายเลขพัสดุ :
+                                                        <span class="f-black-5"><?= $row_get['t_parcel'] ?></span>
+                                                    <?php } ?>
+                                                </p>
+                                                <br>
+                                                <h5 class="mb-3" style="color:black">รายละเอียดอาการ</h5>
+                                                <hr>
+                                                <p><?= $row_get['get_d_detail'] ?></p>
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                            <?php
+                                                                                                    $check_have_pic = 0;
+                                                                                                    $get_d_id = $row_get['get_d_id'];
+                                                                                                    $sql_pic = "SELECT * FROM repair_pic
+                                        LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
+                                        WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
+                                                                                                    $result_pic = mysqli_query($conn, $sql_pic);
+                                                                                                    if (mysqli_num_rows($result_pic)) {
+                                                                                                        $check_have_pic++;
+                                            ?>
+                                                <div class="col-md-5 alert alert-light shadow bg-gray-1">
+                                                    <h5 style="color:black" class="mb-3">รูปภาพ</h5>
+                                                    <hr>
+                                                    <br>
+                                                    <?php }
+                                                                                                    while ($row_pic = mysqli_fetch_array($result_pic)) {
+                                                                                                        if ($row_pic[0] != NULL) {
+                                                    ?>
+                                                        <?php
+                                                                                                            $rp_pic = $row_pic['rp_pic'];
+                                                                                                            $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                                        ?>
+                                                        <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                                            <a href="#" id="bounce-item"><img src="<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                        <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
+                                                            <a href="#">
+                                                                <video width="100px" autoplay muted onclick="openModalVideo(this)" src="<?= $row_pic['rp_pic'] ?>">
+                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/mp4">
+                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/ogg">
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                            </a>
+                                                        <?php endif; ?>
+                                                    <?php
+                                                                                                        }
+                                                                                                    }
+                                                                                                    if ($check_have_pic > 0) { ?>
+                                                </div>
+                                            <?php  } ?>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom1" aria-labelledby="offcanvasBottomLabel1">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasBottomLabel1">รายการซ่อมในหมายเลขแจ้งซ่อม <?= $get_r_id  ?></h5>
@@ -583,416 +994,6 @@ $part_check = 0;
     </div>
 
 
-    <!-- Modal -->
-    <div class="modal fade " id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header"> :
-                    <h4 style="color:white">รายการซ่อมในหมายเลขแจ้งซ่อม <?= $id_get_r  ?></h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" style="background-color: #E7E7E7;">
-                    <br>
-                    <div class="container">
-
-
-                        <?php
-                        $count_get_no = 0;
-                        $repair_count = 0;
-                        $sql_get_c2 = "SELECT *
-                                            FROM get_detail
-                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
-                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                            WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.del_flg = 0 AND (get_d_conf != 1 OR get_d_conf IS NULL);
-                                            ";
-                        $sql_get_count_track = "SELECT * FROM get_detail
-                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
-                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 0 AND get_d_conf = 0";
-                        $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
-                        $result_get = mysqli_query($conn, $sql_get_c2);
-                        $row_get_count_track = mysqli_fetch_array($result_get_count_track);
-
-                        $sql_get_c = "SELECT * FROM get_detail
-                                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
-                                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 0";
-                        $result_get_c = mysqli_query($conn, $sql_get_c);
-                        while ($row_get_c = mysqli_fetch_array($result_get_c)) {
-                            $repair_count++;
-                        }
-                        if ($repair_count > 0) {
-                        ?>
-                            <h2>มีรายการซ่อมทั้งหมด <span class="badge bg-primary"><?= $repair_count ?></span> รายการ</h2>
-                            <hr>
-                            <br>
-                        <?php
-                        }
-
-                        while ($row_get = mysqli_fetch_array($result_get)) {
-                            $count_get_no++;
-                        ?>
-                            <div class="row alert alert-light shadow">
-                                <h1 style="text-align:start; color:blue" id="body_text">
-                                    <span>รายการที่ <?= $count_get_no ?></span> :
-                                    <span class="f-black-5">
-                                        <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?>
-
-                                    </span>
-                                </h1>
-                                <hr>
-                                <div style=" color:#2c2f34" class="my-4">
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-md alert alert-light shadow ml-1 bg-gray-1">
-                                                <h5 class="f-black-5">ข้อมูลอุปกรณ์</h5>
-                                                <hr>
-                                                <p class=" f-gray-5">
-                                                    <?php if ($row_get['com_id'] != NULL) { ?><br>
-                                                        <span class="badge bg-success">
-                                                            ประกัน :
-                                                            <span>
-                                                                <?php
-                                                                $com_id = $row_get['com_id'];
-                                                                $sql_com = "SELECT com_name FROM company WHERE com_id ='$com_id' AND del_flg = 0";
-                                                                $result_com = mysqli_query($conn, $sql_com);
-                                                                $row_com = mysqli_fetch_array($result_com);
-                                                                echo $row_com['com_name'];
-                                                                $row_get['r_id']
-                                                                ?>
-                                                            </span>
-                                                        </span>
-                                                    <?php } ?>
-                                                    <?php if ($row_get['r_guarantee'] != NULL) { ?><br>ระยะประกัน :
-                                                        <span class="f-black-5"><?= $row_get['r_guarantee'] ?> ปี</span><?php } ?>
-                                                    <?php if ($row_get['r_id'] != NULL) { ?><br>รหัสอุปกรณ์ในระบบ :
-                                                        <span class="f-black-5"><?= $row_get['r_id'] ?></span>
-                                                        <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item">
-                                                            <i class="fa fa-question-circle"></i>
-                                                            <span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
-                                                        </a>
-                                                    <?php } ?>
-                                                    <?php if ($row_get['r_brand'] != NULL) { ?><br>ยี่ห้อ/แบรนด์ :
-                                                        <span class="f-black-5"><?= $row_get['r_brand'] ?></span><?php } ?>
-                                                    <?php if ($row_get['r_model'] != NULL) { ?><br>รุ่น :
-                                                        <span class="f-black-5"><?= $row_get['r_model'] ?></span><?php } ?>
-                                                    <?php if ($row_get['r_number_model'] != NULL) { ?><br>หมายเลขรุ่น :
-                                                        <span class="f-black-5"><?= $row_get['r_number_model'] ?></span><?php } ?>
-                                                    <?php if ($row_get['r_serial_number'] != NULL) { ?><br>หมายเลขประจำเครื่อง/Serial Number :
-                                                        <span class="f-black-5"><?= $row_get['r_serial_number'] ?></span><?php } ?>
-                                                    <?php if ($row_get['get_t_id'] != NULL) { ?><br>หมายเลขพัสดุ :
-                                                        <span class="f-black-5"><?= $row_get['t_parcel'] ?></span>
-                                                    <?php } ?>
-                                                </p>
-                                                <br>
-                                                <h5 class="mb-3" style="color:black">รายละเอียดอาการ</h5>
-                                                <hr>
-                                                <p><?= $row_get['get_d_detail'] ?></p>
-                                            </div>
-                                            <div class="col-md-1"></div>
-                                            <?php
-                                            $check_have_pic = 0;
-                                            $get_d_id = $row_get['get_d_id'];
-                                            $sql_pic = "SELECT * FROM repair_pic
-                                                                            LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
-                                                                            WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
-                                            $result_pic = mysqli_query($conn, $sql_pic);
-                                            if (mysqli_num_rows($result_pic)) {
-                                                $check_have_pic++;
-                                            ?>
-                                                <div class="col-md-5 alert alert-light shadow bg-gray-1">
-                                                    <h5 style="color:black" class="mb-3">รูปภาพ</h5>
-                                                    <hr>
-                                                    <br>
-                                                    <?php }
-                                                while ($row_pic = mysqli_fetch_array($result_pic)) {
-                                                    if ($row_pic[0] != NULL) {
-                                                    ?>
-                                                        <?php
-                                                        $rp_pic = $row_pic['rp_pic'];
-                                                        $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
-                                                        ?>
-                                                        <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
-                                                            <a href="#" id="bounce-item"><img src="<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
-                                                        <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
-                                                            <a href="#">
-                                                                <video width="100px" autoplay muted onclick="openModalVideo(this)" src="<?= $row_pic['rp_pic'] ?>">
-                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/mp4">
-                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/ogg">
-                                                                    Your browser does not support the video tag.
-                                                                </video>
-                                                            </a>
-                                                        <?php endif; ?>
-                                                    <?php
-                                                    }
-                                                }
-                                                if ($check_have_pic > 0) { ?>
-                                                </div>
-                                            <?php  } ?>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php } ?>
-                        <?php
-                        $count_get_no = 0;
-                        $sql_get_c3 = "SELECT * FROM get_detail
-                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
-                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 0 AND get_d_conf = 1";
-                        $sql_get_count_track = "SELECT * FROM get_detail
-                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
-                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 0 AND get_d_conf = 1";
-                        $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
-                        $result_get_c3 = mysqli_query($conn, $sql_get_c3);
-                        $row_get_count_track = mysqli_fetch_array($result_get_count_track);
-                        if (mysqli_num_rows($result_get_c3)) {
-
-                        ?><h1><span class="badge bg-warning">รายการที่ไม่สามารถซ่อมได้ (อยู่ในช่วงยื่นข้อเสนอ)</span></h1><?php
-                                                                                                                        }
-
-                                                                                                                        while ($row_get = mysqli_fetch_array($result_get)) {
-                                                                                                                            $count_get_no++;
-                                                                                                                            ?>
-                            <div class="row alert alert-warning shadow">
-                                <h1 style="text-align:start; color:blue" id="body_text">
-                                    <span>รายการที่ <?= $count_get_no ?></span> :
-                                    <span class="f-black-5">
-                                        <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" class="un-scroll f-black-5" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item"><?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?><span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
-                                        </a>
-                                    </span>
-                                </h1>
-                                <hr>
-                                <div style=" color:#2c2f34" class="my-4">
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-md alert alert-light shadow ml-1 bg-gray-1">
-                                                <h5 class="f-black-5">ข้อมูลอุปกรณ์</h5>
-                                                <hr>
-                                                <p class=" f-gray-5">
-                                                    <?php if ($row_get['com_id'] != NULL) { ?><br>
-                                                        <span class="badge bg-success">
-                                                            ประกัน :
-                                                            <span>
-                                                                <?php
-                                                                                                                                $com_id = $row_get['com_id'];
-                                                                                                                                $sql_com = "SELECT com_name FROM company WHERE com_id ='$com_id' AND del_flg = 0";
-                                                                                                                                $result_com = mysqli_query($conn, $sql_com);
-                                                                                                                                $row_com = mysqli_fetch_array($result_com);
-                                                                                                                                echo $row_com['com_name'];
-                                                                                                                                $row_get['r_id']
-                                                                ?>
-                                                            </span>
-                                                        </span>
-                                                    <?php } ?>
-                                                    <?php if ($row_get['r_guarantee'] != NULL) { ?><br>ระยะประกัน :
-                                                        <span class="f-black-5"><?= $row_get['r_guarantee'] ?> ปี</span><?php } ?>
-                                                    <?php if ($row_get['r_id'] != NULL) { ?><br>รหัสอุปกรณ์ในระบบ :
-                                                        <span class="f-black-5"><?= $row_get['r_id'] ?></span>
-                                                        <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item">
-                                                            <i class="fa fa-question-circle"></i>
-                                                            <span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
-                                                        </a>
-                                                    <?php } ?>
-                                                    <?php if ($row_get['r_brand'] != NULL) { ?><br>ยี่ห้อ/แบรนด์ :
-                                                        <span class="f-black-5"><?= $row_get['r_brand'] ?></span><?php } ?>
-                                                    <?php if ($row_get['r_model'] != NULL) { ?><br>รุ่น :
-                                                        <span class="f-black-5"><?= $row_get['r_model'] ?></span><?php } ?>
-                                                    <?php if ($row_get['r_number_model'] != NULL) { ?><br>หมายเลขรุ่น :
-                                                        <span class="f-black-5"><?= $row_get['r_number_model'] ?></span><?php } ?>
-                                                    <?php if ($row_get['r_serial_number'] != NULL) { ?><br>หมายเลขประจำเครื่อง/Serial Number :
-                                                        <span class="f-black-5"><?= $row_get['r_serial_number'] ?></span><?php } ?>
-                                                    <?php if ($row_get['get_t_id'] != NULL) { ?><br>หมายเลขพัสดุ :
-                                                        <span class="f-black-5"><?= $row_get['t_parcel'] ?></span>
-                                                    <?php } ?>
-                                                </p>
-                                                <br>
-                                                <h5 class="mb-3" style="color:black">รายละเอียดอาการ</h5>
-                                                <hr>
-                                                <p><?= $row_get['get_d_detail'] ?></p>
-                                            </div>
-                                            <div class="col-md-1"></div>
-                                            <?php
-                                                                                                                            $check_have_pic = 0;
-                                                                                                                            $get_d_id = $row_get['get_d_id'];
-                                                                                                                            $sql_pic = "SELECT * FROM repair_pic
-                                        LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
-                                        WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
-                                                                                                                            $result_pic = mysqli_query($conn, $sql_pic);
-                                                                                                                            if (mysqli_num_rows($result_pic)) {
-                                                                                                                                $check_have_pic++;
-                                            ?>
-                                                <div class="col-md-5 alert alert-light shadow bg-gray-1">
-                                                    <h5 style="color:black" class="mb-3">รูปภาพ</h5>
-                                                    <hr>
-                                                    <br>
-                                                    <?php }
-                                                                                                                            while ($row_pic = mysqli_fetch_array($result_pic)) {
-                                                                                                                                if ($row_pic[0] != NULL) {
-                                                    ?>
-                                                        <?php
-                                                                                                                                    $rp_pic = $row_pic['rp_pic'];
-                                                                                                                                    $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
-                                                        ?>
-                                                        <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
-                                                            <a href="#" id="bounce-item"><img src="<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
-                                                        <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
-                                                            <a href="#">
-                                                                <video width="100px" autoplay muted onclick="openModalVideo(this)" src="<?= $row_pic['rp_pic'] ?>">
-                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/mp4">
-                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/ogg">
-                                                                    Your browser does not support the video tag.
-                                                                </video>
-                                                            </a>
-                                                        <?php endif; ?>
-                                                    <?php
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                            if ($check_have_pic > 0) { ?>
-                                                </div>
-                                            <?php  } ?>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php } ?>
-                        <?php
-                        $count_get_no = 0;
-
-
-                        $sql_get = "SELECT * FROM get_detail
-                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
-                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 1";
-                        $sql_get_count_track = "SELECT * FROM get_detail
-                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
-                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 1";
-                        $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
-                        $result_get = mysqli_query($conn, $sql_get);
-                        $row_get_count_track = mysqli_fetch_array($result_get_count_track);
-                        if (mysqli_num_rows($result_get)) {
-
-                        ?><h1><span class="badge bg-danger">รายการที่ไม่สามารถซ่อมได้</span></h1><?php
-                                                                                                }
-
-                                                                                                while ($row_get = mysqli_fetch_array($result_get)) {
-                                                                                                    $count_get_no++;
-                                                                                                    ?>
-                            <div class="row alert alert-danger shadow">
-                                <h1 style="text-align:start; color:blue" id="body_text">
-                                    <span>รายการที่ <?= $count_get_no ?></span> :
-                                    <span class="f-black-5">
-                                        <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" class="un-scroll f-black-5" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item"><?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?><span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
-                                        </a>
-                                    </span>
-                                </h1>
-                                <hr>
-                                <div style=" color:#2c2f34" class="my-4">
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-md alert alert-light shadow ml-1 bg-gray-1">
-                                                <h5 class="f-black-5">ข้อมูลอุปกรณ์</h5>
-                                                <hr>
-                                                <p class=" f-gray-5">
-                                                    <?php if ($row_get['com_id'] != NULL) { ?><br>
-                                                        <span class="badge bg-success">
-                                                            ประกัน :
-                                                            <span>
-                                                                <?php
-                                                                                                        $com_id = $row_get['com_id'];
-                                                                                                        $sql_com = "SELECT com_name FROM company WHERE com_id ='$com_id' AND del_flg = 0";
-                                                                                                        $result_com = mysqli_query($conn, $sql_com);
-                                                                                                        $row_com = mysqli_fetch_array($result_com);
-                                                                                                        echo $row_com['com_name'];
-                                                                                                        $row_get['r_id']
-                                                                ?>
-                                                            </span>
-                                                        </span>
-                                                    <?php } ?>
-                                                    <?php if ($row_get['r_guarantee'] != NULL) { ?><br>ระยะประกัน :
-                                                        <span class="f-black-5"><?= $row_get['r_guarantee'] ?> ปี</span><?php } ?>
-                                                    <?php if ($row_get['r_id'] != NULL) { ?><br>รหัสอุปกรณ์ในระบบ :
-                                                        <span class="f-black-5"><?= $row_get['r_id'] ?></span>
-                                                        <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item">
-                                                            <i class="fa fa-question-circle"></i>
-                                                            <span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
-                                                        </a>
-                                                    <?php } ?>
-                                                    <?php if ($row_get['r_brand'] != NULL) { ?><br>ยี่ห้อ/แบรนด์ :
-                                                        <span class="f-black-5"><?= $row_get['r_brand'] ?></span><?php } ?>
-                                                    <?php if ($row_get['r_model'] != NULL) { ?><br>รุ่น :
-                                                        <span class="f-black-5"><?= $row_get['r_model'] ?></span><?php } ?>
-                                                    <?php if ($row_get['r_number_model'] != NULL) { ?><br>หมายเลขรุ่น :
-                                                        <span class="f-black-5"><?= $row_get['r_number_model'] ?></span><?php } ?>
-                                                    <?php if ($row_get['r_serial_number'] != NULL) { ?><br>หมายเลขประจำเครื่อง/Serial Number :
-                                                        <span class="f-black-5"><?= $row_get['r_serial_number'] ?></span><?php } ?>
-                                                    <?php if ($row_get['get_t_id'] != NULL) { ?><br>หมายเลขพัสดุ :
-                                                        <span class="f-black-5"><?= $row_get['t_parcel'] ?></span>
-                                                    <?php } ?>
-                                                </p>
-                                                <br>
-                                                <h5 class="mb-3" style="color:black">รายละเอียดอาการ</h5>
-                                                <hr>
-                                                <p><?= $row_get['get_d_detail'] ?></p>
-                                            </div>
-                                            <div class="col-md-1"></div>
-                                            <?php
-                                                                                                    $check_have_pic = 0;
-                                                                                                    $get_d_id = $row_get['get_d_id'];
-                                                                                                    $sql_pic = "SELECT * FROM repair_pic
-                                        LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
-                                        WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
-                                                                                                    $result_pic = mysqli_query($conn, $sql_pic);
-                                                                                                    if (mysqli_num_rows($result_pic)) {
-                                                                                                        $check_have_pic++;
-                                            ?>
-                                                <div class="col-md-5 alert alert-light shadow bg-gray-1">
-                                                    <h5 style="color:black" class="mb-3">รูปภาพ</h5>
-                                                    <hr>
-                                                    <br>
-                                                    <?php }
-                                                                                                    while ($row_pic = mysqli_fetch_array($result_pic)) {
-                                                                                                        if ($row_pic[0] != NULL) {
-                                                    ?>
-                                                        <?php
-                                                                                                            $rp_pic = $row_pic['rp_pic'];
-                                                                                                            $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
-                                                        ?>
-                                                        <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
-                                                            <a href="#" id="bounce-item"><img src="<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
-                                                        <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
-                                                            <a href="#">
-                                                                <video width="100px" autoplay muted onclick="openModalVideo(this)" src="<?= $row_pic['rp_pic'] ?>">
-                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/mp4">
-                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/ogg">
-                                                                    Your browser does not support the video tag.
-                                                                </video>
-                                                            </a>
-                                                        <?php endif; ?>
-                                                    <?php
-                                                                                                        }
-                                                                                                    }
-                                                                                                    if ($check_have_pic > 0) { ?>
-                                                </div>
-                                            <?php  } ?>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php } ?>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel" style="height: 60%;">
         <div class="offcanvas-header">
@@ -2073,7 +2074,7 @@ ORDER BY rs.rs_date_time DESC
                                     <div class="col-6 text-end">
                                         <p class="ln" style="width: 100%; text-align: right;"> <!-- Add text-align: right; here -->
                                         <h5>
-                                            <a id="bounce-item" class="text-primary" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                            <a id="bounce-item" class="text-primary" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropss">
                                                 รายละเอียดอุปกรณ์ (มี <?= $repair_count ?> อุปกรณ์)
                                             </a>
                                         </h5>
