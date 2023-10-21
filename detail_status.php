@@ -564,7 +564,7 @@ $part_check = 0;
                                                     if ($row_pic[0] != NULL) {
                                                         $rp_pic = $row_pic['rp_pic'];
                                                         $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
-                                                        if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'webp', 'svg'])) {
+                                                        if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'webp', 'svg', 'jiff'])) {
                                                             $check_have_pic_c++;
                                                         } elseif (in_array($file_extension, ['mp4', 'ogg'])) {
                                                             $check_have_pic_c++;
@@ -572,7 +572,6 @@ $part_check = 0;
                                                     }
                                                 }
                                             }
-
 
                                             $check_have_pic = 0;
                                             $sql_pic = "SELECT * FROM repair_pic
