@@ -107,7 +107,15 @@ if (!isset($_SESSION['role_id'])) {
                             <center>
                                 <ul class="nav nav-tabs" id="bar_under">
                                     <li class="nav-item">
-                                        <a class="nav-link active" aria-current="page" href="listview_repair.php?status_select=0 ">ทั้งหมด</a>
+
+                                        <a class="nav-link <?php if ($_GET['status_select'] == 0 &&  isset($_GET['status_select'])) {
+                                                            ?>active<?php
+                                                                } ?>" aria-current="page" href="listview_repair.php?status_select=0 ">ทั้งหมด</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link <?php if (!isset($_GET['status_select'])) {
+                                                            ?>active<?php
+                                                                } ?>" aria-current="page" href="listview_repair.php">ตอบกลับ</a>
                                     </li>
                                     <?php
                                     $get_r_id_old = 0;
@@ -171,14 +179,16 @@ if (!isset($_SESSION['role_id'])) {
                                     $numItems = count($status_data);
                                     foreach ($status_data as $data) {
                                         $counter++;
-                                        if ($counter <= 4) { ?>
+                                        if ($counter <= 3) { ?>
                                             <li class="nav-item">
-                                                <a class="nav-link" href="listview_repair.php?status_select=<?= $data['status_id'] ?>"><?= $data['status_name'] ?>
+                                                <a class="nav-link <?php if ($_GET['status_select'] == $data['status_id']) {
+                                                                    ?>active<?php
+                                                                        } ?>" href="listview_repair.php?status_select=<?= $data['status_id'] ?>"><?= $data['status_name'] ?>
                                                     <p style="display: inline-block; color:<?= $data['status_color'] ?>; ">(<?= $data['count'] ?>)</p>
                                                 </a>
                                             </li>
                                             <?php } else {
-                                            if ($counter == 5) {
+                                            if ($counter == 4) {
                                             ?>
                                                 <li class="nav-item dropdown">
                                                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">อื่นๆ</a>
@@ -459,16 +469,19 @@ if (!isset($_SESSION['role_id'])) {
                                                 <td>
                                                     <div class="text-center">
                                                         <a class="btn btn-primary" href="detail_repair.php?id=<?= $row['get_r_id'] ?>">ดู</a>
+                                                        <!-- 
+                                                        ปุ่มลบใบแจ้งซ่อม    
+                                                        
                                                         <a class="btn btn-danger" href="action/delete_repair.php?get_r_id=<?= $row['get_r_id'] ?>" onclick="return confirmDelete(event);">ลบ</a>
                                                         <?php if ($row_c['status_id'] == 3 || $row_c['status_id'] == 9 || $row_c['status_id'] == 10) : ?>
-    <a class="btn btn-primary" href="bill_repair.php?id=<?= $row['get_r_id'] ?>">ใบแจ้งซ่อม</a>
-<?php endif; ?>
+    <a class="btn btn-primary" href="bill_repair.php?id=<?= $row['get_r_id'] ?>">ใบแจ้งซ่อม</a> -->
+                                                    <?php endif; ?>
 
-                                                        <!-- Include SweetAlert library -->
+                                                    <!-- Include SweetAlert library -->
 
-                                                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-                                                        <a class="btn btn-primary" href="detail_repair.php?id=<?= $row['get_r_id'] ?>">ดู</a>
-                                                        <!-- <a class="btn btn-danger" href="action/delete_repair.php?get_r_id=<?= $row['get_r_id'] ?>" onclick="return confirmDelete(event);">ลบ</a>
+                                                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+                                                    <!-- <a class="btn btn-primary" href="detail_repair.php?id=<?= $row['get_r_id'] ?>">ดู</a> -->
+                                                    <!-- <a class="btn btn-danger" href="action/delete_repair.php?get_r_id=<?= $row['get_r_id'] ?>" onclick="return confirmDelete(event);">ลบ</a>
 
                                                        
                                                         <script>

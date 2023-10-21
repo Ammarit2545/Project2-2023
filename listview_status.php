@@ -253,7 +253,9 @@ if (isset($_GET["status_id"]) && $_GET["search"] == NULL) {
                     <center>
                         <ul class="nav nav-tabs" id="bar_under">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="listview_status.php">ทั้งหมด</a>
+                                <a class="nav-link <?php if(!isset($_GET['status_id'])){
+                                            ?>active<?php
+                                        } ?>" aria-current="page" href="listview_status.php">ทั้งหมด</a>
                             </li>
                             <?php
                             $sql_st = "SELECT status_type.status_id FROM status_type WHERE status_type.del_flg = 0 AND status_type.status_id != 3";
@@ -323,7 +325,11 @@ if (isset($_GET["status_id"]) && $_GET["search"] == NULL) {
                                 $counter++;
                                 if ($counter <= 4) { ?>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="listview_status.php?status_id=<?= $data['status_id'] ?>"><?= $data['status_name'] ?>
+                                        <a class="nav-link 
+                                        <?php if ($data['status_id'] == $_GET['status_id']) {
+                                        ?>active<?php
+                                                } ?>
+                                        " href="listview_status.php?status_id=<?= $data['status_id'] ?>"><?= $data['status_name'] ?>
                                             <p style="display: inline-block; color:<?= $data['status_color'] ?>; ">(<?= $data['count'] ?>)</p>
                                         </a>
                                     </li>
