@@ -111,7 +111,7 @@ $row = mysqli_fetch_array($result);
 
     <!-- navbar-->
     <?php
-    include('bar/topbar_invisible.php');
+    include('bar/topbar_user.php');
 
     $id = $_SESSION["id"];
 
@@ -260,7 +260,7 @@ $row = mysqli_fetch_array($result);
                 </div>
                 <br>
                 <div class="container">
-                    <label for="borderinput1" class="form-label">ไฟล์อ้างอิงของท่าน</label>
+                    <!-- <label for="borderinput1" class="form-label">ไฟล์อ้างอิงของท่าน</label> -->
                     <div class="row">
                         <?php
                         $i = $id_session;

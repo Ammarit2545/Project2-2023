@@ -1,14 +1,22 @@
  <!-- search 11-17 status -->
  <center>
+     <!-- 8,17,6 -->
      <?php
-     $id_get = $_GET['id'];
-        $sql = "SELECT * FROM status_type WHERE status_id = '8'";
-        $result = mysqli_query($conn, $sql);
-        $row_conf = mysqli_fetch_array($result);
-        ?>
-     <button class="btn btn-light" onclick="showCancelValue()" style="background-color: <?= $row_conf['status_color'] ?>;color:white"><?= $row_conf['status_name'] ?></button>
+        $sql_conf = "SELECT * FROM repair_status WHERE del_flg = '0' AND get_r_id = $get_r_id ORDER BY rs_date_time DESC LIMIT 1";
+        $result_conf = mysqli_query($conn, $sql_conf);
+        $row_conf = mysqli_fetch_array($result_conf);
 
-     <?php
+        if ($row_conf['rs_conf'] == NULL) {
+       
+         $id_get = $_GET['id'];
+         $sql = "SELECT * FROM status_type WHERE status_id = '8'";
+         $result = mysqli_query($conn, $sql);
+         $row_conf = mysqli_fetch_array($result);
+         ?>
+         <button class="btn btn-light" onclick="showCancelValue()" style="background-color: <?= $row_conf['status_color'] ?>;color:white"><?= $row_conf['status_name'] ?></button>
+         <?php   }
+   
+        
         $sql = "SELECT * FROM status_type WHERE status_id = '17'";
         $result = mysqli_query($conn, $sql);
         $row_offer = mysqli_fetch_array($result);
@@ -16,7 +24,7 @@
      <button class="btn btn-warning" onclick="showofferValue()" style="background-color: <?= $row_offer['status_color'] ?>;"><?= $row_offer['status_name'] ?></button>
 
 
- <?php
+     <?php
         $sql = "SELECT * FROM status_type WHERE status_id = '6'";
         $result = mysqli_query($conn, $sql);
         $row_conf_do = mysqli_fetch_array($result);
@@ -25,23 +33,23 @@
  </center>
 
  <script>
-    function show_conf_status(id) {
-        Swal.fire({
-            title: 'Confirmation',
-            text: 'คุณต้องการเปลี่ยนเป็นสถานะดำเนินการใช่หรือไม่?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = 'action/status/doing_status.php?id=' + <?= $row['get_r_id'] ?>;
-            }
-        });
-    }
-</script>
+     function show_conf_status(id) {
+         Swal.fire({
+             title: 'Confirmation',
+             text: 'คุณต้องการเปลี่ยนเป็นสถานะดำเนินการใช่หรือไม่?',
+             icon: 'question',
+             showCancelButton: true,
+             confirmButtonColor: '#3085d6',
+             cancelButtonColor: '#d33',
+             confirmButtonText: 'Yes',
+             cancelButtonText: 'No'
+         }).then((result) => {
+             if (result.isConfirmed) {
+                 window.location.href = 'action/status/doing_status.php?id=' + <?= $row['get_r_id'] ?>;
+             }
+         });
+     }
+ </script>
 
  <div id="cancel_value_code" style="display: none;">
      <hr>
@@ -66,7 +74,7 @@
                  <label for="basic-url" class="form-label">ค่าตรวจเช็คอุปกรณ์</label>
                  <div class="input-group mb-3">
                      <!-- <span class="input-group-text" id="basic-addon3"></span> -->
-                     <input type="text" name="price_check" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณาระบุราคาค่าตรวจเช็คอุปกรณ์" >
+                     <input type="text" name="price_check" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณาระบุราคาค่าตรวจเช็คอุปกรณ์">
                  </div>
              </div>
          </div>

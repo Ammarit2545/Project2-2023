@@ -1,4 +1,5 @@
 <center>
+    <!-- 12,18 -->
     <?php
     $sql = "SELECT * FROM status_type WHERE status_id = '12'";
     $result = mysqli_query($conn, $sql);
@@ -12,7 +13,7 @@
     $row_conf = mysqli_fetch_array($result);
     ?>
     <button class="btn btn-success" style="background-color:<?= $row_conf['status_color'] ?>; border : <?= $row_conf['status_color'] ?>" onclick="show_conf_status('<?php echo $row_conf['id']; ?>')">
-        เปลี่ยนเป็นสถานะ "<?= $row_conf['status_name'] ?>"
+        <?= $row_conf['status_name'] ?>
     </button>
 </center>
 
@@ -163,7 +164,7 @@
         <br>
         <div class="row">
             <div class="col-md-6">
-                <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่</label>
+                <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่ <span style="color:red">หากต้องการใช้ค่าเดิม ไม่ต้องกรอกใหม่</span></label>
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
                     <input name="get_wages" type="text" value="<?= $row['get_wages'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกค่าแรงช่าง" required>

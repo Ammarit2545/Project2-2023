@@ -28,6 +28,9 @@ if (!isset($_SESSION['role_id'])) {
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <style>
+        <?php include('../css/all_page.php'); ?>
+    </style>
 
 </head>
 
@@ -120,7 +123,9 @@ if (!isset($_SESSION['role_id'])) {
                             <label for="inputPassword" class="col-sm-1 col-form-label">ตำแหน่ง</label>
                             <div class="col-sm-4">
                                 <!-- <input type="text" class="form-control" name="role_id" id="inputPassword" value="<?= $row['role_id'] ?>" placeholder="Accountant"> -->
-                                <select name="role_id" class="mt-2 form-select" aria-label="Default select example">
+                                <select name="role_id" class="mt-2 form-select" aria-label="Default select example" <?php if($row['role_id'] == '1'){
+                                    ?>disabled<?php
+                                } ?>>
                                     <?php
                                     $role_id = $row['role_id'];
                                     $sql_s1 = "SELECT * FROM role WHERE del_flg = '0' AND role_id = '$role_id'";
@@ -204,8 +209,10 @@ if (!isset($_SESSION['role_id'])) {
 
                             ?>
                             <center>
-                                <button class="btn btn-primary" onclick="New_address()" id="button_new_address" style="display: block;">ต้องการใช้ที่อยู่ใหม่</button>
+                                <button class="btn btn-primary" onclick="New_address()" id="button_new_address" style="display: block;">แก้ไขที่อยู่</button>
                             </center>
+
+
                             <div id="address" style="display:none">
                                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                                 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -248,7 +255,15 @@ if (!isset($_SESSION['role_id'])) {
                                     <a class="btn btn-success" name="submit" onclick="validateForm()">ยืนยัน</a>
                                 </div> -->
                             </div>
+                            <br>
+                            <center>
+                                <button class="btn btn-danger" onclick="New_close_address()" id="button_re_address" style="display: none;">ยกเลิกการแก้ไข</button>
+                            </center>
                             <div class="text-center pt-4">
+                                <hr>
+                                <center>*** หากท่านกรอกข้อมูลเสร็จแล้ว กรุณากดยืนยัน *** </center>
+                                <br>
+                                <a href="#" class="btn btn-danger" onclick="showCancel()">ยกเลิก</a>
                                 <a href="#" class="btn btn-success" onclick="showConfirmation()">ยืนยัน</a>
 
                                 <script>
@@ -264,6 +279,23 @@ if (!isset($_SESSION['role_id'])) {
                                             if (result.isConfirmed) {
                                                 // User clicked "Confirm", trigger the form submission
                                                 document.getElementById('form_edit').submit();
+                                            }
+                                        });
+                                    }
+                                </script>
+                                <script>
+                                    function showCancel() {
+                                        Swal.fire({
+                                            title: 'คุณต้องการยกเลิกหรือไม่?',
+                                            text: 'ข้อมูลของท่านจะไม่ถูกบันทึก',
+                                            icon: 'question',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'ยืนยัน',
+                                            cancelButtonText: 'ยกเลิก'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                // User clicked "Confirm", trigger the form submission
+                                                window.location.href = 'employee_listview.php';
                                             }
                                         });
                                     }
@@ -438,6 +470,15 @@ if (!isset($_SESSION['role_id'])) {
             document.getElementById('address').style.display = 'block';
             document.getElementById('old_address').style.display = 'none';
             document.getElementById('button_new_address').style.display = 'none';
+            document.getElementById('button_re_address').style.display = 'block';
+        }
+
+        function New_close_address() {
+            document.getElementById('address').style.display = 'none';
+            document.getElementById('old_address').style.display = 'block';
+            document.getElementById('button_new_address').style.display = 'block';
+            document.getElementById('button_re_address').style.display = 'none';
+
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

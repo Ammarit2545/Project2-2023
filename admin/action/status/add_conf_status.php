@@ -15,6 +15,16 @@ $status_id  = $_GET['status_id'];
 
 echo $get_r_id;
 
+$sql_repair = "SELECT * FROM get_detail WHERE get_d_conf = 1 AND get_r_id = '$get_r_id '";
+$result_repair = mysqli_query($conn, $sql_repair);
+if (mysqli_num_rows($result_repair)) {
+    while ($row_repair = mysqli_fetch_array($result_repair)) {
+        $get_d_id =  $row_repair['get_d_id'];
+        $sql_update = "UPDATE get_detail SET del_flg = 1 WHERE get_d_id = '$get_d_id'";
+        $result_update = mysqli_query($conn, $sql_update);
+    }
+}
+
 // ... (Your existing code for updating parts and parts_use tables)
 
 $sql3 = "INSERT INTO repair_status (get_r_id, rs_date_time, rs_detail, status_id)

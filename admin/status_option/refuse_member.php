@@ -1,4 +1,5 @@
 <center>
+     <!-- 11,17 -->
     <?php
     $sql = "SELECT * FROM status_type WHERE status_id = '11'";
     $result = mysqli_query($conn, $sql);
@@ -12,7 +13,7 @@
     $row_conf = mysqli_fetch_array($result);
     ?>
     <button class="btn btn-success" style="background-color:<?= $row_conf['status_color'] ?>; border : <?= $row_conf['status_color'] ?>" onclick="showofferValue('<?php echo $row_conf['id']; ?>')">
-        เปลี่ยนเป็นสถานะ "<?= $row_conf['status_name'] ?>"
+        <?= $row_conf['status_name'] ?>
     </button>
     <!-- <button class="btn btn-danger" onclick="showCancelValue()">ปฏิเสธคำสั่งซ่อม</button>
     <button class="btn btn-warning" onclick="showofferValue()">ยื่นข้อเสนอ</button> -->

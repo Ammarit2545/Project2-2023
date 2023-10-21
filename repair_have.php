@@ -243,9 +243,9 @@ if (isset($_GET["search"])) {
     <div class="px-5 pt-5 edit">
         <br>
         <?php if (!isset($_GET["search"])) { ?>
-            <h1 class="pt-5 text-center" id="title_main">ข้อมูลการซ่อมทั้งหมดของคุณ <?= $row['m_fname'] . " " . $row['m_lname']  ?></h1>
+            <h1 class="pt-5 text-center" id="title_main">ข้อมูลอุปกรณ์ทั้งหมดของคุณ <?= $row['m_fname'] . " " . $row['m_lname']  ?></h1>
         <?php } elseif ($status_id == "") {
-        ?><h1 class="pt-5 text-center" id="title_main">ข้อมูลการซ่อมทั้งหมดของคุณ <?= $row['m_fname'] . " " . $row['m_lname']  ?></h1>
+        ?><h1 class="pt-5 text-center" id="title_main">ข้อมูลอุปกรณ์ทั้งหมดของคุณ <?= $row['m_fname'] . " " . $row['m_lname']  ?></h1>
         <?php
         } else {
             $sql_s = "SELECT * FROM `status_type` WHERE status_id = $status_id";
@@ -268,7 +268,7 @@ if (isset($_GET["search"])) {
         <br>
         <br>
 
-        <nav aria-label="Page navigation example">
+        <!-- <nav aria-label="Page navigation example">
 
             <ul class="pagination justify-content-center ">
                 <li class="page-item">
@@ -301,7 +301,6 @@ if (isset($_GET["search"])) {
                     if ($first_char != $original) {
                         $original = $first_char; // Update $original with the current $first_char
                 ?>
-                        <!-- <a href="repair_have.php?search=<?= $first_char ?>" style="color: black;"><?= $first_char ?></a> -->
                         <li class="page-item">
                             <a class="page-link" href="repair_have.php?word=<?= $first_char ?>" tabindex="-1" aria-disabled="true"><?= $first_char ?></a>
                         </li>
@@ -310,7 +309,7 @@ if (isset($_GET["search"])) {
                 }
                 ?>
             </ul>
-        </nav>
+        </nav> -->
 
         <form action="action/add_repair_non_gua.php" method="POST">
             <div class="container">
@@ -487,6 +486,7 @@ if (isset($_GET["search"])) {
                 </div>
                 <?php if (isset($_GET["search"]) && $_GET["search"] != NULL) { ?>
                     <center>
+                        <br>
                         <p>*** หากคุณต้องการดูข้อมูล "การซ่อมทั้งหมด" *** </p>
                         <a href="repair_have.php" class="btn btn-primary">ข้อมูลทั้งหมด</a>
                     </center>

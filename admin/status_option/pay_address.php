@@ -1,4 +1,5 @@
 <center>
+     <!-- 12,8 -->
     <?php
     $sql = "SELECT * FROM status_type WHERE status_id = '12'";
     $result = mysqli_query($conn, $sql);
@@ -12,7 +13,7 @@
     $row_conf = mysqli_fetch_array($result);
     ?>
     <button class="btn btn-success" style="background-color:<?= $row_conf['status_color'] ?>; border : <?= $row_conf['status_color'] ?>" onclick="show_conf_status('<?php echo $row_conf['id']; ?>')">
-        เปลี่ยนเป็นสถานะ "<?= $row_conf['status_name'] ?>"
+        <?= $row_conf['status_name'] ?>
     </button>
 </center>
 

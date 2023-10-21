@@ -67,9 +67,10 @@ if (!isset($_SESSION['role_id'])) {
 
                             <label for="inputPassword" class="col-sm-1 col-form-label">Email</label>
                             <div class="col-sm-4">
-                                <input type="email" name="e_email" class="form-control" id="inputPassword" onblur="checkEmail()" required>
-                                <span id="email-error" style="color:red;display:none;">This email is already registered.</span>
+                                <input type="email" name="e_email" class="form-control" id="inputPassword" onkeyup="checkEmail()" required>
+                                <span id="email-error" style="color: red; display: none;">This email is already registered.</span>
                             </div>
+
                             <label for="inputPassword" class="col-sm-1 col-form-label">Password</label>
                             <div class="col-sm-2">
                                 <input type="password" class="form-control" oninput="checkPasswordLength()" onblur="checkPasswordLength()" id="password_name" name="e_password" required>
@@ -363,25 +364,36 @@ if (!isset($_SESSION['role_id'])) {
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        $(document).ready(function() {
+            $('#inputPassword').on('keyup', function() {
+                checkEmail();
+            });
+        });
+
         function checkEmail() {
-            var email = document.getElementById('inputPassword').value;
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    if (this.responseText == 'exists') {
-                        document.getElementById('email-error').style.display = 'block';
-                        document.getElementById('inputPassword').setCustomValidity('invalid');
+            var email = $('#inputPassword').val();
+
+            $.ajax({
+                url: 'action/check_email.php',
+                type: 'GET',
+                data: {
+                    email: email
+                },
+                success: function(response) {
+                    if (response == 'exists') {
+                        $('#email-error').css('display', 'block');
+                        $('#inputPassword').get(0).setCustomValidity('invalid');
                     } else {
-                        document.getElementById('email-error').style.display = 'none';
-                        document.getElementById('inputPassword').setCustomValidity('');
+                        $('#email-error').css('display', 'none');
+                        $('#inputPassword').get(0).setCustomValidity('');
                     }
                 }
-            };
-            xhttp.open('GET', 'action/check_email.php?email=' + email, true);
-            xhttp.send();
+            });
         }
     </script>
+
 
     <?php include('script.php'); ?>
 

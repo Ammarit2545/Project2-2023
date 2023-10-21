@@ -19,6 +19,7 @@ if (!isset($_SESSION["id"])) {
     <link rel="stylesheet" href="css/edit.css">
     <link rel="stylesheet" href="css/all_page.css">
     <link rel="icon" type="image/x-icon" href="img brand/anelogo.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>ANE - Edit User</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
@@ -39,6 +40,7 @@ if (!isset($_SESSION["id"])) {
     $sql1 = "SELECT * FROM member WHERE m_id = '$id '";
     $result1 = mysqli_query($conn, $sql1);
     $row1 = mysqli_fetch_array($result1);
+
 
     if ($row1 > 0) {
         include('bar/topbar_user.php');
@@ -80,50 +82,54 @@ if (!isset($_SESSION["id"])) {
 
     <div class="pt-5 edit">
         <h1 class="pt-5 text-center">แก้ไขข้อมูล</h1>
-        <br>
+
         <form id="edit_user" action="action/edit_user.php" method="POST">
             <div class="container">
+                <br>
+                <h3>ข้อมูล <i class="fa fa-address-book"></i> </h3>
+                <br>
                 <div class="row g-3">
-                    <div class="col-md-6" id="bounce-item">
+                    <div class="col-md-5">
                         <label for="exampleFormControlInput1" class="form-label fw-bold">ชื่อ</label>
                         <input type="text" class="form-control " id="exampleFormControlInput1" name="fname" value="<?= $row['m_fname'] ?>">
                     </div>
-                    <div class="col-md-6" id="bounce-item">
+                    <div class="col-md-5" >
                         <label for="exampleFormControlInput1" class="form-label fw-bold">นามสกุล</label>
                         <input type="text" class="form-control " id="exampleFormControlInput1" name="lname" value="<?= $row['m_lname'] ?>">
                     </div>
-                </div>
-                <div class="mb-3 mt-3">
-                    <div class="col-md-6" id="bounce-item">
+                    <div class="col-md-2" >
                         <label for="exampleFormControlInput1" class="form-label fw-bold">เบอร์โทรศัพท์</label>
                         <input type="text" class="form-control " id="exampleFormControlInput1" name="tel" value="<?= $row['m_tel'] ?>">
+
                     </div>
                 </div>
+                <br><hr>
                 <div class="mb-3">
                     <!-- <label for="exampleFormControlTextarea1" class="form-label fw-bold">ที่อยู่</label>
           <textarea class="form-control address" id="exampleFormControlTextarea1" name="address"><?= $row['m_add'] ?></textarea> -->
                     <div class="mb-3" id="old_address">
-                        <label for="exampleFormControlTextarea1" class="form-label fw-bold">รายละเอียดข้อมูลการติดต่อ</label>
                         <br>
+                        <h3 >ที่อยู่ <i class="fa fa-map-marker"></i> </h3>
+
                         <?php if ($row['m_add'] != NULL) {
                         ?>
                             <div class="row">
-                                <div class="col-4" id="bounce-item">
+                                <div class="col-4">
                                     <label for="exampleFormControlTextarea1" class="col-form-label">จังหวัด :</label>
                                     <input type="text" class="form-control" value="<?= $row_p[0] ?>" placeholder="กรุณาเลือกจังหวัดที่ต้องการ" readonly>
                                 </div>
-                                <div class="col-4" id="bounce-item">
+                                <div class="col-4">
                                     <label for="exampleFormControlTextarea1" class="col-form-label">อำเภอ :</label>
                                     <input type="text" class="form-control" value="<?= $row_p[1] ?>" placeholder="กรุณาเลือกอำเภอที่ต้องการ" readonly>
                                 </div>
-                                <div class="col-4" id="bounce-item">
+                                <div class="col-4">
                                     <label for="exampleFormControlTextarea1" class="col-form-label">ตำบล :</label>
                                     <input type="text" class="form-control" value="<?= $row_p[2] ?>" placeholder="กรุณาเลือกตำบลที่ต้องการ" readonly>
                                 </div>
                             </div>
                             <br>
-                            <label for="exampleFormControlTextarea1" class="col-form-label" id="bounce-item">รายละเอียดเพิ่มเติม :</label>
-                            <textarea class="form-control" id="bounce-item" rows="3" disabled="disabled" required>
+                            <label for="exampleFormControlTextarea1" class="col-form-label">รายละเอียดเพิ่มเติม :</label>
+                            <textarea class="form-control" rows="3" disabled="disabled" required>
                                 <?php
                                 if ($obj->description == NULL) {
                                     echo "ไม่มีข้อมูล";
@@ -159,7 +165,8 @@ if (!isset($_SESSION["id"])) {
                         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-                        <label for="exampleFormControlTextarea1" class="form-label fw-bold">รายละเอียดข้อมูลการติดต่อ</label>
+                        <br>
+                        <h3 style="color: red;">ที่อยู่ <i class="fa fa-map-marker"></i> </h3>
                         <br>
                         <label for="sel1">จังหวัด:</label>
                         <select class="form-control" name="Ref_prov_id" id="provinces" required>
@@ -188,12 +195,27 @@ if (!isset($_SESSION["id"])) {
 
                         <label for="exampleFormControlTextarea1" class="form-label">กรุณากรอกที่อยู่ที่ต้องการจัดส่ง</label>
                         <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3" required></textarea>
+                        <center>
+                            <br>
+                            <a class="btn btn-danger" onclick="showCancel()"  id="bounce-item">ยกเลิกแก้ไขที่อยู่</a>
+                        </center>
+                        <script>
+                            function showCancel() {
+                                document.getElementById('address').style.display = 'none';
+                                document.getElementById('old_address').style.display = 'block';
+                                document.getElementById('button_new_address').style.display = 'block';
+                            }
+                        </script>
 
-                        <div class="text-center py-4">
-                            <a class="btn btn_custom" name="submit" onclick="validateForm()">ยืนยัน</a>
-                        </div>
                     </div>
+                    <br><hr>
+                    <div class="text-center py-4">
+                        <center>*** หากท่านกรอกข้อมูลเสร็จแล้ว กรุณากดยืนยัน *** </center>
+                        <br>
+                        <a href="index.php" class="btn btn-danger"  id="bounce-item">ยกเลิก</a>
 
+                        <a class="btn btn-success" name="submit" onclick="validateForm()"  id="bounce-item">ยืนยัน</a>
+                    </div>
                     <script>
                         let provinceSelect = document.getElementById("provinces");
                         let amphurSelect = document.getElementById("amphures");

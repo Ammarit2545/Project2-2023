@@ -717,7 +717,6 @@ if ($_SESSION["log_login"] == 0) {
       }));
     }
   </script> -->
-
   <!-- footer-->
   <?php
   include('footer/footer.php')
@@ -742,6 +741,38 @@ if ($_SESSION["log_login"] == 0) {
         <?php
           unset($_SESSION['add_data_alert']);
           unset($_SESSION['add_line_alert']);
+    <!-- Sweet Alert Show Start -->
+    <?php
+    if (isset($_SESSION['add_data_alert'])) {
+      if ($_SESSION['add_data_alert'] == 0) {
+        if ($_SESSION['add_line_alert'] == 0) {
+          if (isset($_SESSION['add_new_line_alert']) && $_SESSION['add_new_line_alert'] == 0) {
+    ?>
+            <script>
+              Swal.fire({
+                title: 'Line ของคุณได้ทำการผูกกับบัญชี Email เก่าของคุณแล้ว',
+                text: 'รายการเก่าของคุณยังคงอยู่',
+                icon: 'success',
+                confirmButtonText: 'Accept'
+              });
+            </script>
+          <?php
+            unset($_SESSION['add_data_alert']);
+            unset($_SESSION['add_line_alert']);
+          } else {
+          ?>
+            <script>
+              Swal.fire({
+                title: 'เข้าสู่ระบบเสร็จสิ้น',
+                text: 'กด Accept เพื่อออก',
+                icon: 'success',
+                confirmButtonText: 'Accept'
+              });
+            </script>
+          <?php
+            unset($_SESSION['add_data_alert']);
+            unset($_SESSION['add_line_alert']);
+          }
         } else {
         ?>
           <script>

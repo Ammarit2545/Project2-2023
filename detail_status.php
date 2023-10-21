@@ -4,6 +4,8 @@ include('database/condb.php');
 $id = $_SESSION['id'];
 $status_id = 0;
 
+$get_id = $_GET['id'];
+$get_r_id = $id_get_r = $_GET['id'];
 $sql1 = "SELECT m_fname,m_lname FROM member WHERE m_id = '$id'";
 $result1 = mysqli_query($conn, $sql1);
 $row1 = mysqli_fetch_array($result1);
@@ -38,9 +40,1362 @@ $part_check = 0;
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        <?php include('css/all_page.css'); ?>
+    </style>
+    <style>
+        .modal-backdrop {
+            background-color: transparent;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom1" aria-labelledby="offcanvasBottomLabel1">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasBottomLabel1">รายการซ่อมในหมายเลขแจ้งซ่อม <?= $get_r_id  ?></h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body small">
+            <br>
+            <div class="container">
+                <?php
+                $count_get_no = 0;
+                $repair_count = 0;
+                $sql_get_c2 = "SELECT *
+                                            FROM get_detail
+                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                            WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.del_flg = 0 AND (get_d_conf != 1 OR get_d_conf IS NULL);
+                                            ";
+                $sql_get_count_track = "SELECT * FROM get_detail
+                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 0 AND get_d_conf = 0";
+                $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
+                $result_get = mysqli_query($conn, $sql_get_c2);
+                $row_get_count_track = mysqli_fetch_array($result_get_count_track);
+
+                $sql_get_c = "SELECT * FROM get_detail
+                                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 0";
+                $result_get_c = mysqli_query($conn, $sql_get_c);
+                while ($row_get_c = mysqli_fetch_array($result_get_c)) {
+                    $repair_count++;
+                }
+                if ($repair_count > 0) {
+                ?>
+                    <h2>มีรายการซ่อมทั้งหมด <span class="badge bg-primary"><?= $repair_count ?></span> รายการ</h2>
+                    <hr>
+                    <br>
+                <?php
+                }
+
+                while ($row_get = mysqli_fetch_array($result_get)) {
+                    $count_get_no++;
+                ?>
+                    <div class="row alert alert-light shadow">
+                        <h1 style="text-align:start; color:blue" id="body_text">
+                            <span>รายการที่ <?= $count_get_no ?></span> :
+                            <span class="f-black-5">
+                                <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" class="un-scroll f-black-5" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item"><?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?><span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
+                                </a>
+                            </span>
+                        </h1>
+                        <hr>
+                        <div style=" color:#2c2f34" class="my-4">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md alert alert-light shadow ml-1 bg-gray-1">
+                                        <h5 class="f-black-5">ข้อมูลอุปกรณ์</h5>
+                                        <hr>
+                                        <p class=" f-gray-5">
+                                            <?php if ($row_get['com_id'] != NULL) { ?><br>
+                                                <span class="badge bg-success">
+                                                    ประกัน :
+                                                    <span>
+                                                        <?php
+                                                        $com_id = $row_get['com_id'];
+                                                        $sql_com = "SELECT com_name FROM company WHERE com_id ='$com_id' AND del_flg = 0";
+                                                        $result_com = mysqli_query($conn, $sql_com);
+                                                        $row_com = mysqli_fetch_array($result_com);
+                                                        echo $row_com['com_name'];
+                                                        $row_get['r_id']
+                                                        ?>
+                                                    </span>
+                                                </span>
+                                            <?php } ?>
+                                            <?php if ($row_get['r_guarantee'] != NULL) { ?><br>ระยะประกัน :
+                                                <span class="f-black-5"><?= $row_get['r_guarantee'] ?> ปี</span><?php } ?>
+                                            <?php if ($row_get['r_id'] != NULL) { ?><br>รหัสอุปกรณ์ในระบบ :
+                                                <span class="f-black-5"><?= $row_get['r_id'] ?></span>
+                                                <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item">
+                                                    <i class="fa fa-question-circle"></i>
+                                                    <span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
+                                                </a>
+                                            <?php } ?>
+                                            <?php if ($row_get['r_brand'] != NULL) { ?><br>ยี่ห้อ/แบรนด์ :
+                                                <span class="f-black-5"><?= $row_get['r_brand'] ?></span><?php } ?>
+                                            <?php if ($row_get['r_model'] != NULL) { ?><br>รุ่น :
+                                                <span class="f-black-5"><?= $row_get['r_model'] ?></span><?php } ?>
+                                            <?php if ($row_get['r_number_model'] != NULL) { ?><br>หมายเลขรุ่น :
+                                                <span class="f-black-5"><?= $row_get['r_number_model'] ?></span><?php } ?>
+                                            <?php if ($row_get['r_serial_number'] != NULL) { ?><br>หมายเลขประจำเครื่อง/Serial Number :
+                                                <span class="f-black-5"><?= $row_get['r_serial_number'] ?></span><?php } ?>
+                                            <?php if ($row_get['get_t_id'] != NULL) { ?><br>หมายเลขพัสดุ :
+                                                <span class="f-black-5"><?= $row_get['t_parcel'] ?></span>
+                                            <?php } ?>
+                                        </p>
+                                        <br>
+                                        <h5 class="mb-3" style="color:black">รายละเอียดอาการ</h5>
+                                        <hr>
+                                        <p><?= $row_get['get_d_detail'] ?></p>
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                    <?php
+                                    $check_have_pic = 0;
+                                    $get_d_id = $row_get['get_d_id'];
+                                    $sql_pic = "SELECT * FROM repair_pic
+                                                                            LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
+                                                                            WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
+                                    $result_pic = mysqli_query($conn, $sql_pic);
+                                    if (mysqli_num_rows($result_pic)) {
+                                        $check_have_pic++;
+                                    ?>
+                                        <div class="col-md-5 alert alert-light shadow bg-gray-1">
+                                            <h5 style="color:black" class="mb-3">รูปภาพ</h5>
+                                            <hr>
+                                            <br>
+                                            <?php }
+                                        while ($row_pic = mysqli_fetch_array($result_pic)) {
+                                            if ($row_pic[0] != NULL) {
+                                            ?>
+                                                <?php
+                                                $rp_pic = $row_pic['rp_pic'];
+                                                $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                                ?>
+                                                <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                                    <a href="#" id="bounce-item"><img src="<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
+                                                    <a href="#">
+                                                        <video width="100px" autoplay muted onclick="openModalVideo(this)" src="<?= $row_pic['rp_pic'] ?>">
+                                                            <source src="<?= $row_pic['rp_pic'] ?>" type="video/mp4">
+                                                            <source src="<?= $row_pic['rp_pic'] ?>" type="video/ogg">
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    </a>
+                                                <?php endif; ?>
+                                            <?php
+                                            }
+                                        }
+                                        if ($check_have_pic > 0) { ?>
+                                        </div>
+                                    <?php  } ?>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+                <?php
+                $count_get_no = 0;
+                $sql_get_c3 = "SELECT * FROM get_detail
+                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 0 AND get_d_conf = 1";
+                $sql_get_count_track = "SELECT * FROM get_detail
+                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 0 AND get_d_conf = 1";
+                $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
+                $result_get_c3 = mysqli_query($conn, $sql_get_c3);
+                $row_get_count_track = mysqli_fetch_array($result_get_count_track);
+                if (mysqli_num_rows($result_get_c3)) {
+
+                ?><h1><span class="badge bg-warning">รายการที่ไม่สามารถซ่อมได้ (อยู่ในช่วงยื่นข้อเสนอ)</span></h1><?php
+                                                                                                                }
+
+                                                                                                                while ($row_get = mysqli_fetch_array($result_get)) {
+                                                                                                                    $count_get_no++;
+                                                                                                                    ?>
+                    <div class="row alert alert-warning shadow">
+                        <h1 style="text-align:start; color:blue" id="body_text">
+                            <span>รายการที่ <?= $count_get_no ?></span> :
+                            <span class="f-black-5">
+                                <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" class="un-scroll f-black-5" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item"><?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?><span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
+                                </a>
+                            </span>
+                        </h1>
+                        <hr>
+                        <div style=" color:#2c2f34" class="my-4">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md alert alert-light shadow ml-1 bg-gray-1">
+                                        <h5 class="f-black-5">ข้อมูลอุปกรณ์</h5>
+                                        <hr>
+                                        <p class=" f-gray-5">
+                                            <?php if ($row_get['com_id'] != NULL) { ?><br>
+                                                <span class="badge bg-success">
+                                                    ประกัน :
+                                                    <span>
+                                                        <?php
+                                                                                                                        $com_id = $row_get['com_id'];
+                                                                                                                        $sql_com = "SELECT com_name FROM company WHERE com_id ='$com_id' AND del_flg = 0";
+                                                                                                                        $result_com = mysqli_query($conn, $sql_com);
+                                                                                                                        $row_com = mysqli_fetch_array($result_com);
+                                                                                                                        echo $row_com['com_name'];
+                                                                                                                        $row_get['r_id']
+                                                        ?>
+                                                    </span>
+                                                </span>
+                                            <?php } ?>
+                                            <?php if ($row_get['r_guarantee'] != NULL) { ?><br>ระยะประกัน :
+                                                <span class="f-black-5"><?= $row_get['r_guarantee'] ?> ปี</span><?php } ?>
+                                            <?php if ($row_get['r_id'] != NULL) { ?><br>รหัสอุปกรณ์ในระบบ :
+                                                <span class="f-black-5"><?= $row_get['r_id'] ?></span>
+                                                <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item">
+                                                    <i class="fa fa-question-circle"></i>
+                                                    <span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
+                                                </a>
+                                            <?php } ?>
+                                            <?php if ($row_get['r_brand'] != NULL) { ?><br>ยี่ห้อ/แบรนด์ :
+                                                <span class="f-black-5"><?= $row_get['r_brand'] ?></span><?php } ?>
+                                            <?php if ($row_get['r_model'] != NULL) { ?><br>รุ่น :
+                                                <span class="f-black-5"><?= $row_get['r_model'] ?></span><?php } ?>
+                                            <?php if ($row_get['r_number_model'] != NULL) { ?><br>หมายเลขรุ่น :
+                                                <span class="f-black-5"><?= $row_get['r_number_model'] ?></span><?php } ?>
+                                            <?php if ($row_get['r_serial_number'] != NULL) { ?><br>หมายเลขประจำเครื่อง/Serial Number :
+                                                <span class="f-black-5"><?= $row_get['r_serial_number'] ?></span><?php } ?>
+                                            <?php if ($row_get['get_t_id'] != NULL) { ?><br>หมายเลขพัสดุ :
+                                                <span class="f-black-5"><?= $row_get['t_parcel'] ?></span>
+                                            <?php } ?>
+                                        </p>
+                                        <br>
+                                        <h5 class="mb-3" style="color:black">รายละเอียดอาการ</h5>
+                                        <hr>
+                                        <p><?= $row_get['get_d_detail'] ?></p>
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                    <?php
+                                                                                                                    $check_have_pic = 0;
+                                                                                                                    $get_d_id = $row_get['get_d_id'];
+                                                                                                                    $sql_pic = "SELECT * FROM repair_pic
+                                        LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
+                                        WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
+                                                                                                                    $result_pic = mysqli_query($conn, $sql_pic);
+                                                                                                                    if (mysqli_num_rows($result_pic)) {
+                                                                                                                        $check_have_pic++;
+                                    ?>
+                                        <div class="col-md-5 alert alert-light shadow bg-gray-1">
+                                            <h5 style="color:black" class="mb-3">รูปภาพ</h5>
+                                            <hr>
+                                            <br>
+                                            <?php }
+                                                                                                                    while ($row_pic = mysqli_fetch_array($result_pic)) {
+                                                                                                                        if ($row_pic[0] != NULL) {
+                                            ?>
+                                                <?php
+                                                                                                                            $rp_pic = $row_pic['rp_pic'];
+                                                                                                                            $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                                ?>
+                                                <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                                    <a href="#" id="bounce-item"><img src="<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
+                                                    <a href="#">
+                                                        <video width="100px" autoplay muted onclick="openModalVideo(this)" src="<?= $row_pic['rp_pic'] ?>">
+                                                            <source src="<?= $row_pic['rp_pic'] ?>" type="video/mp4">
+                                                            <source src="<?= $row_pic['rp_pic'] ?>" type="video/ogg">
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    </a>
+                                                <?php endif; ?>
+                                            <?php
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                    if ($check_have_pic > 0) { ?>
+                                        </div>
+                                    <?php  } ?>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+                <?php
+                $count_get_no = 0;
+
+
+                $sql_get = "SELECT * FROM get_detail
+                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 1";
+                $sql_get_count_track = "SELECT * FROM get_detail
+                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 1";
+                $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
+                $result_get = mysqli_query($conn, $sql_get);
+                $row_get_count_track = mysqli_fetch_array($result_get_count_track);
+                if (mysqli_num_rows($result_get)) {
+
+                ?><h1><span class="badge bg-danger">รายการที่ไม่สามารถซ่อมได้</span></h1><?php
+                                                                                        }
+
+                                                                                        while ($row_get = mysqli_fetch_array($result_get)) {
+                                                                                            $count_get_no++;
+                                                                                            ?>
+                    <div class="row alert alert-danger shadow">
+                        <h1 style="text-align:start; color:blue" id="body_text">
+                            <span>รายการที่ <?= $count_get_no ?></span> :
+                            <span class="f-black-5">
+                                <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" class="un-scroll f-black-5" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item"><?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?><span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
+                                </a>
+                            </span>
+                        </h1>
+                        <hr>
+                        <div style=" color:#2c2f34" class="my-4">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md alert alert-light shadow ml-1 bg-gray-1">
+                                        <h5 class="f-black-5">ข้อมูลอุปกรณ์</h5>
+                                        <hr>
+                                        <p class=" f-gray-5">
+                                            <?php if ($row_get['com_id'] != NULL) { ?><br>
+                                                <span class="badge bg-success">
+                                                    ประกัน :
+                                                    <span>
+                                                        <?php
+                                                                                                $com_id = $row_get['com_id'];
+                                                                                                $sql_com = "SELECT com_name FROM company WHERE com_id ='$com_id' AND del_flg = 0";
+                                                                                                $result_com = mysqli_query($conn, $sql_com);
+                                                                                                $row_com = mysqli_fetch_array($result_com);
+                                                                                                echo $row_com['com_name'];
+                                                                                                $row_get['r_id']
+                                                        ?>
+                                                    </span>
+                                                </span>
+                                            <?php } ?>
+                                            <?php if ($row_get['r_guarantee'] != NULL) { ?><br>ระยะประกัน :
+                                                <span class="f-black-5"><?= $row_get['r_guarantee'] ?> ปี</span><?php } ?>
+                                            <?php if ($row_get['r_id'] != NULL) { ?><br>รหัสอุปกรณ์ในระบบ :
+                                                <span class="f-black-5"><?= $row_get['r_id'] ?></span>
+                                                <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item">
+                                                    <i class="fa fa-question-circle"></i>
+                                                    <span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
+                                                </a>
+                                            <?php } ?>
+                                            <?php if ($row_get['r_brand'] != NULL) { ?><br>ยี่ห้อ/แบรนด์ :
+                                                <span class="f-black-5"><?= $row_get['r_brand'] ?></span><?php } ?>
+                                            <?php if ($row_get['r_model'] != NULL) { ?><br>รุ่น :
+                                                <span class="f-black-5"><?= $row_get['r_model'] ?></span><?php } ?>
+                                            <?php if ($row_get['r_number_model'] != NULL) { ?><br>หมายเลขรุ่น :
+                                                <span class="f-black-5"><?= $row_get['r_number_model'] ?></span><?php } ?>
+                                            <?php if ($row_get['r_serial_number'] != NULL) { ?><br>หมายเลขประจำเครื่อง/Serial Number :
+                                                <span class="f-black-5"><?= $row_get['r_serial_number'] ?></span><?php } ?>
+                                            <?php if ($row_get['get_t_id'] != NULL) { ?><br>หมายเลขพัสดุ :
+                                                <span class="f-black-5"><?= $row_get['t_parcel'] ?></span>
+                                            <?php } ?>
+                                        </p>
+                                        <br>
+                                        <h5 class="mb-3" style="color:black">รายละเอียดอาการ</h5>
+                                        <hr>
+                                        <p><?= $row_get['get_d_detail'] ?></p>
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                    <?php
+                                                                                            $check_have_pic = 0;
+                                                                                            $get_d_id = $row_get['get_d_id'];
+                                                                                            $sql_pic = "SELECT * FROM repair_pic
+                                        LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
+                                        WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
+                                                                                            $result_pic = mysqli_query($conn, $sql_pic);
+                                                                                            if (mysqli_num_rows($result_pic)) {
+                                                                                                $check_have_pic++;
+                                    ?>
+                                        <div class="col-md-5 alert alert-light shadow bg-gray-1">
+                                            <h5 style="color:black" class="mb-3">รูปภาพ</h5>
+                                            <hr>
+                                            <br>
+                                            <?php }
+                                                                                            while ($row_pic = mysqli_fetch_array($result_pic)) {
+                                                                                                if ($row_pic[0] != NULL) {
+                                            ?>
+                                                <?php
+                                                                                                    $rp_pic = $row_pic['rp_pic'];
+                                                                                                    $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                                ?>
+                                                <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                                    <a href="#" id="bounce-item"><img src="<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
+                                                    <a href="#">
+                                                        <video width="100px" autoplay muted onclick="openModalVideo(this)" src="<?= $row_pic['rp_pic'] ?>">
+                                                            <source src="<?= $row_pic['rp_pic'] ?>" type="video/mp4">
+                                                            <source src="<?= $row_pic['rp_pic'] ?>" type="video/ogg">
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    </a>
+                                                <?php endif; ?>
+                                            <?php
+                                                                                                }
+                                                                                            }
+                                                                                            if ($check_have_pic > 0) { ?>
+                                        </div>
+                                    <?php  } ?>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
+    </div>
+   <!-- Modal -->
+   <div class="modal fade" id="exampleModalUnique" tabindex="-1" aria-labelledby="exampleModalLabelUnique" aria-hidden="true">
+                                                                        <div class="modal-dialog">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <span style="color:white">
+                                                                                        <h4 style="color: red">โปรดระบุเหตุผล</h4>
+                                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                                    </span>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    <br>
+                                                                                    <form id="canf_cancel" action="action/conf_cancel.php" method="POST">
+                                                                                        <hr>
+
+
+                                                                                        <input type="text" name="get_r_id" value="<?= $id_get_r ?>" hidden>
+                                                                                        <input type="text" name="status_id" value="<?= $status_id ?>" hidden>
+                                                                                        <span style="color:white">
+                                                                                            <label>
+                                                                                                <input class="form-check-input" type="checkbox" name="checkbox1" value="ต้องการยกเลิกคำสั่งซ่อม" onclick="uncheckOtherCheckboxes('checkbox1')">
+                                                                                                ต้องการยกเลิกคำสั่งซ่อม
+                                                                                            </label><br>
+
+                                                                                            <label>
+                                                                                                <input class="form-check-input" type="checkbox" name="checkbox2" value="ไม่อยากใช้อะไหล่ข้างต้น" onclick="uncheckOtherCheckboxes('checkbox2')">
+                                                                                                ไม่อยากใช้อะไหล่ข้างต้น
+                                                                                            </label><br>
+
+                                                                                            <label>
+                                                                                                <input class="form-check-input" type="checkbox" name="checkbox3" value="อยากได้อะไหล่ที่ถูกกว่านี้" onclick="uncheckOtherCheckboxes('checkbox3')">
+                                                                                                อยากได้อะไหล่ที่ถูกกว่านี้
+                                                                                            </label><br>
+
+                                                                                            <label>
+                                                                                                <input class="form-check-input" type="checkbox" name="checkbox4" onclick="showTextarea(); uncheckOtherCheckboxes('checkbox4')">
+                                                                                                อื่นๆ (หรือยื่นข้อเสนอ)
+                                                                                            </label><br>
+
+                                                                                            <textarea id="myTextarea" name="detail_cancel" style="display: none;" placeholder="โปรดระบุสาเหตุ"></textarea>
+
+                                                                                        </span>
+                                                                                        <br>
+                                                                                        <!-- <a class="btn btn-danger" onclick="hideDiv()">ยกเลิก</a>
+                                                                                        <a class="btn btn-success" id="confirmButtoncancel">ยืนยัน</a> -->
+
+                                                                                        <script>
+                                                                                            document.addEventListener('DOMContentLoaded', function() {
+                                                                                                var id_get_r = <?php echo json_encode($id_get_r); ?>; // Pass PHP variable to JavaScript
+                                                                                                var dialogShown = false; // Flag variable to track if the dialog is already displayed
+
+                                                                                                document.getElementById('confirmButtoncancel').addEventListener('click', function() {
+                                                                                                    if (dialogShown) {
+                                                                                                        return; // Exit if the dialog is already shown
+                                                                                                    }
+
+                                                                                                    dialogShown = true; // Set the flag to true to indicate that the dialog is displayed
+
+                                                                                                    Swal.fire({
+                                                                                                        icon: 'warning',
+                                                                                                        title: 'ยืนยันดำเนินการส่งซ่อม',
+                                                                                                        text: 'การ "ยืนยันเพื่อยกเลิก" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
+                                                                                                        showCancelButton: true,
+                                                                                                        confirmButtonText: 'ยืนยัน',
+                                                                                                        cancelButtonText: 'ยกเลิก'
+                                                                                                    }).then((willConfirm) => {
+                                                                                                        if (willConfirm.isConfirmed) {
+                                                                                                            var form = document.getElementById('canf_cancel');
+                                                                                                            form.submit(); // Submit the form
+                                                                                                        }
+
+                                                                                                        dialogShown = false; // Reset the flag when the dialog is closed
+                                                                                                    });
+                                                                                                });
+                                                                                            });
+                                                                                        </script>
+
+                                                                                   
+                                                                                    <br><br>
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                                                                                    <a class="btn btn-success" id="confirmButtoncancel">ยืนยัน</a>
+                                                                                     </form>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+    <!-- Modal 1 -->
+    <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1">Modal 1 title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Modal 1 content...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Button trigger modal for the second modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+        Launch demo modal 2
+    </button>
+
+    <!-- Modal 2 -->
+    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class modal-content>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel2">Modal 2 title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Modal 2 content...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade " id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header"> :
+                    <h4 style="color:white">รายการซ่อมในหมายเลขแจ้งซ่อม <?= $id_get_r  ?></h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="background-color: #E7E7E7;">
+                    <br>
+                    <div class="container">
+
+
+                        <?php
+                        $count_get_no = 0;
+                        $repair_count = 0;
+                        $sql_get_c2 = "SELECT *
+                                            FROM get_detail
+                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                            WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.del_flg = 0 AND (get_d_conf != 1 OR get_d_conf IS NULL);
+                                            ";
+                        $sql_get_count_track = "SELECT * FROM get_detail
+                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 0 AND get_d_conf = 0";
+                        $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
+                        $result_get = mysqli_query($conn, $sql_get_c2);
+                        $row_get_count_track = mysqli_fetch_array($result_get_count_track);
+
+                        $sql_get_c = "SELECT * FROM get_detail
+                                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 0";
+                        $result_get_c = mysqli_query($conn, $sql_get_c);
+                        while ($row_get_c = mysqli_fetch_array($result_get_c)) {
+                            $repair_count++;
+                        }
+                        if ($repair_count > 0) {
+                        ?>
+                            <h2>มีรายการซ่อมทั้งหมด <span class="badge bg-primary"><?= $repair_count ?></span> รายการ</h2>
+                            <hr>
+                            <br>
+                        <?php
+                        }
+
+                        while ($row_get = mysqli_fetch_array($result_get)) {
+                            $count_get_no++;
+                        ?>
+                            <div class="row alert alert-light shadow">
+                                <h1 style="text-align:start; color:blue" id="body_text">
+                                    <span>รายการที่ <?= $count_get_no ?></span> :
+                                    <span class="f-black-5">
+                                        <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?>
+
+                                    </span>
+                                </h1>
+                                <hr>
+                                <div style=" color:#2c2f34" class="my-4">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md alert alert-light shadow ml-1 bg-gray-1">
+                                                <h5 class="f-black-5">ข้อมูลอุปกรณ์</h5>
+                                                <hr>
+                                                <p class=" f-gray-5">
+                                                    <?php if ($row_get['com_id'] != NULL) { ?><br>
+                                                        <span class="badge bg-success">
+                                                            ประกัน :
+                                                            <span>
+                                                                <?php
+                                                                $com_id = $row_get['com_id'];
+                                                                $sql_com = "SELECT com_name FROM company WHERE com_id ='$com_id' AND del_flg = 0";
+                                                                $result_com = mysqli_query($conn, $sql_com);
+                                                                $row_com = mysqli_fetch_array($result_com);
+                                                                echo $row_com['com_name'];
+                                                                $row_get['r_id']
+                                                                ?>
+                                                            </span>
+                                                        </span>
+                                                    <?php } ?>
+                                                    <?php if ($row_get['r_guarantee'] != NULL) { ?><br>ระยะประกัน :
+                                                        <span class="f-black-5"><?= $row_get['r_guarantee'] ?> ปี</span><?php } ?>
+                                                    <?php if ($row_get['r_id'] != NULL) { ?><br>รหัสอุปกรณ์ในระบบ :
+                                                        <span class="f-black-5"><?= $row_get['r_id'] ?></span>
+                                                        <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item">
+                                                            <i class="fa fa-question-circle"></i>
+                                                            <span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
+                                                        </a>
+                                                    <?php } ?>
+                                                    <?php if ($row_get['r_brand'] != NULL) { ?><br>ยี่ห้อ/แบรนด์ :
+                                                        <span class="f-black-5"><?= $row_get['r_brand'] ?></span><?php } ?>
+                                                    <?php if ($row_get['r_model'] != NULL) { ?><br>รุ่น :
+                                                        <span class="f-black-5"><?= $row_get['r_model'] ?></span><?php } ?>
+                                                    <?php if ($row_get['r_number_model'] != NULL) { ?><br>หมายเลขรุ่น :
+                                                        <span class="f-black-5"><?= $row_get['r_number_model'] ?></span><?php } ?>
+                                                    <?php if ($row_get['r_serial_number'] != NULL) { ?><br>หมายเลขประจำเครื่อง/Serial Number :
+                                                        <span class="f-black-5"><?= $row_get['r_serial_number'] ?></span><?php } ?>
+                                                    <?php if ($row_get['get_t_id'] != NULL) { ?><br>หมายเลขพัสดุ :
+                                                        <span class="f-black-5"><?= $row_get['t_parcel'] ?></span>
+                                                    <?php } ?>
+                                                </p>
+                                                <br>
+                                                <h5 class="mb-3" style="color:black">รายละเอียดอาการ</h5>
+                                                <hr>
+                                                <p><?= $row_get['get_d_detail'] ?></p>
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                            <?php
+                                            $check_have_pic = 0;
+                                            $get_d_id = $row_get['get_d_id'];
+                                            $sql_pic = "SELECT * FROM repair_pic
+                                                                            LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
+                                                                            WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
+                                            $result_pic = mysqli_query($conn, $sql_pic);
+                                            if (mysqli_num_rows($result_pic)) {
+                                                $check_have_pic++;
+                                            ?>
+                                                <div class="col-md-5 alert alert-light shadow bg-gray-1">
+                                                    <h5 style="color:black" class="mb-3">รูปภาพ</h5>
+                                                    <hr>
+                                                    <br>
+                                                    <?php }
+                                                while ($row_pic = mysqli_fetch_array($result_pic)) {
+                                                    if ($row_pic[0] != NULL) {
+                                                    ?>
+                                                        <?php
+                                                        $rp_pic = $row_pic['rp_pic'];
+                                                        $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                                        ?>
+                                                        <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                                            <a href="#" id="bounce-item"><img src="<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                        <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
+                                                            <a href="#">
+                                                                <video width="100px" autoplay muted onclick="openModalVideo(this)" src="<?= $row_pic['rp_pic'] ?>">
+                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/mp4">
+                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/ogg">
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                            </a>
+                                                        <?php endif; ?>
+                                                    <?php
+                                                    }
+                                                }
+                                                if ($check_have_pic > 0) { ?>
+                                                </div>
+                                            <?php  } ?>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+                        <?php
+                        $count_get_no = 0;
+                        $sql_get_c3 = "SELECT * FROM get_detail
+                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 0 AND get_d_conf = 1";
+                        $sql_get_count_track = "SELECT * FROM get_detail
+                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 0 AND get_d_conf = 1";
+                        $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
+                        $result_get_c3 = mysqli_query($conn, $sql_get_c3);
+                        $row_get_count_track = mysqli_fetch_array($result_get_count_track);
+                        if (mysqli_num_rows($result_get_c3)) {
+
+                        ?><h1><span class="badge bg-warning">รายการที่ไม่สามารถซ่อมได้ (อยู่ในช่วงยื่นข้อเสนอ)</span></h1><?php
+                                                                                                                        }
+
+                                                                                                                        while ($row_get = mysqli_fetch_array($result_get)) {
+                                                                                                                            $count_get_no++;
+                                                                                                                            ?>
+                            <div class="row alert alert-warning shadow">
+                                <h1 style="text-align:start; color:blue" id="body_text">
+                                    <span>รายการที่ <?= $count_get_no ?></span> :
+                                    <span class="f-black-5">
+                                        <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" class="un-scroll f-black-5" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item"><?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?><span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
+                                        </a>
+                                    </span>
+                                </h1>
+                                <hr>
+                                <div style=" color:#2c2f34" class="my-4">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md alert alert-light shadow ml-1 bg-gray-1">
+                                                <h5 class="f-black-5">ข้อมูลอุปกรณ์</h5>
+                                                <hr>
+                                                <p class=" f-gray-5">
+                                                    <?php if ($row_get['com_id'] != NULL) { ?><br>
+                                                        <span class="badge bg-success">
+                                                            ประกัน :
+                                                            <span>
+                                                                <?php
+                                                                                                                                $com_id = $row_get['com_id'];
+                                                                                                                                $sql_com = "SELECT com_name FROM company WHERE com_id ='$com_id' AND del_flg = 0";
+                                                                                                                                $result_com = mysqli_query($conn, $sql_com);
+                                                                                                                                $row_com = mysqli_fetch_array($result_com);
+                                                                                                                                echo $row_com['com_name'];
+                                                                                                                                $row_get['r_id']
+                                                                ?>
+                                                            </span>
+                                                        </span>
+                                                    <?php } ?>
+                                                    <?php if ($row_get['r_guarantee'] != NULL) { ?><br>ระยะประกัน :
+                                                        <span class="f-black-5"><?= $row_get['r_guarantee'] ?> ปี</span><?php } ?>
+                                                    <?php if ($row_get['r_id'] != NULL) { ?><br>รหัสอุปกรณ์ในระบบ :
+                                                        <span class="f-black-5"><?= $row_get['r_id'] ?></span>
+                                                        <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item">
+                                                            <i class="fa fa-question-circle"></i>
+                                                            <span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
+                                                        </a>
+                                                    <?php } ?>
+                                                    <?php if ($row_get['r_brand'] != NULL) { ?><br>ยี่ห้อ/แบรนด์ :
+                                                        <span class="f-black-5"><?= $row_get['r_brand'] ?></span><?php } ?>
+                                                    <?php if ($row_get['r_model'] != NULL) { ?><br>รุ่น :
+                                                        <span class="f-black-5"><?= $row_get['r_model'] ?></span><?php } ?>
+                                                    <?php if ($row_get['r_number_model'] != NULL) { ?><br>หมายเลขรุ่น :
+                                                        <span class="f-black-5"><?= $row_get['r_number_model'] ?></span><?php } ?>
+                                                    <?php if ($row_get['r_serial_number'] != NULL) { ?><br>หมายเลขประจำเครื่อง/Serial Number :
+                                                        <span class="f-black-5"><?= $row_get['r_serial_number'] ?></span><?php } ?>
+                                                    <?php if ($row_get['get_t_id'] != NULL) { ?><br>หมายเลขพัสดุ :
+                                                        <span class="f-black-5"><?= $row_get['t_parcel'] ?></span>
+                                                    <?php } ?>
+                                                </p>
+                                                <br>
+                                                <h5 class="mb-3" style="color:black">รายละเอียดอาการ</h5>
+                                                <hr>
+                                                <p><?= $row_get['get_d_detail'] ?></p>
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                            <?php
+                                                                                                                            $check_have_pic = 0;
+                                                                                                                            $get_d_id = $row_get['get_d_id'];
+                                                                                                                            $sql_pic = "SELECT * FROM repair_pic
+                                        LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
+                                        WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
+                                                                                                                            $result_pic = mysqli_query($conn, $sql_pic);
+                                                                                                                            if (mysqli_num_rows($result_pic)) {
+                                                                                                                                $check_have_pic++;
+                                            ?>
+                                                <div class="col-md-5 alert alert-light shadow bg-gray-1">
+                                                    <h5 style="color:black" class="mb-3">รูปภาพ</h5>
+                                                    <hr>
+                                                    <br>
+                                                    <?php }
+                                                                                                                            while ($row_pic = mysqli_fetch_array($result_pic)) {
+                                                                                                                                if ($row_pic[0] != NULL) {
+                                                    ?>
+                                                        <?php
+                                                                                                                                    $rp_pic = $row_pic['rp_pic'];
+                                                                                                                                    $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                                        ?>
+                                                        <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                                            <a href="#" id="bounce-item"><img src="<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                        <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
+                                                            <a href="#">
+                                                                <video width="100px" autoplay muted onclick="openModalVideo(this)" src="<?= $row_pic['rp_pic'] ?>">
+                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/mp4">
+                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/ogg">
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                            </a>
+                                                        <?php endif; ?>
+                                                    <?php
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                            if ($check_have_pic > 0) { ?>
+                                                </div>
+                                            <?php  } ?>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+                        <?php
+                        $count_get_no = 0;
+
+
+                        $sql_get = "SELECT * FROM get_detail
+                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 1";
+                        $sql_get_count_track = "SELECT * FROM get_detail
+                                                            LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                            LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                            WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 1";
+                        $result_get_count_track = mysqli_query($conn, $sql_get_count_track);
+                        $result_get = mysqli_query($conn, $sql_get);
+                        $row_get_count_track = mysqli_fetch_array($result_get_count_track);
+                        if (mysqli_num_rows($result_get)) {
+
+                        ?><h1><span class="badge bg-danger">รายการที่ไม่สามารถซ่อมได้</span></h1><?php
+                                                                                                }
+
+                                                                                                while ($row_get = mysqli_fetch_array($result_get)) {
+                                                                                                    $count_get_no++;
+                                                                                                    ?>
+                            <div class="row alert alert-danger shadow">
+                                <h1 style="text-align:start; color:blue" id="body_text">
+                                    <span>รายการที่ <?= $count_get_no ?></span> :
+                                    <span class="f-black-5">
+                                        <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" class="un-scroll f-black-5" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item"><?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?><span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
+                                        </a>
+                                    </span>
+                                </h1>
+                                <hr>
+                                <div style=" color:#2c2f34" class="my-4">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md alert alert-light shadow ml-1 bg-gray-1">
+                                                <h5 class="f-black-5">ข้อมูลอุปกรณ์</h5>
+                                                <hr>
+                                                <p class=" f-gray-5">
+                                                    <?php if ($row_get['com_id'] != NULL) { ?><br>
+                                                        <span class="badge bg-success">
+                                                            ประกัน :
+                                                            <span>
+                                                                <?php
+                                                                                                        $com_id = $row_get['com_id'];
+                                                                                                        $sql_com = "SELECT com_name FROM company WHERE com_id ='$com_id' AND del_flg = 0";
+                                                                                                        $result_com = mysqli_query($conn, $sql_com);
+                                                                                                        $row_com = mysqli_fetch_array($result_com);
+                                                                                                        echo $row_com['com_name'];
+                                                                                                        $row_get['r_id']
+                                                                ?>
+                                                            </span>
+                                                        </span>
+                                                    <?php } ?>
+                                                    <?php if ($row_get['r_guarantee'] != NULL) { ?><br>ระยะประกัน :
+                                                        <span class="f-black-5"><?= $row_get['r_guarantee'] ?> ปี</span><?php } ?>
+                                                    <?php if ($row_get['r_id'] != NULL) { ?><br>รหัสอุปกรณ์ในระบบ :
+                                                        <span class="f-black-5"><?= $row_get['r_id'] ?></span>
+                                                        <a href="search_repair.php?id=<?= $row_get['r_id'] ?>" title="คลิกเพื่อดูข้อมูลเพิ่มเติม" id="bounce-item">
+                                                            <i class="fa fa-question-circle"></i>
+                                                            <span class="tooltip">ดูประวัติและรายละเอียดอุปกรณ์</span>
+                                                        </a>
+                                                    <?php } ?>
+                                                    <?php if ($row_get['r_brand'] != NULL) { ?><br>ยี่ห้อ/แบรนด์ :
+                                                        <span class="f-black-5"><?= $row_get['r_brand'] ?></span><?php } ?>
+                                                    <?php if ($row_get['r_model'] != NULL) { ?><br>รุ่น :
+                                                        <span class="f-black-5"><?= $row_get['r_model'] ?></span><?php } ?>
+                                                    <?php if ($row_get['r_number_model'] != NULL) { ?><br>หมายเลขรุ่น :
+                                                        <span class="f-black-5"><?= $row_get['r_number_model'] ?></span><?php } ?>
+                                                    <?php if ($row_get['r_serial_number'] != NULL) { ?><br>หมายเลขประจำเครื่อง/Serial Number :
+                                                        <span class="f-black-5"><?= $row_get['r_serial_number'] ?></span><?php } ?>
+                                                    <?php if ($row_get['get_t_id'] != NULL) { ?><br>หมายเลขพัสดุ :
+                                                        <span class="f-black-5"><?= $row_get['t_parcel'] ?></span>
+                                                    <?php } ?>
+                                                </p>
+                                                <br>
+                                                <h5 class="mb-3" style="color:black">รายละเอียดอาการ</h5>
+                                                <hr>
+                                                <p><?= $row_get['get_d_detail'] ?></p>
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                            <?php
+                                                                                                    $check_have_pic = 0;
+                                                                                                    $get_d_id = $row_get['get_d_id'];
+                                                                                                    $sql_pic = "SELECT * FROM repair_pic
+                                        LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
+                                        WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
+                                                                                                    $result_pic = mysqli_query($conn, $sql_pic);
+                                                                                                    if (mysqli_num_rows($result_pic)) {
+                                                                                                        $check_have_pic++;
+                                            ?>
+                                                <div class="col-md-5 alert alert-light shadow bg-gray-1">
+                                                    <h5 style="color:black" class="mb-3">รูปภาพ</h5>
+                                                    <hr>
+                                                    <br>
+                                                    <?php }
+                                                                                                    while ($row_pic = mysqli_fetch_array($result_pic)) {
+                                                                                                        if ($row_pic[0] != NULL) {
+                                                    ?>
+                                                        <?php
+                                                                                                            $rp_pic = $row_pic['rp_pic'];
+                                                                                                            $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                                        ?>
+                                                        <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                                            <a href="#" id="bounce-item"><img src="<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                        <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
+                                                            <a href="#">
+                                                                <video width="100px" autoplay muted onclick="openModalVideo(this)" src="<?= $row_pic['rp_pic'] ?>">
+                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/mp4">
+                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/ogg">
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                            </a>
+                                                        <?php endif; ?>
+                                                    <?php
+                                                                                                        }
+                                                                                                    }
+                                                                                                    if ($check_have_pic > 0) { ?>
+                                                </div>
+                                            <?php  } ?>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel" style="height: 60%;">
+        <div class="offcanvas-header">
+            <!-- <h5 id="offcanvasTopLabel">Offcanvas top</h5> -->
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvasone" aria-label="Close"></button>
+        </div>
+        <div class="offcanvasone-body" style="height: 1000px;">
+            <br>
+            <!-- Page Wrapper -->
+            <div id="wrapper">
+                <!-- Content Wrapper -->
+                <div id="content-wrapper" class="d-flex flex-column">
+
+                    <!-- Main Content -->
+                    <div id="content">
+
+                        <!-- Begin Page Content -->
+                        <div class="container-fluid">
+
+                            <!-- Page Heading -->
+                            <br>
+                            <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ข้อมูลอะไหล่ของคุณ</h1>
+                            <!-- <a href="add_parts.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มอะไหล่หรือไม่?</a> -->
+                            <br>
+                            <br>
+
+                            <!-- DataTales Example -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">ข้อมูลอะไหล่เครื่องเสียง</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>ลำดับ</th>
+                                                    <th>หมายเลขอะไหล่</th>
+                                                    <th>รหัสการซ่อม</th>
+                                                    <th>ชื่อ</th>
+                                                    <th>Brand</th>
+                                                    <th>Model</th>
+                                                    <!-- <th>Name</th> -->
+                                                    <th>ประเภท</th>
+                                                    <!-- <th>รายละเอียด</th> -->
+                                                    <th>ราคา</th>
+                                                    <th>จำนวน</th>
+                                                    <th>ราคารวม</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $total_part_price = 0;
+                                                $sql_op = "SELECT
+                                                repair_detail.p_id,
+                                                MAX(repair_detail.p_id) AS r_brand,
+                                                MAX(repair_detail.p_id) AS r_model,
+                                                   MAX(repair_detail.p_id) AS p_id,
+                                                   MAX(repair_detail.rd_value_parts) AS rd_value_parts,
+                                                   MAX(repair_detail.get_d_id) AS get_d_id,
+                                                   MAX(parts.p_brand) AS p_brand,
+                                                   MAX(parts.p_model) AS p_model,
+                                                   MAX(parts.p_price) AS p_price,
+                                                   MAX(parts_type.p_type_name) AS p_type_name,
+                                                   MAX(repair_status.rs_id) AS rs_id,
+                                                   MAX(parts.p_pic) AS p_pic,
+                                                   MAX(repair.r_brand) AS r_brand,
+                                                   MAX(repair.r_model) AS r_model
+                                               FROM
+                                                   `repair_detail`
+                                                   LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
+                                                   LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
+                                                   LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
+                                                   LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                                                   JOIN parts ON parts.p_id = repair_detail.p_id
+                                                   LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
+                                               WHERE
+                                                   get_repair.del_flg = 0 AND repair_detail.del_flg = 0
+                                                   AND get_repair.get_r_id = '$get_id'
+                                               GROUP BY
+                                                   repair_detail.rd_id;
+                                               ";
+                                                $result_op = mysqli_query($conn, $sql_op);
+                                                $count_part = 0;
+                                                while ($row_op = mysqli_fetch_array($result_op)) {
+
+                                                    $count_part++;
+                                                    $p_id = $row_op['p_id'];
+                                                    $rs_id = $row_op['rs_id'];
+                                                ?>
+                                                    <?php
+
+                                                    $sql_count = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id' AND p_id = '$p_id'";
+                                                    $result_count = mysqli_query($conn, $sql_count);
+                                                    $row_count = mysqli_fetch_array($result_count);
+
+                                                    ?>
+                                                    <tr>
+                                                        <td><?php
+                                                            if ($count_part == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo $count_part;
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td><?php
+                                                            if ($row_op['p_id'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo $row_op['p_id'];
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td><?php
+                                                            if ($row_op['get_d_id'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo $row_op['get_d_id'] . ' ' . '(' . $row_op['r_brand'] . ' ' . $row_op['r_model'] . ')';
+                                                            }
+                                                            ?>
+                                                        </td>
+
+                                                        <td><?php
+                                                            if ($row_op['p_pic'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                            ?>
+                                                                <img src="<?= $row_op['p_pic'] ?>" width="50px" alt="Not Found">
+                                                            <?php
+                                                            }
+                                                            ?>
+                                                        </td>
+
+
+                                                        <!-- <td><?php
+                                                                    if ($row_op['p_name'] == NULL) {
+                                                                        echo "-";
+                                                                    } else {
+                                                                        echo $row_op['p_name'];
+                                                                    }
+                                                                    ?>
+                                        </td> -->
+                                                        <td><?php
+                                                            if ($row_op['p_brand'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo $row_op['p_brand'];
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td><?php
+                                                            if ($row_op['p_model'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo $row_op['p_model'];
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td><?php
+                                                            if ($row_op['p_type_name'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo $row_op['p_type_name'];
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td><?php
+                                                            if ($row_op['p_price'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo $row_op['p_price'];
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td><?php
+                                                            if ($row_op['rd_value_parts'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo $row_op['rd_value_parts'];
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php
+                                                            if ($row_op['p_price'] == NULL) {
+                                                                echo "-";
+                                                            } else {
+                                                                echo number_format($row_op['rd_value_parts'] * $row_op['p_price']);
+                                                                $total +=  $row_op['rd_value_parts'] * $row_op['p_price'];
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php
+                                                }
+                                                ?>
+                                                <tr>
+                                                    <td colspan="7">ยอดอะไหล่ทั้งหมด</td>
+                                                    <td colspan="2">ราคารวม</td>
+                                                    <td><?php $total_part_price = $total; ?><?= number_format($total) ?></td>
+                                                    <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
+                                                </tr>
+                                                <tr>
+                                                    <?php
+                                                    $sql_w = "SELECT get_wages FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
+                                                    $result_w = mysqli_query($conn, $sql_w);
+                                                    $row_w = mysqli_fetch_array($result_w);
+                                                    ?>
+                                                    <td colspan="7">ค่าแรงช่าง</td>
+                                                    <td colspan="2">ค่าแรง</td>
+                                                    <td><?= number_format($row_w['get_wages']) ?></td>
+                                                    <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
+                                                </tr>
+                                                <?php
+                                                $sql_p = "SELECT get_deli , get_add_price FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
+                                                $result_p = mysqli_query($conn, $sql_p);
+                                                $row_p = mysqli_fetch_array($result_p);
+
+                                                if ($row_p['get_deli'] == 1) {
+                                                    $total += $row_p['get_add_price'];
+                                                ?>
+                                                    <tr>
+                                                        <td colspan="7">ค่าจัดส่ง</td>
+                                                        <td colspan="2">ราคาจัดส่ง</td>
+                                                        <td><?= number_format($row_p['get_add_price']) ?></td>
+                                                        <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
+                                                    </tr>
+                                                <?php
+                                                }
+                                                ?>
+
+
+                                                <tr>
+                                                    <td colspan="7"></td>
+                                                    <td colspan="2">ราคารวมทั้งหมด</td>
+                                                    <td>
+                                                        <h5><?= number_format($total + $row_w['get_wages']) ?> </h5>
+                                                    </td>
+                                                    <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <center>
+                            </center>
+                            <!-- Place this in the <head> section of your HTML document -->
+                            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+                            <!-- Place this before the closing </body> tag -->
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    document.getElementById('confirmButton').addEventListener('click', function() {
+                                        Swal.fire({
+                                            icon: 'question',
+                                            title: 'ยืนยันการดำเนินการ',
+                                            text: 'การ "ยืนยัน" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'ยืนยัน',
+                                            cancelButtonText: 'ยกเลิก'
+                                        }).then((willConfirm) => {
+                                            if (willConfirm.isConfirmed) {
+                                                window.location.href = "action/conf_part.php?id=<?= $get_id ?>"; // Redirect to home.php
+                                            }
+                                        });
+                                    });
+                                });
+                            </script>
+
+
+                        </div>
+                        <!-- End of Main Content -->
+
+                    </div>
+                    <!-- End of Content Wrapper -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop_unique" aria-labelledby="offcanvasTopLabel" style="height: 70%">
+        <div class="offcanvas-header">
+        </div>
+        <div class="offcanvas-body">
+            <a type="button" class="btn-close text-reset d-flex justify-content-end ms-auto" data-bs-dismiss="offcanvas" aria-label="Close"></a>
+            <h2>หมายเลขพัสดุจากท่าน</h2>
+            <br>
+            <?php
+            $id_get_r = $_GET['id'];
+            $sql_com_m = "  SELECT * FROM get_detail
+                            LEFT JOIN get_repair ON get_detail.get_r_id = get_repair.get_r_id 
+                            LEFT JOIN tracking ON get_detail.get_t_id = tracking.t_id 
+                            LEFT JOIN repair ON repair.r_id = get_detail.r_id WHERE get_repair.get_r_id = '$id_get_r' AND repair.del_flg = '0' AND get_detail.get_d_conf = '0'";
+            $result_com_m = mysqli_query($conn, $sql_com_m);
+
+            $count_com = 0;
+            while ($row_com_m = mysqli_fetch_array($result_com_m)) {
+                if ($row_com_m['t_parcel'] != NULL) {
+                    $count_com += 1;
+            ?>
+                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="<?= $row_com_m['r_serial_number'] ?>">
+                        <div class="alert alert-secondary">
+                            <p>
+                                <span class="badge bg-secondary"><?= $count_com ?> </span> :
+                                <span class="inline"><?= $row_com_m['r_brand'] . ' ' . $row_com_m['r_model'] . ' - ' . $row_com_m['t_parcel'] ?></span>
+                                <!-- <span id="tooltip"><?= $row_com_m['r_serial_number'] ?></span> -->
+                            </p>
+                        </div>
+                    </a>
+                <?php
+                }
+            }
+            if ($count_com == 0) {
+                ?> <center>
+                    <hr><br>
+                    <h5 class="f-red-5">*** ไม่มีข้อมูล ***</h5>
+                </center> <?php
+                        }
+                            ?>
+        </div>
+    </div>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+            <!-- <h5 id="offcanvasRightLabel">Offcanvas right</h5> -->
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <br>
+            <!-- <h3><span class="badge bg-secondary">หมายเลขอุปกรณ์ของท่าน</span></h3> -->
+            <div class="container">
+                <h3>หมายเลขอุปกรณ์ของท่าน</h3>
+                <br>
+                <!-- <p>Click the button below to copy the Bootstrap code:</p> -->
+
+
+                <?php
+                $count_my_parcel = 0;
+                $id_get_r = $_GET['id'];
+                $sql_track = "SELECT * FROM `get_detail` 
+                                                                        LEFT JOIN tracking ON tracking.t_id = get_detail.t_id
+                                                                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                                        WHERE get_detail.get_r_id = '$id_get_r';";
+                $result_track = mysqli_query($conn, $sql_track);
+                while ($row_track = mysqli_fetch_array($result_track)) {
+                    if ($row_track['t_parcel'] != NULL) {
+                        $count_my_parcel++;
+
+
+                ?>
+                        <div class="row">
+                            <h5><?= $row_track['r_brand'] . ' ' . $row_track['r_model'] ?></h5>
+                        </div>
+                        <!-- <div class="row"> -->
+                        <div class="row">
+                            <!-- <div class="row"> -->
+                            <p style="font-size: 14px;">SN : <?= $row_track['r_serial_number'] ?></p>
+                            <!-- </div> -->
+                            <!-- <div class="row">
+                                                                <h6><?= $row_track['r_serial_number']  ?></h6>
+                                                            </div> -->
+                        </div>
+                        <div class="row">
+                            <div class="row">
+                                <p style="display: none;" id="bootstrapCode"><?= $row_track['t_parcel'] ?></p>
+                                <div class="col-12">
+                                    หมายเลขพัสดุ : <button class="btn btn-primary" id="copyButton" onclick="copyToClipboard()" data-bs-toggle="tooltip" data-bs-placement="top" title="คลิ๊กเพื่อคัดลอก"><?= $row_track['t_parcel'] ?></button>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- </div> -->
+                        <hr>
+                        <br>
+                    <?php }
+                }
+                if ($count_my_parcel == 0) {
+                    ?> <center>
+                        <hr><br>
+                        <h5 class="f-red-5">*** ไม่มีข้อมูล ***</h5>
+                    </center> <?php
+                            }
+                                ?>
+                <script>
+                    function copyToClipboard() {
+                        var copyText = document.getElementById("bootstrapCode");
+                        var textarea = document.createElement("textarea");
+                        textarea.value = copyText.textContent;
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand("copy");
+                        document.body.removeChild(textarea);
+                        alert("Copied to clipboard: " + copyText.textContent);
+                    }
+                </script>
+
+            </div>
+
+        </div>
+    </div>
     <!-- navbar-->
     <?php
     if ($row1 > 0) {
@@ -50,24 +1405,23 @@ $part_check = 0;
     $id_get_r = $_GET['id'];
     // Assuming $id_get_r is your parameterized value
     $sql = "SELECT rs.rs_id,
-                rs.status_id,
-                st.status_name,
-                st.status_color,
-                rs.rs_conf,
-                rs.rs_date_time,
-                rs.rs_detail,
-                rs.rs_conf_date,
-                gr.get_tel,
-                gr.get_add,
-                gr.get_wages,
-                gr.get_add_price,
-                gr.get_check,
-                gr.get_add_price
-            FROM get_repair gr
-            LEFT JOIN repair_status rs ON gr.get_r_id = rs.get_r_id 
-            LEFT JOIN status_type st ON rs.status_id = st.status_id 
-            WHERE gr.get_r_id = ? AND rs.del_flg = '0' 
-            ORDER BY rs.rs_date_time DESC
+    rs.status_id,
+    st.status_name,
+    st.status_color,
+    rs.rs_conf,
+    rs.rs_date_time,
+    rs.rs_detail,
+    rs.rs_conf_date,
+    gr.get_tel,
+    gr.get_add,
+    gr.get_wages,
+    gr.get_add_price,
+    gr.get_add_price
+FROM get_repair gr
+LEFT JOIN repair_status rs ON gr.get_r_id = rs.get_r_id 
+LEFT JOIN status_type st ON rs.status_id = st.status_id 
+WHERE gr.get_r_id = ? AND rs.del_flg = '0' 
+ORDER BY rs.rs_date_time DESC 
            ";
 
     // Use prepared statements
@@ -89,19 +1443,8 @@ $part_check = 0;
         // Handle the error
         echo "Error: " . mysqli_error($conn);
     }
-
-    // $sql_c_date_time = "SELECT * FROM get_repair
-    // LEFT JOIN repair_status ON get_repair.get_r_id = repair_status.get_r_id 
-    // LEFT JOIN status_type ON repair_status.status_id  = status_type.status_id 
-    // WHERE get_repair.get_r_id = $id_get_r AND repair_status.del_flg = '0' ORDER BY repair_status.rs_date_time DESC;";
-    // $result_c_date_time = mysqli_query($conn, $sql_c_date_time);
-    // $row_c_date_time = mysqli_fetch_array($result_c_date_time);
-
-    // $row = mysqli_fetch_array($result);
-
-    // Assuming $id_get_r is your parameterized value
     $sql2 = "SELECT rs.rs_id, rs.status_id, st.status_color, rs.rs_conf, rs.rs_date_time, rs.rs_detail,
-                    gr.get_tel, gr.get_add, gr.get_wages, gr.get_add_price, gr.get_check, gr.get_add_price
+                    gr.get_tel, gr.get_add, gr.get_wages, gr.get_add_price, gr.get_add_price
                 FROM get_repair gr
                 LEFT JOIN repair_status rs ON gr.get_r_id = rs.get_r_id 
                 LEFT JOIN status_type st ON rs.status_id = st.status_id 
@@ -133,7 +1476,7 @@ $part_check = 0;
     }
     // Assuming $id_get_r is your parameterized value
     $sql2 = "SELECT rs.rs_id, rs.status_id, st.status_color, rs.rs_conf, rs.rs_date_time, rs.rs_detail,
-                    gr.get_tel, gr.get_add, gr.get_wages, gr.get_add_price, gr.get_check, gr.get_add_price
+                    gr.get_tel, gr.get_add, gr.get_wages, gr.get_add_price, gr.get_add_price
                 FROM get_repair gr
                 LEFT JOIN repair_status rs ON gr.get_r_id = rs.get_r_id 
                 LEFT JOIN status_type st ON rs.status_id = st.status_id 
@@ -181,56 +1524,63 @@ $part_check = 0;
 
     // check parts of Get_r_id
     // Assuming $id_get_r is your parameterized value
-    $sql_c_part = "SELECT
-                    *,
-                    repair_detail.p_id,
-                    repair_detail.rd_value_parts,
-                    repair_detail.get_d_id,
-                    parts.p_brand,
-                    parts.p_model,
-                    parts.p_price,
-                    parts_type.p_type_name,
-                    repair_status.rs_id,
-                    parts.p_pic
-                    FROM
-                    `repair_detail`
-                    LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
-                    LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
-                    LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
-                    LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                    JOIN parts ON parts.p_id = repair_detail.p_id
-                    LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
-                    WHERE
-                    get_repair.del_flg = 0 AND repair_detail.del_flg = 0
-                    AND get_repair.get_r_id = ?
-                    GROUP BY
-                    rd_id, get_detail.get_d_id;";
+    // $sql_c_part = "SELECT
+    // MAX(repair_detail.p_id) AS p_id,
+    // MAX(repair_detail.rd_value_parts) AS rd_value_parts,
+    // MAX(repair_detail.get_d_id) AS get_d_id,
+    // MAX(parts.p_brand) AS p_brand,
+    // MAX(parts.p_model) AS p_model,
+    // MAX(parts.p_price) AS p_price,
+    // MAX(parts_type.p_type_name) AS p_type_name,
+    // MAX(repair_status.rs_id) AS rs_id,
+    // MAX(parts.p_pic) AS p_pic,
+    // MAX(repair.r_brand) AS r_brand,
+    // MAX(repair.r_model) AS r_model
+    // FROM
+    // `repair_detail`
+    // LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
+    // LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
+    // LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
+    // LEFT JOIN repair ON get_detail.r_id = repair.r_id
+    // JOIN parts ON parts.p_id = repair_detail.p_id
+    // LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
+    // WHERE
+    // get_repair.del_flg = 0 AND repair_detail.del_flg = 0
+    // AND get_repair.get_r_id = ?
+    // GROUP BY
+    // repair_detail.rd_id";
 
-    // Use prepared statements
-    $stmt_c_part = mysqli_prepare($conn, $sql_c_part);
+    // // Use prepared statements
+    // $stmt_c_part = mysqli_prepare($conn, $sql_c_part);
 
-    if ($stmt_c_part) {
-        // Bind the parameter
-        mysqli_stmt_bind_param($stmt_c_part, "s", $id_get_r);
+    // if ($stmt_c_part) {
+    //     // Bind the parameter
+    //     mysqli_stmt_bind_param($stmt_c_part, "s", $id_get_r);
 
-        // Execute the statement
-        mysqli_stmt_execute($stmt_c_part);
+    //     // Execute the statement
+    //     mysqli_stmt_execute($stmt_c_part);
 
-        // Get the result
-        $result_c_part = mysqli_stmt_get_result($stmt_c_part);
+    //     // Get the result
+    //     $result_c_part = mysqli_stmt_get_result($stmt_c_part);
 
-        // Fetch data as needed
-        while ($row_c_part = mysqli_fetch_assoc($result_c_part)) {
-            // Process the row data
-            $total_part_price +=  $row_c_part['rd_parts_price'];
-        }
+    //     // Initialize a total part price variable
+    //     $total_part_price = 0;
 
-        // Close the statement
-        mysqli_stmt_close($stmt_c_part);
-    } else {
-        // Handle the error
-        echo "Error: " . mysqli_error($conn);
-    }
+    //     // Fetch data as needed
+    //     while ($row_c_part = mysqli_fetch_assoc($result_c_part)) {
+    //         // Calculate the total part price based on your selected columns
+    //         $total_part_price += $row_c_part['p_price']; // Adjust based on your requirements
+    //     }
+
+    //     // Close the statement
+    //     mysqli_stmt_close($stmt_c_part);
+    // } else {
+    //     // Handle the error
+    //     echo "Error: " . mysqli_error($conn);
+    // }
+
+    // Use $total_part_price as needed in your code
+
 
     // check status Process Bar
     $process_dot = 0;
@@ -278,7 +1628,7 @@ $part_check = 0;
 
 
     $get_add_price = $row_c['get_add_price']; ?>
-    <div style="background-color: <?= $row_2['status_color'] ?>;height:200px;padding:7%;color:white">
+    <div style="background-color: <?= $row_2['status_color'] ?>;height:200px;padding:7%;color:white;" class="auto-font">
         <?php if ($row_2['status_id'] == 1) { ?>
             <h3><i class="fa fa-check-square-o"></i> คุณได้ทำการส่งเรื่องแล้ว</h3>
             <p>โปรดรอการตอบกลับ พนักงานจะทำการตอบกลับภายใน 2 วันทำการ<br>หากคุณต้องการยกเลิกคำสั่งซ่อมสามารถทำการ <span style="color:white">"ยกเลิก"</span> ได้</p>
@@ -292,7 +1642,7 @@ $part_check = 0;
 
                                                                                 echo $newDate;
                                                                                 ?>)</h3>
-            <p>ทางร้านต้องขอแจ้งให้ทราบว่าคุณไม่ได้ชำระเงินตามระยะเวลาที่กำหนด (ระยะเวลาเก็บอุปกรณ์ของท่านคือ 1 ปี) ดังนั้นเราขอทำการเก็บอุปกณ์ของท่านเป็นทรัพย์สินของทางร้าน โปรดทราบว่าเราจะไม่มีการดำเนินการคืนเงินหรือรับผิดชอบแต่อย่างใดต่อของท่านในกรณีนี้</p>
+            <p>ทางร้านต้องขอแจ้งให้ทราบว่าคุณไม่ได้ชำระเงินตามระยะเวลาที่กำหนด (ระยะเวลาเก็บอุปกรณ์ของท่านคือ 1 ปี) ดังนั้นเราจึงทำการเก็บอุปกณ์ของท่านเป็นทรัพย์สินของทางร้าน โปรดทราบว่าเราจะไม่มีการดำเนินการคืนเงินหรือรับผิดชอบแต่อย่างใดต่อของท่านในกรณีนี้</p>
         <?php  } ?>
         <?php if ($row_2['status_id'] == 10) { ?>
             <h3><i class="fa fa-paper-plane-o"></i> กำลังดำเนินการส่งอุปกรณ์ให้คุณ</h3>
@@ -398,11 +1748,15 @@ $part_check = 0;
         <?php  } elseif ($row_2['status_id'] == 5) { ?>
             <h3> <i class="fa fa-check-square-o"></i> ได้รับการยืนยันแล้ว</h3>
             <p>ขอให้ท่านดำเนินการส่งอุปกรณ์ไปที่ร้านด้วย <u>ตนเอง</u> หรือ <u>ทำการส่งหมายเลข "Tracking Number"</u> หากท่านส่งด้วยผู้ให้บริการขนส่ง เพื่อให้พนักงานสามารถตรวจสอบข้อมูลของท่านอย่างรวดเร็ว</p>
-        <?php  } ?>
+        <?php  }
+
+
+        ?>
+
     </div>
 
 
-    <div class="px-5 pt-5 repair">
+    <div class="px-5 pt-5 repair auto-font">
         <div class="container" style="display: none;">
             <div class="row">
                 <div class="col-6 text-left" style="background-color: #F1F1F1;">
@@ -417,7 +1771,7 @@ $part_check = 0;
             </div>
         </div>
         <br>
-        <div class="container">
+        <div class="container auto-font">
             <div id="MiniDetailStatusSuc" style="display: block;">
                 <?php if ($row_2['status_id'] == 9) { ?>
                     <div class="alert alert-success" role="alert">
@@ -546,113 +1900,241 @@ $part_check = 0;
                     <br>
                     <hr>
                 <?php
-                } ?>
+                }
+                if ($row_2['status_id'] == 25) { ?>
+                    <div class="alert alert-info" role="alert">
+                        <i class="	fa fa-spinner"></i> โปรดรอการตรวจสอบจากพนักงาน ภายใน 1 วันทำการ
+                    </div>
+                <?php }
+                if ($row_2['status_id'] == 8 || $row_2['status_id'] == 26) {
+
+                ?>
+
+                    <div class="alert alert-warning">
+                        <div class="alert alert-secondary" role="alert">
+                            <h5> <i class="fa fa-credit-card"></i> กรุณาทำการชำระเงิน
+                                <?php
+                                $sql = "SELECT rs.rs_id,
+                                          rs.status_id,
+                                          st.status_name,
+                                          st.status_color,
+                                          rs.rs_conf,
+                                          rs.rs_date_time,
+                                          rs.rs_detail,
+                                          rs.rs_conf_date,
+                                          gr.get_tel,
+                                          gr.get_add,
+                                          gr.get_wages,
+                                          gr.get_add_price,
+                                          gr.get_add_price
+                                          FROM get_repair gr
+                                          LEFT JOIN repair_status rs ON gr.get_r_id = rs.get_r_id 
+                                          LEFT JOIN status_type st ON rs.status_id = st.status_id 
+                                          WHERE gr.get_r_id = ? AND rs.del_flg = '0' 
+                                          ORDER BY rs.rs_date_time DESC LIMIT 1
+                                  ";
+
+                                // Use prepared statements
+                                $stmt = mysqli_prepare($conn, $sql);
+
+                                if ($stmt) {
+                                    // Bind the parameter
+                                    mysqli_stmt_bind_param($stmt, "s", $get_id);
+
+                                    // Execute the statement
+                                    mysqli_stmt_execute($stmt);
+
+                                    // Get the result
+                                    $result_pay = mysqli_stmt_get_result($stmt);
+                                    $row1_pay = mysqli_fetch_array($result_pay);
+                                }
+                                if ($row1_pay['status_id'] == 8 || $row1_pay['status_id'] == 26  && $row1_pay['rs_conf'] == NULL) {
+                                    if ($row1_pay['status_id'] == 26) {
+                                ?>
+                                        <a href="form_pay.php?id=<?= $get_id  ?>" class="btn btn-primary">ส่งหลักฐานการชำระเงิน<span class="tooltip">กดเพื่อชำระเงิน</span></a>
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <a href="form_pay.php?id=<?= $get_id  ?>" class="btn btn-primary">ทำการชำระเงิน<span class="tooltip">กดเพื่อชำระเงิน</span></a>
+                                <?php
+                                    }
+                                }
+                                ?>
+
+                            </h5>
+                        </div>
+                        <div class="collapse" id="collapseExample">
+                            <div class="card card-body">
+                                <form action="action/add_tracking.php?id=<?= $id_get_r ?>" method="POST" id="trackingForm">
+                                    <?php
+                                    $count_com = 0;
+                                    $sql_count_repair = "SELECT gd.get_d_id, rp.r_serial_number, rp.r_model, rp.r_brand 
+                                                        FROM get_detail gd
+                                                        LEFT JOIN repair rp ON gd.r_id = rp.r_id
+                                                        WHERE gd.get_r_id = ? AND gd.del_flg = 0;";
+                                    $stmt = $conn->prepare($sql_count_repair);
+                                    $stmt->bind_param("s", $id_get_r);
+                                    $stmt->execute();
+                                    $result_count_repair = $stmt->get_result();
+
+                                    while ($row_count_repair = $result_count_repair->fetch_assoc()) {
+                                        $count_com++;
+                                    ?>
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <h5><span class="badge bg-secondary"><?= $count_com ?></span><?= ' ' . $row_count_repair['r_brand'] . ' ' . $row_count_repair['r_model'] . ' ' ?><span class="badge bg-primary"><?= ' ' . $row_count_repair['r_serial_number'] ?></span></h5>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+
+                                            <div class="col-md-4 mb-3">
+                                                <label for="formGroupExampleInput" class="form-label">กรุณาเลือกผู้ให้บริการ</label>
+                                                <select class="form-select" aria-label="Default select example" name="com_t_id_<?= $count_com ?>" required>
+                                                    <option value="" disabled selected>เลือกบริษัทขนส่ง</option>
+                                                    <?php
+                                                    $sql_com = "SELECT * FROM company_transport WHERE del_flg = 0";
+                                                    $result_com = mysqli_query($conn, $sql_com);
+                                                    while ($row_com = mysqli_fetch_array($result_com)) {
+                                                    ?>
+                                                        <option value="<?= $row_com['com_t_id'] ?>"><?= $row_com['com_t_name'] ?></option>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <label for="formGroupExampleInput" class="form-label">จัดส่งด้วยผู้ให้บริการ</label>
+                                                <input type="text" class="form-control" id="formGroupExampleInput" name="tracking_number_<?= $count_com ?>" placeholder="กรุณาใส่เลข Tracking Number" required>
+                                                <input type="text" name="get_d_id_<?= $count_com ?>" value="<?= $row_count_repair['get_d_id'] ?>" hidden>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                    <?php
+                                    }
+                                    $stmt->close();
+                                    ?>
+
+                                    <center>
+
+                                        <button class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">ยกเลิก</button>
+                                        <button type="button" class="btn btn-success" onclick="showConfirmationTracking()">ยืนยัน</button>
+                                    </center>
+                                </form>
+
+                                <!-- Include SweetAlert library -->
+                                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+                                <script>
+                                    function showConfirmationTracking() {
+                                        Swal.fire({
+                                            title: 'ยืนยันการส่งข้อมูล',
+                                            text: 'คุณต้องการยืนยันการส่งข้อมูลหรือไม่?',
+                                            icon: 'question',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'ยืนยัน',
+                                            cancelButtonText: 'ยกเลิก'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                document.getElementById('trackingForm').submit(); // Submit the form
+                                            }
+                                        });
+                                    }
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <hr>
+                <?php
+
+                }
+                ?>
             </div>
             <div class="row">
                 <div class="col-md">
                     <div class="container px-md-4 py-5 mx-auto">
                         <div class="card" id="process-status">
+
                             <div class="row p-4">
-                                <div class="d-flex">
-                                    <h5>หมายเลขส่งซ่อมที่ <span class="text-primary font-weight-bold">#<?= $id_get_r ?></span></h5>
+                                <?php
+                                $repair_count = 0;
+                                $sql_get_c1 = "SELECT * FROM get_detail
+                                                        LEFT JOIN tracking ON tracking.t_id = get_detail.get_t_id
+                                                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
+                                                        WHERE get_detail.get_r_id =  '$id_get_r' AND get_detail.del_flg = 0";
+                                $result_get_c1 = mysqli_query($conn, $sql_get_c1);
+                                while ($row_get_c1 = mysqli_fetch_array($result_get_c1)) {
+                                    $repair_count++;
+                                } ?>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h5>หมายเลขส่งซ่อมที่ <span class="text-primary font-weight-bold ln">#<?= $id_get_r ?></span></h5>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <p class="ln" style="width: 100%; text-align: right;"> <!-- Add text-align: right; here -->
+                                        <h5>
+                                            <a id="bounce-item" class="text-primary" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                รายละเอียดอุปกรณ์ (มี <?= $repair_count ?> อุปกรณ์)
+                                            </a>
+                                        </h5>
+                                        </p>
+                                    </div>
                                 </div>
+
                                 <div class="d-flex flex-column text-sm-right">
                                     <?php
+
+                                    // เอาค่า get_r_id ออกมาหาค่าวัน
                                     $sql_start_day = "SELECT * FROM `get_repair` WHERE get_r_id = '$id_get_r' AND del_flg = '0';";
                                     $result_start_day = mysqli_query($conn, $sql_start_day);
                                     $row_start_day = mysqli_fetch_array($result_start_day);
+
+                                    // เช็คว่ามีเลขไปรษณีย์จากทางร้านหรือไม่
+                                    $sql_tracking = "SELECT t_id FROM get_repair
+                                    LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id 
+                                    WHERE get_repair.get_r_id = '$id_get_r' AND get_repair.del_flg = '0' ;";
+                                    $result_tracking = mysqli_query($conn, $sql_tracking);
+                                    $row_tracking = mysqli_fetch_array($result_tracking);
+                                    $row_trackin = 0;
+                                    if ($row_tracking['t_id'] != NULL) {
+                                        $row_trackin++;
+                                    }
                                     ?>
-                                    <p style="color: gray" class="mb-0"><i class="	fa fa-calendar"></i> วันที่ยื่นเรื่อง : <?= date('d F Y', strtotime($row_start_day['get_r_date_in'])) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_start_day['get_r_date_in'])); ?></span> <?php if ($row_2['status_id'] == 24 || $row_2['status_id'] == 3) { ?>
+                                    <p style="color: gray" class="mb-0"><i class="	fa fa-calendar"></i> วันที่ยื่นเรื่อง : <?= date('d F Y', strtotime($row_start_day['get_r_date_in'])) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_start_day['get_r_date_in'])); ?></span>
+                                        <?php if ($row_2['status_id'] == 24 || $row_2['status_id'] == 3 &&  $row_trackin > 0) { ?>
                                             <!-- <a href="">หมายเลขอุปกรณ์ของท่าน</a> -->
-                                            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">หมายเลขอุปกรณ์ของท่าน</button>
-
-                                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-                                        <div class="offcanvas-header">
-                                            <h5 id="offcanvasRightLabel">Offcanvas right</h5>
-                                            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                                        </div>
-                                        <div class="offcanvas-body">
-                                            <br>
-                                            <!-- <h3><span class="badge bg-secondary">หมายเลขอุปกรณ์ของท่าน</span></h3> -->
-                                            <div class="container">
-                                                <h3>หมายเลขอุปกรณ์ของท่าน</h3>
-                                                <br>
-                                                <!-- <p>Click the button below to copy the Bootstrap code:</p> -->
-
-
-                                                <?php $sql_track = "SELECT * FROM `get_detail` 
-                                                                        LEFT JOIN tracking ON tracking.t_id = get_detail.t_id
-                                                                        LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                                        WHERE get_detail.get_r_id = '$id_get_r';";
-                                                                                                                                                                                                                                                                                                                                                                        $result_track = mysqli_query($conn, $sql_track);
-                                                                                                                                                                                                                                                                                                                                                                        while ($row_track = mysqli_fetch_array($result_track)) {
-                                                ?>
-                                                    <div class="row">
-                                                        <h5><?= $row_track['r_brand'] . ' ' . $row_track['r_model'] ?></h5>
-                                                    </div>
-                                                    <!-- <div class="row"> -->
-                                                    <div class="row">
-                                                        <!-- <div class="row"> -->
-                                                        <p style="font-size: 14px;">SN : <?= $row_track['r_serial_number'] ?></p>
-                                                        <!-- </div> -->
-                                                        <!-- <div class="row">
-                                                                <h6><?= $row_track['r_serial_number']  ?></h6>
-                                                            </div> -->
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="row">
-                                                            <p style="display: none;" id="bootstrapCode"><?= $row_track['t_parcel'] ?></p>
-                                                            <div class="col-12">
-                                                                หมายเลขพัสดุ : <button class="btn btn-primary" id="copyButton" onclick="copyToClipboard()"><?= $row_track['t_parcel'] ?></button>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                    <!-- </div> -->
-                                                    <hr>
-                                                    <br>
-                                                <?php }  ?>
-                                                <script>
-                                                    function copyToClipboard() {
-                                                        var copyText = document.getElementById("bootstrapCode");
-                                                        var textarea = document.createElement("textarea");
-                                                        textarea.value = copyText.textContent;
-                                                        document.body.appendChild(textarea);
-                                                        textarea.select();
-                                                        document.execCommand("copy");
-                                                        document.body.removeChild(textarea);
-                                                        alert("Copied to clipboard: " + copyText.textContent);
-                                                    }
-                                                </script>
-
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <?php }
-                                                                                                                                                                                                                                                                                                                                                                    $sql_start_repair_date = "SELECT * FROM repair_status 
+                                            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">หมายเลขพัสดุจากทางร้าน</button>
+                                            <?php }
+                                        $sql_start_repair_date = "SELECT * FROM repair_status 
                                 WHERE get_r_id = '$id_get_r' AND status_id = 19 OR status_id = 17 AND del_flg = 0 ORDER BY rs_date_time DESC LIMIT 1;";
-                                                                                                                                                                                                                                                                                                                                                                    $result_start_repair_date  = mysqli_query($conn, $sql_start_repair_date);
-                                                                                                                                                                                                                                                                                                                                                                    $row_start_repair_date = mysqli_fetch_array($result_start_repair_date);
-                                                                                                                                                                                                                                                                                                                                                                    if ($row_start_repair_date['rs_date_time']) {
-                                                                                                                                                                                                                                                                                                                                                                        $startRepairDate_C = $row_start_repair_date['rs_date_time'];
-                                                                                                                                                                                                                                                                                                                                                                        if ($row_start_day['get_date_conf']) {
-                                                                                                                                                                                                                                                                                                                                                                            $daysToAdd_C = $row_start_day['get_date_conf'];
+                                        $result_start_repair_date  = mysqli_query($conn, $sql_start_repair_date);
+                                        $row_start_repair_date = mysqli_fetch_array($result_start_repair_date);
+                                        if ($row_start_repair_date['rs_date_time']) {
+                                            $startRepairDate_C = $row_start_repair_date['rs_date_time'];
+                                            if ($row_start_day['get_date_conf']) {
+                                                $daysToAdd_C = $row_start_day['get_date_conf'];
 
-                                                                                                                                                                                                                                                                                                                                                                            $startDate_C = new DateTime($startRepairDate_C);
-                                                                                                                                                                                                                                                                                                                                                                            $endDate_C = clone $startDate_C;
-                                                                                                                                                                                                                                                                                                                                                                            $endDate_C->add(new DateInterval('P' . $daysToAdd_C . 'D'));
+                                                $startDate_C = new DateTime($startRepairDate_C);
+                                                $endDate_C = clone $startDate_C;
+                                                $endDate_C->add(new DateInterval('P' . $daysToAdd_C . 'D'));
 
-                                                                                                                                                                                                                                                                                                                                                                            $formattedEndDate_conf_C = $endDate_C->format('d F Y H:i:s');
-                                                                                                                                                                                                                                                                                                                                                                            // echo $formattedEndDate_conf;
+                                                $formattedEndDate_conf_C = $endDate_C->format('d F Y H:i:s');
+                                                // echo $formattedEndDate_conf;
 
 
-                                    ?>
-                                        <p style="color: gray" class="mb-0"><i class="fa fa-calendar-check-o"></i> กำหนดแล้วเสร็จวันที่ : <?= date('d F Y', strtotime($formattedEndDate_conf_C)) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($formattedEndDate_conf_C)); ?> <u style="color: #B90000;">(<?= $row_start_day['get_date_conf'] ?> วัน)</u></span>
-                                            <!-- <span style="color:red">*** นับจากวันที่รับอุปกรณ์</span> -->
-                                        </p>
-                                <?php }
-                                                                                                                                                                                                                                                                                                                                                                    } ?>
+                                            ?>
+                                    <p style="color: gray" class="mb-0"><i class="fa fa-calendar-check-o"></i> กำหนดแล้วเสร็จวันที่ : <?= date('d F Y', strtotime($formattedEndDate_conf_C)) . ' ' ?><span style="display:inline-block; color: gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($formattedEndDate_conf_C)); ?> <u style="color: #B90000;">(<?= $row_start_day['get_date_conf'] ?> วัน)</u></span>
+                                        <!-- <span style="color:red">*** นับจากวันที่รับอุปกรณ์</span> -->
+                                    </p>
+                            <?php }
+                                        } ?>
+                            <?php if ($row_2['status_id'] == 9 || $row_2['status_id'] == 3) {
+                                // success_pay_status
+                            ?>
+                                <!-- <div class="alert alert-success"> -->
+                                <p style="color: gray"> พิมพ์บิลใบเสร็จ : <a href="#" style="color: blue">บิลใบเสร็จ <span class="tooltip">กดเพื่อดูใบเสร็จในหมายเลขซ่อมนี้</span></a></p>
+                                <!-- </div> -->
+                            <?php } ?>
                                 </div>
                             </div>
 
@@ -728,6 +2210,7 @@ $part_check = 0;
                                         </ul>
 
                                     </div>
+
                                 </div>
                                 <!-- <div class="row d-flex justify-content-center">
                                     <div class="col-12">
@@ -818,51 +2301,16 @@ $part_check = 0;
                                         <?php if ($row_c['get_t_id'] != NULL) { ?>
                                             <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_unique" aria-controls="offcanvasTop_unique"><u>หมายเลขพัสดุจากคุณ</u></a>
 
-                                            <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop_unique" aria-labelledby="offcanvasTopLabel" style="height: 70%">
-                                                <div class="offcanvas-header">
-                                                    <h5 id="offcanvasTopLabel">Offcanvas top</h5>
-                                                    <br>
-                                                    <br>
-                                                    <a type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></a>
-                                                </div>
-                                                <div class="offcanvas-body">
-                                                    <a type="button" class="btn-close text-reset d-flex justify-content-end ms-auto" data-bs-dismiss="offcanvas" aria-label="Close"></a>
-                                                    <h2><span class="badge bg-secondary">หมายเลขพัสดุของท่าน</span></h2>
-                                                    <br>
-                                                    <?php
-                                                    $sql_com_m = "SELECT * FROM get_detail
-                                                                    LEFT JOIN get_repair ON get_detail.get_r_id = get_repair.get_r_id 
-                                                                    LEFT JOIN tracking ON get_detail.get_t_id = tracking.t_id 
-                                                                    LEFT JOIN repair ON repair.r_id = get_detail.r_id WHERE get_repair.get_r_id = '$id_get_r' AND repair.del_flg = '0' AND get_detail.get_d_conf = '0'";
-                                                    $result_com_m = mysqli_query($conn, $sql_com_m);
 
-                                                    $count_com = 0;
-                                                    while ($row_com_m = mysqli_fetch_array($result_com_m)) {
-                                                        $count_com += 1;
-                                                    ?>
-                                                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="<?= $row_com_m['r_serial_number'] ?>">
-                                                            <div class="alert alert-secondary">
-                                                                <p>
-                                                                    <span class="badge bg-secondary"><?= $count_com ?> </span> :
-                                                                    <span class="inline"><?= $row_com_m['r_brand'] . ' ' . $row_com_m['r_model'] . ' - ' . $row_com_m['t_parcel'] ?></span>
-                                                                    <!-- <span id="tooltip"><?= $row_com_m['r_serial_number'] ?></span> -->
-                                                                </p>
-                                                            </div>
-                                                        </a>
-                                                    <?php
-                                                    }
-                                                    ?>
-                                                </div>
-                                            </div>
 
                                         <?php } ?>
                                     </div>
                                 </font>
                                 <hr>
-                                <font>
+                                <font class="auto-font">
                                     <h5><i class="fa fa-shield"></i> วิธีการรับอุปกรณ์</h5>
                                 </font>
-                                <p style="margin-left : 5%;color : gray">
+                                <p style="margin-left : 5%;color : gray" class="auto-font">
                                     <?php
                                     if ($row_2['get_deli'] == 0) {
                                         echo 'รับอุปกรณ์ที่ร้าน';
@@ -873,14 +2321,14 @@ $part_check = 0;
                                 </p>
                                 <?php if ($total_part_price != NULL) {  ?>
                                     <hr>
-                                    <div class="accordion accordion-flush" id="accordionFlushExample" style="background-color: #F1F1F1;">
+                                    <div class="accordion accordion-flush auto-font" id="accordionFlushExample" style="background-color: #F1F1F1;">
                                         <div class="accordion-item" id="totalprice" style="background-color:#F1F1F1">
                                             <div>
                                                 <h5 class="accordion-header" id="flush-headingTwo" style="background-color: #F1F1F1;">
                                                     <br>
                                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo" style="background-color: #F1F1F1;">
-                                                        <h5>
-                                                            รวมการสั่งซ่อม <?= number_format($total_part_price + $row_2['get_wages'] + $row_2['get_add_price'] + $row_2['get_check']) ?> บาท
+                                                        <h5 class="auto-font-head">
+                                                            รวมการสั่งซ่อม <?= number_format($total_part_price + $row_2['get_wages'] + $row_2['get_add_price']) ?> บาท
                                                         </h5>
                                                     </button>
                                                 </h5>
@@ -913,26 +2361,6 @@ $part_check = 0;
                                                                 ?>
                                                         </div>
                                                     </div>
-                                                    <?php
-                                                    if ($row_2['get_check'] != NULL) {
-                                                    ?>
-                                                        <div class="row">
-                                                            <div class="col-md-6 d-flex  justify-content-start">
-                                                                ค่าตรวจสอบอุปกรณ์
-                                                            </div>
-                                                            <div class="col-md-6 d-flex  justify-content-end">
-                                                                ฿ <?php
-                                                                    if ($row_2['get_check'] != NULL) {
-                                                                        echo number_format($row_2['get_check']);
-                                                                    } else {
-                                                                        echo '0';
-                                                                    }
-                                                                    ?>
-                                                            </div>
-                                                        </div>
-                                                    <?php
-                                                    }
-                                                    ?>
                                                     <div class="row">
                                                         <div class="col-md-6 d-flex  justify-content-start">
                                                             ค่าจัดส่ง
@@ -961,293 +2389,7 @@ $part_check = 0;
 
                                                         <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">ดูรายการอะไหล่</button>
 
-                                                        <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel" style="height: 60%;">
-                                                            <div class="offcanvas-header">
-                                                                <h5 id="offcanvasTopLabel">Offcanvas top</h5>
-                                                                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvasone" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="offcanvasone-body" style="height: 1000px;">
-                                                                <br>
-                                                                <!-- Page Wrapper -->
-                                                                <div id="wrapper">
-                                                                    <!-- Content Wrapper -->
-                                                                    <div id="content-wrapper" class="d-flex flex-column">
 
-                                                                        <!-- Main Content -->
-                                                                        <div id="content">
-
-                                                                            <!-- Begin Page Content -->
-                                                                            <div class="container-fluid">
-
-                                                                                <!-- Page Heading -->
-                                                                                <br>
-                                                                                <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ข้อมูลอะไหล่ของคุณ</h1>
-                                                                                <!-- <a href="add_parts.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มอะไหล่หรือไม่?</a> -->
-                                                                                <br>
-                                                                                <br>
-
-                                                                                <!-- DataTales Example -->
-                                                                                <div class="card shadow mb-4">
-                                                                                    <div class="card-header py-3">
-                                                                                        <h6 class="m-0 font-weight-bold text-primary">ข้อมูลอะไหล่เครื่องเสียง</h6>
-                                                                                    </div>
-                                                                                    <div class="card-body">
-                                                                                        <div class="table-responsive">
-                                                                                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                                                                                <thead>
-                                                                                                    <tr>
-                                                                                                        <th>ลำดับ</th>
-                                                                                                        <th>หมายเลขอะไหล่</th>
-                                                                                                        <th>รหัสการซ่อม</th>
-                                                                                                        <th>ชื่อ</th>
-                                                                                                        <th>Brand</th>
-                                                                                                        <th>Model</th>
-                                                                                                        <!-- <th>Name</th> -->
-                                                                                                        <th>ประเภท</th>
-                                                                                                        <!-- <th>รายละเอียด</th> -->
-                                                                                                        <th>ราคา</th>
-                                                                                                        <th>จำนวน</th>
-                                                                                                        <th>ราคารวม</th>
-                                                                                                    </tr>
-                                                                                                </thead>
-                                                                                                <tbody>
-                                                                                                    <?php
-                                                                                                    $get_id = $id_get_r;
-                                                                                                    $sql_op = "SELECT
-                                                                                                    *,
-                                                                                                    repair_detail.p_id,
-                                                                                                    repair_detail.rd_value_parts,
-                                                                                                    repair_detail.get_d_id,
-                                                                                                    parts.p_brand,
-                                                                                                    parts.p_model,
-                                                                                                    parts.p_price,
-                                                                                                    parts_type.p_type_name,
-                                                                                                    repair_status.rs_id,
-                                                                                                    parts.p_pic
-                                                                                                FROM
-                                                                                                    `repair_detail`
-                                                                                                    LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
-                                                                                                    LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
-                                                                                                    LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
-                                                                                                    LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                                                                                                    JOIN parts ON parts.p_id = repair_detail.p_id
-                                                                                                    LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
-                                                                                                WHERE
-                                                                                                    get_repair.del_flg = 0 AND repair_detail.del_flg = 0
-                                                                                                    AND get_repair.get_r_id = '$get_id'
-                                                                                                GROUP BY
-                                                                                                    rd_id, get_detail.get_d_id
-                                                                                                    ;";
-                                                                                                    $result_op = mysqli_query($conn, $sql_op);
-                                                                                                    $count_part = 0;
-                                                                                                    while ($row_op = mysqli_fetch_array($result_op)) {
-                                                                                                        $count_part++;
-                                                                                                        $p_id = $row_op['p_id'];
-                                                                                                        $rs_id = $row_op['rs_id'];
-                                                                                                    ?>
-                                                                                                        <?php
-
-                                                                                                        $sql_count = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id' AND p_id = '$p_id'";
-                                                                                                        $result_count = mysqli_query($conn, $sql_count);
-                                                                                                        $row_count = mysqli_fetch_array($result_count);
-
-                                                                                                        ?>
-                                                                                                        <tr>
-                                                                                                            <td><?php
-                                                                                                                if ($count_part == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                    echo $count_part;
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-                                                                                                            <td><?php
-                                                                                                                if ($row_op['p_id'] == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                    echo $row_op['p_id'];
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-                                                                                                            <td><?php
-                                                                                                                if ($row_op['get_d_id'] == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                    echo $row_op['get_d_id'] . ' ' . '(' . $row_op['r_brand'] . ' ' . $row_op['r_model'] . ')';
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-
-                                                                                                            <td><?php
-                                                                                                                if ($row_op['p_pic'] == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                ?>
-                                                                                                                    <img src="<?= $row_op['p_pic'] ?>" width="50px" alt="Not Found">
-                                                                                                                <?php
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-
-
-                                                                                                            <!-- <td><?php
-                                                                                                                        if ($row_op['p_name'] == NULL) {
-                                                                                                                            echo "-";
-                                                                                                                        } else {
-                                                                                                                            echo $row_op['p_name'];
-                                                                                                                        }
-                                                                                                                        ?>
-                                        </td> -->
-                                                                                                            <td><?php
-                                                                                                                if ($row_op['p_brand'] == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                    echo $row_op['p_brand'];
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-                                                                                                            <td><?php
-                                                                                                                if ($row_op['p_model'] == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                    echo $row_op['p_model'];
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-                                                                                                            <td><?php
-                                                                                                                if ($row_op['p_type_name'] == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                    echo $row_op['p_type_name'];
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-                                                                                                            <td><?php
-                                                                                                                if ($row_op['p_price'] == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                    echo $row_op['p_price'];
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-                                                                                                            <td><?php
-                                                                                                                if ($row_op['rd_value_parts'] == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                    echo $row_op['rd_value_parts'];
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-                                                                                                            <td>
-                                                                                                                <?php
-                                                                                                                if ($row_op['p_price'] == NULL) {
-                                                                                                                    echo "-";
-                                                                                                                } else {
-                                                                                                                    echo number_format($row_op['rd_value_parts'] * $row_op['p_price']);
-                                                                                                                    $total +=  $row_op['rd_value_parts'] * $row_op['p_price'];
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </td>
-                                                                                                        </tr>
-                                                                                                    <?php
-                                                                                                    }
-                                                                                                    ?>
-                                                                                                    <tr>
-                                                                                                        <td colspan="7">ยอดอะไหล่ทั้งหมด</td>
-                                                                                                        <td colspan="2">ราคารวม</td>
-                                                                                                        <td><?= number_format($total) ?></td>
-                                                                                                        <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
-                                                                                                    </tr>
-                                                                                                    <tr>
-                                                                                                        <?php
-                                                                                                        $sql_w = "SELECT get_wages FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
-                                                                                                        $result_w = mysqli_query($conn, $sql_w);
-                                                                                                        $row_w = mysqli_fetch_array($result_w);
-                                                                                                        ?>
-                                                                                                        <td colspan="7">ค่าแรงช่าง</td>
-                                                                                                        <td colspan="2">ค่าแรง</td>
-                                                                                                        <td><?= number_format($row_w['get_wages']) ?></td>
-                                                                                                        <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
-                                                                                                    </tr>
-                                                                                                    <?php
-                                                                                                    $sql_p = "SELECT get_deli , get_add_price ,get_check FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
-                                                                                                    $result_p = mysqli_query($conn, $sql_p);
-                                                                                                    $row_p = mysqli_fetch_array($result_p);
-
-                                                                                                    if ($row_p['get_deli'] == 1) {
-                                                                                                        $total += $row_p['get_add_price'];
-                                                                                                    ?>
-                                                                                                        <tr>
-                                                                                                            <td colspan="7">ค่าจัดส่ง</td>
-                                                                                                            <td colspan="2">ราคาจัดส่ง</td>
-                                                                                                            <td><?= number_format($row_p['get_add_price']) ?></td>
-                                                                                                            <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
-                                                                                                        </tr>
-                                                                                                    <?php
-                                                                                                    }
-                                                                                                    if ($row_p['get_check'] != NULL) {
-                                                                                                        $total += $row_p['get_check'];
-                                                                                                    ?>
-                                                                                                        <tr>
-                                                                                                            <td colspan="7">ค่าตรวจเช็คอุปกรณ์</td>
-                                                                                                            <td colspan="2">ค่าบริการตรวจเช็ค</td>
-                                                                                                            <td><?= number_format($row_p['get_check']) ?></td>
-                                                                                                            <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
-                                                                                                        </tr>
-                                                                                                    <?php
-                                                                                                    } ?>
-
-
-                                                                                                    <tr>
-                                                                                                        <td colspan="7"></td>
-                                                                                                        <td colspan="2">ราคารวมทั้งหมด</td>
-                                                                                                        <td>
-                                                                                                            <h5><?= number_format($total + $row_w['get_wages']) ?> </h5>
-                                                                                                        </td>
-                                                                                                        <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
-                                                                                                    </tr>
-                                                                                                </tbody>
-                                                                                            </table>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <center>
-                                                                                </center>
-                                                                                <!-- Place this in the <head> section of your HTML document -->
-                                                                                <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-                                                                                <!-- Place this before the closing </body> tag -->
-                                                                                <script>
-                                                                                    document.addEventListener('DOMContentLoaded', function() {
-                                                                                        document.getElementById('confirmButton').addEventListener('click', function() {
-                                                                                            Swal.fire({
-                                                                                                icon: 'question',
-                                                                                                title: 'ยืนยันการดำเนินการ',
-                                                                                                text: 'การ "ยืนยัน" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
-                                                                                                showCancelButton: true,
-                                                                                                confirmButtonText: 'ยืนยัน',
-                                                                                                cancelButtonText: 'ยกเลิก'
-                                                                                            }).then((willConfirm) => {
-                                                                                                if (willConfirm.isConfirmed) {
-                                                                                                    window.location.href = "action/conf_part.php?id=<?= $get_id ?>"; // Redirect to home.php
-                                                                                                }
-                                                                                            });
-                                                                                        });
-                                                                                    });
-                                                                                </script>
-
-
-                                                                            </div>
-                                                                            <!-- End of Main Content -->
-
-                                                                        </div>
-                                                                        <!-- End of Content Wrapper -->
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -1271,7 +2413,7 @@ $part_check = 0;
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" style="background-color: #f1f1f1;border:1px solid #CACACA" aria-expanded="false" aria-controls="flush-collapseOne" onclick="return MiniStatus()">
                                             <font>
                                                 <br>
-                                                <h2 style="margin-left: 1.2rem;">ติดตามสถานะ (Status)</h2>
+                                                <h2 style="margin-left: 1.2rem;" class="auto-font-head">ติดตามสถานะ (Status)</h2>
                                                 <div id="ShowMiniOfStatus" style="display: none;">
                                                     <span id="tooltip">ย่อรายละเอียดสถานะ</span>
                                                 </div>
@@ -1370,7 +2512,7 @@ $part_check = 0;
                                                 <div class="alert alert-success" role="alert">
                                                     <i class="fa fa-check-square"></i> ดำเนินการซ่อมเสร็จสิ้น
                                                 </div>
-                                            <?php } ?>
+                                            <?php }  ?>
                                             <div class="row">
                                                 <div class="col">
                                                     <ul class="timeline-3">
@@ -1405,7 +2547,8 @@ $part_check = 0;
                                                         ?>
                                                             <li>
                                                                 <hr style="border: 3px solid black;">
-                                                                <h5 style="display:inline"><button class="btn btn-outline-secondary" style="color : white; background-color : <?= $row1['status_color'] ?>; border : 2px solid <?= $row1['status_color'] ?>;"><?= $row1['status_name'] ?>
+                                                                <h4 style="display:inline">
+                                                                    <h4 style="color : <?= $row1['status_color'] ?>;"><?= $row1['status_name'] ?>
                                                                         <?php if ($row1['status_id'] == 6) {
 
                                                                             // $carry_out_id = $row['status_id'];
@@ -1417,9 +2560,12 @@ $part_check = 0;
                                                                                 #ครั้งที่<?= $row_carry_out[0] - $count_carry_out ?>
                                                                         <?php }
                                                                             $count_carry_out += 1;
-                                                                        } ?></button></h5>
+                                                                        } ?></h4>
+                                                                </h4>
+
                                                                 <h6 style="display:inline;"><i class="uil uil-book"></i>&nbsp;<?= $formattedDate ?></h6>
                                                                 <p style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row1['rs_date_time'])); ?></p>
+                                                                <br>
                                                                 <?php
                                                                 $rs_id = $row1['rs_id'];
                                                                 $sql_check_p = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id' AND del_flg = '0'";
@@ -1446,11 +2592,16 @@ $part_check = 0;
                                                                     }
                                                                 }
                                                                 if ($row1['status_id'] == 8 || $row1['status_id'] == 26  && $row1['rs_conf'] == NULL) {
+
+                                                                    $sql_check_pay = "SELECT * FROM repair_status WHERE del_flg = 0 AND get_r_id = $id_get_r  ORDER BY rs_id DESC LIMIT 1";
+                                                                    $result_check_pay = mysqli_query($conn, $sql_check_pay);
+                                                                    $row_check_pay = mysqli_fetch_array($result_check_pay);
+
                                                                     if ($row1['status_id'] == 26) {
                                                                         ?>
                                                                         <a href="form_pay.php?id=<?= $id_get_r ?>" class="btn btn-primary">ส่งหลักฐานการชำระเงิน</a>
                                                                     <?php
-                                                                    } else {
+                                                                    } elseif ($row_check_pay['status_id'] == 8) {
                                                                     ?>
                                                                         <a href="form_pay.php?id=<?= $id_get_r ?>" class="btn btn-primary">ทำการชำระเงิน</a>
                                                                     <?php
@@ -1527,7 +2678,7 @@ $part_check = 0;
                                                                 <?php
                                                                 } ?>
                                                                 <hr>
-                                                                <h5 class="btn btn-outline-primary">รายละเอียด</h5>
+                                                                <h5 class="f-gray-5">รายละเอียด</h5>
                                                                 <p class="mt-2" style="margin-left: 30px;"><?= $row1['rs_detail'] ?></p>
                                                                 <?php
                                                                 if ($row1['status_id'] == 5  && $row1['rs_conf'] == NULL) {
@@ -1596,8 +2747,8 @@ $part_check = 0;
 
                                                                 if ($row_pic_check[0] > 0) { ?>
                                                                     <hr>
-                                                                    <h6 class="btn btn-outline-secondary">รูปภาพประกอบ</h6>
-                                                                    <br><br>
+                                                                    <h5 class="f-gray-5">รูปภาพประกอบ</h5>
+                                                                    <br>
                                                                 <?php
                                                                 }
                                                                 $status_id = $row1['status_id'];
@@ -1819,21 +2970,33 @@ $part_check = 0;
                                                                 <br>
                                                                 <?php
                                                             }
+                                                            $sql_c_offer = "SELECT * FROM repair_status WHERE status_id = '19' AND del_flg = '0' AND get_r_id = $id_get_r ORDER BY rs_date_time DESC LIMIT 1";
+                                                            $result_c_offer = mysqli_query($conn, $sql_c_offer);
+                                                            $row_c_offer = mysqli_fetch_array($result_c_offer);
+
+                                                            $sql_conf = "SELECT * FROM repair_status WHERE del_flg = '0' AND get_r_id = $id_get_r ORDER BY rs_date_time DESC LIMIT 1";
+                                                            $result_conf = mysqli_query($conn, $sql_conf);
+                                                            $row_conf = mysqli_fetch_array($result_conf);
                                                             if ($row[0] > 0 || $status_id == 1) {
                                                                 if ($row1['rs_conf'] == NULL) { ?>
                                                                     <?php if ($status_id == 1 && !isset($cancel_id)) {
                                                                     ?>
                                                                         <p style="margin-left: 2%; color:red">*** หากต้องการยกเลิกคำส่งซ่อม ***</p>
                                                                         <a class="btn btn-danger" style="margin-left: 2%" onclick="showDivCancel()">ยกเลิก</a>
-                                                                    <?php
+                                                                        <?php
                                                                     } else if ($status_id != 1 && isset($cancel_id) && $row_2['status_id'] != 14) {
-                                                                    ?>
-                                                                        <hr>
-                                                                        <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
-                                                                        <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน/ยื่นข้อเสนอ</a>
-                                                                        <!-- <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a> -->
-                                                                        <a class="btn btn-success" id="confirmButtonSuccess0" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
+                                                                        if ($row_conf['rs_conf'] == NULL) {
+                                                                        ?>
+                                                                            <hr>
+                                                                            <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
+                                                                            <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModalUnique">
+                                                                                ไม่ทำการยืนยัน/ยื่นข้อเสนอ
+                                                                            </a>
+                                                                            <!-- <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน/ยื่นข้อเสนอ</a> -->
+                                                                            <!-- <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a> -->
+                                                                            <a class="btn btn-success" id="confirmButtonSuccess0" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
                                                                     <?php
+                                                                        }
                                                                     } ?>
 
 
@@ -1864,74 +3027,11 @@ $part_check = 0;
 
 
 
+                                                                 
+
 
                                                                     <div id="myDiv" style="display: none; margin: 20px 30px;">
-                                                                        <br>
-                                                                        <form id="canf_cancel" action="action/conf_cancel.php" method="POST">
-                                                                            <hr>
 
-                                                                            <h4 style="color: red">โปรดระบุเหตุผล</h4>
-                                                                            <input type="text" name="get_r_id" value="<?= $id_get_r ?>" hidden>
-                                                                            <input type="text" name="status_id" value="<?= $status_id ?>" hidden>
-                                                                            <label>
-                                                                                <input class="form-check-input" type="checkbox" name="checkbox1" value="ต้องการยกเลิกคำสั่งซ่อม" onclick="uncheckOtherCheckboxes('checkbox1')">
-                                                                                ต้องการยกเลิกคำสั่งซ่อม
-                                                                            </label><br>
-
-                                                                            <label>
-                                                                                <input class="form-check-input" type="checkbox" name="checkbox2" value="ไม่อยากใช้อะไหล่ข้างต้น" onclick="uncheckOtherCheckboxes('checkbox2')">
-                                                                                ไม่อยากใช้อะไหล่ข้างต้น
-                                                                            </label><br>
-
-                                                                            <label>
-                                                                                <input class="form-check-input" type="checkbox" name="checkbox3" value="อยากได้อะไหล่ที่ถูกกว่านี้" onclick="uncheckOtherCheckboxes('checkbox3')">
-                                                                                อยากได้อะไหล่ที่ถูกกว่านี้
-                                                                            </label><br>
-
-                                                                            <label>
-                                                                                <input class="form-check-input" type="checkbox" name="checkbox4" onclick="showTextarea(); uncheckOtherCheckboxes('checkbox4')">
-                                                                                อื่นๆ (หรือยื่นข้อเสนอ)
-                                                                            </label><br>
-
-                                                                            <textarea id="myTextarea" name="detail_cancel" style="display: none;" placeholder="โปรดระบุสาเหตุ"></textarea>
-
-                                                                            <br>
-                                                                            <a class="btn btn-danger" onclick="hideDiv()">ยกเลิก</a>
-                                                                            <a class="btn btn-success" id="confirmButtoncancel">ยืนยัน</a>
-
-                                                                            <script>
-                                                                                document.addEventListener('DOMContentLoaded', function() {
-                                                                                    var id_get_r = <?php echo json_encode($id_get_r); ?>; // Pass PHP variable to JavaScript
-                                                                                    var dialogShown = false; // Flag variable to track if the dialog is already displayed
-
-                                                                                    document.getElementById('confirmButtoncancel').addEventListener('click', function() {
-                                                                                        if (dialogShown) {
-                                                                                            return; // Exit if the dialog is already shown
-                                                                                        }
-
-                                                                                        dialogShown = true; // Set the flag to true to indicate that the dialog is displayed
-
-                                                                                        Swal.fire({
-                                                                                            icon: 'warning',
-                                                                                            title: 'ยืนยันดำเนินการส่งซ่อม',
-                                                                                            text: 'การ "ยืนยันเพื่อยกเลิก" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
-                                                                                            showCancelButton: true,
-                                                                                            confirmButtonText: 'ยืนยัน',
-                                                                                            cancelButtonText: 'ยกเลิก'
-                                                                                        }).then((willConfirm) => {
-                                                                                            if (willConfirm.isConfirmed) {
-                                                                                                var form = document.getElementById('canf_cancel');
-                                                                                                form.submit(); // Submit the form
-                                                                                            }
-
-                                                                                            dialogShown = false; // Reset the flag when the dialog is closed
-                                                                                        });
-                                                                                    });
-                                                                                });
-                                                                            </script>
-
-                                                                        </form>
-                                                                        <br><br>
                                                                     </div>
 
                                                                     <div id="cancel_status_1" style="display: none; margin: 20px 30px;">
@@ -2111,14 +3211,23 @@ $part_check = 0;
                                 </div>
                             </div>
 
-                        <?php } elseif ($status_id_last  == 4 && $row_2['rs_conf'] == NULL) { ?>
-                            <!-- <hr> -->
-                            <!-- <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p> -->
-                            <center>
-                                <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยัน</a>
-                                <a class="btn btn-success" id="confirmButtonSuccess1" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
-                            </center>
-                        <?php } elseif ($status_id_last  == 24) { ?>
+                            <?php
+
+                        } elseif ($status_id_last  == 4) {
+                            $sql_null = "SELECT * FROM repair_status WHERE get_r_id ='$get_r_id' AND del_flg = 0 ORDER BY rs_id DESC LIMIT 1";
+                            $result_null = mysqli_query($conn, $sql_null);
+                            $row_null = mysqli_fetch_array($result_null);
+                            if ($row_null['rs_conf'] == NULL) {
+                            ?>
+                                <!-- <hr> -->
+                                <!-- <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p> -->
+                                <center>
+                                    <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยันหห</a>
+                                    <a class="btn btn-success" id="confirmButtonSuccess1" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
+                                </center>
+                            <?php
+                            }
+                        } elseif ($status_id_last  == 24) { ?>
                             <!-- <hr> -->
                             <center>
                                 <p style="margin-left: 2%; color:red">*** ตรวจเช็คความปกติของอุปกรณ์ของท่านว่าใช้ได้หรือไม่ก่อนทำการยืนยันเสร็จสิ้นการซ่อม ***</p>
@@ -2134,22 +3243,60 @@ $part_check = 0;
                             $result_c_offer = mysqli_query($conn, $sql_c_offer);
                             $row_c_offer = mysqli_fetch_array($result_c_offer);
 
-                            if ($row_c_offer[0] > 0) {
+                            $sql_conf = "SELECT * FROM repair_status WHERE del_flg = '0' AND get_r_id = $id_get_r ORDER BY rs_date_time DESC LIMIT 1";
+                            $result_conf = mysqli_query($conn, $sql_conf);
+                            $row_conf = mysqli_fetch_array($result_conf);
+
+                            if ($row_c_offer[0] > 0 && $row_conf['rs_conf'] == NULL) {
 
                             ?>
                                 <center>
-                                    <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยัน</a>
-                                    <a class="btn btn-success" id="confirmButtonCheck" style="display:inline-block" onclick="sendValuetoArrived(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม6</a>
+                                    <a style="margin-left: 2%" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModalUnique">
+                                        ไม่ทำการยืนยัน/ยื่นข้อเสนอ
+                                    </a><a class="btn btn-success" id="confirmButtonCheck" style="display:inline-block" onclick="sendValuetoArrived(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม6</a>
 
                                 </center>
-                            <?php
+                                <?php
                             } else {
-                            ?> <center>
-                                    <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยัน</a>
-                                    <a class="btn btn-success" id="confirmButtonSuccess1" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม5</a>
+                                if ($row_conf['rs_conf'] == NULL) {
+                                ?> <center>
+                                        <a style="margin-left: 2%" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModalUnique">
+                                            ไม่ทำการยืนยัน/ยื่นข้อเสนอ
+                                        </a> <a class="btn btn-success" id="confirmButtonSuccess1" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม5</a>
 
-                                </center>
+                                    </center>
                             <?php }
+                            }
+                        } elseif ($status_id_last  == 9) {
+                            ?>
+                            <center>
+                                <a style="margin-left: 2%" href="send_config.php?id=<?= $get_id ?>" class="btn btn-danger">ส่งคำร้อง</a>
+                                <button class="btn btn-success" href="action/add_only_status.php?id=<?= $id_get_r ?>&status_id=3" style="display:inline-block" onclick="showConfirmation()">ยืนยันและตรวจสอบอุปกรณ์แล้ว</button>
+
+
+
+                                <script>
+                                    function showConfirmation() {
+                                        Swal.fire({
+                                            title: 'ยืนยันและตรวจสอบอุปกรณ์แล้ว?',
+                                            text: 'คุณต้องการยืนยันและตรวจสอบอุปกรณ์แล้วหรือไม่?',
+                                            icon: 'question',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#28a745', // Green color
+                                            cancelButtonColor: '#6c757d', // Gray color
+                                            confirmButtonText: 'ยืนยัน',
+                                            cancelButtonText: 'ยกเลิก'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                // If confirmed, proceed with the link redirection
+                                                window.location.href = "action/add_only_status.php?id=<?= $id_get_r ?>&status_id=3";
+                                            }
+                                        });
+                                    }
+                                </script>
+
+                            </center>
+                        <?php
                         } elseif ($status_id_last  == 4 && $row_2['rs_conf'] != NULL) { ?>
                             <div class="d-flex justify-content-center">
                                 <div class="accordion accordion-flush" id="accordionFlushExample">
@@ -2262,52 +3409,53 @@ $part_check = 0;
                             ?>
                                 <li>
                                     <hr style="border: 5px solid black;">
-                                    <h5 style="display:inline"><button class="btn btn-outline-secondary" style="color : white; background-color : <?= $row1['status_color'] ?>; border : 2px solid <?= $row1['status_color'] ?>;"><?= $row1['status_name'] ?>
-                                            <?php
-                                            if ($row1['status_id'] == 6) {
+                                    <h4 style="display:inline">
+                                        <h4 style="color : <?= $row1['status_color'] ?>;"><?= $row1['status_name'] ?>
+                                            <?php if ($row1['status_id'] == 6) {
 
-                                                $carry_out_id = $row['status_id'];
-                                                $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = 155 AND status_id = 6 ORDER BY rs_date_time DESC;";
-                                                $result_carry_out = mysqli_query($conn, $sql_cary_out);
-                                                $row_carry_out = mysqli_fetch_array($result_carry_out);
+                                                // $carry_out_id = $row['status_id'];
+                                                // $sql_cary_out = "SELECT COUNT(get_r_id) FROM `repair_status` WHERE get_r_id = 155 AND status_id = 6 ORDER BY rs_date_time DESC;";
+                                                // $result_carry_out = mysqli_query($conn, $sql_cary_out);
+                                                // $row_carry_out = mysqli_fetch_array($result_carry_out);
 
-                                                if ($row_carry_out[0] > 1) {
-                                            ?> #ครั้งที่<?= $row_carry_out[0] - $count_carry_out ?>
-                                            <?php
-                                                }
+                                                if ($row_carry_out[0] > 1) { ?>
+                                                    #ครั้งที่<?= $row_carry_out[0] - $count_carry_out ?>
+                                            <?php }
                                                 $count_carry_out += 1;
-                                            } ?></button></h5>
+                                            } ?></h4>
+                                    </h4>
+
                                     <h6 style="display:inline;"><i class="uil uil-book"></i>&nbsp;<?= $formattedDate ?></h6>
                                     <p style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row1['rs_date_time'])); ?></p>
-                                    <?php
-                                    $rs_id = $row1['rs_id'];
-                                    $sql_check_p = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id' AND del_flg = '0'";
-                                    $result_check_p = mysqli_query($conn, $sql_check_p);
-                                    $row = mysqli_fetch_array($result_check_p);
+                                    <br><?php
+                                        $rs_id = $row1['rs_id'];
+                                        $sql_check_p = "SELECT * FROM repair_detail WHERE rs_id = '$rs_id' AND del_flg = '0'";
+                                        $result_check_p = mysqli_query($conn, $sql_check_p);
+                                        $row = mysqli_fetch_array($result_check_p);
 
-                                    $sql_check_p = "SELECT rd_id
+                                        $sql_check_p = "SELECT rd_id
                                 FROM repair_detail
                                 LEFT JOIN get_repair ON get_repair.get_r_id = repair_detail.get_r_id
                                 LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
                                 WHERE repair_status.get_r_id = '$id_get_r' AND repair_detail.del_flg = '0';";
-                                    $result_check_p = mysqli_query($conn, $sql_check_p);
-                                    $row_check_part = mysqli_fetch_array($result_check_p);
+                                        $result_check_p = mysqli_query($conn, $sql_check_p);
+                                        $row_check_part = mysqli_fetch_array($result_check_p);
 
-                                    if ($row_p['rs_id'] == $row1['rs_id'] && $row_check_part['rd_id'] != NULL) {
-                                        if ($row1['status_id'] != 8) {
-                                            if ($row1['status_id'] == 9 || $row1['status_id'] == 10) {  ?>
+                                        if ($row_p['rs_id'] == $row1['rs_id'] && $row_check_part['rd_id'] != NULL) {
+                                            if ($row1['status_id'] != 8) {
+                                                if ($row1['status_id'] == 9 || $row1['status_id'] == 10) {  ?>
                                                 <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">จำนวนอะไหล่</a>
                                             <?php
-                                            } else {
+                                                } else {
                                             ?>
                                                 <a class="btn btn-outline-danger" style="margin-left: 20px" href="#" onclick="openModalPart('quantitypart')">ดูจำนวนอะไหล่ที่ต้องใช้</a>
                                         <?php }
+                                            }
                                         }
-                                    }
-                                    if ($row1['status_id'] == 8 && $row1['rs_conf'] == NULL) { ?>
+                                        if ($row1['status_id'] == 8 && $row1['rs_conf'] == NULL) { ?>
                                         <a href="form_pay.php?id=<?= $id_get_r ?>" class="btn btn-primary">ทำการชำระเงิน</a>
                                     <?php
-                                    } ?>
+                                        } ?>
                                     <?php if ($row1['get_track'] != NULL && $row1['status_id'] == 24) {
                                     ?>
                                         <hr>
@@ -2377,7 +3525,7 @@ $part_check = 0;
                                         </div>
                                     <?php  } ?>
                                     <hr>
-                                    <h5 class="btn btn-outline-primary">รายละเอียด</h5>
+                                    <h5 class="f-gray-5">รูปภาพประกอบ</h5>
                                     <p class="mt-2" style="margin-left: 30px;"><?= $row1['rs_detail'] ?></p>
                                     <?php
                                     if ($row1['status_id'] == 5  && $row1['rs_conf'] == NULL) {
@@ -2676,7 +3824,11 @@ $part_check = 0;
                                         ?>
                                             <hr>
                                             <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
-                                            <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน/ยื่นข้อเสนอ</a>
+                                            <!-- Button trigger modal -->
+                                            <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModalUnique">
+                                                ไม่ทำการยืนยัน/ยื่นข้อเสนอ
+                                            </a>
+                                            <!-- <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน/ยื่นข้อเสนอ</a> -->
                                             <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a>
                                         <?php
                                         } ?>
