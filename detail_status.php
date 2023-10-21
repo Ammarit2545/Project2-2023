@@ -30,9 +30,10 @@ $part_check = 0;
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
     <link rel="stylesheet" href="css/status_ok_problem_ok.css">
     <link rel="stylesheet" href="css/all_page.css">
-    <link rel="stylesheet" href="css/detail_status.css">
+    <!-- <link rel="stylesheet" href="css/detail_status.css"> -->
     <link rel="icon" type="image/x-icon" href="img brand/anelogo.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <title>Status - ANE</title>
 
     <!-- Example CDNs, use appropriate versions and sources -->
@@ -40,24 +41,416 @@ $part_check = 0;
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+
+    <!-- Place this in the <head> section of your HTML document -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <!-- Include SweetAlert library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Place this in the <head> section of your HTML document -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <!-- Place this before the closing </body> tag -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.10/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         <?php include('css/all_page.css'); ?>
     </style>
     <style>
-        .modal-backdrop {
-            background-color: transparent;
+        body {
+            font-family: sans-serif;
+        }
+
+        .file-upload {
+            width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        #button-status {
+            margin-left: 2%;
+            color: black;
+        }
+
+        #button-status:hover {
+            color: green;
+        }
+
+        .file-upload-btn {
+            width: 100%;
+            margin: 0;
+            color: #fff;
+            background: #0090C6;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            border-bottom: 4px solid #0090C6;
+            transition: all .2s ease;
+            outline: none;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .file-upload-btn:hover {
+            background: #0090C6;
+            transition: all .2s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-btn:active {
+            border: 0;
+            transition: all .2s ease;
+        }
+
+        .file-upload-content {
+            display: none;
+            text-align: center;
+        }
+
+        .file-upload-input {
+            position: absolute;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            outline: none;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .image-upload-wrap {
+            margin-top: 20px;
+            border: 4px dashed #0090C6;
+            position: relative;
+        }
+
+        .image-dropping,
+        .image-upload-wrap:hover {
+            background-color: #0090C6;
+        }
+
+        .image-title-wrap {
+            padding: 0 15px 15px 15px;
+            color: #222;
+        }
+
+        .drag-text {
+            text-align: center;
+        }
+
+        .drag-text h3 {
+            font-weight: 100;
+            text-transform: uppercase;
+            color: gray;
+            padding: 60px 0;
+        }
+
+        .file-upload-image {
+            max-height: 200px;
+            max-width: 200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .remove-image {
+            width: 200px;
+            margin: 0;
+            color: #fff;
+            background: #cd4535;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            border-bottom: 4px solid #b02818;
+            transition: all .2s ease;
+            outline: none;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .remove-image:hover {
+            background: #c13b2a;
+            color: #ffffff;
+            transition: all .2s ease;
+            cursor: pointer;
+        }
+
+        .remove-image:active {
+            border: 0;
+            transition: all .2s ease;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            /* Dim black background */
+        }
+
+
+        #modal-image {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            margin: auto;
+            /* Center the image horizontally */
+        }
+
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .iframe-container {
+            display: none;
+        }
+
+        .check_icon {
+            margin-left: 10px;
+        }
+
+        #drop-shadow {
+            border-radius: 5%;
+            box-shadow: 0 2px 4px rgba(0, 0.2, 0.2, 0.2);
+            /* Adjust the shadow properties as needed */
+        }
+
+
+        #bounce-item {
+            /* box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3); */
+            /* Add a gray shadow */
+            transition: transform 0.3s, box-shadow 0.3s;
+            /* Add transition for transform and box-shadow */
+        }
+
+        #bounce-item:hover #totalprice {
+            transform: scale(1.02);
+            /* Increase size on hover */
+            /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); */
+            /* Increase shadow size and intensity on hover */
+            /* border: 2px solid gray; */
+
+        }
+
+        #bounce-item:hover {
+            transform: scale(1.02);
+            /* Increase size on hover */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            /* Increase shadow size and intensity on hover */
+            /* border: 2px solid gray; */
+
+        }
+
+        .inline {
+            display: inline;
+        }
+
+        #tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            white-space: nowrap;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        #bounce-item:hover #tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
+            animation: tooltipFadeIn 0.3s, tooltipBounce 0.6s;
+        }
+
+
+
+        #totalprice:hover #tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
+            animation: tooltipFadeIn 0.3s, tooltipBounce 0.6s;
+        }
+
+        #process-status:hover #tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
+            animation: tooltipFadeIn 0.3s, tooltipBounce 0.6s;
+        }
+
+        @keyframes tooltipFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes tooltipBounce {
+
+            0%,
+            100% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+
+            50% {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .card {
+            z-index: 0;
+            background-color: #ECEFF1;
+            padding-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        .top {
+            padding-top: 40px;
+            padding-left: 13% !important;
+            padding-right: 13% !important;
+        }
+
+        /*Icon progressbar*/
+        #progressbar {
+            margin-bottom: 30px;
+            overflow: hidden;
+            color: #455A64;
+            padding-left: 0px;
+            margin-top: 30px;
+        }
+
+        #progressbar li {
+            list-style-type: none;
+            font-size: 13px;
+            width: 12.5%;
+            float: left;
+            position: relative;
+            font-weight: 400;
+        }
+
+        #progressbar .step0:before {
+            font-family: FontAwesome;
+            content: "\f10c";
+            color: #fff;
+        }
+
+        #progressbar li:before {
+            width: 40px;
+            height: 40px;
+            line-height: 45px;
+            display: block;
+            font-size: 20px;
+            background: #C5CAE9;
+            border-radius: 50%;
+            margin: auto;
+            padding: 0px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /*ProgressBar connectors*/
+        #progressbar li:after {
+            content: '';
+            width: 100%;
+            height: 12px;
+            background: #C5CAE9;
+            position: absolute;
+            left: -50%;
+            top: 16px;
+            z-index: -1;
+        }
+
+        #progressbar li:first-child:after {
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+            position: absolute;
+            left: 0;
+        }
+
+        #progressbar li:last-child:after {
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        /*Color number of the step and the connector before it*/
+        #progressbar li.active:before,
+        #progressbar li.active:after {
+            background: green;
+        }
+
+        #progressbar li.active:before {
+            font-family: FontAwesome;
+            content: "\f00c";
+        }
+
+        .icon {
+            width: 60px;
+            height: 60px;
+            margin-right: 15px;
+        }
+
+        .icon-content {
+            padding-bottom: 20px;
+        }
+
+        #font-status {
+            font-style: oblique;
+            font-weight: 100;
+        }
+
+        #progressbar li:first-child:after {
+            content: none;
+        }
+
+
+        @media screen and (max-width: 992px) {
+            .icon-content {
+                width: 50%;
+            }
         }
     </style>
 </head>
 
 <body>
-    
+    <?php
+    if ($row1 > 0) {
+        include('bar/topbar_user.php');
+    }
+    ?>
     <!-- Modal -->
     <div class="modal fade " id="staticBackdropss" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header"> :
-                    <h4 style="color:white">รายการซ่อมในหมายเลขแจ้งซ่อม <?= $id_get_r  ?></h4>
+                <div class="modal-header">
+                    <h4>รายการซ่อมในหมายเลขแจ้งซ่อม <?= $id_get_r  ?></h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="background-color: #E7E7E7;">
@@ -160,39 +553,60 @@ $part_check = 0;
                                             </div>
                                             <div class="col-md-1"></div>
                                             <?php
-                                            $check_have_pic = 0;
+                                            $check_have_pic_c = 0;
                                             $get_d_id = $row_get['get_d_id'];
                                             $sql_pic = "SELECT * FROM repair_pic
-                                                                            LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
-                                                                            WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0;";
+                                                       LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
+                                                       WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.del_flg = 0 AND repair_pic.del_flg = 0;";
                                             $result_pic = mysqli_query($conn, $sql_pic);
                                             if (mysqli_num_rows($result_pic)) {
+                                                while ($row_pic = mysqli_fetch_array($result_pic)) {
+                                                    if ($row_pic[0] != NULL) {
+                                                        $rp_pic = $row_pic['rp_pic'];
+                                                        $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                                        if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'webp', 'svg'])) {
+                                                            $check_have_pic_c++;
+                                                        } elseif (in_array($file_extension, ['mp4', 'ogg'])) {
+                                                            $check_have_pic_c++;
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+
+                                            $check_have_pic = 0;
+                                            $sql_pic = "SELECT * FROM repair_pic
+                                                                            LEFT JOIN get_detail ON repair_pic.get_d_id = get_detail.get_d_id
+                                                                            WHERE get_detail.get_r_id = '$id_get_r' AND get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0 AND repair_pic.del_flg = 0;";
+                                            $result_pic = mysqli_query($conn, $sql_pic);
+                                            if (mysqli_num_rows($result_pic) &&  $check_have_pic_c > 0) {
                                                 $check_have_pic++;
                                             ?>
                                                 <div class="col-md-5 alert alert-light shadow bg-gray-1">
                                                     <h5 style="color:black" class="mb-3">รูปภาพ</h5>
                                                     <hr>
                                                     <br>
-                                                    <?php }
-                                                while ($row_pic = mysqli_fetch_array($result_pic)) {
-                                                    if ($row_pic[0] != NULL) {
-                                                    ?>
-                                                        <?php
-                                                        $rp_pic = $row_pic['rp_pic'];
-                                                        $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
-                                                        ?>
-                                                        <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
-                                                            <a href="#" id="bounce-item"><img src="<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
-                                                        <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
-                                                            <a href="#">
-                                                                <video width="100px" autoplay muted onclick="openModalVideo(this)" src="<?= $row_pic['rp_pic'] ?>">
-                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/mp4">
-                                                                    <source src="<?= $row_pic['rp_pic'] ?>" type="video/ogg">
-                                                                    Your browser does not support the video tag.
-                                                                </video>
-                                                            </a>
-                                                        <?php endif; ?>
                                                     <?php
+                                                    while ($row_pic = mysqli_fetch_array($result_pic)) {
+                                                        if ($row_pic[0] != NULL) {
+                                                    ?>
+                                                            <?php
+                                                            $rp_pic = $row_pic['rp_pic'];
+                                                            $file_extension = pathinfo($rp_pic, PATHINFO_EXTENSION);
+                                                            ?>
+                                                            <?php if (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                                                                <a href="#" id="bounce-item"><img src="<?= $row_pic['rp_pic'] ?>" width="120px" class="picture_modal" alt="" onclick="openModalIMG(this)"></a>
+                                                            <?php elseif (in_array($file_extension, ['mp4', 'ogg'])) : ?>
+                                                                <a href="#">
+                                                                    <video width="100px" autoplay muted onclick="openModalVideo(this)" src="<?= $row_pic['rp_pic'] ?>">
+                                                                        <source src="<?= $row_pic['rp_pic'] ?>" type="video/mp4">
+                                                                        <source src="<?= $row_pic['rp_pic'] ?>" type="video/ogg">
+                                                                        Your browser does not support the video tag.
+                                                                    </video>
+                                                                </a>
+                                                            <?php endif; ?>
+                                                    <?php
+                                                        }
                                                     }
                                                 }
                                                 if ($check_have_pic > 0) { ?>
@@ -862,94 +1276,94 @@ $part_check = 0;
             </div>
         </div>
     </div>
-   <!-- Modal -->
-   <div class="modal fade" id="exampleModalUnique" tabindex="-1" aria-labelledby="exampleModalLabelUnique" aria-hidden="true">
-                                                                        <div class="modal-dialog">
-                                                                            <div class="modal-content">
-                                                                                <div class="modal-header">
-                                                                                    <span style="color:white">
-                                                                                        <h4 style="color: red">โปรดระบุเหตุผล</h4>
-                                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                                    </span>
-                                                                                </div>
-                                                                                <div class="modal-body">
-                                                                                    <br>
-                                                                                    <form id="canf_cancel" action="action/conf_cancel.php" method="POST">
-                                                                                        <hr>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalUnique" tabindex="-1" aria-labelledby="exampleModalLabelUnique" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span style="color:white">
+                        <h4 style="color: red">โปรดระบุเหตุผล</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </span>
+                </div>
+                <div class="modal-body">
+                    <br>
+                    <form id="canf_cancel" action="action/conf_cancel.php" method="POST">
+                        <hr>
 
 
-                                                                                        <input type="text" name="get_r_id" value="<?= $id_get_r ?>" hidden>
-                                                                                        <input type="text" name="status_id" value="<?= $status_id ?>" hidden>
-                                                                                        <span style="color:white">
-                                                                                            <label>
-                                                                                                <input class="form-check-input" type="checkbox" name="checkbox1" value="ต้องการยกเลิกคำสั่งซ่อม" onclick="uncheckOtherCheckboxes('checkbox1')">
-                                                                                                ต้องการยกเลิกคำสั่งซ่อม
-                                                                                            </label><br>
+                        <input type="text" name="get_r_id" value="<?= $id_get_r ?>" hidden>
+                        <input type="text" name="status_id" value="<?= $status_id ?>" hidden>
+                        <span style="color:white">
+                            <label>
+                                <input class="form-check-input" type="checkbox" name="checkbox1" value="ต้องการยกเลิกคำสั่งซ่อม" onclick="uncheckOtherCheckboxes('checkbox1')">
+                                ต้องการยกเลิกคำสั่งซ่อม
+                            </label><br>
 
-                                                                                            <label>
-                                                                                                <input class="form-check-input" type="checkbox" name="checkbox2" value="ไม่อยากใช้อะไหล่ข้างต้น" onclick="uncheckOtherCheckboxes('checkbox2')">
-                                                                                                ไม่อยากใช้อะไหล่ข้างต้น
-                                                                                            </label><br>
+                            <label>
+                                <input class="form-check-input" type="checkbox" name="checkbox2" value="ไม่อยากใช้อะไหล่ข้างต้น" onclick="uncheckOtherCheckboxes('checkbox2')">
+                                ไม่อยากใช้อะไหล่ข้างต้น
+                            </label><br>
 
-                                                                                            <label>
-                                                                                                <input class="form-check-input" type="checkbox" name="checkbox3" value="อยากได้อะไหล่ที่ถูกกว่านี้" onclick="uncheckOtherCheckboxes('checkbox3')">
-                                                                                                อยากได้อะไหล่ที่ถูกกว่านี้
-                                                                                            </label><br>
+                            <label>
+                                <input class="form-check-input" type="checkbox" name="checkbox3" value="อยากได้อะไหล่ที่ถูกกว่านี้" onclick="uncheckOtherCheckboxes('checkbox3')">
+                                อยากได้อะไหล่ที่ถูกกว่านี้
+                            </label><br>
 
-                                                                                            <label>
-                                                                                                <input class="form-check-input" type="checkbox" name="checkbox4" onclick="showTextarea(); uncheckOtherCheckboxes('checkbox4')">
-                                                                                                อื่นๆ (หรือยื่นข้อเสนอ)
-                                                                                            </label><br>
+                            <label>
+                                <input class="form-check-input" type="checkbox" name="checkbox4" onclick="showTextarea(); uncheckOtherCheckboxes('checkbox4')">
+                                อื่นๆ (หรือยื่นข้อเสนอ)
+                            </label><br>
 
-                                                                                            <textarea id="myTextarea" name="detail_cancel" style="display: none;" placeholder="โปรดระบุสาเหตุ"></textarea>
+                            <textarea id="myTextarea" name="detail_cancel" style="display: none;" placeholder="โปรดระบุสาเหตุ"></textarea>
 
-                                                                                        </span>
-                                                                                        <br>
-                                                                                        <!-- <a class="btn btn-danger" onclick="hideDiv()">ยกเลิก</a>
+                        </span>
+                        <br>
+                        <!-- <a class="btn btn-danger" onclick="hideDiv()">ยกเลิก</a>
                                                                                         <a class="btn btn-success" id="confirmButtoncancel">ยืนยัน</a> -->
 
-                                                                                        <script>
-                                                                                            document.addEventListener('DOMContentLoaded', function() {
-                                                                                                var id_get_r = <?php echo json_encode($id_get_r); ?>; // Pass PHP variable to JavaScript
-                                                                                                var dialogShown = false; // Flag variable to track if the dialog is already displayed
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                var id_get_r = <?php echo json_encode($id_get_r); ?>; // Pass PHP variable to JavaScript
+                                var dialogShown = false; // Flag variable to track if the dialog is already displayed
 
-                                                                                                document.getElementById('confirmButtoncancel').addEventListener('click', function() {
-                                                                                                    if (dialogShown) {
-                                                                                                        return; // Exit if the dialog is already shown
-                                                                                                    }
+                                document.getElementById('confirmButtoncancel').addEventListener('click', function() {
+                                    if (dialogShown) {
+                                        return; // Exit if the dialog is already shown
+                                    }
 
-                                                                                                    dialogShown = true; // Set the flag to true to indicate that the dialog is displayed
+                                    dialogShown = true; // Set the flag to true to indicate that the dialog is displayed
 
-                                                                                                    Swal.fire({
-                                                                                                        icon: 'warning',
-                                                                                                        title: 'ยืนยันดำเนินการส่งซ่อม',
-                                                                                                        text: 'การ "ยืนยันเพื่อยกเลิก" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
-                                                                                                        showCancelButton: true,
-                                                                                                        confirmButtonText: 'ยืนยัน',
-                                                                                                        cancelButtonText: 'ยกเลิก'
-                                                                                                    }).then((willConfirm) => {
-                                                                                                        if (willConfirm.isConfirmed) {
-                                                                                                            var form = document.getElementById('canf_cancel');
-                                                                                                            form.submit(); // Submit the form
-                                                                                                        }
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: 'ยืนยันดำเนินการส่งซ่อม',
+                                        text: 'การ "ยืนยันเพื่อยกเลิก" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
+                                        showCancelButton: true,
+                                        confirmButtonText: 'ยืนยัน',
+                                        cancelButtonText: 'ยกเลิก'
+                                    }).then((willConfirm) => {
+                                        if (willConfirm.isConfirmed) {
+                                            var form = document.getElementById('canf_cancel');
+                                            form.submit(); // Submit the form
+                                        }
 
-                                                                                                        dialogShown = false; // Reset the flag when the dialog is closed
-                                                                                                    });
-                                                                                                });
-                                                                                            });
-                                                                                        </script>
+                                        dialogShown = false; // Reset the flag when the dialog is closed
+                                    });
+                                });
+                            });
+                        </script>
 
-                                                                                   
-                                                                                    <br><br>
-                                                                                </div>
-                                                                                <div class="modal-footer">
-                                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
-                                                                                    <a class="btn btn-success" id="confirmButtoncancel">ยืนยัน</a>
-                                                                                     </form>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+
+                        <br><br>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                    <a class="btn btn-success" id="confirmButtoncancel">ยืนยัน</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Modal 1 -->
     <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
         <div class="modal-dialog">
@@ -968,32 +1382,6 @@ $part_check = 0;
             </div>
         </div>
     </div>
-
-    <!-- Button trigger modal for the second modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal2">
-        Launch demo modal 2
-    </button>
-
-    <!-- Modal 2 -->
-    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class modal-content>
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel2">Modal 2 title</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Modal 2 content...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
 
     <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel" style="height: 60%;">
         <div class="offcanvas-header">
@@ -1243,8 +1631,6 @@ $part_check = 0;
 
                             <center>
                             </center>
-                            <!-- Place this in the <head> section of your HTML document -->
-                            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
                             <!-- Place this before the closing </body> tag -->
                             <script>
@@ -1399,9 +1785,7 @@ $part_check = 0;
     </div>
     <!-- navbar-->
     <?php
-    if ($row1 > 0) {
-        include('bar/topbar_user.php');
-    }
+
 
     $id_get_r = $_GET['id'];
     // Assuming $id_get_r is your parameterized value
@@ -1876,9 +2260,6 @@ ORDER BY rs.rs_date_time DESC
                                     </center>
                                 </form>
 
-                                <!-- Include SweetAlert library -->
-                                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
                                 <script>
                                     function showConfirmationTracking() {
                                         Swal.fire({
@@ -2022,8 +2403,6 @@ ORDER BY rs.rs_date_time DESC
                                     </center>
                                 </form>
 
-                                <!-- Include SweetAlert library -->
-                                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
                                 <script>
                                     function showConfirmationTracking() {
@@ -3028,7 +3407,7 @@ ORDER BY rs.rs_date_time DESC
 
 
 
-                                                                 
+
 
 
                                                                     <div id="myDiv" style="display: none; margin: 20px 30px;">
@@ -4098,7 +4477,6 @@ ORDER BY rs.rs_date_time DESC
 
         </div>
         <?php include('footer/footer.php'); ?>
-        <!-- Sweet Alert Show Start -->
         <?php
         if (isset($_SESSION['add_data_alert'])) {
             if ($_SESSION['add_data_alert'] == 0) {
@@ -4218,6 +4596,7 @@ ORDER BY rs.rs_date_time DESC
 
         </script>
 
+
         <script>
             function showConfirmationDialog() {
                 swal({
@@ -4314,14 +4693,7 @@ ORDER BY rs.rs_date_time DESC
             }
         </script>
 
-        <!-- Sweet Alert Show End -->
-        <!-- Place this in the <head> section of your HTML document -->
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-        <!-- Place this before the closing </body> tag -->
-
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.10/dist/sweetalert2.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
