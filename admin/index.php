@@ -244,7 +244,7 @@ if (!isset($_SESSION['role_id'])) {
                                 echo '<h3 style="color:black;">รายงานยอดซ่อมรายเดือน</h3>';
                             }
                             ?>
-                            <table class="table table-striped table-bordered">
+                            <table class="table table-bordered">
                                 <thead>
                                     <?php if (empty($selectedMonth)) : ?>
                                         <tr>
@@ -360,11 +360,11 @@ LEFT JOIN parts_use ON parts_use.pu_id = parts_use_detail.pu_id";
                                         $month_totals[$month_name]['total'] += $total;
                                     }
 
-                                    function calculateTotal($month_totals)
+                                    function calculateTotal($month_totals, $key)
                                     {
                                         $grand_total = 0;
                                         foreach ($month_totals as $totals) {
-                                            $grand_total += $totals['total'];
+                                            $grand_total += $totals[$key];
                                         }
                                         return $grand_total;
                                     }
@@ -383,16 +383,16 @@ LEFT JOIN parts_use ON parts_use.pu_id = parts_use_detail.pu_id";
                                         }
                                         ?>
                                         <tr>
-                                            <td colspan="3" style="font-weight: bold;">รวมทั้งสิ้น</td>
-                                            <td align="right" style="font-weight: bold;">
-                                                <?= number_format(calculateTotal($month_totals)) ?>
-                                            </td>
+                                            <td style="font-weight: bold;">รวมทั้งสิ้น</td>
+                                            <td align="right" style="font-weight: bold;"><?= number_format(calculateTotal($month_totals, 'new_wages')) ?></td>
+                                            <td align="right" style="font-weight: bold;"><?= number_format(calculateTotal($month_totals, 'new_parts')) ?></td>
+                                            <td align="right" style="font-weight: bold;"><?= number_format(calculateTotal($month_totals, 'total')) ?></td>
                                         </tr>
                                     <?php
                                     } else {
                                         // เลือกแสดงข้อมูลเป็นรายวัน
                                     ?>
-                                        <table class="table table-striped table-bordered">
+                                        <table class="table table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th scope="col">วัน</th>
@@ -482,10 +482,10 @@ LEFT JOIN parts_use ON parts_use.pu_id = parts_use_detail.pu_id";
                                                 }
                                                 ?>
                                                 <tr>
-                                                    <td colspan="3" style="font-weight: bold;">รวมทั้งสิ้น</td>
-                                                    <td align="right" style="font-weight: bold;">
-                                                        <?= number_format(calculateTotal($month_totals)) ?>
-                                                    </td>
+                                                    <td style="font-weight: bold;">รวมทั้งสิ้น</td>
+                                                    <td align="right" style="font-weight: bold;"><?= number_format(calculateTotal($month_totals, 'new_wages')) ?></td>
+                                                    <td align="right" style="font-weight: bold;"><?= number_format(calculateTotal($month_totals, 'new_parts')) ?></td>
+                                                    <td align="right" style="font-weight: bold;"><?= number_format(calculateTotal($month_totals, 'total')) ?></td>
                                                 </tr>
                                             </tbody>
                                         </table>

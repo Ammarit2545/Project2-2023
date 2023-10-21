@@ -302,6 +302,9 @@ if (!isset($_SESSION['role_id'])) {
                                                     <div class="text-center">
                                                         <a class="btn btn-primary" href="detail_repair.php?id=<?= $row['get_r_id'] ?>">ดู</a>
                                                         <a class="btn btn-danger" href="action/delete_repair.php?get_r_id=<?= $row['get_r_id'] ?>" onclick="return confirmDelete(event);">ลบ</a>
+                                                        <?php if ($row_c['status_id'] == 3 || $row_c['status_id'] == 9 || $row_c['status_id'] == 10) : ?>
+    <a class="btn btn-primary" href="bill_repair.php?id=<?= $row['get_r_id'] ?>">ใบแจ้งซ่อม</a>
+<?php endif; ?>
 
                                                         <!-- Include SweetAlert library -->
                                                         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
