@@ -128,29 +128,6 @@
     .navbar li {
       position: relative;
     }
-<!-- navbar-->
-<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
-  <div class="container">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <a class="navbar-brand" href="#" style="color: #000141;">
-      <!-- <h4>Anan Electronic</h4> -->
-      <img src="img brand/anelogo.png" alt="" width="100px">
-    </a>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav ps-5">
-        <a class="nav-link active" aria-current="page" href="home.php">หน้าหลัก</a>
-        <!-- <a class="nav-link" href="home_repair.php">ส่งซ่อม</a> -->
-        <a class="nav-link" href="listview_repair.php" title="ส่งซ่อมอุปกรณ์ของคุฯ">ส่งซ่อม</a>
-        <a class="nav-link" href="listview_status.php" title="ติดตามหมายเลขซ่อม สถานะต่างๆ"> ติดตาม</i></a>
-        <a class="nav-link" href="history_main.php" tabindex="-1" aria-disabled="true" title="ดูอุปกรณ์ที่เคยซ่อมในระบบของคุณ">ประวัติอุปกรณ์
-        <!--  <i class="fa fa-history"></i> -->
-        </a>
-        <a style="color:green" class="nav-link" href="history_main_old.php" tabindex="-1" aria-disabled="true" title="หมายเลขซ่อมที่สำเร็จของคุณ">สำเร็จ <i class="fa fa-check-square"></i> </a>
-      </div>
-    </div>
-    <div class="dropdown col-md-3 text-end">
 
     .navbar>ul>li {
       white-space: nowrap;
@@ -418,8 +395,9 @@
 <!-- navbar-->
 <header class="header fixed-top d-flex align-items-center sticked">
   <div class="container d-flex align-items-center justify-content-between">
-    <a href="index.html" class="logo d-flex align-items-center me-auto me-lg-0" style="text-decoration: none;">
-      <h1>Anan Electronic</h1>
+    <a href="index.php" class="logo d-flex align-items-center me-auto me-lg-0" style="text-decoration: none;">
+
+      <img src="img brand/anelogo.png" width="100px" alt="">
     </a>
     <nav id="navbar" class="navbar">
       <ul>
@@ -427,6 +405,7 @@
         <li><a href="listview_repair.php">ส่งซ่อม</a></li>
         <li><a href="listview_status.php">ติดตาม</a></li>
         <li><a href="history_main.php">ประวัติ</a></li>
+        <li><a href="history_main_old.php">สำเร็จ<i class="fa fa-check-square"></i></a></li>
         <li class="dropdown"><a href="#"><span><?= $_SESSION['fname'] . " " . $_SESSION['lname']  ?></span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
             <li><a href="edit_user.php">แก้ไขข้อมูล</a></li>
