@@ -72,7 +72,7 @@ session_start();
   }
 
   /* CSS for the scroll-to-top button */
-  .scroll-top {
+  /* .scroll-top {
     position: fixed;
     visibility: hidden;
     opacity: 0;
@@ -100,7 +100,7 @@ session_start();
   .scroll-top.active {
     visibility: visible;
     opacity: 1;
-  }
+  } */
 
   .header {
     background: #fff;
