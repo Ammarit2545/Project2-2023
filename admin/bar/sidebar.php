@@ -134,7 +134,7 @@
     </li>
     <?php
    if($_SESSION['role_id'] == 1){ 
-    ?> <
+    ?> 
     <!-- Nav Item - company Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsestatus" aria-expanded="true" aria-controls="collapsestatus">

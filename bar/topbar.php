@@ -46,16 +46,6 @@ session_start();
       <h1>Anan Electronic</h1>
     </a>
     <div>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav ps-5">
-        <a class="nav-link active" aria-current="page" href="#">หน้าหลัก</a>
-        <a class="nav-link" href="#">ส่งซ่อม</a>
-        <a class="nav-link" href="#">ติดตาม</a>
-        <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">ประวัติ</a>
-        <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">สำเร็จ</a>
-      </div>
-    </div>
-    <div class="col-md-3 text-end">
       <?php
       if (!isset($_SESSION['profile'])) {
         $line = new LineLogin();
