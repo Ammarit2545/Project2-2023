@@ -404,6 +404,7 @@
         <li><a href="listview_repair.php">ส่งซ่อม</a></li>
         <li><a href="listview_status.php">ติดตาม</a></li>
         <li><a href="history_main.php">ประวัติ</a></li>
+        <li><a href="history_main_old.php" style="color:green">สำเร็จ<i class="fa fa-check-square"></i></a></li>
         <li class="dropdown"><a href="#"><span><?= $_SESSION['fname'] . " " . $_SESSION['lname']  ?></span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
             <li><a href="edit_user.php">แก้ไขข้อมูล</a></li>
