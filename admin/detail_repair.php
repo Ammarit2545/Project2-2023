@@ -1524,6 +1524,9 @@ $get_r_id = $_GET['id'];
                                                     <span class="tooltip">ดูรายละเอียดสถานะทั้งหมด</span>
                                                 </h5>
                                             </h5>
+                                            <?php if ($row['status_id'] == 3 || $row['status_id'] == 8 || $row['status_id'] == 9 || $row['status_id'] == 10 || $row['status_id'] == 24) : ?>
+                                                <a class="btn btn-primary float-end" target="_blank" href="bill_repair.php?id=<?= $row['get_r_id'] ?>">ใบแจ้งซ่อม</a>
+                                            <?php endif; ?>
                                             <hr>
                                             <h4 class="mb-3 f-black-5">รายละเอียด</h4>
                                             <!-- <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled="disabled"><?= $row_s['rs_detail']  ?></textarea> -->
