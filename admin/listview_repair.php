@@ -5,12 +5,9 @@ include('../database/condb.php');
 if (!isset($_SESSION['role_id'])) {
     header('Location:../home.php');
 }
-// $disallowed_roles = array(2, 3);
 
-// if (in_array($_SESSION['role_id'], $disallowed_roles)) {
-//     header('Location: listview_repair_unadmin.php');
-// }
-
+// ใส่สถานะที่ต้องการตอบกลับ ตรงนี้
+$excludedStatusIDs = [1, 25];
 
 ?>
 <!DOCTYPE html>
@@ -79,16 +76,49 @@ if (!isset($_SESSION['role_id'])) {
                     <br>
                     <!-- Page Heading -->
 
-                    <h1 class="mb-2 " style="color : black">หน้าการจัดการใบแจ้งซ่อม/เคลม </h1>
+                    <h1 class="mb-2 " style="color : black">จัดการใบแจ้งซ่อม/เคลม สถานะต่างๆ </h1>
                     <br>
-                    <h2>
+                    <h4>
                         <?php if (isset($_GET['status_select'])) {
+                            $sql_count = 0;
                             $status_select = $_GET['status_select'];
+
+                            $sql_status_get1 = "SELECT repair_status.get_r_id FROM repair_status
+                                            WHERE repair_status.status_id = '$status_select'
+                                            AND repair_status.del_flg = '0'";
+                            $result_status_get1 = mysqli_query($conn, $sql_status_get1);
+
+                            if ($result_status_get1) {
+                                while ($row_status_get1 = mysqli_fetch_array($result_status_get1)) {
+                                    $get_r_id = $row_status_get1['get_r_id'];
+
+                                    $sql_count_status = "SELECT repair_status.status_id, repair_status.get_r_id FROM get_repair 
+                                                        LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
+                                                        LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
+                                                        WHERE get_repair.get_r_id = '$get_r_id' 
+                                                        AND repair_status.del_flg = '0'
+                                                        AND get_repair.del_flg = '0' 
+                                                        AND get_detail.del_flg = '0' 
+                                                        ORDER BY repair_status.rs_id DESC LIMIT 1";
+
+                                    $result_count_status = mysqli_query($conn, $sql_count_status);
+
+                                    if (mysqli_num_rows($result_count_status)) {
+                                        $row_count_status = mysqli_fetch_array($result_count_status);
+                                        if ($row_count_status['status_id'] == $status_select) {
+                                            $sql_count += 1;
+                                        }
+                                    }
+                                }
+                            }
+
                             $sql_sel = "SELECT * FROM status_type WHERE status_id = '$status_select'";
                             $result_sel = mysqli_query($conn, $sql_sel);
                             $row_sel = mysqli_fetch_array($result_sel);
                             if ($_GET['status_select'] != 0) {  ?>
-                                <span>ประเภท : </span><span style="color : <?= $row_sel['status_color'] ?>"><?= $row_sel['status_name'] ?></span>
+                                <span style="display: inline;">ประเภท : <span style="display: inline;color : <?= $row_sel['status_color'] ?>"><?= $row_sel['status_name'] ?> </span><u>
+                                        <h5 style="display: inline;color:black">(<?= $sql_count . ' รายการ' ?>)</h5>
+                                    </u></span>
                             <?php
                             } else {
                             ?>
@@ -99,7 +129,7 @@ if (!isset($_SESSION['role_id'])) {
                         <?php if (!isset($_GET['status_select'])) {   ?>
                             <span>การแจ้งซ่อมใหม่ทั้งหมด</span>
                         <?php  } ?>
-                    </h2>
+                    </h4>
                     <br>
                     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
                     <div class="row">
@@ -129,25 +159,34 @@ if (!isset($_SESSION['role_id'])) {
 
                                     // If $_SESSION['role_id'] is not 2 or 3, the default SQL query will be executed.
                                     $result_st = mysqli_query($conn, $sql_st);
-                                    $status_data = array(); // Array to store status data
-
-
+                                    $status_data = array(); // Array to store status data\
+                                    $status_id_data = 1;
                                     while ($row_st_id = mysqli_fetch_array($result_st)) {
-                                        $status_id_data = $row_st_id['status_id'];
 
-                                        $sql_status_get = "SELECT * FROM repair_status
+                                        if ($status_id_data == $row_st_id['status_id']) {
+                                            continue;
+                                        } else {
+                                            $status_id_data = $row_st_id['status_id'];
+                                            $sql_count = 0;
+                                        }
+
+                                        $sql_status_get = "SELECT repair_status.get_r_id FROM repair_status
                                                             WHERE repair_status.status_id = '$status_id_data'
                                                             AND repair_status.del_flg = '0'";
                                         $result_status_get = mysqli_query($conn, $sql_status_get);
-                                        $sql_count = 0; // Unique count for each status type
 
                                         if ($result_status_get) {
                                             while ($row_status_get = mysqli_fetch_array($result_status_get)) {
                                                 $get_r_id = $row_status_get['get_r_id'];
 
                                                 $sql_count_status = "SELECT repair_status.status_id, repair_status.get_r_id FROM get_repair 
-                                                                    LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
-                                                                    WHERE get_repair.get_r_id = '$get_r_id' AND repair_status.del_flg = '0' ORDER BY repair_status.rs_id DESC LIMIT 1";
+                                                LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
+                                                                                                                    LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
+                                                                                                                    WHERE get_repair.get_r_id = '$get_r_id' 
+                                                                                                                                          AND repair_status.del_flg = '0'
+                                                                                                                                          AND get_repair.del_flg = '0' 
+                                                                                                                                          AND get_detail.del_flg = '0' 
+                                                                                                                                          ORDER BY repair_status.rs_id DESC LIMIT 1";
                                                 $result_count_status = mysqli_query($conn, $sql_count_status);
                                                 $row_count_status = mysqli_fetch_array($result_count_status);
 
@@ -285,9 +324,7 @@ if (!isset($_SESSION['role_id'])) {
 
                                                 $row_check = mysqli_fetch_array($result_check);
 
-                                                // Replace 'status_id' with the actual column name you want to compare
-                                                // If you want to compare it with a specific value like $_GET['status_select'], replace that too
-                                                $excludedStatusIDs = [1, 25];
+
                                                 if (!in_array($row_check['status_id'], $excludedStatusIDs)) {
                                                     // The condition is not met, and you can skip the current iteration of the loop
                                                     continue;
@@ -433,7 +470,15 @@ if (!isset($_SESSION['role_id'])) {
                                                     <?php
                                                     } elseif (isset($row['r_serial_number']) || $row_repair['r_serial_number'] != NULL) {
                                                     ?>
-                                                        <p class="font-one-style"><?= $row_repair['r_serial_number'] ?></p>
+                                                        <p class="font-one-style">
+                                                            <span style="color:black">
+                                                                <?= $row_repair['r_brand'] ?>
+                                                                <?= $row_repair['r_model'] ?>
+                                                            </span>
+                                                            
+                                                            <?= ', S/N ' ?><span style="color:blue"><u><?= $row_repair['r_serial_number'] ?></u>
+                                                            </span>
+                                                        </p>
                                                     <?php
                                                     } else {
                                                         echo "-";
