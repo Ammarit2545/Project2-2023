@@ -8,11 +8,11 @@
     <button class="btn btn-danger" style="background-color:<?= $row_q['status_color'] ?>; border : <?= $row_q['status_color'] ?>" onclick="showCancelValue()">ปฏิเสธคำร้อง</button>
 
     <?php
-    $sql = "SELECT * FROM status_type WHERE status_id = '27'";
+    $sql = "SELECT * FROM status_type WHERE status_id = '28'";
     $result = mysqli_query($conn, $sql);
     $row_conf = mysqli_fetch_array($result);
     ?>
-    <button class="btn btn-success" style="background-color:<?= $row_conf['status_color'] ?>; border : <?= $row_conf['status_color'] ?>" onclick="Acceptoffer('<?php echo $row_conf['id']; ?>')">
+    <button class="btn btn-success" style="background-color:<?= $row_conf['status_color'] ?>; border : <?= $row_conf['status_color'] ?>" onclick="showofferValue('<?php echo $row_conf['id']; ?>')">
         <?= $row_conf['status_name'] ?>
     </button>
     <script>
@@ -28,8 +28,9 @@
                 cancelButtonText: 'ยกเลิก'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = 'action/status/insert_new_part_non_del.php?get_r_id=' + <?= $row['get_r_id'] ?>+'&status_id=27&rs_detail=พนักงานได้รับคำร้องของคุณแล้วในขณะนี้ กรุณารอการตอบกลับภายใน 1 วันทำการ';
+                    window.location.href = 'action/status/27_make_new_repair.php?get_r_id=' + <?= $row['get_r_id'] ?> + '&status_id=2&rs_detail=กรุณารอการตอบกลับภายใน 1 วันทำการ';
                 }
+                2
             });
         }
     </script>
@@ -183,19 +184,45 @@
     <br>
     <h1 class="m-0 font-weight-bold text-primary"><?= $row_conf['status_name'] ?> </h1>
     <br>
-    <form id="offers_status_id" action="action/status/add_offer_doing.php" method="POST" enctype="multipart/form-data">
+    <form id="offers_status_id" action="action/status/27_make_new_repair.php" method="POST" enctype="multipart/form-data">
         <label for="DetailFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_conf['status_color'] ?>"> <?= $row_conf['status_name'] ?></p> :</label>
         <textarea class="form-control" name="rs_detail" id="DetailFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม"></textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
         <input type="hidden" name="cardCount" id="cardCountInput" value="0">
         <br>
-        <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่</label>
-        <div class="input-group mb-3">
-            <input type="text" name="status_id" value="<?= $row_conf['status_id'] ?>" hidden>
-            <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
-            <input name="get_wages" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="<?= $row['get_wages'] ?>" required>
-        </div>
+        <div class="row">
+            <div class="col-md">
+                <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่</label>
+                <div class="input-group mb-3">
 
+                    <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
+                    <input name="get_wages" type="text" value="<?= $row['get_wages'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกค่าแรงช่าง" required>
+                    <span class="input-group-text">฿</span>
+                </div>
+            </div>
+
+            <?php
+            if ($row['get_deli'] == 1) { ?>
+                <div class="col-md">
+                    <label for="basic-url" class="form-label">ค่าจัดส่ง *แยกกับราคาอะไหล่</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon3">ค่าจัดส่ง</span>
+                        <input name="get_add_price" type="text" value="<?= $row['get_add_price'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกค่าส่งอุปกรณ์" required>
+                        <span class="input-group-text">฿</span>
+                    </div>
+                </div>
+            <?php
+            }
+            ?>
+            <div class="col-md">
+                <label for="basic-url" class="form-label">ระยะเวลาซ่อม</label>
+                <div class="input-group mb-3">
+
+                    <input name="get_date_conf" type="text" value="<?= $row['get_date_conf'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกระยะเวลาซ่อม" required>
+                    <span class="input-group-text">วัน</span>
+                </div>
+            </div>
+        </div>
         <br>
         <div class="mb-3">
             <h6>อะไหล่</h6>

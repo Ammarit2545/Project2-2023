@@ -3,14 +3,14 @@
         <div class="row">
             <div class="accordion" id="accordionPanelsStayOpenExample">
                 <?php
-                $count_conf =0;
+                $count_conf = 0;
                 $sql_detail = "SELECT * FROM get_detail 
                     LEFT JOIN repair ON repair.r_id = get_detail.r_id
                     WHERE get_detail.del_flg = 0 AND get_detail.get_r_id = '$get_r_id'";
                 $result_detail = mysqli_query($conn, $sql_detail);
                 while ($row_detail = mysqli_fetch_array($result_detail)) {
                     $get_d_id = $row_detail['get_d_id'];
-                    $count_conf ++;
+                    $count_conf++;
                 ?>
                     <div class="accordion-item">
                         <style>
@@ -42,11 +42,10 @@
                             <div class="accordion-body">
                                 <div class="row">
                                     <p>กดเพื่อเพิ่มอะไหล่
-                                    <span class="f-black-5">(หากไม่ต้องการใช้อะไหล่ ท่านไม่ต้องดำเนินการใดๆ) :   <a class="btn btn-primary" onclick="addInputFields(this)" id="bounce-item">เพิ่มอะไหล่
-                                        <span class="tooltip">กดเพื่อเพิ่มอะไหล่</span>
-                                    </a></span>
-                                </p>
-                                   
+                                        <span class="f-black-5">(หากไม่ต้องการใช้อะไหล่ ท่านไม่ต้องดำเนินการใดๆ) : <a class="btn btn-primary" onclick="addInputFields(this)" id="bounce-item">เพิ่มอะไหล่
+                                                <span class="tooltip">กดเพื่อเพิ่มอะไหล่</span>
+                                            </a></span>
+                                    </p>
                                     <br>
                                 </div>
                                 <input type="hidden" name="get_d_id<?= $count_conf ?>" value="<?= $get_d_id ?>">
@@ -57,7 +56,10 @@
                                             </div> -->
                                         <div class="col-md">
                                             <div class="input-group mb-3">
-                                                <input type="text" list="brow" name="p_id_<?= $count_conf ?>[]" class="form-control" id="partInput<?= $get_d_id ?>" placeholder="กรุณาเลือกอะไหล่ที่ต้องการ" onchange="updatePartImage(<?= $get_d_id ?>)">
+                                                <!-- <img src="" alt="" width="100px" id="imageChange<?= $count_conf ?>"> -->
+                                                <input type="text" list="brow" name="p_id_<?= $count_conf ?>[]" class="form-control" id="partInput<?= $count_conf ?>" placeholder="กรุณาเลือกอะไหล่ที่ต้องการ" onchange="updatePartImage(<?= $count_conf ?>,<?= $get_d_id ?>)">
+                                                <!-- <input type="text" class="form-control" id="show_value<?= $count_conf ?>" value="" disabled> -->
+
                                                 <datalist id="brow">
                                                     <?php
                                                     $sql_part = "SELECT * FROM parts WHERE del_flg = 0";
@@ -69,6 +71,53 @@
                                                     }
                                                     ?>
                                                 </datalist>
+                                                <script>
+                                                    // Define your data arrays (key-value pairs)
+                                                    var dataArray = {
+                                                        <?php
+                                                        $sql_part = "SELECT * FROM parts WHERE del_flg = 0";
+                                                        $result_part = mysqli_query($conn, $sql_part);
+                                                        while ($row_part = mysqli_fetch_array($result_part)) {
+                                                        ?> "<?= $row_part['p_id'] ?>": "<?= $row_part['p_name'] ?>",
+                                                        <?php
+                                                        }
+                                                        ?>
+                                                    };
+
+                                                    var dataPicArray = {
+                                                        <?php
+                                                        $sql_part = "SELECT p_id,p_pic FROM parts WHERE del_flg = 0";
+                                                        $result_part = mysqli_query($conn, $sql_part);
+                                                        while ($row_part = mysqli_fetch_array($result_part)) {
+                                                        ?> "<?= $row_part['p_id'] ?>": "../<?= $row_part['p_pic'] ?>",
+                                                        <?php
+                                                        }
+                                                        ?>
+                                                    };
+
+                                                    function updatePartImage(count_conf,get_d_id) {
+                                                        // Get the input element by its ID
+                                                        var inputElement = document.getElementById('partInput' + count_conf);
+
+                                                        // Get the selected value from the input (key)
+                                                        var selectedKey = inputElement.value;
+
+                                                        // Find the corresponding value in the array
+                                                        var selectedValue = dataArray[selectedKey];
+
+                                                        // Update the show_value input with the selected value in real-time
+                                                        var showValueInput = document.getElementById('show_value'+count_conf);
+                                                        showValueInput.value = selectedValue || ''; // Set to empty string if key is not found
+
+                                                        // Get the corresponding image URL from dataPicArray
+                                                        var imageChange = document.getElementById('imageChange'+count_conf);
+                                                        var imageSrc = dataPicArray[selectedKey];
+                                                        imageChange.src = imageSrc || ''; // Set to an empty string if key is not found
+                                                    }
+                                                </script>
+
+
+
                                             </div>
                                         </div>
                                         <div class="col-md-2">
@@ -82,36 +131,7 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <script>
-                            function updatePartImage(get_d_id) {
-                                const partInput = document.getElementById('partInput' + get_d_id);
-                                const partImage = document.getElementById('partImage' + get_d_id);
-                                const selectedPartId = partInput.value;
 
-                                if (selectedPartId) {
-                                    // Log the selected value to the console
-                                    console.log('Selected Part ID:', selectedPartId);
-
-                                    // Use AJAX to fetch the image URL from the server
-                                    const xhr = new XMLHttpRequest();
-                                    xhr.onreadystatechange = function() {
-                                        if (xhr.readyState === 4 && xhr.status === 200) {
-                                            const response = JSON.parse(xhr.responseText);
-                                            if (response && response.image_url) {
-                                                partImage.src = response.image_url;
-                                            } else {
-                                                partImage.src = 'parts/default-image.jpg';
-                                            }
-                                        }
-                                    };
-
-                                    xhr.open('GET', 'get_part_image.php?p_id=' + selectedPartId, true);
-                                    xhr.send();
-                                } else {
-                                    partImage.src = 'parts/default-image.jpg';
-                                }
-                            }
-                        </script> -->
                 <?php
                 }
                 ?>
@@ -145,3 +165,35 @@
         <button type="submit" class="btn btn-success">Send</button>
     </center> -->
 </form>
+
+
+<!-- <script>
+                            function updatePartImage(get_d_id) {
+                                const partInput = document.getElementById('partInput' + get_d_id);
+                                const partImage = document.getElementById('partImage' + get_d_id);
+                                const selectedPartId = partInput.value;
+
+                                if (selectedPartId) {
+                                    // Log the selected value to the console
+                                    console.log('Selected Part ID:', selectedPartId);
+
+                                    // Use AJAX to fetch the image URL from the server
+                                    const xhr = new XMLHttpRequest();
+                                    xhr.onreadystatechange = function() {
+                                        if (xhr.readyState === 4 && xhr.status === 200) {
+                                            const response = JSON.parse(xhr.responseText);
+                                            if (response && response.image_url) {
+                                                partImage.src = response.image_url;
+                                            } else {
+                                                partImage.src = 'parts/default-image.jpg';
+                                            }
+                                        }
+                                    };
+
+                                    xhr.open('GET', 'get_part_image.php?p_id=' + selectedPartId, true);
+                                    xhr.send();
+                                } else {
+                                    partImage.src = 'parts/default-image.jpg';
+                                }
+                            }
+                        </script> -->

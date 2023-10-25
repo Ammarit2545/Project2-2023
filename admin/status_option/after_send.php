@@ -68,7 +68,7 @@
             <label for="basic-url" class="form-label">หมายเลข</label>
             <?= $row_get['get_d_id'] . ' : ' . $row_get['r_brand'] . ' ' . $row_get['r_model'] . ' - Model : ' . $row_get['r_number_model'] . ' - Serial Number : ' . $row_get['r_serial_number'] ?>
             <?php $get_d_id = 'get_d_id_' .$count_get_no; ?>
-            <input type="text" name="<?= $get_d_id ?>" value=" <?= $row_get['get_d_id'] ?>" hidden>
+            <input type="text" name="<?= $get_d_id ?>" value=" <?= $row_get['get_d_id'] ?>" hidden required>
 
 
             <div class="row">
@@ -77,7 +77,7 @@
                     $com_t = 'com_y_' .$count_get_no;
                     $tracking_number = 'tracking_number' .$count_get_no;
                     ?>
-                    <select name="<?= $com_t ?>" class="form-select" aria-label="Default select example">
+                    <select name="<?= $com_t ?>" class="form-select" aria-label="Default select example" required>
                         <option selected>กรุณาเลือกบรฺษัทขนส่ง</option>
                         <?php
                         $sql_com = "SELECT * FROM company_transport WHERE del_flg = 0";

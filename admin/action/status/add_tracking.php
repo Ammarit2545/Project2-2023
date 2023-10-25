@@ -91,7 +91,6 @@ while (isset($_POST['com_y_' . $i])) {
             echo "Update failed: " . mysqli_error($conn);
         }
     }
-
     $i++;
 }
 $i--;
