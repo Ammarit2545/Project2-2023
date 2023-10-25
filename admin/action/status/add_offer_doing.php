@@ -175,8 +175,8 @@ if ($row[0] > 0) {
 
                         if ($result3) {
                             // Update parts stock in the parts table
-                            // $sql_u = "UPDATE `parts` SET `p_stock` = `p_stock` - '$quantity', `p_date_update` = NOW() WHERE `p_id` = '$partId'";
-                            // $result_u = mysqli_query($conn, $sql_u);
+                            $sql_u = "UPDATE `parts` SET `p_stock` = `p_stock` - '$quantity', `p_date_update` = NOW() WHERE `p_id` = '$partId'";
+                            $result_u = mysqli_query($conn, $sql_u);
 
                             if (!$result_u) {
                                 // Handle the case when the update query fails

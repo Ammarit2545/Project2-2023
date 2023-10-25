@@ -3,9 +3,9 @@ session_start();
 include('../../../database/condb.php');
 
 
-$get_r_id = $_POST['get_r_id'];
-$rs_detail = $_POST['rs_detail'];
-$status_id = $_POST['status_id'];
+$get_r_id = isset($_GET['get_r_id']) ? $_GET['get_r_id'] : (isset($_POST['get_r_id']) ? $_POST['get_r_id'] : null);
+$rs_detail = isset($_GET['rs_detail']) ? $_GET['rs_detail'] : (isset($_POST['rs_detail']) ? $_POST['rs_detail'] : null);
+$status_id = isset($_GET['status_id']) ? $_GET['status_id'] : (isset($_POST['status_id']) ? $_POST['status_id'] : null);
 $e_id = $_SESSION["id"];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

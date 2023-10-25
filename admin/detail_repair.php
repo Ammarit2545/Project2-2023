@@ -427,10 +427,10 @@ $get_r_id = $_GET['id'];
                                     $result_check_send = mysqli_query($conn, $sql_check_send);
                                     $row_check_send = mysqli_fetch_array($result_check_send);
 
-                                    $statusIds = array("4", "17", "5", "19", "6", "7", "8", "9", "13", "10", "24", "20", "25", "21");
+                                    $statusIds = array("4", "17", "5", "19", "6", "7", "8", "9", "13", "10", "24", "20", "25", "21", '27');
 
                                     if (in_array($row['status_id'], $statusIds)) {
-                                        if ($row['rs_conf'] == NULL && !in_array($row['status_id'], ['5', '19', '6', '7', '8', '9', '13', '24', '10', '20', '25'])) {
+                                        if ($row['rs_conf'] == NULL && !in_array($row['status_id'], ['5', '19', '6', '7', '8', '9', '13', '24', '10', '20', '25', '27'])) {
                                             include('status_option/wait_respond.php');
                                         } elseif ($row['status_id'] == '25') {
                                             include('status_option/pay_check.php');
@@ -470,6 +470,8 @@ $get_r_id = $_GET['id'];
                                             include('status_option/after_doing.php');
                                         } elseif ($row['status_id'] == '7') {
                                             include('status_option/check_status.php');
+                                        } elseif ($row['status_id'] == '27') {
+                                            include('status_option/27_open_new_repair.php');
                                         }
                                     }
                                     include('status_option/default_option.php');
@@ -483,7 +485,23 @@ $get_r_id = $_GET['id'];
                     </div>
 
                     <div class="card-header py-3">
-
+                        <?php
+                        $sql_2 = "SELECT gr.get_config
+                                        FROM get_repair gr
+                                        WHERE gr.get_r_id = '$get_r_id' AND gr.del_flg = 0";
+                        $result_2 = mysqli_query($conn, $sql_2);
+                        $row2 = mysqli_fetch_array($result_2);
+                        $row2['get_config'];
+                        if ($row2['get_config'] > 0) {
+                        ?>
+                            <div class="row">
+                                <div class="alert alert-primary" role="alert">
+                                    <h5> ต่อเนื่องมาจากหมายเลขซ่อมสั่งซ่อมที่ : <?= $row2['get_config'] ?></h5>
+                                </div>
+                            </div>
+                        <?php
+                        }
+                        ?>
                         <h1 class="m-0 font-weight-bold mb-2 f-black-5">หมายเลขใบแจ้งซ่อม #<?= $row['get_r_id'] ?></h1>
                         <!-- <a class="btn btn-danger" href="action/delete_repair.php?get_r_id=<?= $row['get_r_id'] ?>" onclick="return confirmDelete(event);">ลบ</a>
 

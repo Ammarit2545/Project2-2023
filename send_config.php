@@ -3,13 +3,18 @@ session_start();
 include('database/condb.php');
 
 if (!isset($_SESSION['id'])) {
-    header('Location:home.php');
+    header('Location: home.php');
 }
 
 if (!isset($_GET['id'])) {
-    header('Location:home.php');
+    header('Location: home.php');
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Handle the form submission here (e.g., saving data to the database).
+    // You can include your PHP code for form processing here.
+    // Don't forget to handle file uploads and database interactions.
+}
 ?>
 
 <!DOCTYPE html>
@@ -22,6 +27,7 @@ if (!isset($_GET['id'])) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
     <link rel="stylesheet" href="css/require_config.css">
+    <link rel="stylesheet" href="css/all_page.css">
     <link rel="icon" type="image/x-icon" href="img brand/anelogo.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Status - ANE</title>
@@ -40,116 +46,136 @@ if (!isset($_GET['id'])) {
             display: inline-block;
         }
     </style>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Add event listener to the form submission
-            document.getElementById("formSubmit").addEventListener("click", function(e) {
-                e.preventDefault(); // Prevent the default form submission
-
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, submit it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Display the spinner
-                        document.getElementById("formSpinner").style.display = "inline-block";
-                        document.getElementById("formSubmit").classList.add("submitting");
-
-                        // Submit the form using AJAX
-                        var xhr = new XMLHttpRequest();
-                        xhr.open("POST", "action/add_prob.php", true);
-                        xhr.onload = function() {
-                            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                                // Hide the spinner
-                                document.getElementById("formSpinner").style.display = "none";
-
-                                // Reset the form
-                                document.getElementById("formSubmit").classList.remove("submitting");
-                                document.getElementById("form").reset();
-
-                                // Show success message
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: 'Data has been inserted successfully.',
-                                    icon: 'success',
-                                    confirmButtonColor: '#3085d6',
-                                    confirmButtonText: 'OK'
-                                }).then(() => {
-                                    // Redirect to status_detail.php
-                                    var get_r_id = document.getElementById("basic-url").value;
-                                    window.location.href = "status_detail.php?id=" + get_r_id;
-                                });
-                            } else {
-                                // Handle errors, if any
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'An error occurred while inserting data.',
-                                    icon: 'error',
-                                    confirmButtonColor: '#3085d6',
-                                    confirmButtonText: 'OK'
-                                });
-                            }
-                        };
-                        xhr.send(new FormData(document.getElementById("form")));
-                    }
-                });
-            });
-        });
-    </script>
 </head>
+<?php
+$get_r_id = $_GET['id'];
+$m_id = $_SESSION['id'];
+
+$sql = "SELECT m_fname, m_lname, m_id FROM member WHERE m_id = '$m_id'";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_array($result);
+?>
 
 <body>
-    <div class="container">
-        <div class="row header">
-            <h1>ติดต่อเรา &nbsp;</h1>
-            <h3>แจ้งถึงปัญหาของคุณให้เราทราบ</h3>
+    <form method="POST" action="action/add_prob.php?id=<?= $get_r_id ?>" enctype="multipart/form-data">
+        <div class="container shadow" style="border-radius: 20px;">
+            <br>
+            <div class="row" style="border-radius: 20px;background-image: linear-gradient(to right,#4D69FF, #4DD1FF);color:white;">
+                <center>
+                    <br>
+                    <h1>ส่งคำร้องของคุณ</h1>
+                    <br>
+                </center>
+            </div>
+            <div class="row">
+                <label for="formFile" class="form-label">หมายเลขใบแจ้งซ่อม</label>
+                <input type="text" class="form-control" name="get_r_id"=placeholder="กรุณากรอกหมายเลขใบแจ้งซ่อม" value="<?= $get_r_id ?>" disabled>
+
+            </div>
+            <div class="row">
+                <label for="formFile" class="form-label">ชื่อ</label>
+                <input type="text" class="form-control" placeholder="กรุณากรอกชื่อของคุณ" value="<?= $row['m_fname'] . " " . $row['m_lname'] ?>" disabled>
+                <input type="text" class="form-control" name="m_id" placeholder="กรุณากรอกชื่อของคุณ" value="<?= $m_id  ?>" disabled>
+            </div>
+            <div class="row">
+                <label for="myfile1">Select a file:</label>
+                <input class="form-control mt-2" type="file" id="myfile1" name="image1">
+                <input class="form-control mt-2" type="file" id="myfile2" name="image2">
+                <input class="form-control mt-2" type="file" id="myfile3" name="image3">
+                <input class="form-control mt-2" type="file" id="myfile4" name="image4">
+            </div>
+            <div class="row">
+                <label for="comments">เหตุผล</label>
+                <textarea name="comments" class="form-control" cols="46" rows="3" placeholder="กรุณาระบุเหตุผลของคุณ"></textarea>
+            </div>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                $(document).ready(function() {
+                    // Bind an input event handler to the textarea
+                    $('textarea[name="comments"]').on('input', function() {
+                        // Get the current text in the textarea
+                        var text = $(this).val();
+
+                        // Check if the length exceeds 255 characters
+                        if (text.length > 255) {
+                            // If it does, truncate the text to 255 characters
+                            $(this).val(text.substring(0, 255));
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Maximum Character Limit Exceeded',
+                                text: 'You have reached the maximum character limit (255).',
+                            });
+                        }
+                    });
+                });
+            </script>
+
+
+            <div class="row">
+                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                    <a href="javascript:void(0);" class="btn btn-danger" onclick="showCancellationPopup()">ยกเลิก</a>
+                    <button type="button" class="btn btn-success" onclick="showConfirmationPopup()">ยืนยัน</button>
+
+                </div>
+                <br>
+            </div>
         </div>
-        <div class="row body">
-            <form id="form" enctype="multipart/form-data">
-                <ul>
-                    <?php
-                    $get_r_id = $_GET['id'];
-                    $m_id = $_SESSION['id'];
+    </form>
 
-                    $sql = "SELECT m_fname, m_lname, m_id FROM member WHERE m_id = 1";
-                    $result = mysqli_query($conn, $sql);
-                    $row = mysqli_fetch_array($result);
-                    ?>
-                    <label for="basic-url" class="form-label">หมายเลขแจ้งซ่อมของคุณ</label>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" name="get_r_id" value="<?= $get_r_id ?>" placeholder="กรุณาใส่หมายเลขแจ้งซ่อมของท่าน" disabled>
-                    </div>
 
-                    <label for="basic-url" class="form-label">จาก</label>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="<?= $row['m_fname'] . " " . $row['m_lname'] ?>" placeholder="กรุณาใส่หมายเลขแจ้งซ่อมของท่าน" required readonly>
-                    </div>
 
-                    <label for="myfile">Select a file:</label>
-                    <input type="file" id="myfile" name="image1">
-                    <input type="file" id="myfile" name="image2">
-                    <input type="file" id="myfile" name="image3">
-                    <input type="file" id="myfile" name="image4">
 
-                    <li>
-                        <label for="comments">เหตุผล</label>
-                        <textarea cols="46" rows="3" name="comments" placeholder="กรุณาระบุเหตุผลของคุณ"></textarea>
-                    </li>
+    <script>
+        // Function to show SweetAlert confirmation popup
+        function showConfirmationPopup() {
+            Swal.fire({
+                title: 'ยืนยันการส่งคำร้อง?',
+                text: 'คุณต้องการยืนยันการส่งคำร้องหรือไม่?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: 'green',
+                confirmButtonText: 'ยืนยัน',
+                cancelButtonText: 'ยกเลิก',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // User confirmed, you can submit the form
+                    document.querySelector('form').submit();
+                }
+            });
+        }
 
-                    <li>
-                        <button id="formSubmit" class="btn btn-success">ยืนยัน</button>
-                        <span id="formSpinner" class="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span>
-                    </li>
-                </ul>
-            </form>
-        </div>
-    </div>
+        // Attach the showConfirmationPopup function to the Confirm button
+        document.querySelector('.btn-success').addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent the default form submission
+            showConfirmationPopup(); // Show the confirmation popup
+        });
+
+        // Function to show SweetAlert cancellation popup
+        function showCancellationPopup() {
+            Swal.fire({
+                title: 'ยกเลิกการส่งคำร้อง?',
+                text: 'คุณต้องการยกเลิกการส่งคำร้องหรือไม่?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'ยกเลิก',
+                cancelButtonText: 'ไม่, ยังคงส่ง',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // User confirmed, redirect to the cancellation URL
+                    window.location.href = 'detail_status.php?id=<?= $get_r_id ?>';
+                }
+            });
+        }
+
+        // Attach the showCancellationPopup function to the Cancel button
+        document.querySelector('.btn-danger').addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent the default button behavior
+            showCancellationPopup(); // Show the cancellation popup
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </body>
 
 </html>

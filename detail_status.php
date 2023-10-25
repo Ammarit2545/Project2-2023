@@ -457,7 +457,6 @@ $part_check = 0;
                     <br>
                     <div class="container">
 
-
                         <?php
                         $count_get_no = 0;
                         $repair_count = 0;
@@ -1828,7 +1827,7 @@ ORDER BY rs.rs_date_time DESC
         echo "Error: " . mysqli_error($conn);
     }
     $sql2 = "SELECT rs.rs_id, rs.status_id, st.status_color, rs.rs_conf, rs.rs_date_time, rs.rs_detail,
-                    gr.get_tel, gr.get_add, gr.get_wages, gr.get_add_price, gr.get_add_price
+                    gr.get_tel, gr.get_add, gr.get_wages, gr.get_add_price, gr.get_add_price, gr.get_config
                 FROM get_repair gr
                 LEFT JOIN repair_status rs ON gr.get_r_id = rs.get_r_id 
                 LEFT JOIN status_type st ON rs.status_id = st.status_id 
@@ -2057,6 +2056,10 @@ ORDER BY rs.rs_date_time DESC
         <?php if ($row_2['status_id'] == 19) { ?>
             <h3><i class="fa fa-check-square-o"></i> พนักงานได้รับอุปกรณ์ของคุณแล้ว</h3>
             <p>โปรดรอการตรวจเช็คจากพนักงานภายใน 1-2 วัน</p>
+        <?php  }
+        if ($row_2['status_id'] == 27) { ?>
+            <h3><i class="fa fa-check-square-o"></i> พนักงานได้คำร้องของคุณแล้ว</h3>
+            <p>โปรดรอการตอบกลับจากพนักงานภายใน 1-2 วัน</p>
         <?php  } ?>
         <?php if ($row_2['status_id'] == 6) { ?>
             <h3><i class="fa fa-check-square-o"></i> พนักงานได้ทำการซ่อมอุปกรณ์ให้คุณแล้วในขณะนี้</h3>
@@ -2430,7 +2433,7 @@ ORDER BY rs.rs_date_time DESC
                 ?>
             </div>
             <div class="row">
-                <div class="col-md">
+                <div class="col-md-8">
                     <div class="container px-md-4 py-5 mx-auto">
                         <div class="card" id="process-status">
 
@@ -2445,6 +2448,23 @@ ORDER BY rs.rs_date_time DESC
                                 while ($row_get_c1 = mysqli_fetch_array($result_get_c1)) {
                                     $repair_count++;
                                 } ?>
+                                <?php
+                                $sql_2 = "SELECT gr.get_config
+                                        FROM get_repair gr
+                                        WHERE gr.get_r_id = '$get_r_id' AND gr.del_flg = 0";
+                                $result_2 = mysqli_query($conn, $sql_2);
+                                $row2 = mysqli_fetch_array($result_2);
+                                $row2['get_config'];
+                                if ($row2['get_config'] > 0) {
+                                ?>
+                                    <div class="row">
+                                        <div class="alert alert-primary" role="alert">
+                                           <h5> ต่อเนื่องมาจากหมายเลขซ่อมสั่งซ่อมที่ : <?= $row2['get_config'] ?></h5>
+                                        </div>
+                                    </div>
+                                <?php
+                                }  ?>
+
                                 <div class="row">
                                     <div class="col-6">
                                         <h5>หมายเลขส่งซ่อมที่ <span class="text-primary font-weight-bold ln">#<?= $id_get_r ?></span></h5>
@@ -2517,7 +2537,7 @@ ORDER BY rs.rs_date_time DESC
                                 </div>
                             </div>
 
-                            <?php if ($row_2['status_id'] != 12) { ?>
+                            <?php if ($row_2['status_id'] != 12 && $row_2['status_id'] != 20 && $row_2['status_id'] != 27) { ?>
                                 <!-- Add class 'active' to progress -->
                                 <div class="row d-flex justify-content-center">
                                     <div class="col-12">
@@ -2602,7 +2622,7 @@ ORDER BY rs.rs_date_time DESC
                                 <div class="row d-flex justify-content-center p-4">
 
                                     <?php if ($row_2['rs_detail'] != NULL) {  ?>
-                                        <h2 style="color:red"><i class="fa fa-check"></i>เหตุผลการยกเลิก</h2>
+                                        <h2 style="color:red"><i class="fa fa-check"></i> เหตุผลการยกเลิก</h2>
                                         <br>
                                         <p style="margin-left:8%;color: gray">เหตุผล : <?= $row_2['rs_detail'] ?></p>
                                         <p style="margin-left:8%;color: gray">ยกเลิกเมื่อ<span>วันที่ : <?= date('d F Y', strtotime($row_2['rs_date_time'])); ?> <span style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_2['rs_date_time'])); ?></span> </span>
@@ -2612,6 +2632,30 @@ ORDER BY rs.rs_date_time DESC
                                         <h2 style="color:red"><i class="fa fa-check"></i>ไม่มีเหตุผลการยกเลิก</h2>
                                         <br>
                                         <p style="margin-left:8%;color: gray">คุณได้ทำการยกเลิกคำสั่งซ่อมนี้เมื่อ<span>วันที่ : <?= date('d F Y', strtotime($row_2['rs_date_time'])); ?> <span style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_2['rs_date_time'])); ?></span> </span>
+                                        </p>
+                                    <?php
+                                    } ?>
+
+                                </div>
+                            <?php
+                            } elseif ($row_2['status_id'] == 20 || $row_2['status_id'] == 27) { ?>
+                                <div class="row d-flex justify-content-center p-4">
+
+                                    <?php if ($row_2['rs_detail'] != NULL) {  ?>
+                                        <h2 style="color:red"><i class="fa fa-envelope"></i> คำร้องของคุณ</h2>
+                                        <br>
+                                        <div class="container p-4" style="margin-left:8%;">
+                                            <div class="row">
+                                                <p style="color: gray">เหตุผล : <?= $row_2['rs_detail'] ?></p>
+                                            </div>
+                                        </div>
+                                        <p style="margin-left:8%;color: gray">ส่งคำร้องเมื่อ<span>วันที่ : <?= date('d F Y', strtotime($row_2['rs_date_time'])); ?> <span style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_2['rs_date_time'])); ?></span> </span>
+                                        <?php
+                                    } else {
+                                        ?>
+                                        <h2 style="color:red"><i class="fa fa-check"></i>ไม่มีเหตุผลในคำร้องของคุณ</h2>
+                                        <br>
+                                        <p style="margin-left:8%;color: gray">ส่งคำร้องนี้เมื่อ<span>วันที่ : <?= date('d F Y', strtotime($row_2['rs_date_time'])); ?> <span style="display:inline-block;color : gray"> | <i class="uil uil-clock"></i> เวลา <?= date('H:i:s', strtotime($row_2['rs_date_time'])); ?></span> </span>
                                         </p>
                                     <?php
                                     } ?>
@@ -3676,6 +3720,51 @@ ORDER BY rs.rs_date_time DESC
 
                             </center>
                         <?php
+                        } elseif ($status_id_last  == 20) {
+                        ?>
+                            <center>
+                                <p style="margin-left: 2%; color:red">*** หากท่านต้องการยกเลิกคำร้องกด "ยืนยัน" ***</p>
+                                <a class="btn btn-success" style="margin-left: 2%" onclick="showConfirmationOff()">ยืนยัน / ยกเลิกคำร้อง</a>
+                                <script>
+                                    function showConfirmationOff() {
+                                        Swal.fire({
+                                            title: 'ต้องการยกเลิกคำร้องหรือไม่',
+                                            text: 'หากคุณกดยืนยัน สถานะจะเปลี่ยนเป็น "สำเร็จ" และคำร้องของท่านจะเป็นโมฆะ',
+                                            icon: 'question',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+                                            confirmButtonText: 'ยืนยัน',
+                                            cancelButtonText: 'ยกเลิก'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                // User confirmed, navigate to the desired page
+                                                window.location.href = 'action/add_only_status.php?id=<?= $id_get_r ?>';
+                                            }
+                                        });
+                                    }
+                                </script>
+                                <script>
+                                    function showConfirmation() {
+                                        Swal.fire({
+                                            title: 'เสร็จสิ้น',
+                                            text: 'หากท่านตรวจเช็คเสร็จสิ้นแล้ว ให้ทำการยืนยัน?',
+                                            icon: 'question',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+                                            confirmButtonText: 'ยืนยัน',
+                                            cancelButtonText: 'ยกเลิก'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                // User confirmed, navigate to the desired page
+                                                window.location.href = 'action/add_only_status.php?id=<?= $id_get_r ?>';
+                                            }
+                                        });
+                                    }
+                                </script>
+                            </center>
+                        <?php
                         } elseif ($status_id_last  == 4 && $row_2['rs_conf'] != NULL) { ?>
                             <div class="d-flex justify-content-center">
                                 <div class="accordion accordion-flush" id="accordionFlushExample">
@@ -4167,27 +4256,6 @@ ORDER BY rs.rs_date_time DESC
                                     <p style="margin-left: 2%; color:red">*** ตรวจเช็คความปกติของอุปกรณ์ของท่านว่าใช้ได้หรือไม่ก่อนทำการยืนยันเสร็จสิ้นการซ่อม ***</p>
                                     <a class="btn btn-danger" style="margin-left: 2%" href="send_config.php?id=<?= $id_get_r ?>">แจ้งเจ้าหน้าที่กรณีมีปัญหา</a>
                                     <a class="btn btn-success" style="margin-left: 2%" onclick="showConfirmation()">ยืนยัน</a>
-
-
-                                    <script>
-                                        function showConfirmation() {
-                                            Swal.fire({
-                                                title: 'เสร็จสิ้น',
-                                                text: 'หากท่านตรวจเช็คเสร็จสิ้นแล้ว ให้ทำการยืนยัน?',
-                                                icon: 'question',
-                                                showCancelButton: true,
-                                                confirmButtonColor: '#3085d6',
-                                                cancelButtonColor: '#d33',
-                                                confirmButtonText: 'ยืนยัน',
-                                                cancelButtonText: 'ยกเลิก'
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    // User confirmed, navigate to the desired page
-                                                    window.location.href = 'action/add_only_status.php?id=<?= $id_get_r ?>';
-                                                }
-                                            });
-                                        }
-                                    </script>
 
                                     <br>
                                     <?php
