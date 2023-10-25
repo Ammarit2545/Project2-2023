@@ -2510,13 +2510,24 @@ ORDER BY rs.rs_date_time DESC
                                     <div class="col-md-6">
                                         <h5>หมายเลขส่งซ่อมที่ <span class="text-primary font-weight-bold ln">#<?= $id_get_r ?></span></h5>
                                     </div>
-                                    <div class="col-md-6 text-end">
+                                    <div class="col-md-6 text-end process-line">
                                         <p class="ln" style="width: 100%; text-align: right;"> <!-- Add text-align: right; here -->
                                         <h5>
                                             <a id="bounce-item" class="text-primary" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropss">
                                                 รายละเอียดอุปกรณ์ (มี <?= $repair_count ?> อุปกรณ์)
                                             </a>
                                         </h5>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6 text-end only-now-process">
+                                        <p class="ln" style="width: 100%; text-align: center;"> <!-- Add text-align: right; here -->
+                                            <center>
+                                                <h5>
+                                                    <a id="bounce-item" class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropss">
+                                                        รายละเอียดอุปกรณ์
+                                                    </a>
+                                                </h5>
+                                            </center>
                                         </p>
                                     </div>
                                 </div>
