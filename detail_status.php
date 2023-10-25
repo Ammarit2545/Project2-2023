@@ -62,6 +62,8 @@ $part_check = 0;
             font-family: sans-serif;
         }
 
+
+
         .file-upload {
             width: 600px;
             margin: 0 auto;
@@ -434,6 +436,25 @@ $part_check = 0;
         @media screen and (max-width: 992px) {
             .icon-content {
                 width: 50%;
+            }
+        }
+
+
+        .process-line {
+            display: block;
+        }
+
+        .only-now-process {
+            display: none;
+        }
+
+        @media screen and (max-width: 767px) {
+            .process-line {
+                display: none;
+            }
+
+            .only-now-process {
+                display: block;
             }
         }
     </style>
@@ -1476,6 +1497,13 @@ $part_check = 0;
                                                     $result_count = mysqli_query($conn, $sql_count);
                                                     $row_count = mysqli_fetch_array($result_count);
 
+                                                    $get_d_id1 = $row_count['get_d_id'];
+
+                                                    $sql_repair = "SELECT * FROM repair 
+                                                    LEFT JOIN get_detail ON get_detail.r_id = repair.r_id
+                                                    WHERE get_detail.get_d_id = '$get_d_id1'";
+                                                    $result_repair = mysqli_query($conn, $sql_repair);
+                                                    $row_get_d = mysqli_fetch_array($result_repair);
                                                     ?>
                                                     <tr>
                                                         <td><?php
@@ -1498,9 +1526,9 @@ $part_check = 0;
                                                             if ($row_op['get_d_id'] == NULL) {
                                                                 echo "-";
                                                             } else {
-                                                                echo $row_op['get_d_id'] . ' ' . '(' . $row_op['r_brand'] . ' ' . $row_op['r_model'] . ')';
-                                                            }
-                                                            ?>
+                                                                echo $row_op['get_d_id'] . ' '  . $row_get_d['r_brand'] . ' ' . $row_get_d['r_model'] ?><h5><?= ' S/N :' . $row_get_d['r_serial_number'] ?></h5><?php
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                                ?>
                                                         </td>
 
                                                         <td><?php
@@ -1858,7 +1886,7 @@ ORDER BY rs.rs_date_time DESC
         echo "Error: " . mysqli_error($conn);
     }
     // Assuming $id_get_r is your parameterized value
-    $sql2 = "SELECT rs.rs_id, rs.status_id, st.status_color, rs.rs_conf, rs.rs_date_time, rs.rs_detail,
+    $sql2 = "SELECT rs.rs_id, rs.status_id, st.status_color, rs.rs_conf, rs.rs_date_time, rs.rs_detail,st.status_name,
                     gr.get_tel, gr.get_add, gr.get_wages, gr.get_add_price, gr.get_add_price
                 FROM get_repair gr
                 LEFT JOIN repair_status rs ON gr.get_r_id = rs.get_r_id 
@@ -1992,6 +2020,8 @@ ORDER BY rs.rs_date_time DESC
     } elseif (in_array($row_2['status_id'], $allowedStatusIds8)) {
         $process_dot = 8;
     }
+
+    $last_status_name = $row_2['status_name'];
 
     // Assuming $id_get_r is your parameterized value
     $sql = "SELECT get_repair.get_add_price, get_detail.get_t_id 
@@ -2135,14 +2165,28 @@ ORDER BY rs.rs_date_time DESC
         <?php  } elseif ($row_2['status_id'] == 5) { ?>
             <h3> <i class="fa fa-check-square-o"></i> ได้รับการยืนยันแล้ว</h3>
             <p>ขอให้ท่านดำเนินการส่งอุปกรณ์ไปที่ร้านด้วย <u>ตนเอง</u> หรือ <u>ทำการส่งหมายเลข "Tracking Number"</u> หากท่านส่งด้วยผู้ให้บริการขนส่ง เพื่อให้พนักงานสามารถตรวจสอบข้อมูลของท่านอย่างรวดเร็ว</p>
-        <?php  }
-
-
-        ?>
-
+        <?php  } ?>
     </div>
 
+    <?php
+    $sql_v = "SELECT get_r_id FROM get_repair WHERE get_config = '$get_r_id' AND del_flg = 0 ";
+    $result_v = mysqli_query($conn, $sql_v);
+    $row_v = mysqli_fetch_array($result_v);
 
+    if ($row_v['get_r_id'] > 0) {
+    ?>
+        <div class="container">
+            <div class="row mt-4 p-4">
+                <br>
+                <div class="alert alert-primary">
+                    <a href="detail_status.php?id=<?= $row_v['get_r_id'] ?>">
+                        <h4><i class="fa fa-paper-plane"></i> คำร้องนี้กำลังอยู่ระหว่างดำเนินการในหมายเลขซ่อม : <?= $row_v['get_r_id'] ?></h4>
+                    </a>
+                </div>
+            </div>
+        </div>
+    <?php
+    } ?>
     <div class="px-5 pt-5 repair auto-font">
         <div class="container" style="display: none;">
             <div class="row">
@@ -2176,9 +2220,10 @@ ORDER BY rs.rs_date_time DESC
                             <p>
                                 <i class="fa fa-exclamation-triangle"></i>
                                 ตรวจสอบรายละเอียดให้ครบถ้วนเพื่อผลประโยชน์ของท่านเอง
-                                <a type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                                    <u>ดูอะไหล่ที่ต้องใช้</u>
+                                <u style="color:blue">
+                                    <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop" <u>ดูอะไหล่ที่ต้องใช้</u>
                                 </a>
+                                </u>
                             </p>
                         </div>
                     <?php } else {  ?>
@@ -2427,10 +2472,7 @@ ORDER BY rs.rs_date_time DESC
                     </div>
                     <br>
                     <hr>
-                <?php
-
-                }
-                ?>
+                <?php  } ?>
             </div>
             <div class="row">
                 <div class="col-md-8">
@@ -2455,21 +2497,20 @@ ORDER BY rs.rs_date_time DESC
                                 $result_2 = mysqli_query($conn, $sql_2);
                                 $row2 = mysqli_fetch_array($result_2);
                                 $row2['get_config'];
-                                if ($row2['get_config'] > 0) {
-                                ?>
+                                if ($row2['get_config'] > 0) {  ?>
                                     <div class="row">
-                                        <div class="alert alert-primary" role="alert">
-                                           <h5> ต่อเนื่องมาจากหมายเลขซ่อมสั่งซ่อมที่ : <?= $row2['get_config'] ?></h5>
-                                        </div>
+                                        <a href="detail_status.php?id=<?= $row2['get_config'] ?>">
+                                            <div class="alert alert-primary" role="alert">
+                                                <h5><i class="fa fa-paper-plane"></i> ต่อเนื่องมาจากหมายเลขซ่อมสั่งซ่อมที่ : <?= $row2['get_config'] ?></h5>
+                                            </div>
+                                        </a>
                                     </div>
-                                <?php
-                                }  ?>
-
+                                <?php  }  ?>
                                 <div class="row">
-                                    <div class="col-6">
+                                    <div class="col-md-6">
                                         <h5>หมายเลขส่งซ่อมที่ <span class="text-primary font-weight-bold ln">#<?= $id_get_r ?></span></h5>
                                     </div>
-                                    <div class="col-6 text-end">
+                                    <div class="col-md-6 text-end">
                                         <p class="ln" style="width: 100%; text-align: right;"> <!-- Add text-align: right; here -->
                                         <h5>
                                             <a id="bounce-item" class="text-primary" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropss">
@@ -2541,7 +2582,7 @@ ORDER BY rs.rs_date_time DESC
                                 <!-- Add class 'active' to progress -->
                                 <div class="row d-flex justify-content-center">
                                     <div class="col-12">
-                                        <ul id="progressbar" class="text-center">
+                                        <ul id="progressbar" class="text-center process-line">
                                             <li class="<?php
                                                         if ($process_dot >= 1) {
                                                             echo 'active';
@@ -2607,6 +2648,15 @@ ORDER BY rs.rs_date_time DESC
                                                 <p id="font-status">เสร็จสิ้น</p>
                                             </li>
                                         </ul>
+                                        <center>
+                                            <div class="alert alert-light m-4 shadow only-now-process" style="background-color: <?= $row_2['status_color'] ?>;border:1px solid #<?= $row_2['status_color'] ?>">
+                                                <h5 style="color:white"> สถานะล่าสุด : <?= $last_status_name  ?></h5>
+                                                <div class="progress">
+                                                    <div class="progress-bar" role="progressbar" style="width:<?= ($process_dot / 8) * 100 ?>%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                            </div>
+
+                                        </center>
 
                                     </div>
 
@@ -4663,7 +4713,6 @@ ORDER BY rs.rs_date_time DESC
 
         </script>
 
-
         <script>
             function showConfirmationDialog() {
                 swal({
@@ -4683,7 +4732,6 @@ ORDER BY rs.rs_date_time DESC
                     });
             }
         </script>
-
 
         <!-- Cancel Button -->
         <script>
@@ -4759,9 +4807,6 @@ ORDER BY rs.rs_date_time DESC
                 conf.style.display = "inline-block";
             }
         </script>
-
-
-
 </body>
 
 </html>
