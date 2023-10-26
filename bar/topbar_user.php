@@ -479,11 +479,10 @@
         <li><a href="listview_status.php">ติดตาม</a></li>
         <li><a href="history_main.php">ประวัติ</a></li>
         <li><a href="history_main_old.php">สำเร็จ<i class="fa fa-check-square"></i></a></li>
+        <li><a data-bs-toggle="modal" data-bs-target="#customModal">แจ้งเตือน<i class="fa fa-bell"></i></a></li>
         <li class="dropdown"><a href="#"><span><?= $_SESSION['fname'] . " " . $_SESSION['lname']  ?></span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
             <li><a href="edit_user.php">แก้ไขข้อมูล</a></li>
-
-            <li><a href="#" data-bs-toggle="modal" data-bs-target="#customModal">การแจ้งเตือน</a></li>
             <li><a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">ข้อกำหนดเกี่ยวกับเว็บไซต์</a></li>
             <li><a href="#" onclick="logout()">Log out</a></li>
           </ul>
