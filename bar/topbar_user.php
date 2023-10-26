@@ -392,6 +392,79 @@
   }
 </style>
 
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="customModal" tabindex="-1" aria-labelledby="customModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="customModalLabel">การแจ้งเตือนทั้งหมดของคุณ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="background-color: #E7E7E7;">
+        <div class="container">
+        <br>
+          <?php
+          $id = $_SESSION['id'];
+          $sql_get_r = "SELECT get_repair.get_r_id FROM get_repair 
+              LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
+              LEFT JOIN repair ON get_detail.r_id = repair.r_id
+              WHERE repair.m_id = '11' AND get_repair.del_flg = 0 
+              GROUP BY get_repair.get_r_id 
+              ORDER BY get_repair.get_r_id DESC";
+
+          $result_get_r = mysqli_query($conn, $sql_get_r);
+          while ($row_get_r = mysqli_fetch_array($result_get_r)) {
+            $get_r_id_nofi = $row_get_r['get_r_id'];
+            $sql_watch = "SELECT * FROM repair_status WHERE  get_r_id = '$get_r_id_nofi'";
+            $result_watch = mysqli_query($conn, $sql_watch);
+            if (mysqli_num_rows($result_watch)) {
+              $sql_watch1 = "SELECT * FROM repair_status 
+                            LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
+                            WHERE repair_status.get_r_id = '$get_r_id_nofi' AND repair_status.del_flg = 0 ORDER BY repair_status.rs_id DESC LIMIT 1";
+              $result_watch1 = mysqli_query($conn, $sql_watch1);
+              $row_last = mysqli_fetch_array($result_watch1);
+
+              $dateString = $row_last['rs_date_time']; // Replace with your date string
+
+              // Convert the date string to a formatted date
+              $formattedDate = date("j M Y", strtotime($dateString));
+              $formattedTime =  date("H:i", strtotime($dateString));
+          ?>
+              <div class="row alert alert-light shadow">
+                <span style="display: inline-block;">
+                  <a href="detail_status.php?id=<?= $get_r_id_nofi ?>" class="btn btn-light" style="border-radius: 20px;background-color: #0026A9;color:white">
+                    <h5 style="display: inline;">หมายเลขซ่อม #<?= $get_r_id_nofi ?></h5>
+                  </a>
+
+                  <p style="color: gray; display: inline;"><?= $formattedDate . '  ' . $formattedTime ?></p>
+
+                  <br><br>
+                  <span >
+                    <p class="mt-4" id="nofication_1" style="font-size: 18px; display: inline;">เปลี่ยนเป็นสถานะ <span class="badge shadow nofication_1" style="color: <?= $row_last['status_color'] ?>; font-size: 18px;"> <?= $row_last['status_name'] ?></span> </p>
+                    <p style=" display: inline;" class="nofication_1">
+                      <a href="detail_status.php?id=<?= $get_r_id_nofi ?>" onclick="customButton(<?= $get_r_id_nofi ?>)" title="กดเพื่อดูรายละเอียดหมายเลขซ่อมนี้">ดูรายละเอียด</a>
+                    </p>
+                  </span>
+                  <br>
+                </span>
+              </div>
+              <br>
+          <?php
+            }
+          }
+          ?>
+        </div>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- navbar-->
 <header class="header fixed-top d-flex align-items-center sticked">
   <div class="container d-flex align-items-center justify-content-between">
@@ -409,6 +482,8 @@
         <li class="dropdown"><a href="#"><span><?= $_SESSION['fname'] . " " . $_SESSION['lname']  ?></span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
             <li><a href="edit_user.php">แก้ไขข้อมูล</a></li>
+
+            <li><a href="#" data-bs-toggle="modal" data-bs-target="#customModal">การแจ้งเตือน</a></li>
             <li><a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">ข้อกำหนดเกี่ยวกับเว็บไซต์</a></li>
             <li><a href="#" onclick="logout()">Log out</a></li>
           </ul>
@@ -503,6 +578,96 @@
   </script>
 
 </header>
+<?php
+$id = $_SESSION['id'];
+$sql_get_r = "SELECT get_repair.get_r_id FROM get_repair 
+              LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
+              LEFT JOIN repair ON get_detail.r_id = repair.r_id
+              WHERE repair.m_id = '11' AND get_repair.del_flg = 0 
+              GROUP BY get_repair.get_r_id 
+              ORDER BY get_repair.get_r_id DESC";
+
+$result_get_r = mysqli_query($conn, $sql_get_r);
+while ($row_get_r = mysqli_fetch_array($result_get_r)) {
+  $get_r_id_nofi = $row_get_r['get_r_id'];
+  $sql_watch = "SELECT * FROM repair_status WHERE rs_watch = 0 AND get_r_id = '$get_r_id_nofi'";
+  $result_watch = mysqli_query($conn, $sql_watch);
+  if (mysqli_num_rows($result_watch)) {
+    $sql_watch1 = "SELECT * FROM repair_status 
+    LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
+    WHERE repair_status.get_r_id = '$get_r_id_nofi' AND repair_status.del_flg = 0 ORDER BY repair_status.rs_id DESC LIMIT 1";
+    $result_watch1 = mysqli_query($conn, $sql_watch1);
+    $row_last = mysqli_fetch_array($result_watch1);
+
+    $dateString = $row_last['rs_date_time']; // Replace with your date string
+
+    // Convert the date string to a formatted date
+    $formattedDate = date("j M Y H:i", strtotime($dateString));
+
+?>
+    <style>
+      .toast-container {
+        position: relative;
+        height: 0;
+      }
+
+      .toast.show {
+        position: fixed;
+        z-index: 9999;
+        /* Set the z-index to a high value to ensure it's on top of everything */
+      }
+    </style>
+
+    <div class="toast show shadow" style="position: fixed; top: 100px; right: 10px; -index: 9999;">
+      <div class="toast-header" style="background-color: #DEDEDE; color: #545454;">
+        <strong class="me-auto">หมายเลขซ่อม <?= $get_r_id_nofi ?></strong>
+        <button type="button" class="btn-close " data-bs-dismiss="toast" id="closeToast" onclick="customButton(<?= $get_r_id_nofi ?>)" style="color: white;"></button>
+      </div>
+      <div class="toast-body" style="background-color: white; border-radius: 10px;">
+        <p style="color:gray"><?= $formattedDate; ?> </p>
+        <p id="nofication_1" style="font-size: 18px;">เปลี่ยนเป็นสถานะ <span class="badge shadow nofication_1" style="background-color: <?= $row_last['status_color'] ?>; font-size: 18px;"> <?= $row_last['status_name'] ?></span> </p>
+        <p class="nofication_1">แล้วในขณะนี้ <a href="detail_status.php?id=<?= $get_r_id_nofi ?>" onclick="customButton(<?= $get_r_id_nofi ?>)" title="กดเพื่อดูรายละเอียดหมายเลขซ่อมนี้">ดูรายละเอียด</a></p>
+      </div>
+    </div>
+    <style>
+      @media (max-width: 768px) {
+        #nofication_1 {
+          font-size: 16px;
+          /* Adjust the font size for smaller screens */
+        }
+
+        .nofication_1 {
+          font-size: 16px;
+          /* Adjust the font size for smaller screens */
+        }
+      }
+    </style>
+
+    <script>
+      document.getElementById("closeToast").addEventListener("click", function() {
+        // Close the toast when the close button is clicked
+        var myToast = new bootstrap.Toast(document.querySelector('.toast'));
+        myToast.hide();
+      });
+
+      function customButton(get_r_id) {
+        // Send a request to 'action/update_toast.php' when the custom button is clicked
+        fetch('action/update_toast.php?id=' + get_r_id)
+          .then(response => response.text())
+          .then(data => {
+            // Handle the response if needed
+            console.log(data);
+          });
+      }
+    </script>
+
+
+<?php
+
+  }
+}
+
+?>
 
 <!-- end navbar-->
 

@@ -24,9 +24,7 @@ $row = mysqli_fetch_array($result);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
-    <!-- <link rel="stylesheet" href="css/repair_non_gua.css"> -->
-    <!-- <link rel="stylesheet" href="css/all_page.css"> -->
-    <link rel="stylesheet" href="css/list_view_repair.css">
+
     <link rel="icon" type="image/x-icon" href="img brand/anelogo.jpg">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -37,7 +35,137 @@ $row = mysqli_fetch_array($result);
     </script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .grid {
+            margin-bottom: 3rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            /* if 4 is 200px */
+            grid-gap: 3rem;
+        }
 
+        .grid-item {
+            /* box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3); */
+            /* Add a gray shadow */
+            transition: transform 0.3s, box-shadow 0.3s;
+            /* Add transition for transform and box-shadow */
+        }
+
+        .grid-item:hover {
+            transform: scale(1.1);
+            /* Increase size on hover */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            /* Increase shadow size and intensity on hover */
+
+        }
+
+
+        #card-show {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            /* Center horizontally */
+            align-items: center;
+            /* Center vertically */
+            text-decoration: none;
+            font-size: 47px;
+        }
+
+        a {
+            text-decoration: none;
+            /* Remove underline */
+        }
+
+        a:hover {
+            text-decoration: none;
+            /* Remove underline on hover */
+        }
+
+        #card-show i {
+            transition: transform 0.3s;
+        }
+
+        #card-show:hover i {
+            transform: scale(1.2);
+        }
+
+        .grid-item .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            white-space: nowrap;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .grid-item:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
+            animation: tooltipFadeIn 0.3s, tooltipBounce 0.6s;
+        }
+
+        #drop-shadow {
+            border-radius: 10%;
+            box-shadow: 0 2px 4px rgba(0, 0.2, 0.2, 0.2);
+            /* Adjust the shadow properties as needed */
+            object-fit: cover;
+            width: 50px;
+        }
+
+        #card-detail {
+            width: 100%;
+            height: 100%
+        }
+
+        @keyframes tooltipFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes tooltipBounce {
+
+            0%,
+            100% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+
+            50% {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
