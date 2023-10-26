@@ -772,7 +772,7 @@ $id_g = $_GET['id'];
                                                                 อื่นๆ (หรือยื่นข้อเสนอ)
                                                             </label><br>
 
-                                                            <textarea id="myTextarea" name="detail_cancel" style="display: none;" placeholder="โปรดระบุสาเหตุ"></textarea>
+                                                            <textarea class="auto-expand" id="myTextarea" name="detail_cancel" style="display: none;" placeholder="โปรดระบุสาเหตุ"></textarea>
 
                                                             <br>
                                                             <a class="btn btn-danger" onclick="hideDiv()">ยกเลิก</a>

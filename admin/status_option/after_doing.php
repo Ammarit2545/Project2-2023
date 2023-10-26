@@ -69,7 +69,7 @@
     <br>
     <form id="cancel_status_id_conf" action="action/status/add_conf_cancel.php" method="POST" enctype="multipart/form-data">
         <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : red"> <?= $row_q['status_name'] ?></p> :</label>
-        <textarea class="form-control" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">ทำการยกเลิกรายการ</textarea>
+        <textarea class="form-control auto-expand" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">ทำการยกเลิกรายการ</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
         <input type="text" name="status_id" value="<?= $row_q['status_id'] ?>" hidden>
         <br>
@@ -205,7 +205,7 @@
     <br>
     <form id="confirm_check" action="action/status/status_non_del_part.php" method="POST" enctype="multipart/form-data">
         <label for="DetailFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_conf['status_color'] ?>"> <?= $row_conf['status_name'] ?> </p> :</label>
-        <textarea class="form-control" name="rs_detail" id="DetailFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">พนักงานกำลังดำเนินการตรวจเช็คความเรียบร้อยในขณะนี้</textarea>
+        <textarea class="form-control auto-expand" name="rs_detail" id="DetailFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">พนักงานกำลังดำเนินการตรวจเช็คความเรียบร้อยในขณะนี้</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
         <input type="text" name="status_id" value="<?= $row_conf['status_id'] ?>" hidden>
         <br>
@@ -342,7 +342,7 @@
     <br>
     <form id="carry_out_form" action="action/status/status_non_del_part.php" method="POST" enctype="multipart/form-data">
         <label for="DetailFormCarry" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_carry['status_color'] ?>"> <?= $row_carry['status_name'] ?> </p> :</label>
-        <textarea class="form-control" name="rs_detail" id="DetailFormCarry" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">ดำเนินการ</textarea>
+        <textarea class="form-control auto-expand" name="rs_detail" id="DetailFormCarry" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">ดำเนินการ</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
         <input type="text" name="status_id" value="<?= $row_carry['status_id'] ?>" hidden>
         <br>
@@ -478,7 +478,7 @@
     <br>
     <form id="confirm_config" action="action/status/add_conf_offer.php" method="POST" enctype="multipart/form-data">
         <label for="DetailFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_confg['status_color'] ?>"> <?= $row_confg['status_name'] ?> </p> :</label>
-        <textarea class="form-control" name="rs_detail" id="DetailFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">พนักงานกำลังดำเนินต้องมีอะไหล่ที่ใช้เพิ่มดังนี้</textarea>
+        <textarea class="form-control auto-expand" name="rs_detail" id="DetailFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">พนักงานกำลังดำเนินต้องมีอะไหล่ที่ใช้เพิ่มดังนี้</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
         <input type="text" name="status_id" value="13" hidden>
         <input type="hidden" name="cardCount" id="cardCountInput" value="0" readonly>

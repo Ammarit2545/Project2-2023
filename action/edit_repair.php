@@ -99,7 +99,7 @@ if (!is_dir($directory)) {
 $count = 1;
 
 while (isset($_FILES['image' . $count])) {
-    if ($_FILES['image' . $count]['name'] != '') {
+    if ($_FILES['image' . $count]['name'] != '' && $_FILES['image' . $count] != NULL) {
         echo '<br>' . $_FILES['image' . $count]['name'];
 
         $files = glob($directory . $count . "_*"); // Get all files that start with the specified index
@@ -179,6 +179,22 @@ while (isset($_FILES['image' . $count])) {
             }
         } else {
             echo '<br>' . 'is_null_' . $count;
+        }
+    } else {
+        $directory = "/uploads/$id/Holder/$session_number/";
+        if (is_dir($directory)) {
+            $files = scandir($directory);
+            foreach ($files as $file) {
+                if ($file != '.' && $file != '..' && strpos($file, $count) === 0) {
+                    $file_path = $directory . $file;
+                    if (is_file($file_path)) {
+                        unlink($file_path);
+                        echo "ไฟล์ $file ถูกลบแล้ว";
+                    }
+                }
+            }
+        } else {
+            echo "ไม่พบไดเรกทอรี: $directory";
         }
     }
     $count++;

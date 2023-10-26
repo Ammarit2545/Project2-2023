@@ -104,14 +104,14 @@ if (!isset($_SESSION['role_id'])) {
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <label for="inputPassword" class="col-sm-1 col-form-label">FAX</label>
+                            <label for="inputPassword" class="col-sm-1 col-form-label">FAX/แฟกซ์</label>
                             <div class="col-sm-4">
                                 <input name="com_fax" type="text" class="form-control" id="inputPassword" value="<?= $row_c['com_fax'] ?>" placeholder="กรุณากรอกชื่อเบอร์ Fax บริษัท (*ไม่จำเป็น)" required> 
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="exampleFormControlTextarea1" class="col-form-label">ที่อยู่ :</label>
-                            <textarea name="com_add" class="form-control" id="exampleFormControlTextarea1" rows="3" required><?= $row_c['com_add'] ?></textarea>
+                            <textarea name="com_add" class="form-control auto-expand" id="exampleFormControlTextarea1" rows="3" required><?= $row_c['com_add'] ?></textarea>
                         </div>
                         <div class="text-center pt-4">
                             <button type="submit" class="btn btn-success">ยืนยัน</button>

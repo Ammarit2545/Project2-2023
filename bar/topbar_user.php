@@ -405,13 +405,14 @@
       </div>
       <div class="modal-body" style="background-color: #E7E7E7;">
         <div class="container">
-        <br>
+          <br>
           <?php
+          $count_toast = 0;
           $id = $_SESSION['id'];
           $sql_get_r = "SELECT get_repair.get_r_id FROM get_repair 
               LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
               LEFT JOIN repair ON get_detail.r_id = repair.r_id
-              WHERE repair.m_id = '11' AND get_repair.del_flg = 0 
+              WHERE repair.m_id = '$id' AND get_repair.del_flg = 0 
               GROUP BY get_repair.get_r_id 
               ORDER BY get_repair.get_r_id DESC";
 
@@ -421,6 +422,7 @@
             $sql_watch = "SELECT * FROM repair_status WHERE  get_r_id = '$get_r_id_nofi'";
             $result_watch = mysqli_query($conn, $sql_watch);
             if (mysqli_num_rows($result_watch)) {
+              $count_toast++;
               $sql_watch1 = "SELECT * FROM repair_status 
                             LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
                             WHERE repair_status.get_r_id = '$get_r_id_nofi' AND repair_status.del_flg = 0 ORDER BY repair_status.rs_id DESC LIMIT 1";
@@ -442,7 +444,7 @@
                   <p style="color: gray; display: inline;"><?= $formattedDate . '  ' . $formattedTime ?></p>
 
                   <br><br>
-                  <span >
+                  <span>
                     <p class="mt-4" id="nofication_1" style="font-size: 18px; display: inline;">เปลี่ยนเป็นสถานะ <span class="badge shadow nofication_1" style="color: <?= $row_last['status_color'] ?>; font-size: 18px;"> <?= $row_last['status_name'] ?></span> </p>
                     <p style=" display: inline;" class="nofication_1">
                       <a href="detail_status.php?id=<?= $get_r_id_nofi ?>" onclick="customButton(<?= $get_r_id_nofi ?>)" title="กดเพื่อดูรายละเอียดหมายเลขซ่อมนี้">ดูรายละเอียด</a>
@@ -452,8 +454,15 @@
                 </span>
               </div>
               <br>
-          <?php
+            <?php
             }
+          }
+          if ($count_toast == 0) {
+            ?>
+            <center>
+              <h2>ไม่มีการแจ้งเตือนในขณะนี้</h2>
+            </center>
+          <?php
           }
           ?>
         </div>
@@ -578,11 +587,10 @@
 
 </header>
 <?php
-$id = $_SESSION['id'];
 $sql_get_r = "SELECT get_repair.get_r_id FROM get_repair 
               LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
               LEFT JOIN repair ON get_detail.r_id = repair.r_id
-              WHERE repair.m_id = '11' AND get_repair.del_flg = 0 
+              WHERE repair.m_id = '$id' AND get_repair.del_flg = 0 
               GROUP BY get_repair.get_r_id 
               ORDER BY get_repair.get_r_id DESC";
 
@@ -972,3 +980,20 @@ while ($row_get_r = mysqli_fetch_array($result_get_r)) {
     });
   }
 </script> -->
+<script>
+  document.addEventListener("input", function(e) {
+    if (e.target && e.target.classList.contains("auto-expand")) {
+      e.target.style.height = "auto";
+      e.target.style.height = (e.target.scrollHeight) + "px";
+    }
+  });
+
+  // Trigger the 'input' event on page load to set the initial height
+  window.addEventListener("load", function() {
+    const textareas = document.querySelectorAll(".auto-expand");
+    textareas.forEach(function(textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = (textarea.scrollHeight) + "px";
+    });
+  });
+</script>

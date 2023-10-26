@@ -86,7 +86,7 @@ $row = mysqli_fetch_array($result);
             </div>
             <div class="row">
                 <label for="comments">เหตุผล</label>
-                <textarea name="comments" class="form-control" cols="46" rows="3" placeholder="กรุณาระบุเหตุผลของคุณ"></textarea>
+                <textarea class="auto-expand" name="comments" class="form-control" cols="46" rows="3" placeholder="กรุณาระบุเหตุผลของคุณ"></textarea>
             </div>
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

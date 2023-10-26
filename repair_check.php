@@ -262,7 +262,7 @@ $row = mysqli_fetch_array($result);
                 </div>
                 <div class="mb-3">
                     <label for="inputtext" class="form-label">กรุณากรอกรายละเอียด</label>
-                    <textarea class="form-control" id="inputtext" rows="3" name="description" required placeholder="กรุณากรอกรายละเอียด" readonly><?= $description ?></textarea>
+                    <textarea class="form-control auto-expand" id="inputtext" rows="3" name="description" required placeholder="กรุณากรอกรายละเอียด" readonly><?= $description ?></textarea>
                 </div>
             </div>
             <br>

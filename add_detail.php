@@ -113,7 +113,7 @@ if (!isset($_SESSION['r_id_1'])) {
                     </div>
                     <br>
                     <label for="exampleFormControlTextarea1" class="col-form-label" id="bounce-item">รายละเอียดเพิ่มเติม :</label>
-                    <textarea class="form-control" id="bounce-item" rows="3" disabled="disabled" required><?php
+                    <textarea class="form-control auto-expand" id="bounce-item" rows="3" disabled="disabled" required><?php
                                                                                                     if ($obj->description        == NULL) {
                                                                                                         echo "ไม่มีข้อมูล";
                                                                                                     } else {
@@ -178,7 +178,7 @@ if (!isset($_SESSION['r_id_1'])) {
                 <input type="text" name="get_r_id" value="<?= $id_g ?>" required hidden>
                 <br>
                 <label for="exampleFormControlTextarea1" class="form-label">กรุณากรอกที่อยู่ที่ต้องการจัดส่ง</label>
-                <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3" required></textarea>
+                <textarea class="form-control auto-expand" name="description" id="exampleFormControlTextarea1" rows="3" required></textarea>
                 <center>
                     <br>
                     <a class="btn btn-warning" onclick="New_address()" href="">ต้องการใช้ที่อยู่เดิม</a>

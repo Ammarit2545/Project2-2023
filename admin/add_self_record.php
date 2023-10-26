@@ -729,7 +729,7 @@ if (!isset($_SESSION['role_id'])) {
                                 </script>
                                 <div class="row">
                                     <label for="inputtext" class="form-label">กรุณากรอกรายละเอียด</label>
-                                    <textarea class="form-control" id="inputtext" rows="3" name="description" required placeholder="กรุณากรอกรายละเอียด"></textarea>
+                                    <textarea class="form-control auto-expand" id="inputtext" rows="3" name="description" required placeholder="กรุณากรอกรายละเอียด"></textarea>
                                 </div>
                                 <div class="row">
                                     <div class="text-center pt-4">

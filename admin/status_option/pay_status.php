@@ -24,7 +24,7 @@
     <br>
     <form id="cancel_status_id_conf" action="action/status/add_conf_cancel.php" method="POST" enctype="multipart/form-data">
         <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_q['status_color'] ?>"> <?= $row_q['status_name'] ?></p> :</label>
-        <textarea class="form-control" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">เนื่องจากไม่สามารถจัดสรรหาอะไหล่ที่ท่านต้องการได้ ทางเราต้องขออภัยเป็นอย่างยิ่ง</textarea>
+        <textarea class="form-control auto-expand" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">เนื่องจากไม่สามารถจัดสรรหาอะไหล่ที่ท่านต้องการได้ ทางเราต้องขออภัยเป็นอย่างยิ่ง</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
         <input type="text" name="status_id" value="<?= $row_q['status_id'] ?>" hidden>
         <br>
@@ -158,7 +158,7 @@
     <br>
     <form id="cancel_status_id_conf_get" action="action/status/add_pay.php" method="POST" enctype="multipart/form-data">
         <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_conf['status_color'] ?>"> <?= $row_conf['status_name'] ?></p> :</label>
-        <textarea class="form-control" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">หลักฐานการโอนเงินถูกต้อง กรุณามารับอุปกรณ์ที่ร้านพร้อมกับแสดงหน้าแจ้งซ่อมให้ทางร้านตรวจสอบ</textarea>
+        <textarea class="form-control auto-expand" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">หลักฐานการโอนเงินถูกต้อง กรุณามารับอุปกรณ์ที่ร้านพร้อมกับแสดงหน้าแจ้งซ่อมให้ทางร้านตรวจสอบ</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
         <input type="text" name="status_id" value="<?= $row_conf['status_id'] ?>" hidden>
         <br>

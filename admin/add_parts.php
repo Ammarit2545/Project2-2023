@@ -19,7 +19,7 @@ if (!isset($_SESSION['role_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- <title>เพิ่มข้อมูลเครื่องเสียง</title> -->
     <title>Add Part - Edit Employee Information</title>
     <link rel="icon" type="image/x-icon" href="../img brand/anelogo.jpg">
@@ -92,12 +92,14 @@ if (!isset($_SESSION['role_id'])) {
                         </div>
 
                         <div class="mb-3 row">
-                            <label for="staticEmail" class="col-sm-1 col-form-label">Brand</label>
-                            <div class="col-sm-4">
+
+                            <div class="col-md-4">
+                                <label for="staticEmail" class="col-sm-1 col-form-label">Brand</label>
                                 <input type="text" name="p_brand" class="form-control" id="staticEmail" placeholder="กรุณากรอกชื่อ Brand" required>
                             </div>
-                            <label for="inputPassword" class="col-sm-0 col-form-label ml-4">Model</label>
-                            <div class="col-sm-5">
+
+                            <div class="col-md-5">
+                                <label for="inputPassword" class="col-sm-0 col-form-label ml-4">Model</label>
                                 <!-- <input type="text" name="p_model" class="form-control" id="inputPassword" placeholder="กรุณาใส่ชื่อ Model" required> -->
                                 <input type="text" name="p_model" id="inputPart" class="form-control" onblur="checkPartType()" placeholder="กรุณากรอกชื่อ Model" required>
                                 <span id="part-error" style="color:red;display:none;">รหัสโมเดลนี้มีอยู่ในระบบแล้ว</span>
@@ -125,22 +127,24 @@ if (!isset($_SESSION['role_id'])) {
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <label for="inputPassword" class="col-sm-1 col-form-label">ชื่อ</label>
-                            <div class="col-sm-2 mr-4">
+
+                            <div class="col-md-5 mr-4">
+                                <label for="inputPassword" class="col-sm-1 col-form-label">ชื่อ</label>
                                 <input type="text" name="p_name" class="form-control" id="inputPassword" placeholder="กรุณาใส่ชื่ออะไหล่" required>
                             </div>
-                            <label for="inputPassword" class="col-sm-0 col-form-label">ราคา</label>
-                            <div class="col-sm-2 mr-4">
+
+                            <div class="col-md-2 mr-4">
+                                <label for="inputPassword" class="col-sm-0 col-form-label">ราคา</label>
                                 <input type="text" name="p_price" class="form-control" id="inputPassword" placeholder="กรุณาใส่ราคา" required>
                             </div>
-                            <label for="inputPassword" class="col-sm-0 col-form-label">จำนวน</label>
+                            <!-- <label for="inputPassword" class="col-sm-0 col-form-label">จำนวน</label>
                             <div class="col-sm-2 mr-4">
                                 <input type="text" name="p_stock" class="form-control" id="inputPassword" placeholder="กรุณาใส่จำนวน" required>
-                            </div>
+                            </div> -->
                             <!-- <label for="inputPassword" class="col-sm-0 col-select-label mt-2">ประเภทอะไหล่</label> -->
-                            <label for="inputPassword" class="col-sm-0 col-form-label">ประเภท</label>
-                            <div class="col-sm-0 mr-0 mt-0">
 
+                            <div class="col-md-4">
+                                <label for="inputPassword" class="form-label">ประเภท</label>
                                 <!-- <select name="p_type_id" class="form-select" aria-label="Default select example">
                                     <option selected>กรุณาเลือกประเภทอะไหล่</option>
                                     <?php
@@ -220,11 +224,11 @@ if (!isset($_SESSION['role_id'])) {
 
                         <div class="mb-3">
                             <label for="exampleFormControlTextarea1" class="col-form-label">รายละเอียด :</label>
-                            <textarea name="p_description" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            <textarea name="p_description" class="form-control auto-expand auto-expand" id="exampleFormControlTextarea1" rows="3"></textarea>
                         </div>
                         <br>
                         <div class="mb-3">
-                            <input name="p_pic" type="file" id="upload" id="p_pic" hidden multiple>
+                            <input name="p_pic" type="file" id="upload" id="p_pic" hidden accept="image/*">
                             <h6>เพิ่มรูป</h6>
                             <label for="upload" style="display: block; color: blue;">Choose file</label>
                             <div id="image-container"></div>
