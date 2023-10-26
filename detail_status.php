@@ -13,6 +13,10 @@ if ($id == NULL) {
     header('Location: home.php');
 }
 
+// อัพเดตสถานะว่าดูหมายเลขนี้แล้ว
+$sql_update = "UPDATE repair_status SET rs_watch = 1 WHERE get_r_id = '$get_r_id'";
+$result = mysqli_query($conn, $sql_update);
+
 $count_carry_out = 0;
 $check_order = 0;
 $part_check = 0;

@@ -78,7 +78,7 @@
                                                         $sql_part = "SELECT * FROM parts WHERE del_flg = 0";
                                                         $result_part = mysqli_query($conn, $sql_part);
                                                         while ($row_part = mysqli_fetch_array($result_part)) {
-                                                        ?> "<?= $row_part['p_id'] ?>": "<?= $row_part['p_name'] ?>",
+                                                        ?> "<?= $row_part['p_id'] ?>" : "<?= $row_part['p_name'] ?>",
                                                         <?php
                                                         }
                                                         ?>
@@ -89,7 +89,7 @@
                                                         $sql_part = "SELECT p_id,p_pic FROM parts WHERE del_flg = 0";
                                                         $result_part = mysqli_query($conn, $sql_part);
                                                         while ($row_part = mysqli_fetch_array($result_part)) {
-                                                        ?> "<?= $row_part['p_id'] ?>": "../<?= $row_part['p_pic'] ?>",
+                                                        ?> "<?= $row_part['p_id'] ?>" : "../<?= $row_part['p_pic'] ?>",
                                                         <?php
                                                         }
                                                         ?>
