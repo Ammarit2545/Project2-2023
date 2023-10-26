@@ -33,7 +33,7 @@
     <br>
     <form id="cancel_status_id_conf" action="action/status/status_refuse_return.php" method="POST" enctype="multipart/form-data">
         <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_q['status_color'] ?>"> <?= $row_q['status_name'] ?></p> :</label>
-        <textarea class="form-control" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">เนื่องจากไม่สามารถจัดสรรหาอะไหล่ที่ท่านต้องการได้ ทางเราต้องขออภัยเป็นอย่างยิ่ง</textarea>
+        <textarea class="form-control auto-expand" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">เนื่องจากไม่สามารถจัดสรรหาอะไหล่ที่ท่านต้องการได้ ทางเราต้องขออภัยเป็นอย่างยิ่ง</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
         <input type="text" name="status_id" value="<?= $row_q['status_id'] ?>" hidden>
         <br>
@@ -167,7 +167,7 @@
     <br>
     <form id="cancel_status_id_conf_get" action="action/status/status_non_del_part.php" method="POST" enctype="multipart/form-data">
         <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_conf['status_color'] ?>"> <?= $row_conf['status_name'] ?></p> :</label>
-        <textarea class="form-control" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">การตรวจเช็คอุปกรณ์เสร็จสิ้น รอการชำระเงิน</textarea>
+        <textarea class="form-control auto-expand" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">การตรวจเช็คอุปกรณ์เสร็จสิ้น รอการชำระเงิน</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
         <input type="text" name="status_id" value="<?= $row_conf['status_id'] ?>" hidden>
         <br>
@@ -308,7 +308,7 @@
     <br>
     <form id="status_id_pay_ag" action="action/status/status_non_del_part.php" method="POST" enctype="multipart/form-data">
         <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_ag['status_color'] ?>"> <?= $row_ag['status_name'] ?></p> :</label>
-        <textarea class="form-control" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">กรุณาส่งหลักฐานการชำระเงินใหม่อีกครั้ง เนื่องจากพนักงานไม่สามารถตรวจสอบให้คุณได้</textarea>
+        <textarea class="form-control auto-expand" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">กรุณาส่งหลักฐานการชำระเงินใหม่อีกครั้ง เนื่องจากพนักงานไม่สามารถตรวจสอบให้คุณได้</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
         <input type="text" name="status_id" value="<?= $row_ag['status_id'] ?>" hidden>
         <br>

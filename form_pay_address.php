@@ -448,7 +448,7 @@ $get_add_price = $row1['get_add_price'];
                         <input type="text" name="get_r_id" value="<?= $id_g ?>" required hidden>
                         <br>
                         <label for="exampleFormControlTextarea1" class="form-label">กรุณากรอกที่อยู่ที่ต้องการจัดส่ง</label>
-                        <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3" required><?= $_SESSION['address'] ?></textarea>
+                        <textarea class="form-control auto-expand" name="description" id="exampleFormControlTextarea1" rows="3" required><?= $_SESSION['address'] ?></textarea>
                     </div>
 
                     <?php include('script.php'); ?>

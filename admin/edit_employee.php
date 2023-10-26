@@ -189,7 +189,7 @@ if (!isset($_SESSION['role_id'])) {
                                     </div>
                                     <br>
                                     <label for="exampleFormControlTextarea1" class="col-form-label" id="bounce-item">รายละเอียดเพิ่มเติม :</label>
-                                    <textarea class="form-control" id="bounce-item" rows="3" disabled="disabled" required>
+                                    <textarea class="form-control auto-expand" id="bounce-item" rows="3" disabled="disabled" required>
                                 <?php
                                     if ($obj->description == NULL) {
                                         echo "ไม่มีข้อมูล";
@@ -258,7 +258,7 @@ if (!isset($_SESSION['role_id'])) {
                                 <br>
 
                                 <label for="exampleFormControlTextarea1" class="form-label">รายละเอียดที่อยู่</label>
-                                <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3" required></textarea>
+                                <textarea class="form-control auto-expand" name="description" id="exampleFormControlTextarea1" rows="3" required></textarea>
 
                                 <!-- <div class="text-center py-4">
                                     <a class="btn btn-success" name="submit" onclick="validateForm()">ยืนยัน</a>
@@ -431,7 +431,7 @@ if (!isset($_SESSION['role_id'])) {
                     <?php include('script.php'); ?>
 
                     <!-- <label for="exampleFormControlTextarea1" class="col-form-label">ที่อยู่ :</label>
-                            <textarea name="e_add" class="form-control" id="exampleFormControlTextarea1" rows="3"><?= $row['e_add'] ?></textarea> -->
+                            <textarea name="e_add" class="form-control auto-expand" id="exampleFormControlTextarea1" rows="3"><?= $row['e_add'] ?></textarea> -->
 
                 </form>
                 <!-- /.container-fluid -->

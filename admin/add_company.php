@@ -103,7 +103,7 @@ if (!isset($_SESSION['role_id'])) {
                         </div>
                         <div class="mb-3">
                             <label for="exampleFormControlTextarea1" class="col-form-label">ที่อยู่ :</label>
-                            <textarea name="com_add" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            <textarea name="com_add" class="form-control auto-expand" id="exampleFormControlTextarea1" rows="3"></textarea>
                         </div>
                         <div class="text-center pt-4">
                             <button type="submit" class="btn btn-success">ยืนยัน</button>

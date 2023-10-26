@@ -224,7 +224,7 @@ if (!isset($_SESSION['role_id'])) {
 
                         <div class="mb-3">
                             <label for="exampleFormControlTextarea1" class="col-form-label">รายละเอียด :</label>
-                            <textarea name="p_description" class="form-control auto-expand" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            <textarea name="p_description" class="form-control auto-expand auto-expand" id="exampleFormControlTextarea1" rows="3"></textarea>
                         </div>
                         <br>
                         <div class="mb-3">

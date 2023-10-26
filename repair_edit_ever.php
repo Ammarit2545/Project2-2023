@@ -261,7 +261,7 @@ if(!isset($_SESSION['id'])){
                         <div class="row">
                             <div class="mb-3">
                                 <label for="inputtext" class="form-label">กรุณากรอกรายละเอียด</label>
-                                <textarea class="form-control" id="inputtext" rows="3" name="description" required><?= $description  ?></textarea>
+                                <textarea class="form-control auto-expand" id="inputtext" rows="3" name="description" required><?= $description  ?></textarea>
                             </div>
 
                             <div class="text-center pt-4">

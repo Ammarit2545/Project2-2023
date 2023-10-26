@@ -339,7 +339,7 @@ if (!isset($_SESSION['role_id'])) {
                                                 <div class="col-md">
                                                     <div class="row">
                                                         <div class="col">
-                                                            <textarea type="text" onchange="EditSession(this,4)" class="form-control" name="pl_detail" id="pl_detail" placeholder="กรุณากรอกรายละเอียด *ไม่จำเป็น" value="<?= $_SESSION['pl_detail'] ?>"><?= $_SESSION['pl_detail'] ?></textarea>
+                                                            <textarea class="auto-expand" type="text" onchange="EditSession(this,4)" class="form-control" name="pl_detail" id="pl_detail" placeholder="กรุณากรอกรายละเอียด *ไม่จำเป็น" value="<?= $_SESSION['pl_detail'] ?>"><?= $_SESSION['pl_detail'] ?></textarea>
                                                         </div>
                                                     </div>
                                                 </div>

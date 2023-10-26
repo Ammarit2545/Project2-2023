@@ -303,7 +303,7 @@ if (!isset($_SESSION['role_id'])) {
                                 <br>
 
                                 <label for="exampleFormControlTextarea1" class="form-label">รายละเอียดที่อยู่</label>
-                                <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3" required></textarea>
+                                <textarea class="form-control auto-expand" name="description" id="exampleFormControlTextarea1" rows="3" required></textarea>
 
                                 <!-- <div class="text-center py-4">
                                     <a class="btn btn-success" name="submit" onclick="validateForm()">ยืนยัน</a>

@@ -49,7 +49,7 @@
         <div class="alert alert-secondary shadow">
             <form id="cancel_status_id" action="action/status/status_non_del_part.php" method="POST" enctype="multipart/form-data">
                 <label for="cancelFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : red"> ปฏิเสธการซ่อม</p> :</label>
-                <textarea class="form-control" name="rs_detail" id="cancelFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการปฏิเสธการซ่อม"></textarea>
+                <textarea class="form-control auto-expand" name="rs_detail" id="cancelFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการปฏิเสธการซ่อม"></textarea>
                 <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
                 <input type="text" name="status_id" value="11" hidden>
                 <br>
@@ -326,7 +326,7 @@
                     </div>
                     <br>
                     <label for="DetailFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการส่ง <p style="display:inline; color : gray"> รายละเอียด</p> :</label>
-                    <textarea class="form-control" name="rs_detail" id="DetailFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">อะไหล่ที่ต้องใช้มีดังนี้</textarea>
+                    <textarea class="form-control auto-expand" name="rs_detail" id="DetailFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">อะไหล่ที่ต้องใช้มีดังนี้</textarea>
 
                 </div>
 
@@ -589,7 +589,7 @@ if ($row['value_code'] == "succ" || $row['value_code'] == "cancel" || $row['valu
 
                 <div class="mb-3">
                     <label for="exampleFormControlTextarea1" class="form-label">รายละเอียด :</label>
-                    <textarea class="form-control" name="rs_detail" id="exampleFormControlTextarea1" rows="3" required></textarea>
+                    <textarea class="form-control auto-expand" name="rs_detail" id="exampleFormControlTextarea1" rows="3" required></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="exampleFormControlInput1" class="form-label">สถานะ</label>&nbsp;&nbsp;
@@ -607,11 +607,11 @@ if ($row['value_code'] == "succ" || $row['value_code'] == "cancel" || $row['valu
 
                 <div class="mb-3" id="ex1Textarea" style="display: none;">
                     <label for="exampleFormControlTextarea1" class="form-label">ex1 :</label>
-                    <textarea class="form-control" name="ex1" id="exampleFormControlTextarea1" rows="3" required></textarea>
+                    <textarea class="form-control auto-expand" name="ex1" id="exampleFormControlTextarea1" rows="3" required></textarea>
                 </div>
                 <div class="mb-3" id="ex2Textarea" style="display: none;">
                     <label for="exampleFormControlTextarea1" class="form-label">ex2 :</label>
-                    <textarea class="form-control" name="ex2" id="exampleFormControlTextarea2" rows="3" required></textarea>
+                    <textarea class="form-control auto-expand" name="ex2" id="exampleFormControlTextarea2" rows="3" required></textarea>
                 </div>
 
                 <script>

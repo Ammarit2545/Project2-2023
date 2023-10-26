@@ -129,7 +129,7 @@ if (!isset($_SESSION["id"])) {
                             </div>
                             <br>
                             <label for="exampleFormControlTextarea1" class="col-form-label">รายละเอียดเพิ่มเติม :</label>
-                            <textarea class="form-control" rows="3" disabled="disabled" required>
+                            <textarea class="form-control auto-expand" rows="3" disabled="disabled" required>
                                 <?php
                                 if ($obj->description == NULL) {
                                     echo "ไม่มีข้อมูล";
@@ -194,7 +194,7 @@ if (!isset($_SESSION["id"])) {
                         <br>
 
                         <label for="exampleFormControlTextarea1" class="form-label">กรุณากรอกที่อยู่ที่ต้องการจัดส่ง</label>
-                        <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3" required></textarea>
+                        <textarea class="form-control auto-expand" name="description" id="exampleFormControlTextarea1" rows="3" required></textarea>
                         <center>
                             <br>
                             <a class="btn btn-danger" onclick="showCancel()"  id="bounce-item">ยกเลิกแก้ไขที่อยู่</a>
