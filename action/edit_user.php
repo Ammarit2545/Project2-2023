@@ -4,14 +4,25 @@ include('../database/condb.php');
 $fname = mysqli_real_escape_string($conn, $_POST['fname']);
 $lname = mysqli_real_escape_string($conn, $_POST['lname']);
 $tel = mysqli_real_escape_string($conn, $_POST['tel']);
-
+echo  $_POST['description'];
 $id = $_SESSION["id"];
 
 $address_json;
+
 if (isset($_POST['Ref_prov_id']) && isset($_POST['Ref_dist_id']) && isset($_POST['Ref_subdist_id']) && isset($_POST['zip_code']) && isset($_POST['description'])) {
 
-    $address = array("province" => $_POST['Ref_prov_id'], "district" => $_POST['Ref_dist_id'], "sub_district" => $_POST['Ref_subdist_id'], "zip_code" => $_POST['zip_code'], "description" => $_POST['description']);
-    $address_json = json_encode($address);
+
+    $address = array(
+        "province" => $_POST['Ref_prov_id'],
+        "district" => $_POST['Ref_dist_id'],
+        "sub_district" => $_POST['Ref_subdist_id'],
+        "zip_code" => $_POST['zip_code'],
+        "description" => $_POST['description']
+    );
+
+    $address_json = json_encode($address, JSON_UNESCAPED_UNICODE);
+
+    echo '<br>' . $address_json;
 } else {
     $address_json = $row['m_add'];
 }
@@ -42,4 +53,3 @@ if ($result) {
     header("location:../index.php");
     // echo "<script>window.location='../edit_user.php';</script>";
 }
-?>

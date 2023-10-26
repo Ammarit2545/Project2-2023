@@ -83,12 +83,22 @@ if (!isset($_SESSION['role_id'])) {
 
                 <!-- Begin Page Content -->
                 <form id="form_edit" action="action/edit_employee.php?id=<?= $e_id ?>" method="POST">
-                    <div class="container-fluid">
 
+
+                    <div class="container-fluid">
+                        <br>
+                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                            <h1 class="h1 mb-0 text-gray-800"> <span style=" color:black">จัดการและแก้ไขข้อมูล</span></h1>
+                        </div>
+                        <br>
+                        <hr>
                         <!-- Page Heading -->
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                            <h1 class="h3 mb-0 text-gray-800">แก้ไขข้อมูลพนักงาน</h1>
+                            <h1 class="h3 mb-0 text-gray-800"><i class="fa fa-user" "></i> <span style=" color:black">ข้อมูลพนักงาน </span></h1>
                         </div>
+                        <!-- <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                            <h1 class="h3 mb-0 text-gray-800">แก้ไขข้อมูลพนักงาน</h1>
+                        </div> -->
                         <?php
 
                         $sql = "SELECT * FROM employee WHERE del_flg = '0' AND e_id = '$e_id'";
@@ -123,9 +133,9 @@ if (!isset($_SESSION['role_id'])) {
                             <label for="inputPassword" class="col-sm-1 col-form-label">ตำแหน่ง</label>
                             <div class="col-sm-4">
                                 <!-- <input type="text" class="form-control" name="role_id" id="inputPassword" value="<?= $row['role_id'] ?>" placeholder="Accountant"> -->
-                                <select name="role_id" class="mt-2 form-select" aria-label="Default select example" <?php if($row['role_id'] == '1'){
-                                    ?>disabled<?php
-                                } ?>>
+                                <select name="role_id" class="mt-2 form-select" aria-label="Default select example" <?php if ($row['role_id'] == '1') {
+                                                                                                                    ?>disabled<?php
+                                                                                                                            } ?>>
                                     <?php
                                     $role_id = $row['role_id'];
                                     $sql_s1 = "SELECT * FROM role WHERE del_flg = '0' AND role_id = '$role_id'";
@@ -156,9 +166,8 @@ if (!isset($_SESSION['role_id'])) {
                             <div class="mb-3" id="old_address">
                                 <br>
                                 <hr>
-                                <!-- Page Heading -->
                                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                                    <h1 class="h3 mb-0 text-gray-800">รายละเอียดข้อมูลการติดต่อ</h1>
+                                    <h1 class="h3 mb-0 text-gray-800"> <i class="fa fa-map"></i> <span style="color:black">ที่อยู่</span></h1>
                                 </div>
                                 <!-- <label for="exampleFormControlTextarea1" class="form-label fw-bold">รายละเอียดข้อมูลการติดต่อ</label> -->
                                 <!-- <br> -->

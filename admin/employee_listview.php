@@ -137,8 +137,8 @@ if (!isset($_SESSION['role_id'])) {
                                                     <?php
                                                     }
                                                     ?>
-                                                </td>   
-                                               <!-- <td>
+                                                </td>
+                                                <!-- <td>
                                                     <?php
                                                     if ($row['e_add'] == NULL) {
                                                         echo "-";
@@ -261,6 +261,51 @@ if (!isset($_SESSION['role_id'])) {
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <?php
+    if (isset($_SESSION['edit_employee'])) {
+        if ($_SESSION['edit_employee'] == 1) {
+    ?>
+            <script>
+                let timerInterval
+                Swal.fire({
+                    title: 'แก้ไขข้อมูลพนักงานเสร็จสิ้น',
+                    html: 'จะปิดภายใน <b></b> มิลลิวินาที.',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading()
+                        const b = Swal.getHtmlContainer().querySelector('b')
+                        timerInterval = setInterval(() => {
+                            b.textContent = Swal.getTimerLeft()
+                        }, 100)
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
+                    },
+                    onClose: () => {
+                        // You can add your code here to run when the alert is closed
+                    }
+                });
+            </script>
+        <?php
+            unset($_SESSION['edit_employee']);
+        } else {
+        ?>
+            <script>
+                Swal.fire(
+                    'มีข้อผิดพลาดในการแก้ไข?',
+                    'โปรดแก้ไขอีกครั้งหรือติดต่อผู้ดูแลระบบ?',
+                    'question'
+                )
+            </script>
+    <?php
+            unset($_SESSION['edit_employee']);
+        }
+    }
+
+    ?>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
