@@ -155,15 +155,15 @@ if (!isset($_SESSION['role_id'])) {
 
                                 <div class="col-sm-2 mr-4">
                                     <label for="inputPassword" class="col-sm-0 col-form-label">จำนวนอะไหล่คงคลัง</label>
-                                    <input type="text" name="p_stock" class="form-control" id="inputPassword" placeholder="กรุณาใส่ราคา" value="<?= $row['p_stock'] ?>" required>
+                                    <input type="text" name="p_stock" class="form-control" id="inputPassword" placeholder="กรุณาใส่ราคา" value="<?= $row['p_stock'] ?>" required disabled>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label for="exampleFormControlTextarea1" class="col-form-label">รายละเอียด :</label>
-                                <textarea name="p_description" class="form-control" id="exampleFormControlTextarea1" rows="3"><?= $row['p_detail'] ?></textarea>
+                                <textarea name="p_description" class="form-control auto-expand" id="exampleFormControlTextarea1" rows="3"><?= $row['p_detail'] ?></textarea>
                             </div>
                             <div class="mb-3">
-                                <input type="file" name="p_pic" id="upload" hidden multiple onchange="displayImages(this)">
+                                <input type="file" name="p_pic" id="upload" hidden onchange="displayImages(this)" accept="image/*">
                                 <h6>เพิ่มรูป</h6>
                                 <label for="upload" style="display: block; color: blue;">Choose file</label>
                                 <div id="image-container">

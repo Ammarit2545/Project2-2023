@@ -40,7 +40,7 @@
     </li> -->
     <li class="nav-item">
         <a class="nav-link" href="listview_repair.php">
-        <i class="fas fa-solid fa-envelope"></i>
+            <i class="fas fa-solid fa-envelope"></i>
             <span>รายการแจ้งซ่อม</span></a>
     </li>
     <li class="nav-item">
@@ -53,46 +53,46 @@
     <div class="sidebar-heading">
         ข้อมูลทั่วไป
     </div>
-   <?php
-   if($_SESSION['role_id'] == 1){ 
+    <?php
+    if ($_SESSION['role_id'] == 1) {
     ?> <!-- Nav Item - employee Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-            <i class="fas fa-solid fa-users"></i>
-            <span>พนักงาน</span>
-        </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">รายละเอียด :</h6>
-                <a class="collapse-item" href="employee_listview.php">ข้อมูลพนักงาน</a>
-                <a class="collapse-item" href="add_employee.php">เพิ่มข้อมูล</a>
-                <a class="collapse-item" href="log_employee.php">ข้อมูลการ เข้า-ออก ระบบ</a>
-                <hr>
-                <h6 class="collapse-header">แผนกพนักงาน :</h6>
-                <a class="collapse-item" href="add_em_type.php">แผนก</a>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                <i class="fas fa-solid fa-users"></i>
+                <span>พนักงาน</span>
+            </a>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">รายละเอียด :</h6>
+                    <a class="collapse-item" href="employee_listview.php">ข้อมูลพนักงาน</a>
+                    <a class="collapse-item" href="add_employee.php">เพิ่มข้อมูล</a>
+                    <a class="collapse-item" href="log_employee.php">ข้อมูลการ เข้า-ออก ระบบ</a>
+                    <hr>
+                    <h6 class="collapse-header">แผนกพนักงาน :</h6>
+                    <a class="collapse-item" href="add_em_type.php">แผนก</a>
+                </div>
             </div>
-        </div>
-    </li><?php
-   }
-   ?>
-<?php
-   if($_SESSION['role_id'] == 1){ 
-    ?> 
-    <!-- Nav Item - customer Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsecustomer" aria-expanded="true" aria-controls="collapsecustomer">
-            <i class="fas fa-user"></i>
-            <span>ลูกค้า</span>
-        </a>
-        <div id="collapsecustomer" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">รายละเอียด :</h6>
-                <a class="collapse-item" href="listview_member.php">ข้อมูลลูกค้า</a>
-                <a class="collapse-item" href="log_member.php">ข้อมูลการ เข้า-ออก ระบบ</a>
-                <!-- <a class="collapse-item" href="repair.html">การส่งซ่อม</a> -->
+        </li><?php
+            }
+                ?>
+    <?php
+    if ($_SESSION['role_id'] == 1) {
+    ?>
+        <!-- Nav Item - customer Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsecustomer" aria-expanded="true" aria-controls="collapsecustomer">
+                <i class="fas fa-user"></i>
+                <span>ลูกค้า</span>
+            </a>
+            <div id="collapsecustomer" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">รายละเอียด :</h6>
+                    <a class="collapse-item" href="listview_member.php">ข้อมูลลูกค้า</a>
+                    <a class="collapse-item" href="log_member.php">ข้อมูลการ เข้า-ออก ระบบ</a>
+                    <!-- <a class="collapse-item" href="repair.html">การส่งซ่อม</a> -->
+                </div>
             </div>
-        </div>
-    </li>
+        </li>
     <?php } ?>
 
     <!-- Nav Item - soundsystem Collapse Menu -->
@@ -133,21 +133,21 @@
         </div>
     </li>
     <?php
-   if($_SESSION['role_id'] == 1){ 
-    ?> 
-    <!-- Nav Item - company Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsestatus" aria-expanded="true" aria-controls="collapsestatus">
-            <i class="fas fa-solid fa-bars"></i>
-            <span>สถานะ</span>
-        </a>
-        <div id="collapsestatus" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">รายละเอียด :</h6>
-                <a class="collapse-item" href="listview_status.php">ข้อมูลสถานะ</a>
+    if ($_SESSION['role_id'] == 1) {
+    ?>
+        <!-- Nav Item - company Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsestatus" aria-expanded="true" aria-controls="collapsestatus">
+                <i class="fas fa-solid fa-bars"></i>
+                <span>สถานะ</span>
+            </a>
+            <div id="collapsestatus" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">รายละเอียด :</h6>
+                    <a class="collapse-item" href="listview_status.php">ข้อมูลสถานะ</a>
+                </div>
             </div>
-        </div>
-    </li>
+        </li>
     <?php } ?>
     <br>
     <div class="sidebar-heading">
@@ -193,3 +193,20 @@
     </li>
 </ul>
 <!-- End of Sidebar -->
+<script>
+    document.addEventListener("input", function(e) {
+        if (e.target && e.target.classList.contains("auto-expand")) {
+            e.target.style.height = "auto";
+            e.target.style.height = (e.target.scrollHeight) + "px";
+        }
+    });
+
+    // Trigger the 'input' event on page load to set the initial height
+    window.addEventListener("load", function() {
+        const textareas = document.querySelectorAll(".auto-expand");
+        textareas.forEach(function(textarea) {
+            textarea.style.height = "auto";
+            textarea.style.height = (textarea.scrollHeight) + "px";
+        });
+    });
+</script>

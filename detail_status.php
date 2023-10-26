@@ -1338,7 +1338,7 @@ $part_check = 0;
                                 อื่นๆ (หรือยื่นข้อเสนอ)
                             </label><br>
 
-                            <textarea id="myTextarea" name="detail_cancel" style="display: none;" placeholder="โปรดระบุสาเหตุ"></textarea>
+                            <textarea class="auto-expand" id="myTextarea" name="detail_cancel" style="display: none;" placeholder="โปรดระบุสาเหตุ"></textarea>
 
                         </span>
                         <br>

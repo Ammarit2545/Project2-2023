@@ -980,3 +980,20 @@ while ($row_get_r = mysqli_fetch_array($result_get_r)) {
     });
   }
 </script> -->
+<script>
+  document.addEventListener("input", function(e) {
+    if (e.target && e.target.classList.contains("auto-expand")) {
+      e.target.style.height = "auto";
+      e.target.style.height = (e.target.scrollHeight) + "px";
+    }
+  });
+
+  // Trigger the 'input' event on page load to set the initial height
+  window.addEventListener("load", function() {
+    const textareas = document.querySelectorAll(".auto-expand");
+    textareas.forEach(function(textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = (textarea.scrollHeight) + "px";
+    });
+  });
+</script>

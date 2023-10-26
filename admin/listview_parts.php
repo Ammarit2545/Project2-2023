@@ -178,7 +178,7 @@ if (!isset($_SESSION['role_id'])) {
                                                     }
                                                     ?>
                                                 </td>
-                                                <td>
+                                                <td width="200px">
                                                     <button onclick="confirmDelete(<?= $row['p_id'] ?>)" class="btn btn-danger">ลบ</button>
                                                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 

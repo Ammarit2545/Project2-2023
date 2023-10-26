@@ -58,10 +58,12 @@ if (isset($_POST["submit"])) {
 if ($uploadOk == 0) {
     echo "Sorry, your file was not uploaded.";
 } else {
-    if (move_uploaded_file($_FILES["p_pic"]["tmp_name"], $target_file)) {
-        echo "The file " . htmlspecialchars(basename($_FILES["p_pic"]["name"])) . " has been uploaded.";
-    } else {
-        echo "Sorry, there was an error uploading your file.";
+    if (isset($_FILES["p_pic"]) && $_FILES["p_pic"] != NULL) {
+        if (move_uploaded_file($_FILES["p_pic"]["tmp_name"], $target_file)) {
+            echo "The file " . htmlspecialchars(basename($_FILES["p_pic"]["name"])) . " has been uploaded.";
+        } else {
+            echo "Sorry, there was an error uploading your file.";
+        }
     }
 }
 
@@ -72,28 +74,34 @@ $row_c = mysqli_fetch_array($result);
 if ($p_pic) {
     $pic_path = "parts/$p_type_id/$filename ";
 
-    $sql = "UPDATE parts SET `p_date_update` = NOW(), `p_type_id` = '$p_type_id', `p_brand` = '$p_brand', `p_model` = '$p_model', `p_name` = '$p_name', `p_detail` ='$p_detail', `p_price`= '$p_price', `p_pic`= '$pic_path' , p_stock = '$p_stock' WHERE p_id = $p_id";
+    $sql = "UPDATE parts SET `p_date_update` = NOW(), `p_type_id` = '$p_type_id', `p_brand` = '$p_brand', `p_model` = '$p_model', `p_name` = '$p_name', `p_detail` ='$p_detail', `p_price`= '$p_price', `p_pic`= '$pic_path'  WHERE p_id = $p_id";
 } else {
-    $sql = "UPDATE parts SET `p_date_update` = NOW(), `p_type_id` = '$p_type_id', `p_brand` = '$p_brand', `p_model` = '$p_model', `p_name` = '$p_name', `p_detail` ='$p_detail', `p_price`= '$p_price' , p_stock = '$p_stock' WHERE p_id = $p_id";
+    $sql = "UPDATE parts SET `p_date_update` = NOW(), `p_type_id` = '$p_type_id', `p_brand` = '$p_brand', `p_model` = '$p_model', `p_name` = '$p_name', `p_detail` ='$p_detail', `p_price`= '$p_price' WHERE p_id = $p_id";
 }
-
 
 $result = mysqli_query($conn, $sql);
 
+// if ($result) {
+//     if ($row_c['p_stock'] < $p_stock) {
+//         $p_stock_c = $p_stock - $row_c['p_stock'];
+//         $sql = "INSERT INTO `parts_log` (`p_id`, `pl_value`, `pl_date`, `e_id`, `st_id`) VALUES ('$p_id', '$p_stock_c', NOW(), '$id', 'plus')";
+//         $result = mysqli_query($conn, $sql);
+//     } elseif ($row_c['p_stock'] > $p_stock) {
+//         $p_stock_c = $row_c['p_stock'] -  $p_stock;
+//         $sql = "INSERT INTO `parts_log` (`p_id`, `pl_value`, `pl_date`, `e_id`, `st_id`) VALUES ('$p_id', '$p_stock_c', NOW(), '$id', 'minus')";
+//         $result = mysqli_query($conn, $sql);
+//     }
+// }
+
 if ($result) {
-    if ($row_c['p_stock'] < $p_stock) {
-        $p_stock_c = $p_stock - $row_c['p_stock'];
-        $sql = "INSERT INTO `parts_log` (`p_id`, `pl_value`, `pl_date`, `e_id`, `st_id`) VALUES ('$p_id', '$p_stock_c', NOW(), '$id', 'plus')";
-        $result = mysqli_query($conn, $sql);
-    } elseif ($row_c['p_stock'] > $p_stock) {
-        $p_stock_c = $row_c['p_stock'] -  $p_stock;
-        $sql = "INSERT INTO `parts_log` (`p_id`, `pl_value`, `pl_date`, `e_id`, `st_id`) VALUES ('$p_id', '$p_stock_c', NOW(), '$id', 'minus')";
-        $result = mysqli_query($conn, $sql);
-    }
+    $_SESSION['add_data_alert'] = 0;
+    // header('Location:../listview_parts.php');
+    header('Location:../listview_parts.php');
+
+    // display an alert message
+    // echo "<script>alert('Success!');</script>";
+} else {
+    $_SESSION['add_data_alert'] = 1;
+    // header('Location:../listview_parts.php');
+    header('Location:../listview_parts.php');
 }
-
-// header('Location:../listview_parts.php');
-header('Location:../listview_parts.php');
-
-// display an alert message
-echo "<script>alert('Success!');</script>";
