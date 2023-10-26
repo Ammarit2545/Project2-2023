@@ -9,9 +9,9 @@ if (!isset($_SESSION['role_id'])) {
 // ใส่สถานะที่ต้องการตอบกลับ ตรงนี้
 $excludedStatusIDs = [];
 
-$excludedStatusIDs = ($_SESSION['role_id'] == 1) ? [1, 25 ,20] : [];
-$excludedStatusIDs = ($_SESSION['role_id'] == 1) ? [1] : [];
-$excludedStatusIDs = ($_SESSION['role_id'] == 1) ? [25] : [];
+$excludedStatusIDs = ($_SESSION['role_id'] == 1) ? [1, 25, 20] : [];
+$excludedStatusIDs = ($_SESSION['role_id'] == 2) ? [1] : [];
+$excludedStatusIDs = ($_SESSION['role_id'] == 3) ? [25] : [];
 
 // role_id = 2  ------ 1, 2, 4, 5, 6, 10, 11, 12, 13, 14, 15, 17, 18, 19, 24
 // role_id = 3  ------ 3, 8, 9, 25, 26
@@ -157,7 +157,6 @@ $excludedStatusIDs = ($_SESSION['role_id'] == 1) ? [25] : [];
                                     <?php
                                     $get_r_id_old = 0;
                                     $sql_st = "SELECT status_type.status_id FROM status_type WHERE status_type.del_flg = 0";
-
                                     if ($_SESSION['role_id'] == 2) {
                                         $sql_st .= " AND status_type.status_id IN (1, 2, 4, 5, 6, 10, 11, 12, 13, 14, 15, 17, 18, 19, 24)";
                                     } elseif ($_SESSION['role_id'] == 3) {
@@ -167,7 +166,7 @@ $excludedStatusIDs = ($_SESSION['role_id'] == 1) ? [25] : [];
                                     // If $_SESSION['role_id'] is not 2 or 3, the default SQL query will be executed.
                                     $result_st = mysqli_query($conn, $sql_st);
                                     $status_data = array(); // Array to store status data\
-                                    $status_id_data = 1;
+                                    $status_id_data = 0;
                                     while ($row_st_id = mysqli_fetch_array($result_st)) {
 
                                         if ($status_id_data == $row_st_id['status_id']) {
@@ -275,11 +274,16 @@ $excludedStatusIDs = ($_SESSION['role_id'] == 1) ? [25] : [];
                                     <thead>
                                         <tr>
                                             <!-- <th>ลำดับ</th> -->
-                                            <th>
+                                            <th data-order="desc">
                                                 <center>
                                                     หมายเลขซ่อม
                                                 </center>
                                             </th>
+                                            <script>
+                                                $(document).ready(function() {
+                                                    $('#dataTable').DataTable();
+                                                });
+                                            </script>
                                             <th>สถานะ</th>
                                             <th>ประเภท</th>
                                             <!-- <th>ยี่ห้อ</th>
@@ -303,8 +307,16 @@ $excludedStatusIDs = ($_SESSION['role_id'] == 1) ? [25] : [];
                                                             LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
                                                             LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
                                                             WHERE get_repair.del_flg = '0' AND get_detail.del_flg = '0'
-                                                            GROUP BY get_repair.get_r_id
-                                                            ORDER BY get_repair.get_r_id DESC;"; // Change ASC to DESC here
+                                                           "; // Change ASC to DESC here
+
+                                        if ($_SESSION['role_id'] == 2) {
+                                            $sql_nofi  .= " AND status_type.status_id IN (1, 2, 4, 5, 6, 10, 11, 12, 13, 14, 15, 17, 18, 19, 24)";
+                                        } elseif ($_SESSION['role_id'] == 3) {
+                                            $sql_nofi  .= " AND status_type.status_id IN (3, 8, 9, 25, 26)";
+                                        }
+
+                                        $sql_nofi  .= " GROUP BY get_repair.get_r_id
+                                        ORDER BY get_repair.get_r_id DESC;";
 
                                         $result_nofi = mysqli_query($conn, $sql_nofi);
                                         $num_rows = mysqli_fetch_array($result_nofi_count);
@@ -482,7 +494,7 @@ $excludedStatusIDs = ($_SESSION['role_id'] == 1) ? [25] : [];
                                                                 <?= $row_repair['r_brand'] ?>
                                                                 <?= $row_repair['r_model'] ?>
                                                             </span>
-                                                            
+
                                                             <?= ', S/N ' ?><span style="color:blue"><u><?= $row_repair['r_serial_number'] ?></u>
                                                             </span>
                                                         </p>
