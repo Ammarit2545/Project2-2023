@@ -104,7 +104,7 @@ if (!isset($_SESSION['role_id'])) {
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <label for="inputPassword" class="col-sm-1 col-form-label">FAX</label>
+                            <label for="inputPassword" class="col-sm-1 col-form-label">FAX/แฟกซ์</label>
                             <div class="col-sm-4">
                                 <input name="com_fax" type="text" class="form-control" id="inputPassword" value="<?= $row_c['com_fax'] ?>" placeholder="กรุณากรอกชื่อเบอร์ Fax บริษัท (*ไม่จำเป็น)" required> 
                             </div>

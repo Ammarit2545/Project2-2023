@@ -80,7 +80,7 @@ if (!isset($_SESSION['role_id'])) {
                                             <th>ชื่อบริษัท</th>
                                             <th>ที่อยู่</th>
                                             <th>เบอร์โทรศัพท์</th>
-                                            <th>FAX</th>
+                                            <th>FAX/แฟกซ์</th>
                                             <th>ปุ่มดำเนินการ</th>
                                         </tr>
                                     </thead>

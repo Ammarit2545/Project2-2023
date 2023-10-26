@@ -255,13 +255,15 @@ $row = mysqli_fetch_array($result);
                                                 $row_c = mysqli_fetch_array($result_c);
 
                                                 $company_name = $row_c['com_name'];
-                                            ?><h5 style="display:inline; margin-right:10px" class="btn btn-secondary"><?= $company_name ?></h5>
+                                            ?>
+                                            <br><hr>
+                                            <h6 style="display:inline; margin-right:10px;color:black" >บริษัทประกัน : <u><?= $company_name ?></u></h6>
+                                        
                                             <?php } ?>
 
 
                                         </h5>
-                                        <br><br>
-                                        <h6 class="card-subtitle mb-2 text-muted">Serial Number : <?= $_SESSION[$serial_number] ?>
+                                        <h6 class="card-subtitle mb-2 text-muted mt-2">Serial Number : <?= $_SESSION[$serial_number] ?>
                                             <?php if (isset($_SESSION[$id_repair_ever])) {   ?>
                                                 <?php if ($_SESSION[$id_repair_round] > 1) { ?>
                                                     <span style="display:inline; margin-right:10px" class="btn btn-primary">ครั้งที่ # <?= $_SESSION[$id_repair_round] ?></span>
@@ -571,7 +573,7 @@ if (isset($_SESSION['add_data_detail'])) {
         modal.style.display = 'none';
     }
 </script>
-
+<?php include('footer/footer.php'); ?>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 

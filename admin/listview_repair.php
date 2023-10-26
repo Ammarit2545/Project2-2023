@@ -7,7 +7,14 @@ if (!isset($_SESSION['role_id'])) {
 }
 
 // ใส่สถานะที่ต้องการตอบกลับ ตรงนี้
-$excludedStatusIDs = [1, 25];
+$excludedStatusIDs = [];
+
+$excludedStatusIDs = ($_SESSION['role_id'] == 1) ? [1, 25 ,20] : [];
+$excludedStatusIDs = ($_SESSION['role_id'] == 1) ? [1] : [];
+$excludedStatusIDs = ($_SESSION['role_id'] == 1) ? [25] : [];
+
+// role_id = 2  ------ 1, 2, 4, 5, 6, 10, 11, 12, 13, 14, 15, 17, 18, 19, 24
+// role_id = 3  ------ 3, 8, 9, 25, 26
 
 ?>
 <!DOCTYPE html>
