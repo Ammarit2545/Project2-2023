@@ -64,12 +64,12 @@
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">รายละเอียด :</h6>
-                    <a class="collapse-item" href="employee_listview.php">ข้อมูลพนักงาน</a>
-                    <a class="collapse-item" href="add_employee.php">เพิ่มข้อมูล</a>
-                    <a class="collapse-item" href="log_employee.php">ข้อมูลการ เข้า-ออก ระบบ</a>
+                    <a class="collapse-item" href="employee_listview.php"><i class="fa fa-address-card"></i> ข้อมูลพนักงาน</a>
+                    <a class="collapse-item" href="add_employee.php"><i class="fa fa-plus-square"></i> เพิ่มข้อมูล</a>
+                    <a class="collapse-item" href="log_employee.php"><i class="	fa fa-calendar-check"></i> ข้อมูลการ เข้า-ออก ระบบ</a>
                     <hr>
                     <h6 class="collapse-header">แผนกพนักงาน :</h6>
-                    <a class="collapse-item" href="add_em_type.php">แผนก</a>
+                    <a class="collapse-item" href="add_em_type.php"><i class="	fa fa-cubes"></i> แผนก</a>
                 </div>
             </div>
         </li><?php
@@ -87,8 +87,8 @@
             <div id="collapsecustomer" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">รายละเอียด :</h6>
-                    <a class="collapse-item" href="listview_member.php">ข้อมูลลูกค้า</a>
-                    <a class="collapse-item" href="log_member.php">ข้อมูลการ เข้า-ออก ระบบ</a>
+                    <a class="collapse-item" href="listview_member.php"><i class="fa fa-address-card"></i> ข้อมูลลูกค้า</a>
+                    <a class="collapse-item" href="log_member.php"><i class="fa fa-calendar-check"></i> ข้อมูลการ เข้า-ออก ระบบ</a>
                     <!-- <a class="collapse-item" href="repair.html">การส่งซ่อม</a> -->
                 </div>
             </div>
@@ -104,16 +104,26 @@
         <div id="collapsesoundsystem" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">รายละเอียด :</h6>
-                <a class="collapse-item" href="listview_parts.php">ข้อมูลอะไหล่</a>
-                <a class="collapse-item" href="add_parts.php">เพิ่มข้อมูลอะไหล่</a>
+                <a class="collapse-item" href="listview_parts.php"><i class="fa fa-search"></i> ข้อมูลอะไหล่</a>
+                <hr>
+
+                <h6 class="collapse-header">การจัดการ :</h6>
+                <a class="collapse-item" href="add_parts.php" style="color:green"> <i class="fa fa-plus-square"></i> เพิ่มข้อมูลอะไหล่</a>
+                <a class="collapse-item" href="edit_stock.php" style="color:blue"> <i class="fa fa-search"></i> จัดการสต๊อก</a>
+
+                <hr>
+                <h6 class="collapse-header">แจ้งเตือน :</h6>
+                <a class="collapse-item" href="stock_alert.php" style="color:red"><i class="fas fa-exclamation-circle"></i> เหลือน้อยกว่า 10 ชิ้น</a>
+                <!-- stock_alert.php -->
 
                 <hr>
                 <h6 class="collapse-header">ประเภทอะไหล่ :</h6>
-                <a class="collapse-item" href="add_parts_type.php">ประเภทอะไหล่</a>
+                <a class="collapse-item" href="add_parts_type.php"><i class="fa fa-clone"></i> จัดการประเภทอะไหล่</a>
+
                 <hr>
                 <h6 class="collapse-header">ประวัติการใช้อะไหล่ :</h6>
-                <a class="collapse-item" href="log_part.php">ประวัติการเพิ่ม</a>
-                <a class="collapse-item" href="log_part_use.php">ประวัติการใช้</a>
+                <a class="collapse-item" href="log_part.php"><i class="	fa fa-download"></i> ประวัติการเพิ่ม</a>
+                <a class="collapse-item" href="log_part_use.php"><i class="fa fa-paper-plane"></i> ประวัติการใช้</a>
             </div>
         </div>
     </li>
@@ -127,8 +137,8 @@
         <div id="collapsecompany" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">รายละเอียด :</h6>
-                <a class="collapse-item" href="listview_company.php">ข้อมูลบริษัท</a>
-                <a class="collapse-item" href="add_company.php">เพิ่มข้อมูล</a>
+                <a class="collapse-item" href="listview_company.php"><i class="	fa fa-building"></i> ข้อมูลบริษัท</a>
+                <a class="collapse-item" href="add_company.php"><i class="fa fa-plus-square"></i> เพิ่มข้อมูล</a>
             </div>
         </div>
     </li>
@@ -144,7 +154,7 @@
             <div id="collapsestatus" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">รายละเอียด :</h6>
-                    <a class="collapse-item" href="listview_status.php">ข้อมูลสถานะ</a>
+                    <a class="collapse-item" href="listview_status.php"><i class="	fa fa-code"></i> ข้อมูลสถานะ</a>
                 </div>
             </div>
         </li>
@@ -164,12 +174,12 @@
             <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
             <span>บันทึกคำสั่งซื้อ</span></a>
     </li>
-
+    <!-- 
     <li class="nav-item">
         <a class="nav-link" href="edit_stock.php">
             <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
             <span>จัดการสต๊อก</span></a>
-    </li>
+    </li> -->
     <br>
 
     <div class="sidebar-heading">
@@ -184,9 +194,9 @@
         <div id="collapsereport" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">รายละเอียด :</h6>
-                <a class="collapse-item" href="report_parts.php">ยอดอะไหล่</a>
-                <a class="collapse-item" href="report_employee.php">ยอดบุคลากร</a>
-                <a class="collapse-item" href="report_repair.php">ยอดการซ่อม</a>
+                <a class="collapse-item" href="report_parts.php"><i class="	fa fa-cogs"></i> ยอดอะไหล่</a>
+                <a class="collapse-item" href="report_employee.php"><i class="	fa fa-address-book"></i> ยอดบุคลากร</a>
+                <a class="collapse-item" href="report_repair.php"> <i class="	fa fa-gavel"></i> ยอดการซ่อม</a>
                 <!-- <a class="collapse-item" href="report_profit.php">ยอดรายได้การซ่อม</a> -->
             </div>
         </div>

@@ -30,7 +30,7 @@ if ($stock_type != NULL || $stock_type != '') {
     $result = mysqli_query($conn, $sql);
     $row_check = mysqli_fetch_array($result);
 
-    if ($row_check['st_type'] == 1) {
+    if ($row_check['st_type'] == 2) {
         $sql = "SELECT pl_id FROM parts_log WHERE pl_bill_number = '$pl_bill_number' OR pl_tax_number = '$pl_tax_number'";  // make del flg = 0
         $result = mysqli_query($conn, $sql);
         $row_check_bill = mysqli_fetch_array($result);
@@ -45,10 +45,14 @@ if ($stock_type != NULL || $stock_type != '') {
                     VALUES (NOW(), '$id', '$stock_type', '$pl_bill_number', '$pl_tax_number', '$pl_date_in', '$pl_detail', '$com_p_id')";
             $result = mysqli_query($conn, $sql);
         }
-    } else {
+    } elseif ($row_check['st_type'] == 1) {
         $sql = "INSERT INTO `parts_log` (`pl_date`, `e_id`, `st_id`)
                 VALUES (NOW(), '$id', '$stock_type')";
         $result = mysqli_query($conn, $sql);
+    } else {
+        $_SESSION["add_data_alert"] = 1;
+        header("Location: ../edit_stock.php");
+        exit();
     }
 
     if ($result) {
@@ -94,7 +98,11 @@ if ($stock_type != NULL || $stock_type != '') {
         }
     }
 } else {
-    $_SESSION["add_data_alert"] = 1;
+    if ($_SESSION['stock_type'] != 1 && $_SESSION['stock_type']  != 2) {
+        $_SESSION["add_data_alert"] = 4;
+    } else {
+        $_SESSION["add_data_alert"] = 1;
+    }
 }
 
 header("Location: ../edit_stock.php");
