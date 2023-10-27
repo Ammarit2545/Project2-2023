@@ -101,12 +101,17 @@ if (!isset($_SESSION['role_id'])) {
                             <div class="mb-3 row">
                                 <label for="staticEmail" class="col-sm-1 col-form-label">Brand</label>
                                 <div class="col-sm-4">
-                                    <input type="text" name="p_brand" class="form-control" id="staticEmail" value="<?= $row['p_brand'] ?>" placeholder="กรุณากรอกยี่ห้ออะไหล่">
+                                    <!-- <input type="text" name="p_brand" class="form-control" id="staticEmail"placeholder="กรุณากรอกยี่ห้ออะไหล่"> -->
                                     <input type="text" name="p_id" class="form-control" id="staticEmail" value="<?= $row['p_id'] ?>" placeholder="กรุณากรอกยี่ห้ออะไหล่" hidden>
+                                    <input type="text" name="p_brand" class="form-control" id="part_name_check" value="<?= $row['p_brand'] ?>" placeholder="กรุณากรอกชื่อ Brand" required>
+                                    <span id="name-part-error" style="color: red; display: none;">ข้อมูลนี้มีอยู่ในระบบแล้ว</span>
+
+
                                 </div>
                                 <label for="inputPassword" class="col-sm-1 col-form-label">Model</label>
                                 <div class="col-sm-4">
-                                    <input type="text" name="p_model" class="form-control" id="inputPassword" placeholder="กรุณากรอกรหัสโมเดล" value="<?= $row['p_model'] ?>">
+                                    <input type="text" name="p_model" id="part_modal_name" class="form-control" onblur="checkPartType()" placeholder="กรุณากรอกชื่อ Model" value="<?= $row['p_model'] ?>" required>
+                                    <span id="part-error" style="color: red; display: none;">รหัสโมเดลนี้มีอยู่ในระบบแล้ว</span>
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -299,7 +304,65 @@ if (!isset($_SESSION['role_id'])) {
             }
         }
     </script>
+    <script>
+        var BrandNames = [
+            <?php
+            $sql = "SELECT p_brand FROM parts WHERE del_flg = '0'";
+            $result = mysqli_query($conn, $sql);
+            $first = true;
+            while ($row_c = mysqli_fetch_array($result)) {
+                if (!$first) {
+                    echo ", ";
+                }
+                echo "\"" . $row_c['p_brand'] . "\"";
+                $first = false;
+            }
+            ?>
+        ];
 
+        function checkBrandName() {
+            var inputElement = document.getElementById('part_name_check');
+            var errorElement = document.getElementById('name-part-error');
+            var inputValue = inputElement.value;
+
+            if (BrandNames.includes(inputValue)) {
+                errorElement.style.display = 'inline';
+            } else {
+                errorElement.style.display = 'none';
+            }
+        }
+
+        document.getElementById('part_name_check').addEventListener('keyup', checkBrandName);
+
+        var PartNames = [
+            <?php
+            $sql = "SELECT p_model FROM parts WHERE del_flg = '0'";
+            $result = mysqli_query($conn, $sql);
+            $first = true;
+            while ($row_c = mysqli_fetch_array($result)) {
+                if (!$first) {
+                    echo ", ";
+                }
+                echo "\"" . $row_c['p_model'] . "\"";
+                $first = false;
+            }
+            ?>
+        ];
+
+        function checkPartType() {
+            var inputElement = document.getElementById('part_modal_name');
+            var errorElement = document.getElementById('part-error');
+            var inputValue = inputElement.value;
+
+            if (PartNames.includes(inputValue)) {
+                errorElement.style.display = 'inline';
+            } else {
+                errorElement.style.display = 'none';
+            }
+        }
+
+        document.getElementById('part_modal_name').addEventListener('keyup', checkPartType);
+    </script>
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

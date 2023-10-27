@@ -57,7 +57,7 @@ if (!isset($_SESSION['role_id'])) {
                 <!-- End of Topbar -->
                 <form id="add_status" action="action/add_status.php" method="POST">
 
-                    <div class="container-fluid">
+                    <div class="container-fluid" hidden>
 
                         <!-- Page Heading -->
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -191,6 +191,9 @@ if (!isset($_SESSION['role_id'])) {
                                 </div>
 
                             </div>
+                            <br>
+                            <hr>
+                            <br>
                         </div>
 
                         <!-- <div class="text-center pt-4">
@@ -201,9 +204,7 @@ if (!isset($_SESSION['role_id'])) {
 
 
                 </form>
-                <br>
-                <hr>
-                <br>
+
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -225,7 +226,7 @@ if (!isset($_SESSION['role_id'])) {
                                             <th>ลำดับที่</th>
                                             <th>ชื่อ</th>
                                             <th>สี</th>
-                                            <th>Value_code (ชื่อย่อ)</th>
+                                            <!-- <th>Value_code (ชื่อย่อ)</th> -->
                                             <th>ปุ่มดำเนินการ</th>
                                         </tr>
                                     </thead>
@@ -264,17 +265,17 @@ if (!isset($_SESSION['role_id'])) {
                                                     }
                                                     ?>
                                                 </td>
-                                                <td><?php
+                                                <!-- <td><?php
                                                     if ($row['value_code'] == NULL) {
                                                         echo "-";
                                                     } else {
                                                         echo $row['value_code'];
                                                     }
                                                     ?>
-                                                </td>
+                                                </td> -->
 
                                                 <td>
-                                                    <button onclick="confirmDelete(<?= $row['status_id'] ?>)" class="btn btn-danger">ลบ</button>
+                                                    <!-- <button onclick="confirmDelete(<?= $row['status_id'] ?>)" class="btn btn-danger">ลบ</button> -->
                                                     <button type="button" class="btn btn-warning" onclick="window.location.href='edit_status.php?id=<?= $row['status_id'] ?>'">แก้ไข</button>&nbsp; &nbsp;
                                                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 

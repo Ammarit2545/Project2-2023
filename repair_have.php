@@ -411,7 +411,7 @@ if (isset($_GET["search"])) {
 
                                                 </style>
                                                 <b class="ln auto-font"><?= $row1['r_brand'] ?></b><span class="ln auto-font"><?= ' - ' . $row1['r_model'] . '   '  ?></span>
-                                                <h5 class="ln auto-font"><span class="badge bg-primary ln auto-font"><?= 'SH : ' . $row1['r_number_model'] ?></span></h5>
+                                                <h5 class="ln auto-font"><span class="badge bg-primary ln auto-font"><?= 'S/N : ' . $row1['r_number_model'] ?></span></h5>
                                             </div>
                                         </a>
                                     </div>
@@ -467,7 +467,7 @@ if (isset($_GET["search"])) {
 
                                                 </style>
                                                 <b class="ln auto-font"><?= $row1['r_brand'] ?></b><span class="ln auto-font"><?= ' - ' . $row1['r_model'] . '   '  ?></span>
-                                                <h5 class="ln auto-font"><span class="badge bg-primary ln auto-font"><?= 'SH : ' . $row1['r_number_model'] ?></span></h5>
+                                                <h5 class="ln auto-font"><span class="badge bg-primary ln auto-font"><?= 'S/N : ' . $row1['r_number_model'] ?></span></h5>
                                             </div>
                                         </a>
                                     </div>

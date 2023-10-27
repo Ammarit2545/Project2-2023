@@ -260,56 +260,11 @@ if ($_SESSION["log_login"] == 0) {
                 </div>
                 <form action="action/register.php" method="POST">
                   <div class="input-group">
-                    <input type="email" class="input-field" id="email" name="email" onblur="checkEmail()" required>
+
+                    <!-- </button> -->
+                    <input type="email" class="input-field" id="inputPasswordEmail" name="email" required>
                     <label for="email">Email</label>
-                    <!-- <span style="font-size: 12px; padding: -2px"> -->
-                    <span id="email-error" style="color: red; font-size: 12px; padding: -2px;display:none;">
-                      <!-- <button class="btn btn-danger" style="padding: 0;"> -->
-                      อีเมลนี้ถูกใช้งานแล้วโดยบัญชีอื่น
-                      <!-- </button> -->
-                    </span>
-
-                    <script>
-                      document.addEventListener("DOMContentLoaded", function() {
-                        var emailError = document.getElementById("email-error");
-                        var emailInput = document.getElementById('email');
-
-                        function showError() {
-                          emailError.style.display = 'block';
-                          emailInput.setCustomValidity('มีข้อมูลอยู่แล้ว');
-                        }
-
-                        function hideError() {
-                          emailError.style.display = 'none';
-                          emailInput.setCustomValidity('');
-                        }
-
-                        emailInput.addEventListener('input', hideError); // Hide the error on input change
-
-                        function checkEmail() {
-                          var email = emailInput.value;
-
-                          if (emailInput.validity.valid) {
-                            var xhttp = new XMLHttpRequest();
-                            xhttp.onreadystatechange = function() {
-                              if (this.readyState == 4 && this.status == 200) {
-                                if (this.responseText === 'exists') {
-                                  showError();
-                                } else {
-                                  hideError();
-                                }
-                              }
-                            };
-                            xhttp.open('GET', 'action/check_email.php?email=' + encodeURIComponent(email), true);
-                            xhttp.send();
-                          } else {
-                            hideError();
-                          }
-                        }
-
-                        emailInput.addEventListener('blur', checkEmail); // Trigger checkEmail() on blur event
-                      });
-                    </script>
+                    <span id="email-error" style="color:red; display:none;">อีเมลนี้ถูกใช้งานแล้ว</span>
 
                   </div>
 
@@ -420,10 +375,18 @@ if ($_SESSION["log_login"] == 0) {
                     <label for="lname">นามสกุล</label>
                   </div>
 
+                  <!-- <label for="inputPasswordTel" class="col-sm-1 col-form-label">เบอร์โทรศัพท์</label>
+                  <div class="col-sm-3">
+                    <input type="text" name="tel" class="input-field" id="inputPasswordTel" placeholder="กรุณากรอกเบอร์โทรติดต่อ">
+                    <span id="tel-error" style="color:red; display:none;">เบอร์โทรนี้ถูกใช้งานแล้ว</span>
+                  </div> -->
+
                   <div class="input-group">
-                    <input type="text" class="input-field" id="tel" name="tel" required>
-                    <label for="tel">เบอร์โทรศัพท์</label>
+                    <input type="text" class="input-field" id="inputPasswordTel" name="tel" required>
+                    <label for="inputPasswordTel">เบอร์โทรศัพท์</label>
+                    <span id="tel-error" style="color:red; display:none;">เบอร์โทรนี้ถูกใช้งานแล้ว</span>
                   </div><br>
+
                   <div class="d-grid gap-2">
                     <button class="btn btn-primary btn-lg" type="submit">Sign up</button>
                   </div>
@@ -484,7 +447,7 @@ if ($_SESSION["log_login"] == 0) {
     </div>
   </div>
   <!-- End Hero -->
- 
+
   <section id="why-us" class="why-us section-bg" style="margin-top: 60px;">
     <div class="container" data-aos="fade-up">
 
@@ -848,6 +811,86 @@ if ($_SESSION["log_login"] == 0) {
       $.LoadingOverlay("hide");
     }, 10);
   </script> -->
+  <script>
+    var emailAddresses = [
+      <?php
+      $sql = "SELECT m_email FROM member WHERE del_flg = '0'";
+      $result = mysqli_query($conn, $sql);
+      $first = true;
+      while ($row_c = mysqli_fetch_array($result)) {
+        if (!$first) {
+          echo ", ";
+        }
+        echo "\"" . $row_c['m_email'] . "\"";
+        $first = false;
+      }
+      echo ", ";
+      $sql1 = "SELECT e_email FROM employee WHERE del_flg = '0'";
+      $result1 = mysqli_query($conn, $sql1);
+      $first1 = true;
+      while ($row_c = mysqli_fetch_array($result1)) {
+        if (!$first1) {
+          echo ", ";
+        }
+        echo "\"" . $row_c['e_email'] . "\"";
+        $first1 = false;
+      }
+      ?>
+    ];
+
+    var TelAddresses = [
+      <?php
+      $sql = "SELECT m_tel FROM member WHERE del_flg = '0'";
+      $result = mysqli_query($conn, $sql);
+      $first = true;
+      while ($row_c = mysqli_fetch_array($result)) {
+        if (!$first) {
+          echo ", ";
+        }
+        echo "\"" . $row_c['m_tel'] . "\"";
+        $first = false;
+      }
+      echo ", ";
+      $sql1 = "SELECT e_tel FROM employee WHERE del_flg = '0'";
+      $result1 = mysqli_query($conn, $sql1);
+      $first1 = true;
+      while ($row_c = mysqli_fetch_array($result1)) {
+        if (!$first1) {
+          echo ", ";
+        }
+        echo "\"" . $row_c['e_tel'] . "\"";
+        $first1 = false;
+      }
+      ?>
+    ];
+
+    function checkEmail() {
+      var inputElement = document.getElementById('inputPasswordEmail');
+      var errorElement = document.getElementById('email-error');
+      var inputValue = inputElement.value;
+
+      if (emailAddresses.includes(inputValue)) {
+        errorElement.style.display = 'inline';
+      } else {
+        errorElement.style.display = 'none';
+      }
+    }
+
+    function checkTel() {
+      var inputElement = document.getElementById('inputPasswordTel');
+      var errorElement = document.getElementById('tel-error');
+      var inputValue = inputElement.value;
+
+      if (TelAddresses.includes(inputValue)) {
+        errorElement.style.display = 'inline';
+      } else {
+        errorElement.style.display = 'none';
+      }
+    }
+
+    document.getElementById('inputPasswordEmail').addEventListener('keyup', checkEmail);
+    document.getElementById('inputPasswordTel').addEventListener('keyup', checkTel);
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>

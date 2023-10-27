@@ -65,15 +65,61 @@ if (!isset($_SESSION['role_id'])) {
 
                         <div class="mb-3 row">
 
-                            <label for="inputPassword" class="col-sm-1 col-form-label">Email</label>
+                            <label for="inputPasswordEmail" class="col-sm-1 col-form-label">Email</label>
                             <div class="col-sm-4">
-                                <input type="email" name="e_email" class="form-control" id="inputPassword" onkeyup="checkEmail()" required>
-                                <span id="email-error" style="color: red; display: none;">This email is already registered.</span>
+                                <input type="email" name="e_email" class="form-control" id="inputPasswordEmail" placeholder="กรุณากรอกอีเมลของท่าน" required>
+                                <span id="email-error" style="color:red; display:none;">อีเมลนี้ถูกใช้งานแล้ว</span>
                             </div>
+
+                            <!-- <script>
+                                var emailAddresses = [
+                                    <?php
+                                    $sql = "SELECT m_email FROM member WHERE del_flg = '0'";
+                                    $result = mysqli_query($conn, $sql);
+                                    $first = true;
+                                    while ($row_c = mysqli_fetch_array($result)) {
+                                        if (!$first) {
+                                            echo ", ";
+                                        }
+                                        echo "\"" . $row_c['m_email'] . "\"";
+                                        $first = false;
+                                    }
+                                    echo ", ";
+                                    $sql1 = "SELECT e_email FROM employee WHERE del_flg = '0'";
+                                    $result1 = mysqli_query($conn, $sql1);
+                                    $first1 = true;
+                                    while ($row_c = mysqli_fetch_array($result1)) {
+                                        if (!$first1) {
+                                            echo ", ";
+                                        }
+                                        echo "\"" . $row_c['e_email'] . "\"";
+                                        $first1 = false;
+                                    }
+                                    ?>
+                                ];
+
+                                function checkEmail() {
+                                    var inputElement = document.getElementById('inputPasswordEmail');
+                                    var errorElement = document.getElementById('email-error');
+                                    var inputValue = inputElement.value;
+
+                                    if (emailAddresses.includes(inputValue)) {
+                                        // Email exists in the array, show the error message
+                                        errorElement.style.display = 'inline';
+                                    } else {
+                                        // Email doesn't exist in the array, hide the error message
+                                        errorElement.style.display = 'none';
+                                    }
+                                }
+
+                                // Attach the checkEmail function to the blur event of the input field
+                                document.getElementById('inputPasswordEmail').addEventListener('keyup', checkEmail);
+                            </script> -->
+
 
                             <label for="inputPassword" class="col-sm-1 col-form-label">Password</label>
                             <div class="col-sm-2">
-                                <input type="password" class="form-control" oninput="checkPasswordLength()" onblur="checkPasswordLength()" id="password_name" name="e_password" required>
+                                <input type="password" class="form-control" oninput="checkPasswordLength()" onblur="checkPasswordLength()" id="password_name" name="e_password" placeholder="กรุณากรอกรหัสผ่าน" required>
 
                                 <span id="password-error" style="color: red; font-size: 12px; display: none;">
                                     <button class="btn btn-danger" style="font-size: 12px; padding: -2px">
@@ -85,7 +131,7 @@ if (!isset($_SESSION['role_id'])) {
                             <label for="inputConfirmPassword" class="col-sm-1 col-form-label">Confirm Password</label>
                             <div class="col-sm-2">
                                 <!-- <input type="password" name="e_confirm_password" class="form-control" id="inputConfirmPassword" oninput="validateConfirmPassword(this)"> -->
-                                <input type="password" class="form-control" oninput="checkPasswordLengthAgain()" onblur="checkPasswordLengthAgain()" id="password_con" name="e_confirm_password" required>
+                                <input type="password" class="form-control" oninput="checkPasswordLengthAgain()" onblur="checkPasswordLengthAgain()" id="password_con" name="e_confirm_password" placeholder="กรุณากรอกรหัสผ่านอีกครั้ง" required>
                                 <span id="password-again-error" style="color: red; font-size: 12px; display: none;">
                                     <button class="btn btn-danger" style="font-size: 12px; padding: -2px">
                                         รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร
@@ -171,22 +217,23 @@ if (!isset($_SESSION['role_id'])) {
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-1 col-form-label">ชื่อ</label>
                             <div class="col-sm-4">
-                                <input type="text" name="e_fname" class="form-control" id="staticEmail">
+                                <input type="text" name="e_fname" class="form-control" id="staticEmail" placeholder="ชื่อจริง">
                             </div>
                             <label for="inputPassword" class="col-sm-1 col-form-label">นามสกุล</label>
                             <div class="col-sm-4">
-                                <input type="text" name="e_lname" class="form-control" id="inputPassword">
+                                <input type="text" name="e_lname" class="form-control" id="inputPassword" placeholder="นามสกุลจริง">
                             </div>
                         </div>
                         <br>
                         <div class="mb-3 row">
-                            <label for="inputPassword" class="col-sm-1 col-form-label">เบอร์โทรศัพท์</label>
+                            <label for="inputPasswordTel" class="col-sm-1 col-form-label">เบอร์โทรศัพท์</label>
                             <div class="col-sm-3">
-                                <input type="text" name="e_tel" class="form-control" id="inputPassword">
+                                <input type="text" name="e_tel" class="form-control" id="inputPasswordTel" placeholder="กรุณากรอกเบอร์โทรติดต่อ">
+                                <span id="tel-error" style="color:red; display:none;">เบอร์โทรนี้ถูกใช้งานแล้ว</span>
                             </div>
                             <label for="inputPassword" class="col-sm-1 col-form-label">เงินเดือน</label>
                             <div class="col-sm-3">
-                                <input type="text" name="e_salary" class="form-control" id="inputPassword">
+                                <input type="text" name="e_salary" class="form-control" id="inputPassword" placeholder="เพิ่มเงินเดือน">
                             </div>
                             <label for="inputPassword" class="col-sm-1 col-form-label">ตำแหน่ง</label>
                             <div class="col-sm-3">
@@ -297,7 +344,7 @@ if (!isset($_SESSION['role_id'])) {
                                     </div>
                                     <div class="col-md-3">
                                         <label for="sel1">รหัสไปรษณีย์:</label>
-                                        <input type="text" name="zip_code" id="zip_code" class="form-control" required>
+                                        <input type="text" name="zip_code" id="zip_code" class="form-control" required placeholder="รหัสไปรษณีย์">
                                     </div>
                                 </div>
                                 <br>
@@ -363,7 +410,86 @@ if (!isset($_SESSION['role_id'])) {
             </div>
         </div>
     </div>
+    <script>
+        var emailAddresses = [
+            <?php
+            $sql = "SELECT m_email FROM member WHERE del_flg = '0'";
+            $result = mysqli_query($conn, $sql);
+            $first = true;
+            while ($row_c = mysqli_fetch_array($result)) {
+                if (!$first) {
+                    echo ", ";
+                }
+                echo "\"" . $row_c['m_email'] . "\"";
+                $first = false;
+            }
+            echo ", ";
+            $sql1 = "SELECT e_email FROM employee WHERE del_flg = '0'";
+            $result1 = mysqli_query($conn, $sql1);
+            $first1 = true;
+            while ($row_c = mysqli_fetch_array($result1)) {
+                if (!$first1) {
+                    echo ", ";
+                }
+                echo "\"" . $row_c['e_email'] . "\"";
+                $first1 = false;
+            }
+            ?>
+        ];
 
+        var TelAddresses = [
+            <?php
+            $sql = "SELECT m_tel FROM member WHERE del_flg = '0'";
+            $result = mysqli_query($conn, $sql);
+            $first = true;
+            while ($row_c = mysqli_fetch_array($result)) {
+                if (!$first) {
+                    echo ", ";
+                }
+                echo "\"" . $row_c['m_tel'] . "\"";
+                $first = false;
+            }
+            echo ", ";
+            $sql1 = "SELECT e_tel FROM employee WHERE del_flg = '0'";
+            $result1 = mysqli_query($conn, $sql1);
+            $first1 = true;
+            while ($row_c = mysqli_fetch_array($result1)) {
+                if (!$first1) {
+                    echo ", ";
+                }
+                echo "\"" . $row_c['e_tel'] . "\"";
+                $first1 = false;
+            }
+            ?>
+        ];
+
+        function checkEmail() {
+            var inputElement = document.getElementById('inputPasswordEmail');
+            var errorElement = document.getElementById('email-error');
+            var inputValue = inputElement.value;
+
+            if (emailAddresses.includes(inputValue)) {
+                errorElement.style.display = 'inline';
+            } else {
+                errorElement.style.display = 'none';
+            }
+        }
+
+        function checkTel() {
+            var inputElement = document.getElementById('inputPasswordTel');
+            var errorElement = document.getElementById('tel-error');
+            var inputValue = inputElement.value;
+
+            if (TelAddresses.includes(inputValue)) {
+                errorElement.style.display = 'inline';
+            } else {
+                errorElement.style.display = 'none';
+            }
+        }
+
+        document.getElementById('inputPasswordEmail').addEventListener('keyup', checkEmail);
+        document.getElementById('inputPasswordTel').addEventListener('keyup', checkTel);
+    </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {

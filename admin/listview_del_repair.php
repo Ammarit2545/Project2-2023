@@ -1,7 +1,11 @@
 <?php
 session_start();
-include('database/condb.php');
-$id_member = $_SESSION['id'];
+include('../database/condb.php');
+
+if (!isset($_SESSION['role_id'])) {
+    header('Location:../home.php');
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -10,21 +14,23 @@ $id_member = $_SESSION['id'];
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
-    <link rel="stylesheet" href="css/repair_non_gua.css">
-    <link rel="stylesheet" href="css/all_page.css">
-    <link rel="icon" type="image/x-icon" href="img brand/anelogo.jpg">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
-
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
     <!-- All Page Css-->
     <link href="../css/all_page.css" rel="stylesheet">
 
 
+    <title>Admin Page - Create Auto Create Serial Number</title>
+    <link rel="icon" type="image/x-icon" href="../img brand/anelogo.jpg">
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
@@ -166,18 +172,14 @@ $id_member = $_SESSION['id'];
 </head>
 
 <body id="page-top">
-    <!-- navbar-->
-    <?php
-    include('bar/topbar_user.php');
-    ?>
-    <!-- end navbar-->
-
-    <div class="background"></div>
 
     <!-- Page Wrapper -->
     <div id="wrapper">
 
-
+        <!-- Sidebar -->
+        <?php
+        include('bar/sidebar.php');
+        ?>
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -194,7 +196,7 @@ $id_member = $_SESSION['id'];
 
                 <!-- Begin Page Content -->
                 <div class="background"></div>
-                <br><br><br>
+
 
                 <h1 class="pt-5 text-center f-black-5">ค้นหาอุปกรณ์</h1>
                 <center>
@@ -216,34 +218,31 @@ $id_member = $_SESSION['id'];
                                             <button type="submit" id="search-button">Search</button>
                                         </div> -->
 
-
-                                    </div>
-                                    <div class="row">
                                         <div id="search-results">
                                             ค้นหาอุปกรณ์ที่คุณต้องการ....
                                         </div>
                                     </div>
                                     <br>
-                                    <!-- <nav aria-label="Page navigation example">
+                                    <nav aria-label="Page navigation example">
 
                                         <ul class="pagination justify-content-center ">
                                             <li class="page-item">
-                                                <a class="page-link" href="history_main.php" tabindex="-1" aria-disabled="true">ทั้งหมด</a>
+                                                <a class="page-link" href="listview_del_repair.php" tabindex="-1" aria-disabled="true">ทั้งหมด</a>
                                             </li>
                                             <?php
                                             $sql_f = "SELECT repair.r_brand
-                                                        FROM get_detail
-                                                        LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
-                                                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                                                        LEFT JOIN (
-                                                            SELECT get_r_id, MAX(rs_date_time) AS max_date
-                                                            FROM repair_status
-                                                            GROUP BY get_r_id
-                                                        ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
-                                                        LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
-                                                        WHERE repair.m_id = '$id_member' AND rs.status_id = '3' AND rs.rs_date_time = subquery.max_date AND get_repair.del_flg = 0 
-
-                                                        ORDER BY repair.r_brand ASC;  ";
+                                            FROM get_detail
+                                            LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                                            LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                                            LEFT JOIN (
+                                                SELECT get_r_id, MAX(rs_date_time) AS max_date
+                                                FROM repair_status
+                                                GROUP BY get_r_id
+                                            ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
+                                            LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
+                                            WHERE  rs.rs_date_time = subquery.max_date AND get_repair.del_flg = 1 AND repair.del_flg = 1
+                                            
+                                            ORDER BY repair.r_brand ASC;  ";
                                             $result_f = mysqli_query($conn, $sql_f);
 
                                             $original = ''; // Initialize $original to an empty string
@@ -257,15 +256,16 @@ $id_member = $_SESSION['id'];
                                                 if ($first_char != $original) {
                                                     $original = $first_char; // Update $original with the current $first_char
                                             ?>
+                                                    <!-- <a href="repair_have.php?search=<?= $first_char ?>" style="color: black;"><?= $first_char ?></a> -->
                                                     <li class="page-item">
-                                                        <a class="page-link" href="history_main.php?word=<?= $first_char ?>" tabindex="-1" aria-disabled="true"><?= $first_char ?></a>
+                                                        <a class="page-link" href="listview_del_repair.php?word=<?= $first_char ?>" tabindex="-1" aria-disabled="true"><?= $first_char ?></a>
                                                     </li>
                                             <?php
                                                 }
                                             }
                                             ?>
                                         </ul>
-                                    </nav> -->
+                                    </nav>
 
 
                                 </div>
@@ -305,7 +305,7 @@ $id_member = $_SESSION['id'];
                         // Simulated search results
                         const results = [
                             <?php
-                            $sql_r = "SELECT * FROM repair WHERE del_flg = 0 ORDER BY r_id DESC";
+                            $sql_r = "SELECT * FROM repair WHERE del_flg = 1 ORDER BY r_id DESC";
                             $result_r = mysqli_query($conn, $sql_r);
                             while ($row_r = mysqli_fetch_array($result_r)) {
                             ?> {
@@ -333,7 +333,7 @@ $id_member = $_SESSION['id'];
                                 const resultElement = document.createElement("div");
                                 resultElement.textContent = result.text;
                                 resultElement.addEventListener("click", function() {
-                                    window.location.href = `history_main.php?id=${result.id}`;
+                                    window.location.href = `listview_del_repair.php?id=${result.id}`;
                                 });
                                 searchResults.appendChild(resultElement);
                             });
@@ -355,7 +355,7 @@ $id_member = $_SESSION['id'];
                         <div class="row">
                             <?php
                             $r_id = $_GET['id'];
-                            $sql_check = "SELECT * FROM repair WHERE r_id = ' $r_id' AND repair.m_id = '$id_member' ";
+                            $sql_check = "SELECT * FROM repair WHERE r_id = ' $r_id'";
                             $result_check = mysqli_query($conn, $sql_check);
                             $row_check = mysqli_fetch_array($result_check);
 
@@ -421,7 +421,7 @@ $id_member = $_SESSION['id'];
 
 
                                         <span style="color: black" id="serialNumber"><?= $row_check['r_serial_number'] ?>
-                                            <a href="#" id="copySerialNumber" title="กดเพื่อคัดลอก"><i class='fa fa-clone'></i></a>
+                                            <a href="#" id="copySerialNumber" title="กดเพื่อคัดลอก"><i class='fas fa-copy'></i></a>
 
                                         </span>
                                         <span id="copyConfirmation" style="display: none; color: green;">คัดลอกแล้ว</span></span>
@@ -480,7 +480,7 @@ $id_member = $_SESSION['id'];
                                         ?>
                                             เบอร์โทรติดต่อ :
                                             <span style="color: black" id="PhoneNumber"><?= $row_f['get_tel'] ?>
-                                                <a href="#" id="copyPhoneNumber" title="กดเพื่อคัดลอก"><i class='fa fa-clone'></i></a>
+                                                <a href="#" id="copyPhoneNumber" title="กดเพื่อคัดลอก"><i class='fas fa-copy'></i></a>
 
                                             </span>
                                             <span id="copyConfirmationPhone" style="display: none; color: green;">คัดลอกแล้ว</span></span>
@@ -517,7 +517,7 @@ $id_member = $_SESSION['id'];
                                                 <br>
                                                 อีเมล :
                                                 <span style="color: black" id="EmailMember"><?= $row_m['m_email'] ?>
-                                                    <a href="#" id="copyEmail" title="กดเพื่อคัดลอก"><i class='fa fa-clone'></i></a>
+                                                    <a href="#" id="copyEmail" title="กดเพื่อคัดลอก"><i class='fas fa-copy'></i></a>
 
                                                 </span>
                                                 <span id="copyEmailnofi" style="display: none; color: green;">คัดลอกแล้ว</span></span>
@@ -591,13 +591,21 @@ $id_member = $_SESSION['id'];
                                 </div>
                             </div>
                             <?php
+                            $cancel_conf = 0;
+                            $delete_conf = 0;
                             $count_round = 0;
-                            $sql_get = "SELECT * FROM get_repair 
+                            $sql_get = "SELECT get_detail.del_flg ,get_detail.get_d_conf FROM get_repair 
                              LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
-                             WHERE get_detail.r_id = '$r_id' AND get_repair.del_flg = 0 ORDER BY get_repair.get_r_date_in DESC";
+                             WHERE get_detail.r_id = '$r_id'  ORDER BY get_repair.get_r_date_in DESC";
                             $result_get = mysqli_query($conn, $sql_get);
                             while ($row_get = mysqli_fetch_array($result_get)) {
                                 $count_round++;
+                                if ($row_get['get_d_conf'] == 1) {
+                                    $cancel_conf = 1;
+                                }
+                                if ($row_get['del_flg'] == 1) {
+                                    $delete_conf = 1;
+                                }
                             }
                             if ($count_round != 0) {
                             ?>
@@ -607,7 +615,7 @@ $id_member = $_SESSION['id'];
                                         $count_get = 0;
                                         $sql_get = "SELECT * FROM get_repair 
                                                     LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
-                                                    WHERE get_detail.r_id = '$r_id' AND get_repair.del_flg = 0 ORDER BY get_repair.get_r_date_in DESC ";
+                                                    WHERE get_detail.r_id = '$r_id' ORDER BY get_repair.get_r_date_in DESC";
                                         $result_get = mysqli_query($conn, $sql_get);
                                         while ($row_get = mysqli_fetch_array($result_get)) {
                                             $count_get++;
@@ -634,7 +642,7 @@ $id_member = $_SESSION['id'];
 
                                                     <div class="container " style="background-color: #F7FCFF;">
                                                         <br>
-                                                        <a class="btn btn-primary" id="bounce-item" href="detail_status.php?id=<?= $row_get['get_r_id'] ?>">
+                                                        <a class="btn btn-primary" id="bounce-item" href="detail_repair.php?id=<?= $row_get['get_r_id'] ?>">
                                                             <h4 class="ln" style="color:white">หมายเลขซ่อมที่ <?= $row_get['get_r_id'] ?></h4>
                                                         </a>
                                                         <hr>
@@ -738,6 +746,25 @@ $id_member = $_SESSION['id'];
 
 
                                                         <?php
+
+                                                        if ($delete_conf == 1) {
+                                                        ?>
+                                                            <center>
+                                                                <!-- <hr> -->
+                                                                <h5 class="shadow p-1" style="border-radius:3px;background-color:red;color:white">ไม่สามารถซ่อมได้</h5>
+                                                                <br>
+                                                            </center>
+                                                        <?php
+                                                        } elseif ($cancel_conf == 1) {
+                                                        ?>
+                                                            <center>
+                                                                <!-- <hr> -->
+                                                                <h5 class="shadow p-1" style="border-radius:3px;background-color:orange;color:white">อยู่ในระหว่างยื่นข้อเสนอ ไม่สามารถซ่อมได้</h5>
+                                                                <br>
+                                                            </center>
+                                                        <?php
+                                                        }
+
                                                         $count_part = 0;
                                                         $count_part_check = 0;
                                                         $get_d_id = $row_get['get_d_id'];
@@ -777,15 +804,15 @@ $id_member = $_SESSION['id'];
                                                             </div>
                                                         <?php
                                                             $sql_p = "SELECT * FROM repair_detail
-                                                    LEFT JOIN get_detail ON repair_detail.get_d_id = get_detail.get_d_id
-                                                    LEFT JOIN parts ON repair_detail.p_id = parts.p_id
-                                                     WHERE get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0 AND repair_detail.del_flg = 0";
+                                                                    LEFT JOIN get_detail ON repair_detail.get_d_id = get_detail.get_d_id
+                                                                    LEFT JOIN parts ON repair_detail.p_id = parts.p_id
+                                                                    WHERE get_detail.get_d_id = '$get_d_id' AND get_detail.del_flg = 0 AND repair_detail.del_flg = 0";
                                                             $result_p = mysqli_query($conn, $sql_p);
                                                             $row_p = mysqli_fetch_array($result_p);
                                                         } elseif ($success != '1') {  ?>
                                                             <center>
                                                                 <!-- <hr> -->
-                                                                <h5 class="shadow" style="border-radius:3px;background-color:#D8CB00;color:white">การซ่อมอยู่ระหว่างดำเนินการในขณะนี้ <span id="dot-animation<?= $row_get['get_d_id'] ?>"></span></h5>
+                                                                <!-- <h5 class="shadow p-1" style="border-radius:3px;background-color:#D8CB00;color:white">การซ่อมอยู่ระหว่างดำเนินการในขณะนี้ <span id="dot-animation<?= $row_get['get_d_id'] ?>"></span></h5> -->
 
                                                                 <!-- <hr> -->
                                                                 <script>
@@ -814,7 +841,7 @@ $id_member = $_SESSION['id'];
                                                         } elseif ($success == '1') {  ?>
                                                             <center>
                                                                 <!-- <hr> -->
-                                                                <h5 class="shadow" style="border-radius:3px;background-color:green;color:white">การซ่อมดำเนินการเสร็จสิ้นแล้ว </h5>
+                                                                <h5 class="shadow p-1" style="border-radius:3px;background-color:green;color:white">การซ่อมดำเนินการเสร็จสิ้นแล้ว </h5>
 
                                                                 <br>
                                                             </center>
@@ -870,9 +897,8 @@ $id_member = $_SESSION['id'];
                                                            LEFT JOIN repair ON get_detail.r_id = repair.r_id
                                                            JOIN parts ON parts.p_id = repair_detail.p_id
                                                            LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
-                                                           WHERE
-                                                           get_repair.del_flg = 0 AND repair_detail.del_flg = 0
-                                                           AND get_repair.get_r_id = ? AND repair.m_id = ?
+                                                           WHERE repair_detail.del_flg = 0
+                                                           AND get_repair.get_r_id = ?
                                                            GROUP BY
                                                            rd_id, get_detail.get_d_id;";
 
@@ -881,7 +907,7 @@ $id_member = $_SESSION['id'];
 
                                                         if ($stmt_c_part) {
                                                             // Bind the parameter
-                                                            mysqli_stmt_bind_param($stmt_c_part, "si", $get_r_id, $id_member);
+                                                            mysqli_stmt_bind_param($stmt_c_part, "s", $get_r_id);
 
                                                             // Execute the statement
                                                             mysqli_stmt_execute($stmt_c_part);
@@ -1048,7 +1074,7 @@ $id_member = $_SESSION['id'];
                                                                 } ?>
                                                         <hr>
                                                         <center>
-                                                            <a class="ln" href="detail_status.php?id=<?= $row_get['get_r_id'] ?>" style="color:;text-decortion:none">ดูรายละเอียดต่างๆเพิ่มเติม</a>
+                                                            <a class="ln" href="detail_repair.php?id=<?= $row_get['get_r_id'] ?>" style="color:;text-decortion:none">ดูรายละเอียดต่างๆเพิ่มเติม</a>
                                                         </center>
                                                         <br>
                                                     </div>
@@ -1071,43 +1097,60 @@ $id_member = $_SESSION['id'];
                             <div class="row">
                                 <?php
                                 if (!isset($_GET["search"])) {
-                                    $sql = "SELECT get_repair.get_r_id,repair.*
-                        FROM get_detail
-                        LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
-                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                        LEFT JOIN (
-                            SELECT get_r_id, MAX(rs_date_time) AS max_date
-                            FROM repair_status
-                            GROUP BY get_r_id
-                        ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
-                        LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
-                        WHERE  rs.status_id = '3' AND repair.m_id = '$id_member' AND rs.rs_date_time = subquery.max_date AND get_repair.del_flg = 0  AND repair.del_flg = 0 
-                        
-                        ORDER BY repair.r_brand ASC;  ";
+                                    $sql = "SELECT get_repair.get_r_id, repair.*
+                                        FROM get_detail
+                                        LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                                        LEFT JOIN (
+                                            SELECT get_r_id, MAX(rs_date_time) AS max_date
+                                            FROM repair_status
+                                            GROUP BY get_r_id
+                                        ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
+                                        LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
+                                        WHERE  repair.del_flg = 1
+                                        ORDER BY repair.r_brand ASC; ";
                                 } else {
-                                    $sql = "SELECT get_repair.get_r_id,repair.*
-                        FROM get_detail
-                        LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
-                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                        LEFT JOIN (
-                            SELECT get_r_id, MAX(rs_date_time) AS max_date
-                            FROM repair_status
-                            GROUP BY get_r_id
-                        ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
-                        LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
-                        WHERE   rs.status_id = '3' AND repair.m_id = '$id_member'  AND rs.rs_date_time = subquery.max_date AND get_repair.del_flg = 0 AND repair.del_flg = 0 AND (
-                                repair.r_brand LIKE '%$search%'
-                                OR repair.r_model LIKE '%$search%'
-                                OR repair.r_serial_number LIKE '%$search%'
-                                OR repair.r_number_model LIKE '%$search%'
-                                OR get_repair.get_r_id LIKE '%$search%'
-                                OR CONCAT(repair.r_brand, ' ', repair.r_model) LIKE '%$search%'
-                                OR CONCAT(repair.r_brand, '', repair.r_model) LIKE '%$search%'
-                            )
-                        
-                        ORDER BY repair.r_brand ASC;
-                                ";
+                                    $search = $_GET["search"]; // Assuming you've properly sanitized this input
+
+                                    $sql = "SELECT get_repair.get_r_id, repair.*
+                                    FROM get_detail
+                                    LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                                    LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                                    LEFT JOIN (
+                                        SELECT get_r_id, MAX(rs_date_time) AS max_date
+                                        FROM repair_status
+                                        GROUP BY get_r_id
+                                    ) AS subquery ON get_repair.get_r_id = subquery.get_r_id
+                                    LEFT JOIN repair_status AS rs ON subquery.get_r_id = rs.get_r_id AND subquery.max_date = rs.rs_date_time
+                                    WHERE rs.rs_date_time = subquery.max_date AND repair.del_flg = 1";
+
+                                    if ($_SESSION['role_id'] == 2) {
+                                        $sql .= "AND rs.status_id IN (1, 2, 4, 5, 6, 10, 11, 12, 13, 14, 15, 17, 18, 19, 24) AND (
+                                                repair.r_brand LIKE '%$search%'
+                                                OR repair.r_model LIKE '%$search%'
+                                                OR repair.r_serial_number LIKE '%$search%'
+                                                OR repair.r_number_model LIKE '%$search%'
+                                                OR get_repair.get_r_id LIKE '%$search%'
+                                                OR CONCAT(repair.r_brand, ' ', repair.r_model) LIKE '%$search%'
+                                                OR CONCAT(repair.r_brand, '', repair.r_model) LIKE '%$search%'
+                                            )";
+                                    } elseif ($_SESSION['role_id'] == 3) {
+                                        $sql .= "AND rs.status_id IN (3, 8, 9, 25, 26) AND (
+                                                repair.r_brand LIKE '%$search%'
+                                                OR repair.r_model LIKE '%$search%'
+                                                OR repair.r_serial_number LIKE '%$search%'
+                                                OR repair.r_number_model LIKE '%$search%'
+                                                OR get_repair.get_r_id LIKE '%$search%'
+                                                OR CONCAT(repair.r_brand, ' ', repair.r_model) LIKE '%$search%'
+                                                OR CONCAT(repair.r_brand, '', repair.r_model) LIKE '%$search'
+                                            )";
+                                    }
+
+                                    // $sql .= "ORDER BY repair.r_brand ASC;";
                                 }
+
+
+                                $status_data = array(); // Array to store status data
 
                                 $result = mysqli_query($conn, $sql);
                                 $i = 0;
@@ -1160,7 +1203,63 @@ $id_member = $_SESSION['id'];
                                                     }
                                                 </style>
                                                 <div id="bounce-item">
-                                                    <a href="history_main.php?id=<?= $row1['r_id'] ?>" id="card_sent" data-bs-toggle="tooltip" data-bs-placement="top" title="Model: <?= $row1['r_number_model'] ?>">
+                                                    <a href="listview_del_repair.php?id=<?= $row1['r_id'] ?>" id="card_sent" data-bs-toggle="tooltip" data-bs-placement="top" title="Model: <?= $row1['r_number_model'] ?>">
+                                                        <div class="alert alert-light shadow" role="alert" style="color: black; background-color: #F5F5F5; border: 1px solid #F5F5F5;">
+                                                            <style>
+
+                                                            </style>
+                                                            <b class="ln auto-font"><?= $row1['r_brand'] ?></b><span class="ln auto-font"><?= ' - ' . $row1['r_model'] . '   '  ?></span>
+                                                            <h5 class="ln auto-font"><span class="badge bg-primary ln auto-font"><?= 'SN : ' . $row1['r_number_model'] ?></span></h5>
+                                                        </div>
+                                                    </a>
+                                                </div>
+
+
+                                                <?php }
+                                        }
+                                    } else { {
+
+                                            $string = $row1['r_brand'];
+                                            $firstChar = $string[0];
+                                            // Check get_r_id is not as it was 
+                                            if ($id_r != $row1['get_r_id']) {
+                                                $i = $i + 1;
+                                                $id_r = $row1['get_r_id'];
+                                                $id_r_get = $row1['r_id'];
+
+
+                                                $sql_c = "SELECT COUNT(get_r_id) FROM get_detail WHERE get_r_id = '$id_r' AND del_flg = '0'";
+                                                $result_c = mysqli_query($conn, $sql_c);
+                                                $row_c = mysqli_fetch_array($result_c);
+
+                                                $id_g = $row_c[0];
+
+                                                $sql_s = "SELECT status_type.status_name,status_type.status_color,repair_status.status_id FROM repair_status 
+                                        LEFT JOIN status_type ON status_type.status_id = repair_status.status_id 
+                                        WHERE get_r_id = '$id_r' AND repair_status.del_flg = '0' ORDER BY rs_date_time DESC LIMIT 1;";
+                                                $result_s = mysqli_query($conn, $sql_s);
+                                                $row_status = mysqli_fetch_array($result_s);
+
+                                                // Check if data is found
+                                                if ($row_c) {
+                                                    $found_data = true;
+                                                    // Display data
+                                                }
+                                                if ($remember_first !== $firstChar) {
+                                                    $remember_first = $firstChar;
+
+                                                ?><h2><span class="badge bg-secondary mt-4"><?= strtoupper($remember_first) ?></span></h2>
+                                                    <hr>
+                                                <?php
+                                                }
+                                                ?>
+                                                <style>
+                                                    .dsad {
+                                                        font-size: 100;
+                                                    }
+                                                </style>
+                                                <div id="bounce-item">
+                                                    <a href="listview_del_repair.php?id=<?= $row1['r_id'] ?>" id="card_sent" data-bs-toggle="tooltip" data-bs-placement="top" title="Model: <?= $row1['r_number_model'] ?>">
                                                         <div class="alert alert-light shadow" role="alert" style="color: black; background-color: #F5F5F5; border: 1px solid #F5F5F5;">
                                                             <style>
 
@@ -1172,67 +1271,8 @@ $id_member = $_SESSION['id'];
                                                 </div>
 
 
-                                            <?php }
-                                        }
-                                    } else {
-                                        
-                                        $string = $row1['r_brand'];
-                                        $firstChar = ucfirst($string[0]);
-                                        // Check get_r_id is not as it was 
-                                        if ($id_r != $row1['get_r_id']) {
-                                            $i = $i + 1;
-                                            $id_r = $row1['get_r_id'];
-                                            $id_r_get = $row1['r_id'];
-
-
-                                            $sql_c = "SELECT COUNT(get_r_id) FROM get_detail 
-                                                LEFT JOIN repair ON repair.r_id = get_detail.r_id
-                                                WHERE get_detail.get_r_id = '$id_r' AND repair.m_id = '$id_member'  AND get_detail.del_flg = '0'";
-                                            $result_c = mysqli_query($conn, $sql_c);
-                                            $row_c = mysqli_fetch_array($result_c);
-
-                                            $id_g = $row_c[0];
-
-                                            $sql_s = "SELECT status_type.status_name,status_type.status_color,repair_status.status_id FROM repair_status 
-                                                            LEFT JOIN status_type ON status_type.status_id = repair_status.status_id 
-                                                            WHERE get_r_id = '$id_r'  AND repair_status.del_flg = '0' ORDER BY rs_date_time DESC LIMIT 1;";
-                                            $result_s = mysqli_query($conn, $sql_s);
-                                            $row_status = mysqli_fetch_array($result_s);
-
-                                            // Check if data is found
-                                            if ($row_c) {
-                                                $found_data = true;
-                                                // Display data
-                                            }
-                                            if ($remember_first !== $firstChar) {
-                                                $remember_first = $firstChar;
-                                            ?>
-                                                <h2>
-                                                    <span class="badge bg-secondary mt-4"><?= strtoupper($remember_first) ?></span>
-                                                </h2>
-                                                <hr>
-                                            <?php
-                                            }
-                                            ?>
-                                            <style>
-                                                .dsad {
-                                                    font-size: 100;
-                                                }
-                                            </style>
-                                            <div id="bounce-item">
-                                                <a href="history_main.php?id=<?= $row1['r_id'] ?>" id="card_sent" data-bs-toggle="tooltip" data-bs-placement="top" title="Model: <?= $row1['r_number_model'] ?>">
-                                                    <div class="alert alert-light shadow" role="alert" style="color: black; background-color: #F5F5F5; border: 1px solid #F5F5F5;">
-                                                        <style>
-
-                                                        </style>
-                                                        <b class="ln auto-font"><?= $row1['r_brand'] ?></b><span class="ln auto-font"><?= ' - ' . $row1['r_model'] . '   '  ?></span>
-                                                        <h5 class="ln auto-font"><span class="badge bg-primary ln auto-font"><?= 'S/N : ' . $row1['r_number_model'] ?></span></h5>
-                                                    </div>
-                                                </a>
-                                            </div>
-
-
                                     <?php }
+                                        }
                                     }
                                 }
                                 // Display message if no data found
@@ -1245,7 +1285,7 @@ $id_member = $_SESSION['id'];
                             <?php if (isset($_GET["search"]) && $_GET["search"] != NULL) { ?>
                                 <center>
                                     <p>*** หากคุณต้องการดูข้อมูล "การซ่อมทั้งหมด" *** </p>
-                                    <a href="history_main.php" class="btn btn-primary">ข้อมูลทั้งหมด</a>
+                                    <a href="listview_del_repair.php" class="btn btn-primary">ข้อมูลทั้งหมด</a>
                                 </center>
                             <?php  } ?>
                         </div>
@@ -1263,14 +1303,23 @@ $id_member = $_SESSION['id'];
     </div>
     <!-- End of Content Wrapper -->
 
+    <!-- Footer -->
+    <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Copyright &copy; Your Website 2020</span>
+            </div>
+        </div>
+    </footer>
+    <!-- End of Footer -->
 
     </div>
     <!-- End of Page Wrapper -->
 
     <!-- Scroll to Top Button-->
-    <!-- <a class="scroll-to-top rounded" href="#page-top">
+    <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
-    </a> -->
+    </a>
 
     <!-- Logout Modal-->
     <!-- <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1333,22 +1382,8 @@ $id_member = $_SESSION['id'];
         }
     }
     ?>
-    <!-- footer-->
-    <?php
-    include('footer/footer.php')
-    ?>
-    <!-- end footer-->
+    <!-- Sweet Alert Show End -->
 
-    <script>
-        // Show full page LoadingOverlay
-        $.LoadingOverlay("show");
-
-        // Hide it after 3 seconds
-        setTimeout(function() {
-            $.LoadingOverlay("hide");
-        }, 10);
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

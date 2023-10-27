@@ -65,40 +65,19 @@ if (!isset($_SESSION['role_id'])) {
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-1 col-form-label">ชื่อบริษัท</label>
                             <div class="col-sm-4">
-                            <input type="text" class="form-control" name="com_name" id="inputPartType" onblur="checkPartType()" value="<?= $row['p_type_name'] ?>" placeholder="กรุณากรอกชื่อบริษัท" required>
-                                <!-- <input type="text" class="form-control" name="p_type_id" id="staticEmail" value="<?= $row['p_type_id'] ?>" placeholder="กรุณากรอกข้อมูล" hidden> -->
-                                <span id="part-type-error" style="color:red;display:none;">ชื่อบริษัทนี้มีอยู่แล้ว</span>
-                                <script>
-                                    function checkPartType() {
-                                        var com_name = document.getElementById('inputPartType').value;
-                                        var xhttp = new XMLHttpRequest();
-                                        xhttp.onreadystatechange = function() {
-                                            if (this.readyState == 4 && this.status == 200) {
-                                                if (this.responseText == 'exists') {
-                                                    document.getElementById('part-type-error').style.display = 'block';
-                                                    document.getElementById('inputPartType').setCustomValidity('มีข้อมูลอยู่แล้ว');
-                                                    document.getElementById('submit-button').disabled = true; // disable the submit button
-                                                } else {
-                                                    document.getElementById('part-type-error').style.display = 'none';
-                                                    document.getElementById('inputPartType').setCustomValidity('');
-                                                    document.getElementById('submit-button').disabled = false; // enable the submit button
-                                                }
-                                            }
-                                        };
-                                        xhttp.open('GET', 'action/check_company.php?com_name=' + com_name, true);
-                                        xhttp.send();
-                                    }
-                                </script>
+                                <input type="text" name="com_name" id="inputcom_name" class="form-control" placeholder="กรุณากรอกชื่อบริษัท" value="<?= $row['com_name'] ?>" required>
+                                <span id="company-name-error" style="color: red; display: none;">ชื่อบริษัทนี้มีอยู่แล้ว</span>
                             </div>
                             <label for="inputPassword" class="col-sm-1 col-form-label">เบอร์โทรศัพท์</label>
                             <div class="col-sm-4">
-                                <input name="com_tel" type="text" class="form-control" id="inputPassword" placeholder="กรุณากรอกชื่อเบอร์บริษัท (*ไม่จำเป็น)" required>
+                                <input name="com_tel" type="text" class="form-control" id="inputPassword" placeholder="กรุณากรอกเบอร์โทรศัพท์บริษัท (*ไม่จำเป็น)" required>
+                                <span id="com-tel-error" style="color: red; display: none;">เบอร์โทรนี้ถูกใช้งานแล้ว</span>
                             </div>
                         </div>
                         <div class="mb-3 row">
                             <label for="inputPassword" class="col-sm-1 col-form-label">FAX/แฟกซ์</label>
                             <div class="col-sm-4">
-                                <input name="com_fax" type="text" class="form-control" id="inputPassword" placeholder="กรุณากรอกชื่อเบอร์ Fax บริษัท (*ไม่จำเป็น)" required> 
+                                <input name="com_fax" type="text" class="form-control" id="inputPassword" placeholder="กรุณากรอกชื่อเบอร์ Fax บริษัท (*ไม่จำเป็น)">
                             </div>
                         </div>
                         <div class="mb-3">
@@ -165,7 +144,65 @@ if (!isset($_SESSION['role_id'])) {
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
+    <script>
+        var CompanyNames = [
+            <?php
+            $sql = "SELECT com_name FROM company WHERE del_flg = '0'";
+            $result = mysqli_query($conn, $sql);
+            $first = true;
+            while ($row_c = mysqli_fetch_array($result)) {
+                if (!$first) {
+                    echo ", ";
+                }
+                echo "\"" . $row_c['com_name'] . "\"";
+                $first = false;
+            }
+            ?>
+        ];
 
+        function checkCompanyName() {
+            var inputElement = document.getElementById('inputcom_name');
+            var errorElement = document.getElementById('company-name-error');
+            var inputValue = inputElement.value;
+
+            if (CompanyNames.includes(inputValue)) {
+                errorElement.style.display = 'inline';
+            } else {
+                errorElement.style.display = 'none'; // Fix the typo here
+            }
+        }
+
+        document.getElementById('inputcom_name').addEventListener('keyup', checkCompanyName);
+
+        var CompanyTelNumbers = [
+            <?php
+            $sql = "SELECT com_tel FROM company WHERE del_flg = '0'";
+            $result = mysqli_query($conn, $sql);
+            $first = true;
+            while ($row_c = mysqli_fetch_array($result)) {
+                if (!$first) {
+                    echo ", ";
+                }
+                echo "\"" . $row_c['com_tel'] . "\"";
+                $first = false;
+            }
+            ?>
+        ];
+
+        function checkCompanyTel() {
+            var inputElement = document.getElementById('inputPassword');
+            var errorElement = document.getElementById('com-tel-error');
+            var inputValue = inputElement.value;
+
+            if (CompanyTelNumbers.includes(inputValue)) {
+                errorElement.style.display = 'inline';
+            } else {
+                errorElement.style.display = 'none';
+            }
+        }
+
+        document.getElementById('inputPassword').addEventListener('keyup', checkCompanyTel);
+    </script>
 </body>
 
 </html>
