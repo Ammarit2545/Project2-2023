@@ -19,7 +19,7 @@ if (!isset($_SESSION['role_id'])) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>View Part - Edit Employee Information</title>
+    <title>อะไหล่จะหมด - Edit Employee Information</title>
     <link rel="icon" type="image/x-icon" href="../img brand/anelogo.jpg">
 
     <!-- Custom fonts for this template -->
@@ -63,48 +63,51 @@ if (!isset($_SESSION['role_id'])) {
 
                     <!-- Page Heading -->
                     <br>
-                    <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ข้อมูลอะไหล่</h1>
-                    <a href="add_parts.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มอะไหล่หรือไม่?</a>
+                    <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">อะไหล่ที่กำลังจะหมดสต็อก</h1>
+                    <a href="edit_stock.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องเพิ่มสต๊อกอะไหล่หรือไม่?</a>
                     <br>
                     <br>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">ข้อมูลอะไหล่เครื่องเสียง</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">ข้อมูลอะไหล่ที่กำลังจะหมดสต็อก</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>ลำดับ</th>
+                                            <th>รหัสอะไหล่</th>
                                             <th>รูปภาพ</th>
                                             <th>Brand</th>
                                             <th>Model</th>
                                             <th>Model Number</th>
                                             <th>ประเภท</th>
-                                            <th>รายละเอียด</th>
-                                            <th>ราคา</th>
+                                            <!-- <th>รายละเอียด</th>
+                                            <th>ราคา</th> -->
                                             <th>จำนวนคงเหลือ</th>
-                                            <th>ปุ่มดำเนินการ</th>
+                                            <!-- <th>ปุ่มดำเนินการ</th> -->
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $sql = "SELECT * FROM parts LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id WHERE parts.del_flg = '0' ";
+                                        $plus = 0;
+                                        $minus = 0;
+                                        $sum  = 0;
+                                        $sql = "SELECT * FROM parts LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id WHERE parts.del_flg = '0'";
                                         $result = mysqli_query($conn, $sql);
 
                                         while ($row = mysqli_fetch_array($result)) {
 
-
                                             $p_id = $row['p_id'];
+
                                             // Initialize $plus and $minus variables
                                             $plus = 0;
                                             $minus = 0;
 
                                             $sql_plus = "SELECT SUM(pl_d_value) AS sum FROM parts_log_detail
-                                                         WHERE p_id = '$p_id' AND del_flg = 0";
+                                                        WHERE p_id = '$p_id' AND del_flg = 0";
                                             $result_plus = mysqli_query($conn, $sql_plus);
 
                                             if ($row_plus = mysqli_fetch_array($result_plus)) {
@@ -112,7 +115,7 @@ if (!isset($_SESSION['role_id'])) {
                                             }
 
                                             $sql_minus = "SELECT SUM(pu_value) AS sum FROM parts_use_detail
-                                                          WHERE p_id = '$p_id' AND del_flg = 0";
+                                                         WHERE p_id = '$p_id' AND del_flg = 0";
                                             $result_minus = mysqli_query($conn, $sql_minus);
 
                                             if ($row_minus = mysqli_fetch_array($result_minus)) {
@@ -120,129 +123,102 @@ if (!isset($_SESSION['role_id'])) {
                                             }
 
                                             $sum = $plus - $minus;
+
+                                            if ($sum <= 10) {
+
+
                                         ?>
-                                            <tr>
-                                                <td><?php
-                                                    if ($row['p_id'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['p_id'];
-                                                    }
-                                                    ?>
-                                                </td>
-
-                                                <td><?php
-                                                    if ($row['p_pic'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                    ?>
-                                                        <img src="../<?= $row['p_pic'] ?>" width="50px" alt="Not Found">
-                                                    <?php
-                                                    }
-                                                    ?>
-                                                </td>
-
-
-                                                <td><?php
-                                                    if ($row['p_name'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['p_name'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td><?php
-                                                    if ($row['p_brand'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['p_brand'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td><?php
-                                                    if ($row['p_model'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['p_model'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td><?php
-                                                    if ($row['p_type_name'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo $row['p_type_name'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td><?php
-                                                    if ($row['p_detail'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                    ?>
-                                                        <p><?= substr($row['p_detail'], 0, 50) . '...' ?></p>
-                                                    <?php
-                                                    }
-                                                    ?>
-                                                </td>
-
-                                                <td><?php
-                                                    if ($row['p_price'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo number_format($row['p_price']);
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td><?php
-                                                    if ($sum == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        if ($sum > 10) {
-                                                    ?><p style="color:black"><?= $sum ?> ชิ้น</p><?php
-                                                                                                        } else {
-                                                                                                            ?><p style="color:red"><?= $sum ?> ชิ้น</p><?php
-                                                                                                        }
-                                                                                                    }
-                                                                                                        ?>
-                                                </td>
-                                                <td width="200px">
-                                                 
-
-                                                    <a class="btn btn-warning" href="edit_parts.php?id=<?= $row['p_id'] ?>">แก้ไข</a>
-                                                    <button onclick="confirmDelete(<?= $row['p_id'] ?>)" class="btn btn-danger">ลบ</button>
-                                                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-                                                    <!-- JavaScript function for confirmation -->
-                                                    <script>
-                                                        function confirmDelete(id) {
-                                                            Swal.fire({
-                                                                title: 'คุณแน่ใจหรือไม่?',
-                                                                text: 'คุณต้องการลบข้อมูลนี้หรือไม่',
-                                                                icon: 'warning',
-                                                                showCancelButton: true,
-                                                                confirmButtonColor: '#dc3545',
-                                                                cancelButtonColor: '#6c757d',
-                                                                confirmButtonText: 'Yes, delete it!'
-                                                            }).then((result) => {
-                                                                if (result.isConfirmed) {
-                                                                    // If confirmed, continue with the deletion process
-                                                                    window.location.href = "action/delete_part.php?id=" + id;
-                                                                }
-                                                            });
+                                                <tr>
+                                                    <td><?php
+                                                        if ($row['p_id'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo $p_id;
                                                         }
-                                                    </script>
-                                                    <?php
-                                                    if ($sum <= 10) {
-                                                    ?> <a class="btn btn-primary" href="edit_stock.php">เพิ่ม</a><?php
-                                                                                                    } 
-                                                                                                    ?>
-                                                                                                    
-                                                </td>
-                                            </tr>
+                                                        ?>
+                                                    </td>
+
+                                                    <td><?php
+                                                        if ($row['p_pic'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                        ?>
+                                                            <img src="../<?= $row['p_pic'] ?>" width="50px" alt="Not Found">
+                                                        <?php
+                                                        }
+                                                        ?>
+                                                    </td>
+
+
+                                                    <td><?php
+                                                        if ($row['p_name'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo $row['p_name'];
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td><?php
+                                                        if ($row['p_brand'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo $row['p_brand'];
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td><?php
+                                                        if ($row['p_model'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo $row['p_model'];
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td><?php
+                                                        if ($row['p_type_name'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo $row['p_type_name'];
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <!-- <td><?php
+                                                                if ($row['p_detail'] == NULL) {
+                                                                    echo "-";
+                                                                } else {
+                                                                ?>
+                                                            <p><?= substr($row['p_detail'], 0, 50) . '...' ?></p>
+                                                        <?php
+                                                                }
+                                                        ?>
+                                                    </td>
+
+                                                    <td><?php
+                                                        if ($row['p_price'] == NULL) {
+                                                            echo "-";
+                                                        } else {
+                                                            echo number_format($row['p_price']);
+                                                        }
+                                                        ?>
+                                                    </td> -->
+                                                    <td><?php
+
+                                                        ?><h5 style="color:red"><?= $sum ?> ชิ้น</h5><?php
+
+                                                                                                                                        ?>
+                                                    </td>
+                                                    <!-- <td width="200px">
+
+
+                                                        <a class="btn btn-primary" href="edit_stock.php">จัดการสต๊อก</a>
+                                                    </td> -->
+                                                </tr>
                                         <?php
+                                            }
                                         }
                                         ?>
+
+
                                         <!-- <tr>
                                             <td>Tiger Nixon</td>
                                             <td>Yamaha</td>

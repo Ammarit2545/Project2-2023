@@ -200,7 +200,7 @@ if (!isset($_SESSION['role_id'])) {
                                     <div class="col-sm-3">
                                         <?php if (isset($_SESSION['stock_type'])) {  ?>
                                             <select class="form-select" name="st_id" id="stockType" aria-label="Default select example" onchange="ShowBillFunc(),EditSession(this,6)" required>
-                                                <?php if ($_SESSION['stock_type'] == NULL) {
+                                                <?php if ($_SESSION['stock_type'] == NULL || !isset($_SESSION['stock_type'])) {
                                                 ?>
                                                     <option selected>เลือกวิธีการเพิ่มอะไหล่</option>
                                                 <?php
@@ -339,7 +339,7 @@ if (!isset($_SESSION['role_id'])) {
                                                 <div class="col-md">
                                                     <div class="row">
                                                         <div class="col">
-                                                            <textarea class="auto-expand" type="text" onchange="EditSession(this,4)" class="form-control" name="pl_detail" id="pl_detail" placeholder="กรุณากรอกรายละเอียด *ไม่จำเป็น" value="<?= $_SESSION['pl_detail'] ?>"><?= $_SESSION['pl_detail'] ?></textarea>
+                                                            <textarea type="text" onchange="EditSession(this,4)" class="form-control  auto-expand" name="pl_detail" id="pl_detail" placeholder="กรุณากรอกรายละเอียด *ไม่จำเป็น" value="<?= $_SESSION['pl_detail'] ?>"><?= $_SESSION['pl_detail'] ?></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -881,6 +881,17 @@ if (!isset($_SESSION['role_id'])) {
                 <script>
                     Swal.fire({
                         title: 'มีเลขที่ใบเสร็จ/กำกับภาษีนี้อยู่แล้ว',
+                        text: 'กด Accept เพื่อออก เพื่อทำรายการใหม่',
+                        icon: 'warning',
+                        confirmButtonText: 'Accept'
+                    });
+                </script>
+            <?php unset($_SESSION['add_data_alert']);
+            } else if ($_SESSION['add_data_alert'] == 4) {
+            ?>
+                <script>
+                    Swal.fire({
+                        title: 'กรุณาเลือกวิธีการเพิ่มอะไหล่',
                         text: 'กด Accept เพื่อออก เพื่อทำรายการใหม่',
                         icon: 'warning',
                         confirmButtonText: 'Accept'
