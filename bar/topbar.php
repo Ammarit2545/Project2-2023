@@ -42,9 +42,10 @@ session_start();
 <!-- navbar-->
 <header class="header fixed-top d-flex align-items-center sticked">
   <div class="container d-flex align-items-center justify-content-between">
-    <a href="index.html" class="logo d-flex align-items-center me-auto me-lg-0" style="text-decoration: none;">
-      <h1>Anan Electronic</h1>
+    <a href="#" class="logo d-flex align-items-center me-auto me-lg-0" style="text-decoration: none;">
+      <img src="img brand/anelogo.png" width="120px" alt="">
     </a>
+
     <div>
       <?php
       if (!isset($_SESSION['profile'])) {

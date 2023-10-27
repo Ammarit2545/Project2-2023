@@ -310,7 +310,7 @@ ORDER BY repair.r_brand ASC;  ";
                             while ($row_r = mysqli_fetch_array($result_r)) {
                             ?> {
                                     id: <?= $row_r['r_id'] ?>,
-                                    text: "<?= $row_r['r_brand'] . ' ' . $row_r['r_model'] . ' ' . $row_r['r_number_model'] . ' :  SH - ' . $row_r['r_serial_number'] ?>"
+                                    text: "<?= $row_r['r_brand'] . ' ' . $row_r['r_model'] . ' ' . $row_r['r_number_model'] . ' :  S/N - ' . $row_r['r_serial_number'] ?>"
                                 },
                             <?php
                             }
@@ -1266,7 +1266,7 @@ ORDER BY repair.r_brand ASC;  ";
 
                                                             </style>
                                                             <b class="ln auto-font"><?= $row1['r_brand'] ?></b><span class="ln auto-font"><?= ' - ' . $row1['r_model'] . '   '  ?></span>
-                                                            <h5 class="ln auto-font"><span class="badge bg-primary ln auto-font"><?= 'SH : ' . $row1['r_number_model'] ?></span></h5>
+                                                            <h5 class="ln auto-font"><span class="badge bg-primary ln auto-font"><?= 'S/N : ' . $row1['r_number_model'] ?></span></h5>
                                                         </div>
                                                     </a>
                                                 </div>

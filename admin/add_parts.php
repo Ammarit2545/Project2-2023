@@ -95,35 +95,17 @@ if (!isset($_SESSION['role_id'])) {
 
                             <div class="col-md-4">
                                 <label for="staticEmail" class="col-sm-1 col-form-label">Brand</label>
-                                <input type="text" name="p_brand" class="form-control" id="staticEmail" placeholder="กรุณากรอกชื่อ Brand" required>
+                                <input type="text" name="p_brand" class="form-control" id="part_name_check" placeholder="กรุณากรอกชื่อ Brand" required>
+                                <span id="name-part-error" style="color: red; display: none;">ข้อมูลนี้มีอยู่ในระบบแล้ว</span>
+
+
+
                             </div>
 
                             <div class="col-md-5">
-                                <label for="inputPassword" class="col-sm-0 col-form-label ml-4">Model</label>
-                                <!-- <input type="text" name="p_model" class="form-control" id="inputPassword" placeholder="กรุณาใส่ชื่อ Model" required> -->
-                                <input type="text" name="p_model" id="inputPart" class="form-control" onblur="checkPartType()" placeholder="กรุณากรอกชื่อ Model" required>
-                                <span id="part-error" style="color:red;display:none;">รหัสโมเดลนี้มีอยู่ในระบบแล้ว</span>
-                                <script>
-                                    function checkPartType() {
-                                        var p_name = document.getElementById('inputPart').value;
-                                        var xhttp = new XMLHttpRequest();
-                                        xhttp.onreadystatechange = function() {
-                                            if (this.readyState == 4 && this.status == 200) {
-                                                if (this.responseText == 'exists') {
-                                                    document.getElementById('part-error').style.display = 'block';
-                                                    document.getElementById('inputPart').setCustomValidity('มีข้อมูลอยู่แล้ว');
-                                                    document.getElementById('submit-button').disabled = true; // disable the submit button
-                                                } else {
-                                                    document.getElementById('part-error').style.display = 'none';
-                                                    document.getElementById('inputPart').setCustomValidity('');
-                                                    document.getElementById('submit-button').disabled = false; // enable the submit button
-                                                }
-                                            }
-                                        };
-                                        xhttp.open('GET', 'action/check_part_model.php?p_name=' + p_name, true);
-                                        xhttp.send();
-                                    }
-                                </script>
+                                <label for="inputPassword" class="col-form-label ml-4">Model</label>
+                                <input type="text" name="p_model" id="part_modal_name" class="form-control" onblur="checkPartType()" placeholder="กรุณากรอกชื่อ Model" required>
+                                <span id="part-error" style="color: red; display: none;">รหัสโมเดลนี้มีอยู่ในระบบแล้ว</span>
                             </div>
                         </div>
                         <div class="mb-3 row">
@@ -131,6 +113,7 @@ if (!isset($_SESSION['role_id'])) {
                             <div class="col-md-5 mr-4">
                                 <label for="inputPassword" class="col-sm-1 col-form-label">ชื่อ</label>
                                 <input type="text" name="p_name" class="form-control" id="inputPassword" placeholder="กรุณาใส่ชื่ออะไหล่" required>
+
                             </div>
 
                             <div class="col-md-2 mr-4">
@@ -330,7 +313,63 @@ if (!isset($_SESSION['role_id'])) {
             return false;
         }
     </script> -->
+    <script>
+        var PartNames = [
+            <?php
+            $sql = "SELECT p_name FROM parts WHERE del_flg = '0'";
+            $result = mysqli_query($conn, $sql);
+            $first = true;
+            while ($row_c = mysqli_fetch_array($result)) {
+                if (!$first) {
+                    echo ", ";
+                }
+                echo "\"" . $row_c['p_name'] . "\"";
+                $first = false;
+            }
+            ?>
+        ];
 
+        function checkCompanyName() {
+            var inputElement = document.getElementById('part_name_check');
+            var errorElement = document.getElementById('name-part-error');
+            var inputValue = inputElement.value;
+
+            if (PartNames.includes(inputValue)) {
+                errorElement.style.display = 'inline';
+            } else {
+                errorElement.style.display = 'none';
+            }
+        }
+
+        document.getElementById('part_name_check').addEventListener('keyup', checkCompanyName);
+
+        var PartNames = [
+            <?php
+            $sql = "SELECT p_model FROM parts WHERE del_flg = '0'";
+            $result = mysqli_query($conn, $sql);
+            $first = true;
+            while ($row_c = mysqli_fetch_array($result)) {
+                if (!$first) {
+                    echo ", ";
+                }
+                echo "\"" . $row_c['p_model'] . "\"";
+                $first = false;
+            }
+            ?>
+        ];
+
+        function checkPartType() {
+            var inputElement = document.getElementById('part_modal_name');
+            var errorElement = document.getElementById('part-error');
+            var inputValue = inputElement.value;
+
+            if (PartNames.includes(inputValue)) {
+                errorElement.style.display = 'inline';
+            } else {
+                errorElement.style.display = 'none';
+            }
+        }
+    </script>
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
