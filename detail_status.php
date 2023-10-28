@@ -1511,12 +1511,12 @@ $part_check = 0;
                                 $result_lastest = mysqli_query($conn, $sql_lastest);
                                 $row_lastest = mysqli_fetch_array($result_lastest);
                                 $status_id_last = $row_lastest['status_id'];
-                                if ($status_id_last == 13) {
+                                if ($status_id_last == 13 && $row_lastest['rs_conf'] == NULL) {
                                 ?>
-                                    <div class="col-md-6 alert alert-danger">
+                                    <div class="col-md-6 <?php if ($status_id_last == 13) { ?> alert alert-primary  <?php  } ?>">
                                         <div class="card shadow mb-4 ">
                                             <div class="card-header py-3">
-                                                <h6 class="m-0 font-weight-bold text-danger">ข้อมูลอะไหล่ใหม่ของอุปกรณ์</h6>
+                                                <h6 class="m-0 font-weight-bold text-primary">ข้อมูลอะไหล่ใหม่ของอุปกรณ์</h6>
                                             </div>
                                             <div class="card-body">
                                                 <div class="table-responsive">
@@ -1564,10 +1564,22 @@ $part_check = 0;
                                                                         LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
                                                                     WHERE
                                                                         get_repair.del_flg = 0 AND repair_detail.del_flg = 0
-                                                                        AND get_repair.get_r_id = '$get_id' AND repair_status.status_id = 13
-                                                                    GROUP BY
-                                                                        repair_detail.rd_id;
-                                                                    ";
+                                                                        AND get_repair.get_r_id = '$get_id'  ";
+
+                                                            if ($status_id_last == 13) {
+                                                                $sqlCheckOffer = "SELECT * FROM repair_status WHERE get_r_id = '$get_id' AND status_id = 13 AND del_flg = 0 ORDER BY rs_id DESC LIMIT 1";
+                                                                $resultOffer = mysqli_query($conn, $sqlCheckOffer);
+
+                                                                if (mysqli_num_rows($resultOffer)) {
+                                                                    $rowOffer = mysqli_fetch_array($resultOffer);
+                                                                    $Offer_rs =  $rowOffer['rs_id'];
+                                                                    $sqlParts .=   " AND repair_status.rs_id = $Offer_rs ";
+                                                                } else {
+                                                                    $sqlParts .=   " AND repair_status.status_id != 13 ";
+                                                                }
+                                                            }
+                                                            $sqlParts .= "GROUP BY repair_detail.rd_id;";
+
                                                             $resultParts = mysqli_query($conn, $sqlParts);
                                                             $partCount = 0;
                                                             while ($rowParts = mysqli_fetch_array($resultParts)) {
@@ -1608,8 +1620,8 @@ $part_check = 0;
                                                                             echo "-";
                                                                         } else {
                                                                             echo $rowParts['getDId'] . ' ' . $rowParts['rBrand'] . ' ' . $rowParts['rModel'] ?><h5><?= ' S/N :' . $rowParts['rSerialNumber'] ?></h5><?php
-                                                                                                                                                                            }
-                                                                                                                                                                                ?>
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                                    ?>
                                                                     </td>
                                                                     <td><?php
                                                                         if ($rowParts['pPic'] == NULL) {
@@ -1724,13 +1736,14 @@ $part_check = 0;
 
                                 <?php
                                 } ?>
-                                <div class="col-md">
+                                <div class="col-md 
+                                <?php if ($status_id_last == 13 && $row_lastest['rs_conf'] == NULL) { ?> alert alert-danger  <?php  } ?> ">
                                     <div class="card shadow mb-4">
                                         <div class="card-header py-3">
                                             <?php
                                             // สถานะเกิดปัญหา
-                                            if ($status_id_last == 13) {
-                                            ?> <h6 class="m-0 font-weight-bold text-primary">ข้อมูลอะไหล่เก่าของอุปกรณ์</h6>
+                                            if ($status_id_last == 13 && $row_lastest['rs_conf'] == NULL) {
+                                            ?> <h6 class="m-0 font-weight-bold text-danger">ข้อมูลอะไหล่เก่าของอุปกรณ์</h6>
                                             <?php
                                             } else {
                                             ?> <h6 class="m-0 font-weight-bold text-primary">ข้อมูลอะไหล่อุปกรณ์ของคุณ</h6>
@@ -1786,7 +1799,16 @@ $part_check = 0;
                                                                         get_repair.del_flg = 0 AND repair_detail.del_flg = 0
                                                                         AND get_repair.get_r_id = '$get_id' ";
                                                         if ($status_id_last == 13) {
-                                                            $sql_op .=   " AND repair_status.status_id != 13 ";
+                                                            $sqlCheckOffer = "SELECT * FROM repair_status WHERE get_r_id = '$get_id' AND status_id = 13 AND del_flg = 0 ORDER BY rs_id DESC LIMIT 1 OFFSET 1";
+                                                            $resultOffer = mysqli_query($conn, $sqlCheckOffer);
+
+                                                            if (mysqli_num_rows($resultOffer)) {
+                                                                $rowOffer = mysqli_fetch_array($resultOffer);
+                                                                $Offer_rs =  $rowOffer['rs_id'];
+                                                                $sql_op .=   " AND repair_status.rs_id = $Offer_rs ";
+                                                            } else {
+                                                                $sql_op .=   " AND repair_status.status_id != 13 ";
+                                                            }
                                                         }
                                                         $sql_op .= "GROUP BY repair_detail.rd_id;";
                                                         $result_op = mysqli_query($conn, $sql_op);
@@ -1806,8 +1828,8 @@ $part_check = 0;
                                                             $get_d_id1 = $row_count['get_d_id'];
 
                                                             $sql_repair = "SELECT * FROM repair 
-                                                    LEFT JOIN get_detail ON get_detail.r_id = repair.r_id
-                                                    WHERE get_detail.get_d_id = '$get_d_id1'";
+                                                                        LEFT JOIN get_detail ON get_detail.r_id = repair.r_id
+                                                                        WHERE get_detail.get_d_id = '$get_d_id1'";
                                                             $result_repair = mysqli_query($conn, $sql_repair);
                                                             $row_get_d = mysqli_fetch_array($result_repair);
                                                             ?>
@@ -1816,7 +1838,7 @@ $part_check = 0;
                                                                     if ($count_part == NULL) {
                                                                         echo "-";
                                                                     } else {
-                                                                        echo $count_part;
+                                                                        echo $count_part . '  ' . $Offer_rs;
                                                                     }
                                                                     ?>
                                                                 </td>
@@ -3894,6 +3916,24 @@ ORDER BY rs.rs_date_time DESC
                                                                 <?php
                                                                         } ?> -->
                                                                 <br>
+                                                                <?php
+                                                                if ($row1['status_id'] == 13 && $row1['rs_conf'] == NULL) {
+                                                                    $sql_null = "SELECT * FROM repair_status WHERE get_r_id ='$get_r_id' AND del_flg = 0 ORDER BY rs_id DESC LIMIT 1";
+                                                                    $result_null = mysqli_query($conn, $sql_null);
+                                                                    $row_null = mysqli_fetch_array($result_null);
+                                                                    if ($row_null['rs_conf'] == NULL) {
+                                                                ?>
+                                                                        <!-- 13 in -->
+                                                                        <hr>
+                                                                        <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
+
+                                                                        <a style="margin-left: 2%" id="UnconfirmButtonConfAfterDoingInStatus" class="btn btn-danger">ไม่ทำการยืนยัน</a>
+                                                                        <a class="btn btn-success" id="confirmButtonConfAfterDoingInStatus" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
+                                                                        <br><br>
+                                                                <?php
+                                                                    }
+                                                                }
+                                                                ?>
                                                                 <?php if ($row1['status_id'] == 24 && $row1['rs_conf'] == NULL) { ?>
 
                                                                     <hr>
@@ -3924,6 +3964,7 @@ ORDER BY rs.rs_date_time DESC
 
                                                                     <br>
                                                                     <?php
+
                                                                 }
                                                                 if ($row1['status_id'] == 13 && $row1['rs_conf'] != 1 && $row1['rs_conf'] != 0) {
                                                                     $sql_null = "SELECT * FROM repair_status WHERE get_r_id ='$get_r_id' AND del_flg = 0 ORDER BY rs_id DESC LIMIT 1";
@@ -4207,7 +4248,7 @@ ORDER BY rs.rs_date_time DESC
                                     <hr>
                                     <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
 
-                                    <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยัน</a>
+                                    <a style="margin-left: 2%" id="UnconfirmButtonConfAfterDoing" class="btn btn-danger">ไม่ทำการยืนยัน</a>
                                     <a class="btn btn-success" id="confirmButtonConfAfterDoing" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
                                 </center>
                             <?php
@@ -5197,6 +5238,62 @@ ORDER BY rs.rs_date_time DESC
                     });
                 });
             });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var id_get_r = <?= $id_get_r ?>; // Pass PHP variable to JavaScript
+
+                document.getElementById('confirmButtonConfAfterDoingInStatus').addEventListener('click', function() {
+                    Swal.fire({
+                        icon: 'question',
+                        title: 'ยืนยันดำเนินการส่งซ่อม',
+                        text: 'การ "ยืนยัน" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
+                        showCancelButton: true,
+                        confirmButtonText: 'ยืนยัน',
+                        cancelButtonText: 'ยกเลิก'
+                    }).then((willConfirm) => {
+                        if (willConfirm.isConfirmed) {
+                            window.location.href = "action/conf_after_doing.php?id=" + id_get_r + "&status_id=" + status_id; // Redirect with the passed value
+                        }
+                    });
+                });
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var id_get_r = <?= $id_get_r ?>; // Pass PHP variable to JavaScript
+
+                // Get both elements by their IDs
+                var button1 = document.getElementById('UnconfirmButtonConfAfterDoing');
+                var button2 = document.getElementById('UnconfirmButtonConfAfterDoingInStatus');
+
+                // Add the click event listener to either of the buttons
+                button1.addEventListener('click', handleButtonClick);
+                button2.addEventListener('click', handleButtonClick);
+
+                function handleButtonClick() {
+                    Swal.fire({
+                        title: 'เพิ่มเหตุผลการปฏิเสธของคุณ',
+                        input: 'text',
+                        inputAttributes: {
+                            autocapitalize: 'off'
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'ส่งข้อมูลของคุณ',
+                        showLoaderOnConfirm: true,
+                        cancelButtonText: 'ยกเลิก',
+                        cancelButtonColor: '#CE3500',
+                        preConfirm: (login) => {
+                            // Construct the URL with the parameters you want to send
+                            const status_id = '13'; // Replace with the actual value
+                            const url = `action/conf_after_doing.php?id=${id_get_r}&status_id=${status_id}&cancel=${login}`;
+
+                            // Navigate to the constructed URL
+                            window.location.href = url;
+                        },
+                    });
+                }
+            });
+
+
 
             document.addEventListener('DOMContentLoaded', function() {
                 var id_get_r = <?= $id_get_r ?>; // Pass PHP variable to JavaScript
