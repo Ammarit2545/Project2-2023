@@ -8,6 +8,10 @@
     <button class="btn btn-danger" style="background-color:<?= $row_q_c['status_color'] ?>; border : <?= $row_q_c['status_color'] ?>" onclick="showCancelValue()"><?= $row_q_c['status_name'] ?></button> -->
 
     <?php
+    $sql_now = "SELECT status_id FROM repair_status WHERE del_flg = 0 AND get_r_id = '$get_r_id' ORDER BY rs_id DESC LIMIT 1";
+    $re_now = mysqli_query($conn, $sql_now);
+    $row_now = mysqli_fetch_array($re_now);
+
     $sql = "SELECT * FROM status_type WHERE status_id = '12'";
     $result = mysqli_query($conn, $sql);
     $row_conf = mysqli_fetch_array($result);
@@ -22,8 +26,9 @@
     $row_q = mysqli_fetch_array($result);
     ?>
     <button class="btn btn-danger" style="background-color:<?= $row_q['status_color'] ?>; border : <?= $row_q['status_color'] ?>" onclick="show_doing()"><?= $row_q['status_name'] ?></button>
-
-
+    <?php if ($row_now['status_id'] == 13) { 
+       $Add_string =  "?status_id_conf=13" ;
+     } ?>
 </center>
 
 <!-- <script>
@@ -45,7 +50,6 @@
     }
 </script> -->
 
-
 <div id="doing_status" style="display: none;">
     <hr>
     <br>
@@ -53,7 +57,7 @@
     <h1 class="m-0 font-weight-bold text-warning" style="display:inline; color:<?= $row_q['status_color'] ?>"><?= $row_q['status_name'] ?></h1>
     <br>
     <br>
-    <form id="cancel_status_id_conf" action="action/status/doing_status.php" method="POST" enctype="multipart/form-data">
+    <form id="cancel_status_id_conf" action="action/status/doing_status.php<?=$Add_string?>" method="POST" enctype="multipart/form-data">
         <label for="cancelFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color:<?= $row_q['status_color'] ?>"><?= $row_q['status_name'] ?></p> :</label>
         <textarea class="form-control auto-expand" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการดำเนินการส่งซ่อม">ทางเราได้รับการยืนยันจากคุณ และดำเนินการซ่อมต่อ</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>

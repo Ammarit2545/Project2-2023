@@ -476,33 +476,100 @@
     <br>
     <h1 class="m-0 font-weight-bold text-danger"><?= $row_confg['status_name'] ?> </h1>
     <br>
-    <form id="confirm_config" action="action/status/add_conf_offer.php" method="POST" enctype="multipart/form-data">
-        <label for="DetailFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_confg['status_color'] ?>"> <?= $row_confg['status_name'] ?> </p> :</label>
-        <textarea class="form-control auto-expand" name="rs_detail" id="DetailFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">พนักงานกำลังดำเนินต้องมีอะไหล่ที่ใช้เพิ่มดังนี้</textarea>
+    <form id="confirm_config" action="action/status/insert_new_part_non_del.php" method="POST" enctype="multipart/form-data">
+        <!-- <label for="DetailFormControlTextareaConf" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการ <p style="display:inline; color : <?= $row_confg['status_color'] ?>"> <?= $row_confg['status_name'] ?> </p> :</label>
+        <textarea class="form-control auto-expand" name="rs_detail" id="DetailFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">พนักงานกำลังดำเนินต้องมีอะไหล่ที่ใช้เพิ่มดังนี้</textarea> -->
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
         <input type="text" name="status_id" value="13" hidden>
         <input type="hidden" name="cardCount" id="cardCountInput" value="0" readonly>
         <br>
-        <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่</label>
-        <div class="input-group mb-3">
-            <!-- <input type="text" name="status_id" value="6" hidden readonly> -->
-            <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
-            <input name="get_wages" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="<?= $row['get_wages'] ?>" required>
+        <div class="container alert alert-light bg-gray-2 shadow">
+            <div class="alert alert-primary">
+                <h5 class="ln f-black-5">ขั้นตอนที่ 1 : </h5>
+                <p class="ln">กรอกค่าแรงและรายละเอียด</p>
+            </div>
+
+            <div class="container ">
+                <div class="row">
+                    <div class="col-md">
+                        <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่</label>
+                        <div class="input-group mb-3">
+
+                            <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
+                            <input name="get_wages" type="number" value="<?= $row['get_wages'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกค่าแรงช่าง" required>
+                            <span class="input-group-text">฿</span>
+                        </div>
+                    </div>
+
+                    <?php
+                    if ($row['get_deli'] == 1) { ?>
+                        <div class="col-md">
+                            <label for="basic-url" class="form-label">ค่าจัดส่ง *แยกกับราคาอะไหล่</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon3">ค่าจัดส่ง</span>
+                                <input name="get_add_price" type="number" value="<?= $row['get_add_price'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกค่าส่งอุปกรณ์" required>
+                                <span class="input-group-text">฿</span>
+                            </div>
+                        </div>
+                    <?php
+                    }
+                    ?>
+                    <div class="col-md-4">
+                        <label for="basic-url" class="form-label">ระยะเวลาซ่อม</label>
+                        <div class="input-group mb-3">
+
+                            <input name="get_date_conf" type="number" value="<?= $row['get_date_conf'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกระยะเวลาซ่อม" required>
+                            <span class="input-group-text">วัน</span>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <label for="DetailFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการส่ง <p style="display:inline; color : gray"> รายละเอียด</p> :</label>
+                <textarea class="form-control auto-expand" name="rs_detail" id="DetailFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">อะไหล่ที่ต้องใช้มีดังนี้</textarea>
+
+            </div>
+
+            <br>
+            <hr>
+            <br>
+            <div class="alert alert-primary">
+                <!-- <h5>ขั้นตอนที่ 2 : จัดการอะไหล่และเลือกอุปกรณ์</h5> -->
+                <h5 class="ln f-black-5">ขั้นตอนที่ 2 : </h5>
+                <p class="ln">จัดการอะไหล่และเลือกอุปกรณ์</p>
+            </div>
+            <h6>จัดการอะไหล่และเลือกอุปกรณ์</h6>
+            <div id="cardContainer" style="display: none;">
+                <table class="table" id="cardSection"></table>
+            </div>
+            <?php include('func_parts/func_parts.php'); ?> 
+
+            <br>
+            <hr>
+            <br>
+            <div class="alert alert-primary">
+                <!-- <h5>ขั้นตอนที่ 3 : ใส่รูปภาพประกอบ <span class="f-red-5">*ไม่จำเป็น</span></h5> -->
+                <h5 class="ln f-black-5">ขั้นตอนที่ 3 : </h5>
+                <p class="ln">ใส่รูปภาพประกอบ <span class="f-red-5">*ไม่จำเป็น</span></p>
+            </div>
+
+            <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
+            <hr>
+            <label for="DetailFormControlTextarea" class="form-label">เพิ่มรูปภาพหรือวิดีโอ *ไม่จำเป็น (สูงสุด 4 ไฟล์) : </label>
+            <a class="btn btn-primary" onclick="showInputDetailConf()">เพิ่มรูปภาพหรือวิดีโอ</a>
+            <br><br>
+            <div id="inputContainerDetail"></div>
+
         </div>
 
         <br>
-        <div class="mb-3">
-            <h6>อะไหล่</h6>
-          <?php include('func_parts/func_parts.php'); ?>
-        </div>
 
         <br>
-        <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
+        <!-- <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
         <hr>
         <label for="DetailFormControlTextareaConf" class="form-label">เพิ่มรูปภาพหรือวิดีโอ *ไม่จำเป็น (สูงสุด 4 ไฟล์):</label>
         <a class="btn btn-primary" onclick="showInputDetailConf()">เพิ่มรูปภาพหรือวิดีโอ</a>
         <br>
-        <div id="inputContainerDetail"></div>
+        <div id="inputContainerDetail"></div> -->
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <script>
