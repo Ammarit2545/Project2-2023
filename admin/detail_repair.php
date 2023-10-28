@@ -415,7 +415,7 @@ $get_r_id = $_GET['id'];
                                     }
                                     ?>
                                     <center>
-                                        <h5>กดการดำเนินการที่ท่านต้องการ</h5>
+                                        <h5>เลือกการดำเนินการถัดไป</h5>
                                         <hr style="width:50%">
                                     </center>
 
@@ -441,7 +441,16 @@ $get_r_id = $_GET['id'];
                                             if ($row_c_conf_send) {
                                                 include('status_option/send_back_conf.php');
                                             } else {
-                                                include('status_option/send_back.php');
+                                                // ถ้ามี Status 13 หรือ เกิดปัญหา
+                                                $sql_c_conf_send = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' And del_flg = '0' And status_id = '13'";
+                                                $result_c_conf_send = mysqli_query($conn, $sql_c_conf_send);
+                                                
+                                                if(mysqli_num_rows( $result_c_conf_send)){
+                                                    include('status_option/17offerWithConfig.php');
+                                                }else{
+                                                    include('status_option/send_back.php');
+                                                }
+                                              
                                                 // echo $rs_id;
                                             }
                                         } elseif ($row['status_id'] == '20') {

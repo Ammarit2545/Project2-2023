@@ -954,7 +954,7 @@ $id_member = $_SESSION['id'];
                                                                             <?php if ($total_part_price > 0) {   ?>
                                                                                 <br>
                                                                                 <div class="row">
-                                                                                    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">ดูรายการอะไหล่</button>
+                                                                                    <a class="btn btn-primary" href="detail_status.php?id=<?= $get_r_id ?>">ดูรายการอะไหล่</a>
                                                                                 </div>
                                                                             <?php   } ?>
 
@@ -1035,7 +1035,7 @@ $id_member = $_SESSION['id'];
                                                                                 </nav>
                                                                             </div> -->
                                                                                 <?php if ($count_part_check > 0) {   ?>
-                                                                                    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">ดูรายการอะไหล่</button>
+                                                                                    <a class="btn btn-primary" href="detail_status.php?id=<?= $get_r_id ?>">ดูรายการอะไหล่</a>
                                                                                 <?php   } ?>
                                                                             </div>
                                                                         </div>
@@ -1175,7 +1175,7 @@ $id_member = $_SESSION['id'];
                                             <?php }
                                         }
                                     } else {
-                                        
+
                                         $string = $row1['r_brand'];
                                         $firstChar = ucfirst($string[0]);
                                         // Check get_r_id is not as it was 
