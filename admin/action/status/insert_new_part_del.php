@@ -12,6 +12,8 @@ $get_r_id = $_POST['get_r_id'];
 $rs_detail = $_POST['rs_detail'];
 $status_id = $_POST['status_id'];
 $e_id = $_SESSION["id"];
+$get_add_price = $_POST['get_add_price'];
+    $get_wages = $_POST['get_wages'];
 
 
 
@@ -323,12 +325,12 @@ if (isset($_POST['get_date_conf'])) {
 
 if (isset($_POST['get_add_price']) && isset($_POST['get_wages'])) {
     $get_add_price = $_POST['get_add_price'];
-    $get_wages = $_POST[''];
-    $sql_up = "UPDATE `get_repair` SET `get_wages`='$get_wages',`get_add_price`='$get_add_price' WHERE get_r_id = '$get_r_id'";
-    $result_up = mysqli_query($conn, $sql_up);
-} else {
-    $get_add_price = $_POST['get_add_price'];
     $get_wages = $_POST['get_wages'];
+    $sql_up = "UPDATE `get_repair` SET `get_wages`='$get_wages',`get_add_price`='$get_add_price' WHERE get_r_id = '$get_r_id'";
+    $result_up = mysqli_query($conn, $sql_up);echo 'asdasdasdsadasdasd';
+} else {
+    
+    echo $_POST['get_wages'].' - '.$_POST['get_add_price'];
     if (isset($_POST['get_add_price'])) {
         $sql_up = "UPDATE `get_repair` SET `get_add_price`='$get_add_price' WHERE get_r_id = '$get_r_id'";
         $result_up = mysqli_query($conn, $sql_up);

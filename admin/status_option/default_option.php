@@ -2,7 +2,7 @@
 
 
 <!-- สถานะ "ส่งเรื่องแล้ว" -->
-<?php if ($row['value_code'] == "submit") {
+<?php if ($row['status_id'] == "1") {
 ?>
     <!-- เปลี่ยนสถานะเป็น  -->
     <center>
@@ -35,7 +35,7 @@
     <!-- สถานะ "รับเรื่องแล้ว" -->
 <?php
 } ?>
-<?php if ($row['value_code'] == "received") { ?>
+<?php if ($row['status_id'] == "2") { ?>
     <center>
         <button class="btn btn-danger" onclick="showCancelValue()">ปฏิเสธการซ่อม</button>
         <button class="btn btn-secondary" onclick="showDetailValue()">รายละเอียด</button>

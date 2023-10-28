@@ -493,10 +493,7 @@
         <br>
         <div class="mb-3">
             <h6>อะไหล่</h6>
-            <div id="cardContainer" style="display: none;">
-                <table class="table" id="cardSection"></table>
-            </div>
-            <button type="button" class="btn btn-primary" onclick="showNextCard()">เพิ่มอะไหล่</button>
+          <?php include('func_parts/func_parts.php'); ?>
         </div>
 
         <br>

@@ -691,7 +691,7 @@ if ($_SESSION["log_login"] == 0) {
   <?php
   if (isset($_SESSION['add_data_alert'])) {
     if ($_SESSION['add_data_alert'] == 0) {
-      if ($_SESSION['add_line_alert'] == 0) {
+      if (isset($_SESSION['add_line_alert'])) {
         if (isset($_SESSION['add_new_line_alert']) && $_SESSION['add_new_line_alert'] == 0) {
   ?>
           <script>
