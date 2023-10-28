@@ -11,6 +11,12 @@ if ($status_id == 17 || $status_id == 4) {
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($result);
     echo ' 1';
+
+    $rs_id = $row['rs_id'];
+    if ($rs_id  > 0) {
+        $sql = "UPDATE repair_status SET rs_conf = '1' , rs_conf_date = NOW() WHERE rs_id = '$rs_id '";
+        $result = mysqli_query($conn, $sql);
+    }
 }
 
 if ($status_id == 4 || $status_id == 17 || $row['rs_id'] > 0) {
@@ -19,14 +25,12 @@ if ($status_id == 4 || $status_id == 17 || $row['rs_id'] > 0) {
     $row_c = mysqli_fetch_array($result_c);
 
     if ($row_c['rs_id'] > 0) {
-        $sql_c = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' AND del_flg = '0' AND status_id = '19' ";
+        $sql_c = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' AND del_flg = '0' AND status_id = '19' ORDER BY rs_id DESC LIMIT 1";
         $result_c = mysqli_query($conn, $sql_c);
         $row_c = mysqli_fetch_array($result_c);
 
         if ($row_c['rs_id'] > 0) {
-            $rs_id = $row['rs_id'];
-            $sql = "UPDATE repair_status SET rs_conf = '1' , rs_conf_date = NOW() WHERE rs_id = '$rs_id '";
-            $result = mysqli_query($conn, $sql);
+
             if ($result) {
 
                 // เอาคืนสต๊อก เอาค่าจาก $get_r_id
@@ -42,8 +46,8 @@ if ($status_id == 4 || $status_id == 17 || $row['rs_id'] > 0) {
                     // Update parts stock in the parts table
                     $sql_u = "UPDATE `parts` SET `p_stock` = `p_stock` - '$rd_value_parts', `p_date_update` = NOW() WHERE `p_id` = '$p_id'";
                     $result_u = mysqli_query($conn, $sql_u);
-            //    status_record_001
-               
+                    //    status_record_001
+
                 }
 
                 $_SESSION['add_data_alert'] = 0;

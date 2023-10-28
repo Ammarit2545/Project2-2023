@@ -1,55 +1,21 @@
- <!-- search 11-17 status -->
+ <!-- search 6-17 status -->
  <center>
-     <!-- 8,17,6 -->
+     <!-- 6,17 -->
      <?php
-        $sql_conf = "SELECT * FROM repair_status WHERE del_flg = '0' AND get_r_id = $get_r_id ORDER BY rs_date_time DESC LIMIT 1";
-        $result_conf = mysqli_query($conn, $sql_conf);
-        $row_conf = mysqli_fetch_array($result_conf);
+        $id_get = $_GET['id'];
+        $sql = "SELECT * FROM status_type WHERE status_id = '6'";
+        $result = mysqli_query($conn, $sql);
+        $row_conf = mysqli_fetch_array($result);
+        ?>
+     <button class="btn btn-light" onclick="showCancelValue()" style="background-color: <?= $row_conf['status_color'] ?>;color:white"><?= $row_conf['status_name'] ?></button>
 
-        if ($row_conf['rs_conf'] == NULL) {
-       
-         $id_get = $_GET['id'];
-         $sql = "SELECT * FROM status_type WHERE status_id = '8'";
-         $result = mysqli_query($conn, $sql);
-         $row_conf = mysqli_fetch_array($result);
-         ?>
-         <button class="btn btn-light" onclick="showCancelValue()" style="background-color: <?= $row_conf['status_color'] ?>;color:white"><?= $row_conf['status_name'] ?></button>
-         <?php   }
-   
-        
+     <?php
         $sql = "SELECT * FROM status_type WHERE status_id = '17'";
         $result = mysqli_query($conn, $sql);
         $row_offer = mysqli_fetch_array($result);
         ?>
      <button class="btn btn-warning" onclick="showofferValue()" style="background-color: <?= $row_offer['status_color'] ?>;"><?= $row_offer['status_name'] ?></button>
-
-
-     <?php
-        $sql = "SELECT * FROM status_type WHERE status_id = '6'";
-        $result = mysqli_query($conn, $sql);
-        $row_conf_do = mysqli_fetch_array($result);
-        ?>
-     <button class="btn btn-light" onclick="show_conf_status('<?php echo $row_conf_do['id']; ?>')" style="background-color: <?= $row_conf_do['status_color'] ?>;color:white"><?= $row_conf_do['status_name'] ?></button>
  </center>
-
- <script>
-     function show_conf_status(id) {
-         Swal.fire({
-             title: 'Confirmation',
-             text: 'คุณต้องการเปลี่ยนเป็นสถานะดำเนินการใช่หรือไม่?',
-             icon: 'question',
-             showCancelButton: true,
-             confirmButtonColor: '#3085d6',
-             cancelButtonColor: '#d33',
-             confirmButtonText: 'Yes',
-             cancelButtonText: 'No'
-         }).then((result) => {
-             if (result.isConfirmed) {
-                 window.location.href = 'action/status/insert_new_part_non_del.php?get_r_id=' + <?= $row['get_r_id'] ?> + '&status_id='+<?=  $row_conf_do['status_id'] ?> +'&rs_detail=ตอนนี้เราได้ทำการรับเรื่องของท่านแล้้วและกำลังดำเนินการซ่อมต่อในขณะนี้';
-             }
-         });
-     }
- </script>
 
  <div id="cancel_value_code" style="display: none;">
      <hr>
@@ -209,7 +175,7 @@
      <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
      <br>
      <form id="offers_status_id" action="action/status/insert_new_part_non_del.php" method="POST" enctype="multipart/form-data">
-         <div>
+         <!-- <div>
              <br>
              <label for="basic-url" class="form-label">กรุณาเลือกอุปกรณ์ที่ต้องการทำการซ่อม</label>
              <?php
@@ -234,12 +200,16 @@
 
                 ?>
 
-         </div>
+         </div> -->
 
          <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
          <input type="text" name="status_id" value="17" hidden>
          <input type="hidden" name="cardCount" id="cardCountInput" value="0">
          <br>
+         <div class="alert alert-primary">
+             <h5 class="ln f-black-5">ขั้นตอนที่ 1 : </h5>
+             <p class="ln">กรอกค่าแรงและรายละเอียด</p>
+         </div>
          <div class="row">
              <div class="col-md">
                  <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่</label>
@@ -276,18 +246,28 @@
          <br>
          <label for="DetailFormControlTextarea" class="form-label">กรุณาใส่รายละเอียดเพื่อทำการส่ง <p style="display:inline; color : gray"> รายละเอียด</p> :</label>
          <textarea class="form-control auto-expand" name="rs_detail" id="DetailFormControlTextarea" rows="3" required placeholder="กรอกรายละเอียดในการรายละเอียดการซ่อม">อะไหล่ที่ต้องใช้มีดังนี้</textarea>
-
-
+         ิ<br>
+         <div class="alert alert-primary">
+             <!-- <h5>ขั้นตอนที่ 2 : จัดการอะไหล่และเลือกอุปกรณ์</h5> -->
+             <h5 class="ln f-black-5">ขั้นตอนที่ 2 : </h5>
+             <p class="ln">จัดการอะไหล่และเลือกอุปกรณ์</p>
+         </div>
 
          <br>
          <div class="mb-3">
              <h6>อะไหล่</h6>
-             <div id="cardContainer" style="display: none;">
+             <!-- <div id="cardContainer" style="display: none;">
                  <table class="table" id="cardSection"></table>
              </div>
-             <button type="button" class="btn btn-primary" onclick="showNextCard()">เพิ่มอะไหล่</button>
+             <button type="button" class="btn btn-primary" onclick="showNextCard()">เพิ่มอะไหล่</button> -->
+             <?php include('func_parts/func_parts.php'); ?>
          </div>
          <br>
+         <div class="alert alert-primary">
+             <!-- <h5>ขั้นตอนที่ 3 : ใส่รูปภาพประกอบ <span class="f-red-5">*ไม่จำเป็น</span></h5> -->
+             <h5 class="ln f-black-5">ขั้นตอนที่ 3 : </h5>
+             <p class="ln">ใส่รูปภาพประกอบ <span class="f-red-5">*ไม่จำเป็น</span></p>
+         </div>
          <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
          <hr>
          <label for="DetailFormControlTextarea" class="form-label">เพิ่มรูปภาพหรือวิดีโอ *ไม่จำเป็น (สูงสุด 4 ไฟล์):</label>

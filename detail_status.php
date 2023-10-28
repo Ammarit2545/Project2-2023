@@ -1346,7 +1346,7 @@ $part_check = 0;
     } ?>
     <!-- Modal -->
     <div class="modal fade" id="exampleModalUnique" tabindex="-1" aria-labelledby="exampleModalLabelUnique" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <span style="color:white">
@@ -1453,8 +1453,8 @@ $part_check = 0;
                         <br><br>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
                     <a class="btn btn-success" data-bs-dismiss="modal" id="confirmButtoncancelOffer">ยืนยัน</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
                     </form>
                 </div>
             </div>
@@ -3619,7 +3619,7 @@ ORDER BY rs.rs_date_time DESC
                                                                             } ?>
                                                                             <?php if ($check_order  == 0) { ?>
                                                                                 <hr>
-                                                                                <p class="btn btn-outline-primary">รายการที่สามารถซ่อมได้</p>
+                                                                                <h6 class="text-primary">รายการที่สามารถซ่อมได้</h6>
                                                                                 <?php
                                                                                 $count_conf = 0;
 
@@ -3917,7 +3917,7 @@ ORDER BY rs.rs_date_time DESC
                                                                         } ?> -->
                                                                 <br>
                                                                 <?php
-                                                                if ($row1['status_id'] == 13 && $row1['rs_conf'] == NULL) {
+                                                                if ($row1['status_id'] == 13 && $row1['rs_conf'] == NULL && $row1['rs_cancel_detail'] == NULL) {
                                                                     $sql_null = "SELECT * FROM repair_status WHERE get_r_id ='$get_r_id' AND del_flg = 0 ORDER BY rs_id DESC LIMIT 1";
                                                                     $result_null = mysqli_query($conn, $sql_null);
                                                                     $row_null = mysqli_fetch_array($result_null);
@@ -3929,6 +3929,27 @@ ORDER BY rs.rs_date_time DESC
 
                                                                         <a style="margin-left: 2%" id="UnconfirmButtonConfAfterDoingInStatus" class="btn btn-danger">ไม่ทำการยืนยัน</a>
                                                                         <a class="btn btn-success" id="confirmButtonConfAfterDoingInStatus" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
+                                                                        <br><br>
+                                                                <?php
+                                                                    }
+                                                                }
+                                                                ?>
+                                                                <?php
+                                                                if ($row1['status_id'] == 17 && $row1['rs_conf'] == NULL && $row1['rs_cancel_detail'] == NULL) {
+                                                                    $sql_null = "SELECT * FROM repair_status WHERE get_r_id ='$get_r_id' AND del_flg = 0 ORDER BY rs_id DESC LIMIT 1";
+                                                                    $result_null = mysqli_query($conn, $sql_null);
+                                                                    $row_null = mysqli_fetch_array($result_null);
+                                                                    if ($row_null['rs_conf'] == NULL) {
+                                                                ?>
+                                                                        <!-- 13 in -->
+                                                                        <hr>
+                                                                        <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
+                                                                        <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModalUnique">
+                                                                            ไม่ทำการยืนยัน/ยื่นข้อเสนอ
+                                                                        </a>
+                                                                        <!-- <a class="btn btn-danger" style="margin-left: 2%" onclick="showDiv()">ไม่ทำการยืนยัน/ยื่นข้อเสนอ</a> -->
+                                                                        <!-- <a class="btn btn-success" id="confirmButtonSuccess" style="display:inline-block">ยืนยันการส่งซ่อม</a> -->
+                                                                        <a class="btn btn-success" id="confirmButtonSuccess0" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
                                                                         <br><br>
                                                                 <?php
                                                                     }
@@ -4917,8 +4938,9 @@ ORDER BY rs.rs_date_time DESC
                                                 <textarea class="auto-expand" id="myTextarea" name="detail_cancel" style="display: none;" placeholder="โปรดระบุสาเหตุ"></textarea>
 
                                                 <br>
-                                                <a class="btn btn-danger" onclick="hideDiv()">ยกเลิก</a>
+
                                                 <a class="btn btn-success" id="confirmButtoncancel">ยืนยัน</a>
+                                                <a class="btn btn-danger" onclick="hideDiv()">ยกเลิก</a>
 
                                                 <script>
                                                     document.addEventListener('DOMContentLoaded', function() {

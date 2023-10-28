@@ -51,8 +51,14 @@ $get_id = $_GET['id'];
 <body>
     <br>
     <div class="container">
+        <div class="row">
+            <center>
+                <h1>หน้าการชำระเงิน</h1>
+                <p>ระบบนี้ <u style="color:red">ไม่ใช่ระบบชำระเงินแบบอัตโนมัติ</u> หากท่านทำรายการเสร็จสิ้นให้แนบ <span style="color:blue">"หลักฐานการโอนเงิน"</span> ตามจำนวนที่ระบุไว้</p>
+            </center>
+        </div>
         <?php $get_id = $_GET['id']; ?>
-        <div class="row shadow my-4" >
+        <div class="row shadow my-4">
             <div class="col-8">
                 <div class="card ">
                     <div class="card-body">
@@ -90,31 +96,18 @@ $get_id = $_GET['id'];
                                         <tbody>
                                             <?php
                                             $sql = "SELECT
-                                            repair_detail.p_id,
-                                            COUNT(repair_detail.p_id) AS count,
-                                            parts.p_brand,
-                                            parts.p_model,
-                                            parts.p_price,
-                                            parts_type.p_type_name,
-                                            repair_status.rs_id,
-                                            parts.p_pic
+                                           *
                                         FROM
                                             `repair_detail`
                                             LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
                                             LEFT JOIN get_repair ON repair_status.get_r_id = get_repair.get_r_id
+                                            LEFT JOIN get_detail ON get_detail.get_r_id = get_repair.get_r_id
+                                            LEFT JOIN repair ON get_detail.r_id = repair.r_id
                                             JOIN parts ON parts.p_id = repair_detail.p_id
                                             LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id
                                         WHERE
                                             get_repair.del_flg = 0 AND repair_detail.del_flg = 0
-                                            AND get_repair.get_r_id = '$get_id'
-                                        GROUP BY
-                                            repair_detail.p_id, -- Include all non-aggregated columns in GROUP BY
-                                            parts.p_brand,
-                                            parts.p_model,
-                                            parts.p_price,
-                                            parts_type.p_type_name,
-                                            repair_status.rs_id,
-                                            parts.p_pic
+                                            AND get_repair.get_r_id = '$get_id' 
                                         
                                         ";
                                             $result = mysqli_query($conn, $sql);
@@ -227,23 +220,35 @@ $get_id = $_GET['id'];
                                                 <td><?= number_format($total) ?></td>
                                                 <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
                                             </tr>
-                                            <tr>
-                                                <?php
-                                                $sql_w = "SELECT get_wages FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
-                                                $result_w = mysqli_query($conn, $sql_w);
-                                                $row_w = mysqli_fetch_array($result_w);
-                                                ?>
-                                                <td colspan="5">ค่าแรงช่าง</td>
-                                                <td colspan="2">ค่าแรง</td>
-                                                <td><?= number_format($row_w['get_wages']) ?></td>
-                                                <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
-                                            </tr>
-                                            <?php if (isset($_GET['get_add'])) {
+                                            <?php
+                                            $sql_w = "SELECT * FROM get_repair WHERE get_r_id = '$get_id' AND del_flg = '0'";
+                                            $result_w = mysqli_query($conn, $sql_w);
+                                            $row_w = mysqli_fetch_array($result_w);
+
+                                            if ($row_w['get_wages'] > 0 && $row_w['get_wages'] != NULL) {
+                                            ?>
+                                                <tr>
+                                                    <?php
+
+                                                    ?>
+                                                    <td colspan="5">ค่าแรงช่าง</td>
+                                                    <td colspan="2">ค่าแรง</td>
+                                                    <td><?= number_format($row_w['get_wages']) ?></td>
+                                                    <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
+                                                </tr>
+                                            <?php
+                                            }
+                                            ?>
+
+                                            <?php
+
+
+                                            if ($row_w['get_add_price'] > 0 && $row_w['get_add_price'] != NULL) {
                                             ?>
                                                 <tr>
                                                     <td colspan="5">ค่าจัดส่งอุปกรณ์ <span style="color : blue">(ไปรษณีย์ไทยแบบลงทะเบียน)</span></td>
                                                     <td colspan="2">ค่าจัดส่งอุปกรณ์</td>
-                                                    <td><?= number_format($_GET['get_add']) ?></td>
+                                                    <td><?= number_format($row_w['get_add_price']) ?></td>
                                                     <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
                                                 </tr>
                                             <?php
@@ -253,7 +258,7 @@ $get_id = $_GET['id'];
                                                 <td colspan="5"></td>
                                                 <td colspan="2">ราคารวมทั้งหมด</td>
                                                 <td>
-                                                    <h5><?= number_format($total + $row_w['get_wages'] + $_GET['get_add']) ?> </h5>
+                                                    <h5><?= number_format($total + $row_w['get_wages'] + $row_w['get_add_price'] + $_GET['get_add'])  ?> </h5>
                                                 </td>
                                                 <!-- <td><button type="button" class="btn btn-danger">ลบ</button>&nbsp; &nbsp;<button type="button" class="btn btn-warning" onclick="window.location.href='editsoundsystem.html'">แก้ไข</button></td> -->
                                             </tr>
@@ -307,7 +312,7 @@ $get_id = $_GET['id'];
                         $PromptPayQR = new PromptPayQR(); // new object
                         $PromptPayQR->size = 8; // Set QR code size to 8
                         $PromptPayQR->id = '0957655647'; // PromptPay ID
-                        $PromptPayQR->amount = $total + $row_w['get_wages'] + $_GET['get_add'] ; // Set amount (not necessary)
+                        $PromptPayQR->amount = $total + $row_w['get_wages'] + $_GET['get_add']; // Set amount (not necessary)
                         echo '<center><img src="' . $PromptPayQR->generate() . '" /></center>';
                         ?>
                         <br>
@@ -315,7 +320,7 @@ $get_id = $_GET['id'];
                         <center>
                             <h3>ชื่อ : อมฤต โชติทินวัฒน์</h3>
                             <br>
-                            <h2>ราคารวม : <?= number_format($total + $row_w['get_wages'] + $_GET['get_add'])  ?> บาท</h2>
+                            <h2>ราคารวม : <?= number_format($total + $row_w['get_wages'] + $row_w['get_add_price'] + $_GET['get_add'])  ?> บาท</h2>
                         </center>
                         <br>
                         <center>
