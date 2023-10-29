@@ -221,7 +221,7 @@
                 <a class="collapse-item" href="listview_del_member.php" style="color:red"> <i class="fas fa-user"></i> สมาชิก</a>
                 <a class="collapse-item" href="listview_del_part.php" style="color:red"><i class="fa fa-cubes"></i> อะไหล่</a>
                 <a class="collapse-item" href="listview_del_company.php" style="color:red"> <i class="fas fa-solid fa-building"></i> บริษัท</a>
-                <a class="collapse-item" href="listview_del_status.php" style="color:red"><i class="fas fa-solid fa-bars"></i> สถานะ</a>
+                <a class="collapse-item" href="listview_del_company_transpost.php" style="color:red"><i class="fas fa-paper-plane"></i> บริษัทขนส่ง</a>
                 <!-- <a class="collapse-item" href="report_profit.php">ยอดรายได้การซ่อม</a> -->
             </div>
         </div>

@@ -18,7 +18,7 @@ if (!isset($_SESSION['role_id'])) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>ข้อมูลบริษัทขนส่ง - View Company Information</title>
+    <title>บริษัทที่ลบ - View Company Information</title>
     <link rel="icon" type="image/x-icon" href="../img brand/anelogo.jpg">
 
     <!-- Custom fonts for this template -->
@@ -30,8 +30,7 @@ if (!isset($_SESSION['role_id'])) {
 
     <!-- Custom styles for this page -->
     <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@12"></script>
 
 </head>
 
@@ -63,8 +62,8 @@ if (!isset($_SESSION['role_id'])) {
 
                     <!-- Page Heading -->
                     <br>
-                    <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ข้อมูลบริษัท</h1>
-                    <a href="add_company_transpost.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มข้อมูลบริษัทขนส่งหรือไม่?</a>
+                    <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ข้อมูลบริษัทที่ถูกลบ</h1>
+                    <!-- <a href="add_company.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มข้อมูลบริษัทหรือไม่?</a> -->
                     <br>
                     <br>
 
@@ -80,16 +79,17 @@ if (!isset($_SESSION['role_id'])) {
                                         <tr>
                                             <th>ลำดับ</th>
                                             <th>ชื่อบริษัท</th>
-                                            <th>ปุ่มดำเนินการ</th>
+                                            <th>ที่อยู่</th>
+                                            <th>เบอร์โทรศัพท์</th>
+                                            <th>FAX/แฟกซ์</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $sql = "SELECT * FROM `company_transport` WHERE del_flg = 0 ORDER BY com_t_name ASC";
+                                        $sql = "SELECT * FROM `company` WHERE del_flg = 1 ORDER BY com_name ASC";
                                         $result = mysqli_query($conn, $sql);
                                         $i = 0;
                                         while ($row = mysqli_fetch_array($result)) {
-                                            $com_t_id = $row['com_t_id'];
                                             $i = $i + 1;
                                         ?>
                                             <tr>
@@ -97,20 +97,42 @@ if (!isset($_SESSION['role_id'])) {
                                                     <?= $i ?>
                                                 </td>
                                                 <td><?php
-                                                    if ($row['com_t_name'] == NULL) {
+                                                    if ($row['com_name'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $row['com_t_name'];
+                                                        echo $row['com_name'];
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php
+                                                    if ($row['com_add'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['com_add'];
                                                     }
                                                     ?>
                                                 </td>
 
-                                                <td>
-                                                    <a href="action/delete_company_transport.php?id=<?= $com_t_id  ?>" class="btn btn-danger" id="deleteButton">ลบ</a>&nbsp; &nbsp;
+                                                <td><?php
+                                                    if ($row['com_tel'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['com_tel'];
+                                                    }
+                                                    ?>
+                                                </td>
 
+                                                <td><?php
+                                                    if ($row['com_fax'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo $row['com_fax'];
+                                                    }
+                                                    ?>
+                                                </td>
 
-                                                    <a href="edit_company_transport.php?id=<?= $com_t_id  ?>" class="btn btn-warning" onclick="window.location.href='edit_company_transport.html'">แก้ไข</a>&nbsp; &nbsp;
-                                            </tr>
+                                                
+ </tr>
 
                                         <?php
                                         }
@@ -126,29 +148,6 @@ if (!isset($_SESSION['role_id'])) {
 
             </div>
             <!-- End of Main Content -->
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    document.getElementById('deleteButton').addEventListener('click', function(e) {
-                        e.preventDefault(); // Prevent the default link behavior
-
-                        Swal.fire({
-                            title: 'คุณแน่ใจหรือไม่?',
-                            text: 'คุณต้องการลบบริษัทนี้หรือไม่?',
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#d33',
-                            cancelButtonColor: '#3085d6',
-                            confirmButtonText: 'ยืนยัน',
-                            cancelButtonText: 'ยกเลิก'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                // If confirmed, navigate to the deletion URL
-                                window.location.href = "action/delete_company_transport.php?id=<?= $com_t_id  ?>";
-                            }
-                        });
-                    });
-                });
-            </script>
 
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
@@ -165,11 +164,12 @@ if (!isset($_SESSION['role_id'])) {
 
     </div>
     <!-- End of Page Wrapper -->
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <?php
-    if (isset($_SESSION['add_data_com_transport'])) {
-        if ($_SESSION['add_data_com_transport'] == 1) {
+    if (isset($_SESSION['alert_add_company'])) {
+        if ($_SESSION['alert_add_company'] == 1) {
     ?>
             <script>
                 let timerInterval
@@ -197,7 +197,7 @@ if (!isset($_SESSION['role_id'])) {
             </script>
         <?php
         }
-        if ($_SESSION['add_data_com_transport'] == 2) {
+        if ($_SESSION['alert_add_company'] == 2) {
         ?>
             <script>
                 Swal.fire({
@@ -225,10 +225,9 @@ if (!isset($_SESSION['role_id'])) {
     <?php
 
         }
-        unset($_SESSION['add_data_com_transport']);
+        unset($_SESSION['alert_add_company']);
     }
     ?>
-
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>

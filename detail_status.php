@@ -3697,7 +3697,7 @@ ORDER BY rs.rs_date_time DESC
                                                                                 $total_part += $row_c['p_price'];
                                                                             }
                                                                             if ($total_part > 0) {  ?>
-                                                                        <p class="mt-2" style="margin-left: 30px;display:inline"> - ค่าอะไหล่ <?= $total_part ?> บาท</span></p> <a onclick="openModalPart('quantitypart')" style="display:inline; color:red">ดูอะไหล่ที่ต้องใช้</a>
+                                                                        <p class="mt-2" style="margin-left: 30px;display:inline"> - ค่าอะไหล่ <?= $total_part ?> บาท</span></p> <a onclick="openModalPart('quantitypart')" style="display:inline; color:red"><u>ดูอะไหล่ที่ต้องใช้</u></a>
                                                                     <?php }  ?>
                                                                     <h5 class="alert alert-primary" style="margin-left: 30px;">รวมราคา <?= number_format($total + $total_part) ?> บาท</span></h3>
                                                                 <?php
@@ -4665,7 +4665,7 @@ ORDER BY rs.rs_date_time DESC
                                                 $total_part += $row_c['p_price'];
                                             }
                                             if ($total_part > 0) {  ?>
-                                                <p class="mt-2" style="margin-left: 30px;display:inline"> - ค่าอะไหล่ <?= $total_part ?> บาท</span></p> <a onclick="openModalPart('quantitypart')" style="display:inline; color:red">ดูอะไหล่ที่ต้องใช้</a>
+                                                <p class="mt-2" style="margin-left: 30px;display:inline"> - ค่าอะไหล่ <?= $total_part ?> บาท</span></p> <a onclick="openModalPart('quantitypart')" style="display:inline; color:red"><u>ดูอะไหล่ที่ต้องใช้</u></a>
                                             <?php }  ?>
                                             <h5 class="alert alert-primary" style="margin-left: 30px;">รวมราคา <?= number_format($total + $total_part) ?> บาท</span></h3>
                                             <?php
