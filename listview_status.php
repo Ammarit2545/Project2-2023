@@ -553,21 +553,21 @@ if (isset($_GET["status_id"]) && $_GET["search"] == NULL) {
 
                                         // Check Repair Count 
                                         $sql_count_p = "SELECT COUNT(get_d_id)
-                                    FROM get_detail
-                                    LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
-                                    LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                                    WHERE repair.m_id = '$id' AND get_repair.get_r_id = '$id_r '
-                                    ORDER BY get_repair.get_r_date_in DESC;";
+                                                        FROM get_detail
+                                                        LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                                                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                                                        WHERE repair.m_id = '$id' AND get_repair.get_r_id = '$id_r '
+                                                        ORDER BY get_repair.get_r_date_in DESC;";
                                         $result_count_p = mysqli_query($conn, $sql_count_p);
                                         $row_count_p = mysqli_fetch_array($result_count_p);
 
                                         // Data In Get_repair Select r_id From Repair
                                         $sql_detail = "SELECT get_repair.*, repair.*
-                                    FROM get_detail
-                                    LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
-                                    LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                                    WHERE repair.m_id = '$id' 
-                                    ORDER BY get_repair.get_r_date_in DESC;";
+                                                        FROM get_detail
+                                                        LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                                                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                                                        WHERE repair.m_id = '$id' AND get_repair.get_r_id = '$id_r'
+                                                        ORDER BY get_repair.get_r_date_in DESC;";
                                         $result_detail = mysqli_query($conn, $sql_detail);
                                         $row_detail = mysqli_fetch_array($result_detail);
 
@@ -576,7 +576,7 @@ if (isset($_GET["status_id"]) && $_GET["search"] == NULL) {
                                                 <li class="list-group-item">
                                                     <h5 style="color: blue" id="head_text"><?= $row_detail['r_brand'] ?> <?= $row_detail['r_model'] ?></h5>
                                                     <br>
-                                                    <p style="text-align: start" id="body_text">Serial Number: <?= $row_detail['r_serial_number'] ?></p>
+                                                    <p style="text-align: start" id="body_text">Serial Number: <?=  $row_detail['r_serial_number'] ?></p>
                                                     <p style="text-align: start" id="body_text">Model: <?= $row_detail['r_number_model'] ?></p>
                                                 </li>
                                                 <?php if ($row_c['get_r_detail'] != NULL) {
@@ -637,7 +637,7 @@ if (isset($_GET["status_id"]) && $_GET["search"] == NULL) {
                                                                 $count_get_no++;
                                                             ?>
 
-                                                                <p style="text-align:start" id="body_text"> <span class="btn btn-secondary"><?= $count_get_no ?></span> : <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?> | Serial Number : <?= $row_get['r_serial_number'] ?> <?php if ($row_get['get_d_record'] > 1) {
+                                                                <p style="text-align:start" id="body_text"> <span class="btn btn-secondary"><?= $count_get_no ?></span>  <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?> | Serial Number : <?= $row_get['r_serial_number'] ?> <?php if ($row_get['get_d_record'] > 1) {
                                                                                                                                                                                                                                                                                         ?>
                                                                         <span> - ครั้งที่ <?= $row_get['get_d_record'] ?></span>
                                                                     <?php

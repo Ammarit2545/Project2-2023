@@ -1,5 +1,5 @@
 <center>
-    <!-- 17,12,6 -->
+    <!-- 17,12,6    12,17,6 -->
     <!-- <?php
             $sql = "SELECT * FROM status_type WHERE status_id = '17'";
             $result = mysqli_query($conn, $sql);
@@ -625,7 +625,7 @@
     <br>
     <h1 class="m-0 font-weight-bold text-primary">ตอบกลับ </h1>
     <br>
-    <form id="offers_status_id" action="action/status/insert_new_part_non_del.php" method="POST" enctype="multipart/form-data">
+    <form id="offers_status_id" action="action/status/insert_new_part_del_non_offset.php" method="POST" enctype="multipart/form-data">
 
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
         <input type="text" name="status_id" value="17" hidden>

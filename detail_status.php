@@ -1507,13 +1507,32 @@ $part_check = 0;
                             <div class="row">
                                 <!-- DataTales Example -->
                                 <?php
-                                $sql_lastest = "SELECT * FROM `repair_status` WHERE del_flg = '0' AND get_r_id = ' $id_get_r' ORDER BY rs_date_time DESC LIMIT 1";
+                                $sql_lastest = "SELECT * FROM `repair_status` WHERE del_flg = '0' AND get_r_id = '$id_get_r' ORDER BY rs_date_time DESC LIMIT 1";
                                 $result_lastest = mysqli_query($conn, $sql_lastest);
                                 $row_lastest = mysqli_fetch_array($result_lastest);
                                 $status_id_last = $row_lastest['status_id'];
-                                if ($status_id_last == 13 && $row_lastest['rs_conf'] == NULL) {
+                                $have_17 = 0;
+                                if ($row_lastest['status_id'] == 17) {
+                                    $sql_lastest = "SELECT * FROM `repair_status` WHERE del_flg = '0' AND get_r_id = '$id_get_r' AND (status_id = '13' OR status_id = '17') ORDER BY rs_date_time DESC LIMIT 1";
+                                    $result_lastest = mysqli_query($conn, $sql_lastest);
+
+                                    if (mysqli_num_rows($result_lastest)) {
+                                        $have_17 = 17;   // มีสถานะ 17
+
+                                        $sql_lastest1 = "SELECT rs_id FROM `repair_status` WHERE del_flg = '0' AND get_r_id = '$id_get_r' AND status_id = '13' OR status_id = '17' ORDER BY rs_date_time DESC LIMIT 1 OFFSET 1";
+                                        $result_lastest1 = mysqli_query($conn, $sql_lastest1);
+
+                                        $row_lastest1 = mysqli_fetch_array($result_lastest1);
+                                        $rs_id_update_17 = $row_lastest1['rs_id'];
+
+                                        // $sql_lastest_up = "UPDATE repair_detail SET del_flg = 0 WHERE rs_id = '$rs_id_update_17'";
+                                        // $result_lastest_up = mysqli_query($conn, $sql_lastest_up);
+                                    }
+                                }
+
+                                if ($status_id_last == 13 && $row_lastest['rs_conf'] == NULL || $have_17 == 17) {
                                 ?>
-                                    <div class="col-md-6 <?php if ($status_id_last == 13) { ?> alert alert-primary  <?php  } ?>">
+                                    <div class="col-md-6 <?php if ($status_id_last == 13 || $have_17 == 17) { ?> alert alert-primary  <?php  } ?>">
                                         <div class="card shadow mb-4 ">
                                             <div class="card-header py-3">
                                                 <h6 class="m-0 font-weight-bold text-primary">ข้อมูลอะไหล่ใหม่ของอุปกรณ์</h6>
@@ -1578,6 +1597,22 @@ $part_check = 0;
                                                                     $sqlParts .=   " AND repair_status.status_id != 13 ";
                                                                 }
                                                             }
+
+
+                                                            if ($status_id_last == 17) {
+                                                                $sqlCheckOffer = "SELECT * FROM repair_status WHERE get_r_id = '$get_id' AND status_id = 17 AND del_flg = 0 ORDER BY rs_id DESC LIMIT 1";
+                                                                $resultOffer = mysqli_query($conn, $sqlCheckOffer);
+
+                                                                if (mysqli_num_rows($resultOffer)) {
+                                                                    $rowOffer = mysqli_fetch_array($resultOffer);
+                                                                    $Offer_rs =  $rowOffer['rs_id'];
+                                                                    $sqlParts .=   " AND repair_status.rs_id = $Offer_rs ";
+                                                                } else {
+                                                                    $sqlParts .=   " AND repair_status.status_id != 17 ";
+                                                                }
+                                                            }
+
+
                                                             $sqlParts .= "GROUP BY repair_detail.rd_id;";
 
                                                             $resultParts = mysqli_query($conn, $sqlParts);
@@ -1737,12 +1772,12 @@ $part_check = 0;
                                 <?php
                                 } ?>
                                 <div class="col-md 
-                                <?php if ($status_id_last == 13 && $row_lastest['rs_conf'] == NULL) { ?> alert alert-danger  <?php  } ?> ">
+                                <?php if ($status_id_last == 13 || $have_17 == 17 && $row_lastest['rs_conf'] == NULL) { ?> alert alert-danger  <?php  } ?> ">
                                     <div class="card shadow mb-4">
                                         <div class="card-header py-3">
                                             <?php
                                             // สถานะเกิดปัญหา
-                                            if ($status_id_last == 13 && $row_lastest['rs_conf'] == NULL) {
+                                            if ($status_id_last == 13 || $have_17 == 17 && $row_lastest['rs_conf'] == NULL) {
                                             ?> <h6 class="m-0 font-weight-bold text-danger">ข้อมูลอะไหล่เก่าของอุปกรณ์</h6>
                                             <?php
                                             } else {
@@ -1799,7 +1834,27 @@ $part_check = 0;
                                                                         get_repair.del_flg = 0 AND repair_detail.del_flg = 0
                                                                         AND get_repair.get_r_id = '$get_id' ";
                                                         if ($status_id_last == 13) {
-                                                            $sqlCheckOffer = "SELECT * FROM repair_status WHERE get_r_id = '$get_id' AND status_id = 13 AND del_flg = 0 ORDER BY rs_id DESC LIMIT 1 OFFSET 1";
+                                                            $sqlCheckOffer = "SELECT * FROM repair_status WHERE get_r_id = '$get_id' AND status_id = 13 OR status_id = 17 AND del_flg = 0 ORDER BY rs_id DESC LIMIT 1 OFFSET 1";
+                                                            $resultOffer = mysqli_query($conn, $sqlCheckOffer);
+
+                                                            if (mysqli_num_rows($resultOffer)) {
+                                                                $rowOffer = mysqli_fetch_array($resultOffer);
+                                                                $Offer_rs =  $rowOffer['rs_id'];
+                                                                $sql_op .=   " AND repair_status.rs_id = '$Offer_rs' ";
+                                                            } else {
+                                                                $sql_op .=   " AND repair_status.status_id != 13 ";
+                                                            }
+                                                        } elseif ($have_17 == 17) {
+                                                            $sqlCheckOffer = "SELECT *
+                                                            FROM repair_status
+                                                            LEFT JOIN repair_detail ON repair_detail.rs_id = repair_status.rs_id
+                                                            WHERE repair_status.get_r_id = '$get_id'
+                                                            AND (repair_status.status_id = 17 OR repair_status.status_id = 13)
+                                                            AND repair_status.del_flg = 0
+                                                            AND repair_detail.del_flg = 0
+                                                            ORDER BY repair_status.rs_id DESC
+                                                            LIMIT 1 OFFSET 1;
+                                                            ";
                                                             $resultOffer = mysqli_query($conn, $sqlCheckOffer);
 
                                                             if (mysqli_num_rows($resultOffer)) {
@@ -4254,7 +4309,9 @@ ORDER BY rs.rs_date_time DESC
                                     <hr>
                                     <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
 
-                                    <a style="margin-left: 2%" onclick="showDiv(); return MiniStatus()" class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">ไม่ทำการยืนยัน</a>
+                                    <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModalUnique">
+                                        ไม่ทำการยืนยัน/ยื่นข้อเสนอ
+                                    </a>
                                     <a class="btn btn-success" id="confirmButtonSuccess1" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
                                 </center>
                             <?php
@@ -4301,7 +4358,7 @@ ORDER BY rs.rs_date_time DESC
                                     <a style="margin-left: 2%" class="btn btn-danger mr-4" data-bs-toggle="modal" data-bs-target="#exampleModalUnique">
                                         ไม่ทำการยืนยัน/ยื่นข้อเสนอ
                                     </a>
-                                    <a class="btn btn-success  ml-4" id="confirmButtonCheck" style="display:inline-block" onclick="sendValuetoArrived(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
+                                    <a class="btn btn-success" id="confirmButtonSuccess1" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
 
                                 </center>
                                 <?php
@@ -4421,7 +4478,7 @@ ORDER BY rs.rs_date_time DESC
                             <div class="d-flex justify-content-center">
                                 <div class="accordion accordion-flush" id="accordionFlushExample">
                                     <div class="accordion-item">
-                                        <h2 class="accordion-header " id="flush-headingThree">
+                                        <h2 class="accordion-header" id="flush-headingThree">
                                             <button style="background-color:#B90000;color:white;" class="accordion-button collapsed btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
                                                 ยกเลิกคำสั่งซ่อม
                                             </button>
@@ -4434,16 +4491,59 @@ ORDER BY rs.rs_date_time DESC
                                                     <input type="text" name="get_r_id" value="<?= $id_get_r ?>" hidden>
                                                     <input type="text" name="status_id" value="12" hidden>
                                                     <br>
+
+                                                    <script>
+                                                        function showConfirmationDialog() {
+                                                            // Display a SweetAlert confirmation dialog
+                                                            Swal.fire({
+                                                                title: "คุณแน่ใจหรือไม่ว่าต้องการยกเลิก?",
+                                                                text: "การทำรายการนี้จะไม่สามารถย้อนกลับได้",
+                                                                icon: "warning",
+                                                                showCancelButton: true,
+                                                                confirmButtonColor: "#3085d6",
+                                                                cancelButtonColor: "#d33",
+                                                                confirmButtonText: "ยืนยัน",
+                                                                cancelButtonText: "ยกเลิก"
+                                                            }).then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    // User clicked "ยืนยัน," you can proceed with the cancellation action
+                                                                    // You can submit the form using JavaScript here
+                                                                    document.getElementById("cancel").submit();
+                                                                } else {
+                                                                    // User clicked "ยกเลิก," do nothing or handle as needed
+                                                                }
+                                                            });
+                                                        }
+                                                    </script>
+
                                                     <center>
-                                                        <a class="btn btn-success" style="margin: 1%;" onclick="showConfirmationDialog()">ยืนยันการยกเลิก</a>
+                                                        <button type="button" class="btn btn-success" style="margin: 1%;" onclick="showConfirmationDialog()">ยืนยันการยกเลิก</button>
                                                     </center>
                                                 </form>
-
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <!-- <script>
+                                function showConfirmationDialog() {
+                                    swal({
+                                        title: "ยืนยันการยกเลิก",
+                                        text: "คุณต้องการยกเลิกหรือไม่?",
+                                        icon: "warning",
+                                        buttons: ["ยกเลิก", "ยืนยัน"],
+                                        dangerMode: true,
+                                    }).then((willCancel) => {
+                                        if (willCancel) {
+                                            // The user confirmed the cancellation, you can proceed with the cancellation logic here
+                                            document.getElementById("cancel").submit(); // Submit the form with the id "cancel"
+                                        } else {
+                                            // The user clicked "Cancel," do nothing
+                                        }
+                                    });
+                                }
+                            </script> -->
+
 
 
                         <?php   } ?>
@@ -5335,6 +5435,25 @@ ORDER BY rs.rs_date_time DESC
                     });
                 });
             });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var id_get_r = <?= $id_get_r ?>; // Pass PHP variable to JavaScript
+
+                document.getElementById('confirmButtonSuccess1').addEventListener('click', function() {
+                    Swal.fire({
+                        icon: 'question',
+                        title: 'ยืนยันดำเนินการส่งซ่อม',
+                        text: 'การ "ยืนยัน" จะไม่สามารถกลับมาแก้ไขข้อมูลได้?',
+                        showCancelButton: true,
+                        confirmButtonText: 'ยืนยัน',
+                        cancelButtonText: 'ยกเลิก'
+                    }).then((willConfirm) => {
+                        if (willConfirm.isConfirmed) {
+                            window.location.href = "action/conf_part.php?id=" + id_get_r + "&status_id=" + status_id; // Redirect with the passed value
+                        }
+                    });
+                });
+            });
         </script>
         <script>
             var status_id = 0;
@@ -5366,25 +5485,7 @@ ORDER BY rs.rs_date_time DESC
 
         </script>
 
-        <script>
-            function showConfirmationDialog() {
-                swal({
-                        title: "ยืนยันการยกเลิก",
-                        text: "คุณต้องการยกเลิกหรือไม่?",
-                        icon: "warning",
-                        buttons: ["ยกเลิก", "ยืนยัน"],
-                        dangerMode: true,
-                    })
-                    .then((willCancel) => {
-                        if (willCancel) {
-                            // The user confirmed the cancellation, you can proceed with the cancellation logic here
-                            document.getElementById("cancel").submit(); // Submit the form
-                        } else {
-                            // The user clicked "Cancel", do nothing
-                        }
-                    });
-            }
-        </script>
+
 
         <!-- Cancel Button -->
         <script>

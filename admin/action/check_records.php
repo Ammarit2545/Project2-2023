@@ -78,6 +78,23 @@ if ($result_get) {
         }
     }
 }
+if (0 == 1) {
+    $rs_idCSK = 0;
+    $sql_check_send_ok = "SELECT get_r_id FROM repair_status WHERE del_flg = 0 AND status_id = 24 GROUP BY rs_id ORDER BY rs_id DESC ";
+    $re_check_send_ok = mysqli_query($conn, $sql_check_send_ok);
 
+    if (mysqli_num_rows($re_check_send_ok)) {
+        while ($rowCSK = mysqli_fetch_array($re_check_send_ok)) {
+            $get_r_idCSK = $rowCSK['get_r_id'];
+
+            $sqlCSK = "SELECT status_id,rs_date_time FROM repair_status WHERE del_flg = 0 AND get_r_id = '$get_r_idCSK' GROUP BY rs_id ORDER BY rs_id DESC LIMIT 1";
+            $reCSK = mysqli_query($conn, $sqlCSK);
+            $rCSK = mysqli_fetch_array($reCSK);
+            if ($rCSK['status_id'] == 24) {
+                $rCSK = 
+            }
+        }
+    }
+}
 // Output the data as JSON
 echo json_encode($response);

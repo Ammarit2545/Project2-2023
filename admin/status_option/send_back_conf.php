@@ -45,7 +45,7 @@
              cancelButtonText: 'No'
          }).then((result) => {
              if (result.isConfirmed) {
-                 window.location.href = 'action/status/insert_new_part_non_del.php?get_r_id=' + <?= $row['get_r_id'] ?> + '&status_id='+<?=  $row_conf_do['status_id'] ?> +'&rs_detail=ตอนนี้เราได้ทำการรับเรื่องของท่านแล้้วและกำลังดำเนินการซ่อมต่อในขณะนี้';
+                 window.location.href = 'action/status/insert_new_part_del_offset.php?get_r_id=' + <?= $row['get_r_id'] ?> + '&status_id='+<?=  $row_conf_do['status_id'] ?> +'&rs_detail=ตอนนี้เราได้ทำการรับเรื่องของท่านแล้้วและกำลังดำเนินการซ่อมต่อในขณะนี้';
              }
          });
      }

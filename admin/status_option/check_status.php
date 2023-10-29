@@ -162,27 +162,41 @@
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
         <input type="text" name="status_id" value="<?= $row_conf['status_id'] ?>" hidden>
         <br>
-        <div class="row">
-            <div class="col-md-6">
-                <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่ <span style="color:red">หากต้องการใช้ค่าเดิม ไม่ต้องกรอกใหม่</span></label>
-                <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
-                    <input name="get_wages" type="text" value="<?= $row['get_wages'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกค่าแรงช่าง" required>
-                </div>
-            </div>
-            <?php
-            if ($row['get_deli'] == 1) { ?>
-                <div class="col-md-6">
-                    <label for="basic-url" class="form-label">ค่าจัดส่ง *แยกกับราคาอะไหล่</label>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon3">ค่าจัดส่ง</span>
-                        <input name="get_add_price" type="text" value="<?= $row['get_add_price'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกค่าส่งอุปกรณ์" required>
+        <div class="accordion accordion-flush shadow" id="accordionFlushExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingOne" ">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" style="color:red">
+                        <u>หากต้องการเปลี่ยนค่าแรงต่างๆ *กรณีตกลงกันนอกระบบ</u>
+                    </button>
+                </h2>
+                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="basic-url" class="form-label">ค่าแรงช่าง *แยกกับราคาอะไหล่ <span style="color:red">หากต้องการใช้ค่าเดิม ไม่ต้องกรอกใหม่</span></label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon3">ค่าแรงช่าง</span>
+                                    <input name="get_wages" type="text" value="<?= $row['get_wages'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกค่าแรงช่าง" required>
+                                </div>
+                            </div>
+                            <?php
+                            if ($row['get_deli'] == 1) { ?>
+                                <div class="col-md-6">
+                                    <label for="basic-url" class="form-label">ค่าจัดส่ง *แยกกับราคาอะไหล่</label>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text" id="basic-addon3">ค่าจัดส่ง</span>
+                                        <input name="get_add_price" type="text" value="<?= $row['get_add_price'] ?>" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="กรุณากรอกค่าส่งอุปกรณ์" required>
+                                    </div>
+                                </div>
+                            <?php
+                            }
+                            ?>
+                        </div>
                     </div>
                 </div>
-            <?php
-            }
-            ?>
+            </div>
         </div>
+
         <br>
         <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
         <!-- <br>
