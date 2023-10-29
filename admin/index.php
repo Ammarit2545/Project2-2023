@@ -188,7 +188,7 @@ if (!isset($_SESSION['role_id'])) {
                         <div class="card-body">
                             <form class="row g-3" method="get">
                                 <div class="col-auto">
-                                    <h5 for="year" style="margin-top : 8px;">เลือกปี:</h5>
+                                    <h5 for="year" style="margin-top: 8px;">เลือกปี:</h5>
                                 </div>
                                 <div class="col-auto">
                                     <select class="form-select" name="year" id="year">
@@ -203,7 +203,7 @@ if (!isset($_SESSION['role_id'])) {
                                     </select>
                                 </div>
                                 <div class="col-auto">
-                                    <h5 for="month" style="margin-top : 8px;">ทั้งหมด:</h5>
+                                    <h5 for="month" style="margin-top: 8px;">เลือกเดือน:</h5>
                                 </div>
                                 <div class="col-auto">
                                     <select class="form-select" name="month" id="month">
@@ -230,6 +230,22 @@ if (!isset($_SESSION['role_id'])) {
                                         ?>
                                     </select>
                                 </div>
+                                <?php if (!empty($_GET['month'])) : ?>
+                                    <div class="col-auto">
+                                        <h5 for="day" style="margin-top: 8px;">เลือกวันที่:</h5>
+                                    </div>
+                                    <div class="col-auto">
+                                        <select class="form-select" name="day" id="day">
+                                            <option value="">ทั้งหมด</option> <!-- Default option -->
+                                            <?php
+                                            for ($day = 1; $day <= 31; $day++) {
+                                                $selected = (isset($_GET['day']) && $_GET['day'] == $day) ? 'selected' : '';
+                                                echo "<option value='$day' $selected>$day</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                <?php endif; ?>
                                 <div class="col-auto">
                                     <button type="submit" class="btn btn-primary mb-3">ดูข้อมูล</button>
                                 </div>
@@ -237,13 +253,18 @@ if (!isset($_SESSION['role_id'])) {
                             <?php
                             $selectedYear = isset($_GET['year']) ? $_GET['year'] : date('Y'); // Default to the current year if not specified
                             $selectedMonth = isset($_GET['month']) ? $_GET['month'] : '';
+                            $selectedDay = isset($_GET['day']) ? $_GET['day'] : '';
 
-                            if (empty($selectedMonth)) {
+                            if (empty($selectedMonth) && empty($selectedDay)) {
                                 echo '<h3 style="color:black;">รายงานยอดซ่อมรายปี</h3>';
-                            } else {
+                            } else if (empty($selectedDay)) {
                                 echo '<h3 style="color:black;">รายงานยอดซ่อมรายเดือน</h3>';
+                            } else {
+                                $formatted_date = $selectedDay . '/' . $selectedMonth . '/' . $selectedYear;
+                                echo '<h3 style="color:black;">รายงานยอดซ่อมวันที่ ' . $formatted_date . '</h3>';
                             }
                             ?>
+
                             <table class="table table-bordered">
                                 <thead>
                                     <?php if (empty($selectedMonth)) : ?>
@@ -285,6 +306,7 @@ if (!isset($_SESSION['role_id'])) {
     LEFT JOIN repair ON get_detail.r_id = repair.r_id   
     LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
     LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
+    LEFT JOIN repair_detail ON get_repair.get_r_id = repair_detail.get_r_id
     WHERE YEAR(get_repair.get_r_date_in) = $selectedYear";
 
                                     // Add a condition for the selected month if it's not empty
@@ -299,12 +321,14 @@ if (!isset($_SESSION['role_id'])) {
 
                                     while ($row = mysqli_fetch_array($result_get)) {
                                         $get_r_id = $row['get_r_id'];
+                                        $get_d_id = $row['get_d_id'];
                                         $sql_date = "SELECT MONTHNAME(STR_TO_DATE(get_r_date_in, '%Y-%m-%d')) AS month_name
   FROM get_repair WHERE get_r_id = '$get_r_id'
   GROUP BY MONTHNAME(STR_TO_DATE(get_r_date_in, '%Y-%m-%d'))";
                                         $result_date = mysqli_query($conn, $sql_date);
                                         $row_date = mysqli_fetch_array($result_date);
 
+                                        //ค่าแรง
                                         $sql_addprice = "SELECT (get_add_price - get_add_cost_price) as sum_amount FROM get_repair WHERE get_r_id = '$get_r_id'";
                                         $result_addprice = mysqli_query($conn, $sql_addprice);
                                         $row_addprice = mysqli_fetch_array($result_addprice);
@@ -325,7 +349,12 @@ if (!isset($_SESSION['role_id'])) {
                                             }
                                         }
 
-                                        $sql_parts = "SELECT (p_price - p_cost_price) as sum_amountparts FROM parts";
+                                        //ค่าอะไหล่
+                                        $sql_parts = "SELECT (p_price - p_cost_price) as sum_amountparts FROM parts p
+                                        JOIN repair_detail rd ON p.p_id = rd.p_id
+                                        JOIN get_detail gd ON rd.get_d_id = gd.get_d_id
+                                        JOIN get_repair gr ON gd.get_r_id = gr.get_r_id
+                                        WHERE gr.get_r_id = '$get_r_id' AND gd.get_d_id = '$get_d_id'";
                                         $result_parts = mysqli_query($conn, $sql_parts);
                                         $row_parts = mysqli_fetch_array($result_parts);
 
@@ -333,16 +362,18 @@ if (!isset($_SESSION['role_id'])) {
                                             $sum_amountparts = $row_parts['sum_amountparts'];
 
                                             // ดึงค่า get_wages จากตาราง get_repair
-                                            $sql_get_parts = "SELECT pu_value FROM parts_use_detail 
-LEFT JOIN parts_use ON parts_use.pu_id = parts_use_detail.pu_id";
+                                            $sql_get_parts = "SELECT rd_value_parts
+                                            FROM repair_detail
+                                            WHERE get_d_id = '$get_d_id';
+                                            ";
                                             $result_get_parts = mysqli_query($conn, $sql_get_parts);
                                             $row_get_parts = mysqli_fetch_array($result_get_parts);
 
                                             if ($row_get_parts) {
-                                                $current_parts = $row_get_parts['pu_value'];
+                                                $current_parts = $row_get_parts['rd_value_parts'];
 
                                                 // นำผลลัพธ์มาบวกกับค่า get_wages
-                                                $new_parts = $current_parts + $sum_amountparts;
+                                                $new_parts = $current_parts * $sum_amountparts;
                                             }
                                         }
 
@@ -369,7 +400,7 @@ LEFT JOIN parts_use ON parts_use.pu_id = parts_use_detail.pu_id";
                                         return $grand_total;
                                     }
 
-                                    if (empty($selectedMonth)) {
+                                    if (empty($selectedMonth) && empty($selectedDay)) {
                                         // Loop through the associative array and display month totals
                                         foreach ($month_totals as $month_name => $totals) {
                                     ?>
@@ -389,7 +420,7 @@ LEFT JOIN parts_use ON parts_use.pu_id = parts_use_detail.pu_id";
                                             <td align="right" style="font-weight: bold;"><?= number_format(calculateTotal($month_totals, 'total')) ?></td>
                                         </tr>
                                     <?php
-                                    } else {
+                                    } else if (!empty($selectedMonth) && empty($selectedDay)) {
                                         // เลือกแสดงข้อมูลเป็นรายวัน
                                     ?>
                                         <table class="table table-bordered">
@@ -424,6 +455,7 @@ LEFT JOIN parts_use ON parts_use.pu_id = parts_use_detail.pu_id";
 
                                                 while ($row = mysqli_fetch_array($result_get)) {
                                                     $get_r_id = $row['get_r_id'];
+                                                    $get_d_id = $row['get_d_id'];
                                                     $get_r_date_in = $row['get_r_date_in'];
 
                                                     // แปลงรูปแบบวันที่เป็น "วัน เดือน ปี" (เช่น "1/10/2566")
@@ -449,7 +481,12 @@ LEFT JOIN parts_use ON parts_use.pu_id = parts_use_detail.pu_id";
                                                         }
                                                     }
 
-                                                    $sql_parts = "SELECT (p_price - p_cost_price) as sum_amountparts FROM parts";
+                                                    //ค่าอะไหล่
+                                                    $sql_parts = "SELECT (p_price - p_cost_price) as sum_amountparts FROM parts p
+                                        LEFT JOIN repair_detail rd ON p.p_id = rd.p_id
+                                        LEFT JOIN get_detail gd ON rd.get_d_id = gd.get_d_id
+                                        LEFT JOIN get_repair gr ON gd.get_r_id = gr.get_r_id
+                                        WHERE gr.get_r_id = '$get_r_id' AND gd.get_d_id = '$get_d_id'";
                                                     $result_parts = mysqli_query($conn, $sql_parts);
                                                     $row_parts = mysqli_fetch_array($result_parts);
 
@@ -457,16 +494,18 @@ LEFT JOIN parts_use ON parts_use.pu_id = parts_use_detail.pu_id";
                                                         $sum_amountparts = $row_parts['sum_amountparts'];
 
                                                         // ดึงค่า get_wages จากตาราง get_repair
-                                                        $sql_get_parts = "SELECT pu_value FROM parts_use_detail 
-                      LEFT JOIN parts_use ON parts_use.pu_id = parts_use_detail.pu_id";
+                                                        $sql_get_parts = "SELECT rd_value_parts
+                                            FROM repair_detail
+                                            WHERE get_d_id = '$get_d_id';
+                                            ";
                                                         $result_get_parts = mysqli_query($conn, $sql_get_parts);
                                                         $row_get_parts = mysqli_fetch_array($result_get_parts);
 
                                                         if ($row_get_parts) {
-                                                            $current_parts = $row_get_parts['pu_value'];
+                                                            $current_parts = $row_get_parts['rd_value_parts'];
 
                                                             // นำผลลัพธ์มาบวกกับค่า get_wages
-                                                            $new_parts = $current_parts + $sum_amountparts;
+                                                            $new_parts = $current_parts * $sum_amountparts;
                                                         }
                                                     }
 
@@ -486,6 +525,116 @@ LEFT JOIN parts_use ON parts_use.pu_id = parts_use_detail.pu_id";
                                                     <td align="right" style="font-weight: bold;"><?= number_format(calculateTotal($month_totals, 'new_wages')) ?></td>
                                                     <td align="right" style="font-weight: bold;"><?= number_format(calculateTotal($month_totals, 'new_parts')) ?></td>
                                                     <td align="right" style="font-weight: bold;"><?= number_format(calculateTotal($month_totals, 'total')) ?></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    <?php
+                                    } else {
+                                        // เลือกแสดงข้อมูลรายละเอียดเป็นวันที่เลือก
+                                    ?>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" style="width: 200px; vertical-align: middle; text-align: center;">หมายเลขใบแจ้งซ่อม</th>
+                                                    <th scope="col" style="text-align: center;">รายการ</th>
+                                                    <th scope="col" style="text-align: right;">ค่าแรง</th>
+                                                    <th scope="col" style="text-align: right;">ค่าอะไหล่</th>
+                                                    <th scope="col" style="text-align: right;">รวม</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $sql_get = "SELECT get_repair.get_r_id, MAX(get_detail.get_d_id) AS get_d_id, MAX(repair.r_id) AS r_id, 3 AS status_id, MAX(get_repair.get_deli) AS get_deli, DATE(get_repair.get_r_date_in) AS get_r_date_in
+    FROM get_repair
+    LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
+    LEFT JOIN repair ON get_detail.r_id = repair.r_id   
+    LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id
+    LEFT JOIN status_type ON repair_status.status_id = status_type.status_id
+    WHERE YEAR(get_repair.get_r_date_in) = $selectedYear";
+
+                                                if (!empty($selectedMonth)) {
+                                                    $sql_get .= " AND MONTH(get_repair.get_r_date_in) = $selectedMonth";
+                                                }
+
+                                                if (!empty($selectedDay)) {
+                                                    $sql_get .= " AND DAY(get_repair.get_r_date_in) = $selectedDay";
+                                                }
+
+                                                $sql_get .= " AND get_repair.del_flg = '0' AND get_detail.del_flg = '0' AND repair_status.status_id = 3
+    GROUP BY get_repair.get_r_id
+    ORDER BY get_repair.get_r_id ASC;";
+                                                $result_get = mysqli_query($conn, $sql_get);
+
+                                                $daily_totals = array(
+                                                    'new_wages' => 0,
+                                                    'new_parts' => 0,
+                                                    'total' => 0
+                                                );
+
+                                                while ($row = mysqli_fetch_array($result_get)) {
+                                                    $get_r_id = $row['get_r_id'];
+                                                    $get_d_id = $row['get_d_id'];
+                                                    $get_r_date_in = $row['get_r_date_in'];
+
+                                                    // SQL query to get repair data based on get_r_id
+                                                    $sql_repair = "SELECT r_brand, r_model FROM repair WHERE r_id = (SELECT r_id FROM get_detail WHERE get_r_id = $get_r_id)";
+                                                    $result_repair = mysqli_query($conn, $sql_repair);
+                                                    $row_repair = mysqli_fetch_array($result_repair);
+
+                                                    $r_brand = $row_repair['r_brand'];
+                                                    $r_model = $row_repair['r_model'];
+
+                                                    // SQL query to calculate additional price
+                                                    $sql_addprice = "SELECT (get_add_price - get_add_cost_price) as sum_amount FROM get_repair WHERE get_r_id = '$get_r_id'";
+                                                    $result_addprice = mysqli_query($conn, $sql_addprice);
+                                                    $row_addprice = mysqli_fetch_array($result_addprice);
+                                                    $sum_amount = $row_addprice['sum_amount'];
+
+                                                    // SQL query to get wages from get_repair table
+                                                    $sql_get_wages = "SELECT get_wages FROM get_repair WHERE get_r_id = '$get_r_id'";
+                                                    $result_get_wages = mysqli_query($conn, $sql_get_wages);
+                                                    $row_get_wages = mysqli_fetch_array($result_get_wages);
+                                                    $current_wages = $row_get_wages['get_wages'];
+
+                                                    $new_wages = $current_wages + $sum_amount;
+
+                                                    // SQL query to calculate part cost
+                                                    $sql_parts = "SELECT (p_price - p_cost_price) as sum_amountparts FROM parts p
+        JOIN repair_detail rd ON p.p_id = rd.p_id
+        WHERE rd.get_d_id = '$get_d_id'";
+                                                    $result_parts = mysqli_query($conn, $sql_parts);
+                                                    $row_parts = mysqli_fetch_array($result_parts);
+                                                    $sum_amountparts = $row_parts['sum_amountparts'];
+
+                                                    // SQL query to get parts value from repair_detail table
+                                                    $sql_get_parts = "SELECT rd_value_parts FROM repair_detail WHERE get_d_id = '$get_d_id'";
+                                                    $result_get_parts = mysqli_query($conn, $sql_get_parts);
+                                                    $row_get_parts = mysqli_fetch_array($result_get_parts);
+                                                    $current_parts = $row_get_parts['rd_value_parts'];
+
+                                                    $new_parts = $current_parts * $sum_amountparts;
+
+                                                    $total = $new_wages + $new_parts;
+
+                                                    $daily_totals['new_wages'] += $new_wages;
+                                                    $daily_totals['new_parts'] += $new_parts;
+                                                    $daily_totals['total'] += $total;
+                                                ?>
+                                                    <tr>
+                                                        <td align="center"><?= $get_r_id ?></td>
+                                                        <td align="left"><?= $r_brand . " " . $r_model ?></td>
+                                                        <td align="right"><?= number_format($new_wages) ?></td>
+                                                        <td align="right"><?= number_format($new_parts) ?></td>
+                                                        <td align="right"><?= number_format($total) ?></td>
+                                                    </tr>
+                                                <?php
+                                                }
+                                                ?>
+                                                <tr>
+                                                    <td style="font-weight: bold;" colspan="2">รวมทั้งสิ้น</td>
+                                                    <td align="right" style="font-weight: bold;"><?= number_format($daily_totals['new_wages']) ?></td>
+                                                    <td align="right" style="font-weight: bold;"><?= number_format($daily_totals['new_parts']) ?></td>
+                                                    <td align="right" style="font-weight: bold;"><?= number_format($daily_totals['total']) ?></td>
                                                 </tr>
                                             </tbody>
                                         </table>
