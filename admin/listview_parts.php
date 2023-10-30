@@ -85,7 +85,8 @@ if (!isset($_SESSION['role_id'])) {
                                             <th>Model Number</th>
                                             <th>ประเภท</th>
                                             <th>รายละเอียด</th>
-                                            <th>ราคา</th>
+                                            <th>ราคาต้นทุน</th>
+                                            <th>ราคาขาย</th>
                                             <th>จำนวนคงเหลือ</th>
                                             <th>ปุ่มดำเนินการ</th>
                                         </tr>
@@ -185,7 +186,14 @@ if (!isset($_SESSION['role_id'])) {
                                                     }
                                                     ?>
                                                 </td>
-
+                                                <td><?php
+                                                    if ($row['p_cost_price'] == NULL) {
+                                                        echo "-";
+                                                    } else {
+                                                        echo number_format($row['p_cost_price']);
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <td><?php
                                                     if ($row['p_price'] == NULL) {
                                                         echo "-";

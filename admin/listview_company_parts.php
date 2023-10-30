@@ -18,7 +18,7 @@ if (!isset($_SESSION['role_id'])) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>ข้อมูลบริษัทไปรษณีย์ - View Company Information</title>
+    <title>ข้อมูลบริษัทขนส่ง - View Company Information</title>
     <link rel="icon" type="image/x-icon" href="../img brand/anelogo.jpg">
 
     <!-- Custom fonts for this template -->
@@ -64,7 +64,7 @@ if (!isset($_SESSION['role_id'])) {
                     <!-- Page Heading -->
                     <br>
                     <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ข้อมูลบริษัท</h1>
-                    <a href="add_company_transpost.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มข้อมูลบริษัทขนส่งหรือไม่?</a>
+                    <a href="add_company_parts.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มข้อมูลบริษัทขนส่งหรือไม่?</a>
                     <br>
                     <br>
 
@@ -85,11 +85,11 @@ if (!isset($_SESSION['role_id'])) {
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $sql = "SELECT * FROM `company_transport` WHERE del_flg = 0 ORDER BY com_t_name ASC";
+                                        $sql = "SELECT * FROM `company_parts` WHERE del_flg = 0 ORDER BY com_p_name ASC";
                                         $result = mysqli_query($conn, $sql);
                                         $i = 0;
                                         while ($row = mysqli_fetch_array($result)) {
-                                            $com_t_id = $row['com_t_id'];
+                                            $com_p_id = $row['com_p_id'];
                                             $i = $i + 1;
                                         ?>
                                             <tr>
@@ -97,19 +97,19 @@ if (!isset($_SESSION['role_id'])) {
                                                     <?= $i ?>
                                                 </td>
                                                 <td><?php
-                                                    if ($row['com_t_name'] == NULL) {
+                                                    if ($row['com_p_name'] == NULL) {
                                                         echo "-";
                                                     } else {
-                                                        echo $row['com_t_name'];
+                                                        echo $row['com_p_name'];
                                                     }
                                                     ?>
                                                 </td>
 
                                                 <td>
-                                                    <a href="action/delete_company_transport.php?id=<?= $com_t_id  ?>" class="btn btn-danger" id="deleteButton">ลบ</a>&nbsp; &nbsp;
+                                                    <a href="action/delete_company_parts.php?id=<?= $com_p_id  ?>" class="btn btn-danger" id="deleteButton">ลบ</a>&nbsp; &nbsp;
 
 
-                                                    <a href="edit_company_transport.php?id=<?= $com_t_id  ?>" class="btn btn-warning" onclick="window.location.href='edit_company_transport.html'">แก้ไข</a>&nbsp; &nbsp;
+                                                    <a href="edit_company_parts.php?id=<?= $com_p_id  ?>" class="btn btn-warning" onclick="window.location.href='edit_company_parts.html'">แก้ไข</a>&nbsp; &nbsp;
                                             </tr>
 
                                         <?php
@@ -143,7 +143,7 @@ if (!isset($_SESSION['role_id'])) {
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 // If confirmed, navigate to the deletion URL
-                                window.location.href = "action/delete_company_transport.php?id=<?= $com_t_id  ?>";
+                                window.location.href = "action/delete_company_parts.php?id=<?= $com_t_id  ?>";
                             }
                         });
                     });

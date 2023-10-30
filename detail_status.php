@@ -3977,15 +3977,20 @@ ORDER BY rs.rs_date_time DESC
                                                                     $result_null = mysqli_query($conn, $sql_null);
                                                                     $row_null = mysqli_fetch_array($result_null);
                                                                     if ($row_null['rs_conf'] == NULL) {
+                                                                        $sql_null1 = "SELECT * FROM repair_status WHERE get_r_id ='$get_r_id' AND del_flg = 0  ORDER BY rs_id DESC LIMIT 1";
+                                                                        $result_null1 = mysqli_query($conn, $sql_null1);
+                                                                        $row_null1 = mysqli_fetch_array($result_null1);
+                                                                        if ($row_null1['status_id'] == 13) {
                                                                 ?>
-                                                                        <!-- 13 in -->
-                                                                        <hr>
-                                                                        <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
+                                                                            <!-- 13 in -->
+                                                                            <hr>
+                                                                            <p style="margin-left: 2%; color:red">*** ตรวจเช็คข้อมูลรายละเอียดการซ่อมให้ครบถ้วนก่อนทำรายการ ***</p>
 
-                                                                        <a style="margin-left: 2%" id="UnconfirmButtonConfAfterDoingInStatus" class="btn btn-danger">ไม่ทำการยืนยัน</a>
-                                                                        <a class="btn btn-success" id="confirmButtonConfAfterDoingInStatus" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
-                                                                        <br><br>
+                                                                            <a style="margin-left: 2%" id="UnconfirmButtonConfAfterDoingInStatus" class="btn btn-danger">ไม่ทำการยืนยัน</a>
+                                                                            <a class="btn btn-success" id="confirmButtonConfAfterDoingInStatus" style="display:inline-block" onclick="sendValue(<?= $status_id_last ?>)">ยืนยันการส่งซ่อม</a>
+                                                                            <br><br>
                                                                 <?php
+                                                                        }
                                                                     }
                                                                 }
                                                                 ?>
@@ -4043,7 +4048,7 @@ ORDER BY rs.rs_date_time DESC
 
                                                                 }
                                                                 if ($row1['status_id'] == 13 && $row1['rs_conf'] != 1 && $row1['rs_conf'] != 0) {
-                                                                    $sql_null = "SELECT * FROM repair_status WHERE get_r_id ='$get_r_id' AND del_flg = 0 ORDER BY rs_id DESC LIMIT 1";
+                                                                    $sql_null = "SELECT * FROM repair_status WHERE get_r_id ='$get_r_id' AND del_flg = 0  AND status_id = 13 ORDER BY rs_id DESC LIMIT 1";
                                                                     $result_null = mysqli_query($conn, $sql_null);
                                                                     $row_null = mysqli_fetch_array($result_null);
                                                                     if ($row_null['rs_conf'] == NULL) {
@@ -4056,6 +4061,7 @@ ORDER BY rs.rs_date_time DESC
 
                                                                         <br><br>
                                                                     <?php
+
                                                                     }
                                                                 }
                                                                 $sql_c_offer = "SELECT * FROM repair_status WHERE status_id = '19' AND del_flg = '0' AND get_r_id = $id_get_r ORDER BY rs_date_time DESC LIMIT 1";
@@ -4335,7 +4341,7 @@ ORDER BY rs.rs_date_time DESC
                             <!-- <hr> -->
                             <center>
                                 <p style="margin-left: 2%; color:red">*** ตรวจเช็คความปกติของอุปกรณ์ของท่านว่าใช้ได้หรือไม่ก่อนทำการยืนยันเสร็จสิ้นการซ่อม ***</p>
-                                <a class="btn btn-danger" style="margin-left: 2%" href="send_config.php?id=<?= $id_get_r ?>">แจ้งเจ้าหน้าที่กรณีมีปัญหา</a>
+                                <a class="btn btn-danger" style="margin-left: 2%" href="send_config.php?id=<?= $id_get_r ?>">แจ้งเจ้าหน้าที่กรณีมีปัญหาฟหกฟห</a>
                                 <a class="btn btn-success" style="margin-left: 2%" onclick="showConfirmation()">ยืนยัน</a>
                             </center>
                         <?php
