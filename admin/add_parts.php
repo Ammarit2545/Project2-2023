@@ -110,15 +110,19 @@ if (!isset($_SESSION['role_id'])) {
                         </div>
                         <div class="mb-3 row">
 
-                            <div class="col-md-5 mr-4">
+                            <div class="col-md-4">
                                 <label for="inputPassword" class="col-sm-1 col-form-label">ชื่อ</label>
                                 <input type="text" name="p_name" class="form-control" id="inputPassword" placeholder="กรุณาใส่ชื่ออะไหล่" required>
 
                             </div>
 
-                            <div class="col-md-2 mr-4">
+                            <div class="col-md-2">
+                                <label for="inputPassword" class="col-sm-0 col-form-label">ราคาต้นทุน</label>
+                                <input type="text" name="p_cost_price" class="form-control" id="inputPassword" placeholder="กรุณาใส่ราคาต้นทุน" required>
+                            </div>
+                            <div class="col-md-2 ">
                                 <label for="inputPassword" class="col-sm-0 col-form-label">ราคา</label>
-                                <input type="text" name="p_price" class="form-control" id="inputPassword" placeholder="กรุณาใส่ราคา" required>
+                                <input type="text" name="p_price" class="form-control" id="inputPassword" placeholder="กรุณาใส่ราคาขาย" required>
                             </div>
                             <!-- <label for="inputPassword" class="col-sm-0 col-form-label">จำนวน</label>
                             <div class="col-sm-2 mr-4">
@@ -126,7 +130,7 @@ if (!isset($_SESSION['role_id'])) {
                             </div> -->
                             <!-- <label for="inputPassword" class="col-sm-0 col-select-label mt-2">ประเภทอะไหล่</label> -->
 
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label for="inputPassword" class="form-label">ประเภท</label>
                                 <!-- <select name="p_type_id" class="form-select" aria-label="Default select example">
                                     <option selected>กรุณาเลือกประเภทอะไหล่</option>

@@ -173,7 +173,6 @@ $excludedStatusIDs = ($_SESSION['role_id'] == 3) ? [25] : [];
                                             <!-- <th>ชื่อ</th> -->
                                             <th>จำนวน</th>
                                             <th>Date</th>
-                                            <th>ปุ่ม</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -380,47 +379,7 @@ $excludedStatusIDs = ($_SESSION['role_id'] == 3) ? [25] : [];
                                                     } ?>
                                                 </td>
 
-                                                <td>
-                                                    <div class="text-center">
-                                                        <a class="btn btn-primary" href="detail_del_repair.php?id=<?= $row['get_r_id'] ?>">ดู</a>
-                                                        <!-- 
-                                                        ปุ่มลบใบแจ้งซ่อม    
-                                                        
-                                                        <a class="btn btn-danger" href="action/delete_repair.php?get_r_id=<?= $row['get_r_id'] ?>" onclick="return confirmDelete(event);">ลบ</a>
-                                                        <?php if ($row_c['status_id'] == 3 || $row_c['status_id'] == 9 || $row_c['status_id'] == 10) : ?>
-    <a class="btn btn-primary" href="bill_repair.php?id=<?= $row['get_r_id'] ?>">ใบแจ้งซ่อม</a> -->
-                                                    <?php endif; ?>
-
-                                                    <!-- Include SweetAlert library -->
-
-                                                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-                                                    <!-- <a class="btn btn-primary" href="detail_repair.php?id=<?= $row['get_r_id'] ?>">ดู</a> -->
-                                                    <!-- <a class="btn btn-danger" href="action/delete_repair.php?get_r_id=<?= $row['get_r_id'] ?>" onclick="return confirmDelete(event);">ลบ</a>
-
-                                                       
-                                                        <script>
-                                                            function confirmDelete(event) {
-                                                                event.preventDefault(); // Prevent the default action of the link
-
-                                                                Swal.fire({
-                                                                    title: 'คุณแน่ใจหรือไม่?',
-                                                                    text: 'คุณต้องการลบข้อมูลนี้หรือไม่',
-                                                                    icon: 'warning',
-                                                                    showCancelButton: true,
-                                                                    confirmButtonColor: '#dc3545',
-                                                                    cancelButtonColor: '#6c757d',
-                                                                    confirmButtonText: 'Yes, delete it!'
-                                                                }).then((result) => {
-                                                                    if (result.isConfirmed) {
-                                                                        // If confirmed, continue with the deletion process
-                                                                        window.location.href = event.target.href; // Redirect to the deletion URL
-                                                                    }
-                                                                });
-                                                            }
-                                                        </script> -->
-
-                                                    </div>
-                                                </td>
+                                               
                                             </tr>
                                         <?php } ?>
 

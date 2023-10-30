@@ -6,6 +6,7 @@ $get_r_id = $_GET['id'];
 $status_id = $_GET['status_id'];
 echo $get_r_id . ' ' . $status_id;
 
+// คอนเฟิร์มสถานะ 17 และ 4 ว่าใช้อะไหล่
 if ($status_id == 17 || $status_id == 4) {
     $sql = "SELECT * FROM repair_status WHERE get_r_id = '$get_r_id' AND del_flg = '0' AND status_id = '$status_id' ORDER BY rs_date_time DESC";
     $result = mysqli_query($conn, $sql);
@@ -16,6 +17,11 @@ if ($status_id == 17 || $status_id == 4) {
     if ($rs_id  > 0) {
         $sql = "UPDATE repair_status SET rs_conf = '1' , rs_conf_date = NOW() WHERE rs_id = '$rs_id '";
         $result = mysqli_query($conn, $sql);
+        if ($result) {
+            $_SESSION['add_data_alert'] = 0;
+            header("location:../detail_status.php?id=$get_r_id");
+            exit;
+        }
     }
 }
 

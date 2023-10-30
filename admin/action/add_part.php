@@ -15,6 +15,7 @@ $p_name = $_POST['p_name'];
 $p_detail = $_POST['p_description'];
 $p_stock = $_POST['p_stock'];
 $p_price = $_POST['p_price'];
+$p_cost_price = $_POST['p_cost_price'];
 $p_pic = $_FILES['p_pic']['name'];
 
 $sql_p = "SELECT * FROM parts WHERE p_brand = '$p_brand'  
@@ -133,10 +134,18 @@ if ($row_p[0] == NULL) {
 
     $pic_path = "parts/$p_type_id/$filename ";
 
-    $sql = "INSERT INTO parts (p_date_in, p_type_id, p_brand, p_model, p_name, p_detail, p_stock, p_price, p_pic, del_flg)
-    VALUES (NOW(), '$p_type_id', '$p_brand', '$p_model', '$p_name', '$p_detail', '$p_stock', '$p_price', '$pic_path', '0')";
-    $result = mysqli_query($conn, $sql);
-
+    $sql = "INSERT INTO parts (p_date_in, p_type_id, p_brand, p_model, p_name, p_detail, p_stock, p_price, p_cost_price, p_pic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = mysqli_prepare($conn, $sql);
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "siisssddss", $p_date_in, $p_type_id, $p_brand, $p_model, $p_name, $p_detail, $p_stock, $p_price, $p_cost_price, $pic_path);
+        $p_date_in = date('Y-m-d H:i:s'); // Assuming p_date_in is a datetime field
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+    } else {
+        echo "Error in preparing the SQL statement: " . mysqli_error($conn);
+    }
+    
+    echo 'asdsad';
     $_SESSION["add_data_alert"] = 0;
     // header('Location:../listview_parts.php');
     header('Location:../listview_parts.php');

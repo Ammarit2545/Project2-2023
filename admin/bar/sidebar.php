@@ -139,9 +139,13 @@
                 <h6 class="collapse-header">รายละเอียด :</h6>
                 <a class="collapse-item" href="listview_company.php"><i class="	fa fa-building"></i> ข้อมูลบริษัท</a>
                 <a class="collapse-item" href="add_company.php"><i class="fa fa-plus-square"></i> เพิ่มข้อมูล</a>
-           <hr>
-                <h6 class="collapse-header">ไปรษณีย์ :</h6>
-                <a class="collapse-item" href="listview_company_transpost.php"><i class="	fa fa-paper-plane"></i> ข้อมูลบริษัทขนส่ง</a>
+                <hr>
+                <h6 class="collapse-header">บริษัทขนส่งอะไหล่ :</h6>
+                <a class="collapse-item" href="listview_company_parts.php"><i class="	fa fa-paper-plane"></i> ข้อมูลบริษัทขนส่ง</a>
+                <a class="collapse-item" href="add_company_parts.php"><i class="fa fa-plus-square"></i> เพิ่มข้อมูล</a>
+                <hr>
+                <h6 class="collapse-header">บริษัทไปรษณีย์ :</h6>
+                <a class="collapse-item" href="listview_company_transpost.php"><i class="	fa fa-paper-plane"></i> ข้อมูลบริษัทไปรษณีย์</a>
                 <a class="collapse-item" href="add_company_transpost.php"><i class="fa fa-plus-square"></i> เพิ่มข้อมูล</a>
             </div>
         </div>
@@ -212,16 +216,16 @@
         </a>
         <div id="collapseDelete" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header" >รายละเอียด :</h6>
+                <h6 class="collapse-header">รายละเอียด :</h6>
                 <a class="collapse-item" href="listview_del_get_repair.php" style="color:red"><i class="fa fa-wrench"></i> ใบแจ้งซ่อม</a>
                 <a class="collapse-item" href="listview_del_repair.php" style="color:red"><i class="fa fa-cubes"></i> อุปกรณ์</a>
                 <hr>
-                <h5 class="collapse-header" >ข้อมูลทั้วไป :</h5>
+                <h5 class="collapse-header">ข้อมูลทั้วไป :</h5>
                 <a class="collapse-item" href="listview_del_employee.php" style="color:red"> <i class="fas fa-solid fa-users"></i> พนักงาน</a>
                 <a class="collapse-item" href="listview_del_member.php" style="color:red"> <i class="fas fa-user"></i> สมาชิก</a>
                 <a class="collapse-item" href="listview_del_part.php" style="color:red"><i class="fa fa-cubes"></i> อะไหล่</a>
                 <a class="collapse-item" href="listview_del_company.php" style="color:red"> <i class="fas fa-solid fa-building"></i> บริษัท</a>
-                <a class="collapse-item" href="listview_del_status.php" style="color:red"><i class="fas fa-solid fa-bars"></i> สถานะ</a>
+                <a class="collapse-item" href="listview_del_company_transpost.php" style="color:red"><i class="fas fa-paper-plane"></i> บริษัทขนส่ง</a>
                 <!-- <a class="collapse-item" href="report_profit.php">ยอดรายได้การซ่อม</a> -->
             </div>
         </div>

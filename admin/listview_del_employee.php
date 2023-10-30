@@ -5,7 +5,7 @@ include('../database/condb.php');
 if (!isset($_SESSION['role_id'])) {
     header('Location:../home.php');
 }
-$id = $_SESSION['id'];
+
 ?>
 
 <!DOCTYPE html>
@@ -62,8 +62,7 @@ $id = $_SESSION['id'];
 
                     <!-- Page Heading -->
                     <br>
-                    <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">เพิ่มข้อมูลพนักงาน</h1>
-                    <a href="add_employee.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มรายชื่อพนักงานหรือไม่?</a>
+                    <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ข้อมูลพนักงานที่ถูกลบ</h1>
                     <br>
                     <br>
 
@@ -84,7 +83,6 @@ $id = $_SESSION['id'];
                                             <!-- <th>ที่อยู่</th> -->
                                             <!-- <th>Start date</th> -->
                                             <!-- <th>Salary</th> -->
-                                            <th>ปุ่มดำเนินการ</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -92,7 +90,7 @@ $id = $_SESSION['id'];
                                         $sql = "SELECT * FROM employee 
                                                 LEFT JOIN role 
                                                 ON employee.role_id = role.role_id 
-                                                WHERE employee.del_flg = '0'";
+                                                WHERE employee.del_flg = '1'";
                                         $result = mysqli_query($conn, $sql);
                                         while ($row = mysqli_fetch_array($result)) { ?>
                                             <tr>
@@ -185,40 +183,7 @@ $id = $_SESSION['id'];
                                                     }
                                                     ?>
                                                 </td> -->
-                                                <td>
-                                                    <?php if ($row['e_id'] != $id) {
-                                                    ?>
-                                                        <a href="action/del_employee.php?id=<?= $row['e_id'] ?>" class="btn btn-danger" onclick="return confirmDelete(event);">ลบ</a>&nbsp; &nbsp;
-
-                                                    <?php
-                                                    } ?>
-                                                    <!-- Include SweetAlert library -->
-                                                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-                                                    <!-- JavaScript function for confirmation -->
-                                                    <script>
-                                                        function confirmDelete(event) {
-                                                            event.preventDefault(); // Prevent the default action of the link
-
-                                                            Swal.fire({
-                                                                title: 'คุณแน่ใจหรือไม่?',
-                                                                text: 'คุณต้องการลบข้อมูลนี้หรือไม่',
-                                                                icon: 'warning',
-                                                                showCancelButton: true,
-                                                                confirmButtonColor: '#dc3545',
-                                                                cancelButtonColor: '#6c757d',
-                                                                confirmButtonText: 'Yes, delete it!'
-                                                            }).then((result) => {
-                                                                if (result.isConfirmed) {
-                                                                    // If confirmed, continue with the deletion process
-                                                                    window.location.href = event.target.href; // Redirect to the deletion URL
-                                                                }
-                                                            });
-                                                        }
-                                                    </script>
-                                                    <a class="btn btn-success" href="show_profile.php?id=<?= $row['e_id'] ?>">ดู</a>
-                                                    <a class="btn btn-warning" href="edit_employee.php?id=<?= $row['e_id'] ?>">แก้ไข</a>
-                                                </td>
+                                               
                                             </tr>
                                         <?php } ?>
                                     </tbody>

@@ -76,31 +76,31 @@ if (isset($_GET['status_id_conf']) || $_GET['status_id_conf'] == 13) {
         header("location:../../detail_repair.php?id=$get_r_id");
     }
 } 
-// else {
-//     //    ตัดของออกจาก Stock หลังจากยืนยัน
-//     $sql_check_p = "SELECT *
-//                     FROM repair_detail
-//                     LEFT JOIN get_repair ON get_repair.get_r_id = repair_detail.get_r_id
-//                     LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
-//                     WHERE repair_status.get_r_id = '$get_r_id' AND repair_detail.del_flg = '0';";
-//     $result_check_p = mysqli_query($conn, $sql_check_p);
+else {
+    //    ตัดของออกจาก Stock หลังจากยืนยัน
+    $sql_check_p = "SELECT *
+                    FROM repair_detail
+                    LEFT JOIN get_repair ON get_repair.get_r_id = repair_detail.get_r_id
+                    LEFT JOIN repair_status ON repair_status.rs_id = repair_detail.rs_id
+                    WHERE repair_status.get_r_id = '$get_r_id' AND repair_detail.del_flg = '0';";
+    $result_check_p = mysqli_query($conn, $sql_check_p);
 
-//     while ($row_check_part = mysqli_fetch_array($result_check_p)) {
+    while ($row_check_part = mysqli_fetch_array($result_check_p)) {
 
-//         $rd_id = $row_check_part['rd_id'];
-//         $p_id = $row_check_part['p_id'];
-//         $value_parts = $row_check_part['rd_value_parts'];
+        $rd_id = $row_check_part['rd_id'];
+        $p_id = $row_check_part['p_id'];
+        $value_parts = $row_check_part['rd_value_parts'];
 
-//         $sql_update_part = "UPDATE parts SET p_stock = p_stock - $value_parts WHERE p_id = '$p_id'";
-//         $result_update_part = mysqli_query($conn, $sql_update_part);
-//     }
-//     //    ตัดของออกจาก Stock 
-//     $sql3 = "INSERT INTO repair_status (get_r_id, rs_date_time, rs_detail, status_id)
-//             VALUES ('$get_r_id', NOW(), 'พนักงานได้ทำการตรวจเช็คอุปกรณ์ของท่านและกำลังดำเนินการซ่อมในขณะนี้','$status_id')";
-//     $result3 = mysqli_query($conn, $sql3);
+        $sql_update_part = "UPDATE parts SET p_stock = p_stock - $value_parts WHERE p_id = '$p_id'";
+        $result_update_part = mysqli_query($conn, $sql_update_part);
+    }
+    //    ตัดของออกจาก Stock 
+    $sql3 = "INSERT INTO repair_status (get_r_id, rs_date_time, rs_detail, status_id)
+            VALUES ('$get_r_id', NOW(), 'พนักงานได้ทำการตรวจเช็คอุปกรณ์ของท่านและกำลังดำเนินการซ่อมในขณะนี้','$status_id')";
+    $result3 = mysqli_query($conn, $sql3);
 
-//     if ($result3) {
-//         $_SESSION["add_data_alert"] = 0;
-//         header("Location: ../../detail_repair.php?id=$get_r_id");
-//     }
-// }
+    if ($result3) {
+        $_SESSION["add_data_alert"] = 0;
+        header("Location: ../../detail_repair.php?id=$get_r_id");
+    }
+}

@@ -85,15 +85,13 @@ if (!isset($_SESSION['role_id'])) {
                                             <th>Model Number</th>
                                             <th>ประเภท</th>
                                             <th>รายละเอียด</th>
-                                            <th>ราคาต้นทุน</th>
-                                            <th>ราคาขาย</th>
+                                            <th>ราคา</th>
                                             <th>จำนวนคงเหลือ</th>
-                                            <th>ปุ่มดำเนินการ</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $sql = "SELECT * FROM parts LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id WHERE parts.del_flg = '0' ";
+                                        $sql = "SELECT * FROM parts LEFT JOIN parts_type ON parts_type.p_type_id = parts.p_type_id WHERE parts.del_flg = '1' ";
                                         $result = mysqli_query($conn, $sql);
 
                                         while ($row = mysqli_fetch_array($result)) {
@@ -186,14 +184,7 @@ if (!isset($_SESSION['role_id'])) {
                                                     }
                                                     ?>
                                                 </td>
-                                                <td><?php
-                                                    if ($row['p_cost_price'] == NULL) {
-                                                        echo "-";
-                                                    } else {
-                                                        echo number_format($row['p_cost_price']);
-                                                    }
-                                                    ?>
-                                                </td>
+
                                                 <td><?php
                                                     if ($row['p_price'] == NULL) {
                                                         echo "-";
@@ -214,39 +205,7 @@ if (!isset($_SESSION['role_id'])) {
                                                                                                     }
                                                                                                         ?>
                                                 </td>
-                                                <td width="200px">
-                                                 
-
-                                                    <a class="btn btn-warning" href="edit_parts.php?id=<?= $row['p_id'] ?>">แก้ไข</a>
-                                                    <button onclick="confirmDelete(<?= $row['p_id'] ?>)" class="btn btn-danger">ลบ</button>
-                                                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-                                                    <!-- JavaScript function for confirmation -->
-                                                    <script>
-                                                        function confirmDelete(id) {
-                                                            Swal.fire({
-                                                                title: 'คุณแน่ใจหรือไม่?',
-                                                                text: 'คุณต้องการลบข้อมูลนี้หรือไม่',
-                                                                icon: 'warning',
-                                                                showCancelButton: true,
-                                                                confirmButtonColor: '#dc3545',
-                                                                cancelButtonColor: '#6c757d',
-                                                                confirmButtonText: 'Yes, delete it!'
-                                                            }).then((result) => {
-                                                                if (result.isConfirmed) {
-                                                                    // If confirmed, continue with the deletion process
-                                                                    window.location.href = "action/delete_part.php?id=" + id;
-                                                                }
-                                                            });
-                                                        }
-                                                    </script>
-                                                    <?php
-                                                    if ($sum <= 10) {
-                                                    ?> <a class="btn btn-primary" href="edit_stock.php">เพิ่ม</a><?php
-                                                                                                    } 
-                                                                                                    ?>
-                                                                                                    
-                                                </td>
+                                                
                                             </tr>
                                         <?php
                                         }

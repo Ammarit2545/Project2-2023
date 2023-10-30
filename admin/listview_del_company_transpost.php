@@ -18,7 +18,7 @@ if (!isset($_SESSION['role_id'])) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>ข้อมูลบริษัทไปรษณีย์ - View Company Information</title>
+    <title>ข้อมูลบริษัทขนส่งที่ถูกลบ - View Company Information</title>
     <link rel="icon" type="image/x-icon" href="../img brand/anelogo.jpg">
 
     <!-- Custom fonts for this template -->
@@ -63,15 +63,14 @@ if (!isset($_SESSION['role_id'])) {
 
                     <!-- Page Heading -->
                     <br>
-                    <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ข้อมูลบริษัท</h1>
-                    <a href="add_company_transpost.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มข้อมูลบริษัทขนส่งหรือไม่?</a>
+                    <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ข้อมูลบริษัทขนส่ง</h1>
                     <br>
                     <br>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">ข้อมูลบริษัท</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">ข้อมูลบริษัทขนส่ง</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -80,7 +79,6 @@ if (!isset($_SESSION['role_id'])) {
                                         <tr>
                                             <th>ลำดับ</th>
                                             <th>ชื่อบริษัท</th>
-                                            <th>ปุ่มดำเนินการ</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -105,11 +103,7 @@ if (!isset($_SESSION['role_id'])) {
                                                     ?>
                                                 </td>
 
-                                                <td>
-                                                    <a href="action/delete_company_transport.php?id=<?= $com_t_id  ?>" class="btn btn-danger" id="deleteButton">ลบ</a>&nbsp; &nbsp;
-
-
-                                                    <a href="edit_company_transport.php?id=<?= $com_t_id  ?>" class="btn btn-warning" onclick="window.location.href='edit_company_transport.html'">แก้ไข</a>&nbsp; &nbsp;
+                                              
                                             </tr>
 
                                         <?php

@@ -5,6 +5,9 @@ include('../../database/condb.php');
 
 $_SESSION['ajax_check'] += 1;
 
+// วันเวลาปัจจุบันของไทย
+date_default_timezone_set('Asia/Bangkok'); // Set the timezone to Thailand
+$current_time = date('Y-m-d H:i:s'); // Get the current date and time in the format 'Y-m-d H:i:s' with the Thailand timezone
 
 $sql_get = "SELECT rs_id, get_r_id, rs_date_time, rs_conf
             FROM repair_status
@@ -74,6 +77,65 @@ if ($result_get) {
                 }
 
                 $response[] = ['get_r_id' => $get_r_id];
+            }
+        }
+    }
+}
+
+$rs_idCSK = 0;
+$sql_check_send_ok = "SELECT get_r_id FROM repair_status WHERE del_flg = 0 AND status_id = 24 GROUP BY rs_id ORDER BY rs_id DESC";
+$re_check_send_ok = mysqli_query($conn, $sql_check_send_ok);
+
+if (mysqli_num_rows($re_check_send_ok)) {
+    while ($rowCSK = mysqli_fetch_array($re_check_send_ok)) {
+        $get_r_idCSK = $rowCSK['get_r_id'];
+
+        $sqlCSK = "SELECT rs_id,status_id, rs_date_time FROM repair_status WHERE del_flg = 0 AND get_r_id = '$get_r_idCSK' GROUP BY rs_id ORDER BY rs_id DESC LIMIT 1";
+        $reCSK = mysqli_query($conn, $sqlCSK);
+        $rCSK = mysqli_fetch_array($reCSK);
+
+        if ($rCSK['status_id'] == 24) {
+            $rs_id = $rCSK['rs_id'];
+            $rs_date_time = $rCSK['rs_date_time'];
+            echo '<br>' . $rs_date_time . ' - AND - ' . $current_time;
+
+            // Set the timezone to Thailand
+            date_default_timezone_set('Asia/Bangkok');
+
+            // Your current time and $rs_date_time (assuming they are in the format 'Y-m-d H:i:s')
+            $current_time = date('Y-m-d H:i:s');
+
+            // Convert date strings to timestamps
+            $current_timestamp = strtotime($current_time);
+            $rs_timestamp = strtotime($rs_date_time);
+
+            // Calculate the difference in seconds
+            $time_difference = $current_timestamp - $rs_timestamp;
+
+            // Calculate the number of days in the time difference
+            $days_difference = floor($time_difference / (60 * 60 * 24));
+
+            if ($days_difference >= 7) {
+                echo 'It ' . $get_r_idCSK . ' has been more than 5 days.';
+                $sql_update = "UPDATE repair_status SET rs_conf = 1 WHERE rs_id =  '$rs_id' ";
+                $result_update = mysqli_query($conn, $sql_update);
+                // Insert a new record with appropriate values
+
+                if ($result_update) {
+                    echo 'Upload 3 OK';
+                    $sqlCSK = "SELECT rs_id,status_id, rs_date_time FROM repair_status WHERE del_flg = 0 AND get_r_id = '$get_r_idCSK' GROUP BY rs_id ORDER BY rs_id DESC LIMIT 1";
+                    $reCSK = mysqli_query($conn, $sqlCSK);
+                    $rCSK = mysqli_fetch_array($reCSK);
+                    if ($rCSK['status_id'] != 3) {
+                        $sql_insert1 = "INSERT INTO repair_status (get_r_id, rs_date_time, rs_detail, status_id) VALUES ('$get_r_idCSK', NOW(), 'ยืนยันรับอุปกรณ์แล้ว (ระบบตัดอัตโนมัติ)', 3)";
+                        $result_insert1 = mysqli_query($conn, $sql_insert1);
+                    } else {
+                        continue;
+                    }
+                }
+            } else {
+                echo 'It has been less than 5 days.';
+                continue;
             }
         }
     }
