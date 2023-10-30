@@ -505,7 +505,10 @@ $get_r_id = $_GET['id'];
                         ?>
                             <div class="row">
                                 <div class="alert alert-primary" role="alert">
-                                    <h5> ต่อเนื่องมาจากหมายเลขซ่อมสั่งซ่อมที่ : <?= $row2['get_config'] ?></h5>
+                                    <h5> ต่อเนื่องมาจากหมายเลขซ่อมสั่งซ่อมที่ : <a href="detail_repair.php?id=<?= $row2['get_config'] ?>" id="bounce-item"><?= $row2['get_config'] ?>
+                                    <span class="tooltip">shadhds</span>
+                                </a>
+                            </h5>
                                 </div>
                             </div>
                         <?php
