@@ -177,14 +177,14 @@ if ($_SESSION["log_login"] == 0) {
                 $link = $line->getLink();
               ?>
                 <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Login</button> -->
-                <a href="<?php echo $link; ?>" class="btn btn-success"><img src="img/icon/line.png" alt="Line Picture" width="8%" style="border-radius:20%"> Line Login</a>
+                <a href="<?php echo $link; ?>" class="btn btn-success"><img src="img/icon/line.png" alt="Line Picture" width="8%" style="border-radius:20%" loading="lazy"> Line Login</a>
               <?php }  ?>
             </div><br>
             <p class="text-center fw-bold mx-3 mb-0 text-muted">OR</p><br>
             <p class="text-center">
               <center>
                 <p>Don’t have an Account?
-                  <a href="#" style="color: #0066CC; text-decoration:none;" data-bs-toggle="modal" data-bs-target="#Register">Create yours now.</a>
+                  <a href="#" style="color: #0066CC; text-decoration:none;" data-bs-toggle="modal" data-bs-target="#Register" >Create yours now.</a>
                 </p>
               </center>
             </p>
@@ -415,7 +415,7 @@ if ($_SESSION["log_login"] == 0) {
           foreach ($files as $file) {
           ?>
             <div class="carousel-item <?php echo $active ? 'active' : ''; ?>">
-              <img src="<?php echo $file; ?>" class="d-block w-100 img-fluid" alt="...">
+              <img src="<?php echo $file; ?>" class="d-block w-100 img-fluid" alt="..." loading="lazy">
             </div>
           <?php
             $active = false; // Set the flag to false after the first carousel item
@@ -435,7 +435,7 @@ if ($_SESSION["log_login"] == 0) {
   </center>
   <!-- Hero -->
   <div class="px-1 py-1 my-1 text-center">
-    <img class="d-block mx-auto my-4 imglogo" src="img brand/anelogo.png" alt="" width="20%" data-aos="fade-up" data-aos-delay="100">
+    <img class="d-block mx-auto my-4 imglogo" src="img brand/anelogo.png" alt="" width="20%" data-aos="fade-up" data-aos-delay="100" loading="lazy">
 
     <h1 class="display-5 fw-bold text-body-emphasis mt-2" data-aos="fade-up" data-aos-delay="100">ANE อนันต์อิเล็กทรอนิกส์</h1>
     <div class="col-lg-6 mx-auto">
@@ -516,49 +516,49 @@ if ($_SESSION["log_login"] == 0) {
 
         <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="100">
           <div class="gallery-item">
-            <img src="img/review/383970602_823379349790406_6690656903408277112_n.jpg" alt="" class="img-fluid">
+            <img src="img/review/383970602_823379349790406_6690656903408277112_n.jpg" alt="" class="img-fluid" loading="lazy">
           </div>
         </div>
 
         <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="100">
           <div class="gallery-item">
-            <img src="img/review/375598797_808268331301508_2174038410938474552_n.jpg" alt="" class="img-fluid">
+            <img src="img/review/375598797_808268331301508_2174038410938474552_n.jpg" alt="" class="img-fluid" loading="lazy">
           </div>
         </div>
 
         <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="100">
           <div class="gallery-item">
-            <img src="img/review/387094307_828601502601524_7975221138491196415_n.jpg" alt="" class="img-fluid">
+            <img src="img/review/387094307_828601502601524_7975221138491196415_n.jpg" alt="" class="img-fluid" loading="lazy">
           </div>
         </div>
 
         <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="100">
           <div class="gallery-item">
-            <img src="img/review/383006980_822737626521245_1136385593892097670_n.jpg" alt="" class="img-fluid">
+            <img src="img/review/383006980_822737626521245_1136385593892097670_n.jpg" alt="" class="img-fluid" loading="lazy">
           </div>
         </div>
 
         <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="100">
           <div class="gallery-item">
-            <img src="img/review/391650041_835762578552083_8354594631154264069_n.jpg" alt="" class="img-fluid">
+            <img src="img/review/391650041_835762578552083_8354594631154264069_n.jpg" alt="" class="img-fluid" loading="lazy">
           </div>
         </div>
 
         <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="100">
           <div class="gallery-item">
-            <img src="img/review/366986258_793333816128293_3955095931783667611_n.jpg" alt="" class="img-fluid">
+            <img src="img/review/366986258_793333816128293_3955095931783667611_n.jpg" alt="" class="img-fluid" loading="lazy">
           </div>
         </div>
 
         <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="100">
           <div class="gallery-item">
-            <img src="img/review/366722333_791445006317174_3605743124027557854_n.jpg" alt="" class="img-fluid">
+            <img src="img/review/366722333_791445006317174_3605743124027557854_n.jpg" alt="" class="img-fluid" loading="lazy">
           </div>
         </div>
 
         <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="100">
           <div class="gallery-item">
-            <img src="img/review/393369930_836411291820545_5293328076192840653_n.jpg" alt="" class="img-fluid">
+            <img src="img/review/393369930_836411291820545_5293328076192840653_n.jpg" alt="" class="img-fluid" loading="lazy">
           </div>
         </div>
 
@@ -574,27 +574,27 @@ if ($_SESSION["log_login"] == 0) {
       <div class="row">
 
         <div class="col-lg-2 col-md-4 col-6">
-          <img src="img/guarantee/300362600_782934319427391_2334636618198316713_n-removebg-preview.png" class="img-fluid aos-init aos-animate" alt="" data-aos="zoom-in">
+          <img src="img/guarantee/300362600_782934319427391_2334636618198316713_n-removebg-preview.png" class="img-fluid aos-init aos-animate" alt="" data-aos="zoom-in" loading="lazy">
         </div>
 
         <div class="col-lg-2 col-md-4 col-6">
-          <img src="img/guarantee/a034lw-removebg-preview.png" class="img-fluid aos-init aos-animate" alt="" data-aos="zoom-in" data-aos-delay="100">
+          <img src="img/guarantee/a034lw-removebg-preview.png" class="img-fluid aos-init aos-animate" alt="" data-aos="zoom-in" data-aos-delay="100" loading="lazy">
         </div>
 
         <div class="col-lg-2 col-md-4 col-6">
-          <img src="img/guarantee/g0x2wl-removebg-preview.png" class="img-fluid aos-init aos-animate" alt="" data-aos="zoom-in" data-aos-delay="200">
+          <img src="img/guarantee/g0x2wl-removebg-preview.png" class="img-fluid aos-init aos-animate" alt="" data-aos="zoom-in" data-aos-delay="200" loading="lazy">
         </div>
 
         <div class="col-lg-2 col-md-4 col-6">
-          <img src="img/guarantee/logo-npe-removebg-preview.png" class="img-fluid aos-init aos-animate" alt="" data-aos="zoom-in" data-aos-delay="300">
+          <img src="img/guarantee/logo-npe-removebg-preview.png" class="img-fluid aos-init aos-animate" alt="" data-aos="zoom-in" data-aos-delay="300" loading="lazy">
         </div>
 
         <div class="col-lg-2 col-md-4 col-6">
-          <img src="img/guarantee/logo-removebg-preview.png" class="img-fluid aos-init aos-animate" alt="" data-aos="zoom-in" data-aos-delay="400">
+          <img src="img/guarantee/logo-removebg-preview.png" class="img-fluid aos-init aos-animate" alt="" data-aos="zoom-in" data-aos-delay="400" loading="lazy">
         </div>
 
         <div class="col-lg-2 col-md-4 col-6">
-          <img src="img/guarantee/download-removebg-preview.png" class="img-fluid aos-init aos-animate" alt="" data-aos="zoom-in" data-aos-delay="500">
+          <img src="img/guarantee/download-removebg-preview.png" class="img-fluid aos-init aos-animate" alt="" data-aos="zoom-in" data-aos-delay="500" loading="lazy">
         </div>
 
       </div>

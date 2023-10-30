@@ -73,8 +73,16 @@ if (mysqli_num_rows($result_check)) {
         $result_insert_repair = mysqli_query($conn, $sql_insert_repair);
 
         if ($result_insert_repair) {
-            $sql_insert_repair = "INSERT INTO get_repair (get_r_date_in ,e_id ,get_tel ,get_add ,get_wages ,get_add_price ,get_date_conf,get_config) 
-                VALUES (NOW(),'$e_id','$get_tel','$get_add','$get_wages','$get_add_price','$get_date_conf','$get_r_id')";
+            if ($row_see['get_deli'] == 1) {
+                $sql_insert_repair = "INSERT INTO get_repair (get_r_date_in ,e_id ,get_tel ,get_add ,get_wages ,get_add_price ,get_date_conf,get_config) 
+                                        VALUES (NOW(),'$e_id','$get_tel','$get_add','$get_wages','$get_add_price','$get_date_conf','$get_r_id')";
+                echo '<br>' . $sql_insert_repair;
+            } else {
+                $sql_insert_repair = "INSERT INTO get_repair (get_r_date_in ,e_id ,get_tel ,get_add ,get_wages  ,get_date_conf,get_config) 
+                                        VALUES (NOW(),'$e_id','$get_tel','$get_add','$get_wages','$get_date_conf','$get_r_id')";
+                echo '<br>' . $sql_insert_repair;
+            }
+
             $result_insert_repair = mysqli_query($conn, $sql_insert_repair);
 
             if ($result_insert_repair) {
@@ -192,7 +200,7 @@ if (mysqli_num_rows($result_check)) {
                             $row_get1 = mysqli_fetch_array($result_get1);
 
                             $get_d_id = $row_get1['get_d_id'];
-                            
+
                             $sql3 = "INSERT INTO repair_detail (`p_id`, `rd_value_parts`, `rd_parts_price`, `rs_id`, `rd_date_in`, `get_d_id`)
                                     VALUES ('$partId', '$quantity', '$total_s', '$rs_id', NOW(), '$get_d_id')";
                             $result3 = mysqli_query($conn, $sql3);
