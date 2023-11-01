@@ -53,6 +53,7 @@
         <textarea class="form-control auto-expand" name="rs_detail" id="cancelFormControlTextareaConf" rows="3" required placeholder="กรอกรายละเอียดในการยกเลิกคำส่งซ่อม">ทางเราได้ดำเนินการตรวจเช็คอย่างละเอียดแล้วและมีหลักฐานก่อนนำส่งแล้ว</textarea>
         <input type="text" name="get_r_id" value="<?= $get_r_id ?>" hidden>
         <input type="text" name="status_id" value="<?= $row_q['status_id'] ?>" hidden>
+        <input type="text" name="status_id" value="<?= $row_q['status_id'] ?>" hidden>
         <br>
         <p style="color:red">*** โปรดกรอกรายละเอียดข้างต้นก่อนทำการเพิ่มรูปภาพ ***</p>
         <hr>
