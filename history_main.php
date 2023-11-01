@@ -218,12 +218,12 @@ $id_member = $_SESSION['id'];
 
 
                                     </div>
-                                    <div class="row">
+                                    <!-- <div class="row">
                                         <div id="search-results">
                                             ค้นหาอุปกรณ์ที่คุณต้องการ....
                                         </div>
                                     </div>
-                                    <br>
+                                    <br> -->
                                     <!-- <nav aria-label="Page navigation example">
 
                                         <ul class="pagination justify-content-center ">
@@ -1220,7 +1220,7 @@ $id_member = $_SESSION['id'];
                                                 }
                                             </style>
                                             <div id="bounce-item">
-                                                <a href="history_main.php?id=<?= $row1['r_id'] ?>" id="card_sent" data-bs-toggle="tooltip" data-bs-placement="top" title="Model: <?= $row1['r_number_model'] ?>">
+                                                <a href="history_main.php?id=<?= $row1['r_id'] ?>" style="text-decoration: none;" id="card_sent" data-bs-toggle="tooltip" data-bs-placement="top" title="Model: <?= $row1['r_number_model'] ?>">
                                                     <div class="alert alert-light shadow" role="alert" style="color: black; background-color: #F5F5F5; border: 1px solid #F5F5F5;">
                                                         <style>
 

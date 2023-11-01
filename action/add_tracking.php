@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $get_r_id = $_GET['id'];
 
 if (isset($_POST['get_d_id_1'])) {
-    
+
     $i = 1;
     while (isset($_POST['get_d_id_' . $i])) {
         $get_d_id = $_POST['get_d_id_' . $i];
@@ -26,9 +26,15 @@ if (isset($_POST['get_d_id_1'])) {
         $row = mysqli_fetch_assoc($result);
 
         if (!$row) {
+
             // The record does not exist, insert a new one
-            $sql = "INSERT INTO `tracking`(`t_parcel`, `t_c_id`, `t_date_in`) VALUES ('$tracking_number', '$com_t_id', NOW())";
-            $result = mysqli_query($conn, $sql);
+            $sql = "INSERT INTO tracking (t_parcel, t_c_id, t_date_in, del_flg) VALUES (?, ?, NOW(), ?)";
+            $stmt = mysqli_prepare($conn, $sql);
+            $del_flg = 0; // Assuming del_flg is an integer
+            mysqli_stmt_bind_param($stmt, "sii", $tracking_number, $com_t_id, $del_flg);
+            $result = mysqli_stmt_execute($stmt);
+
+
             // mysqli_stmt_bind_param($stmt, "si", $tracking_number, $com_t_id);
             // $result = mysqli_stmt_execute($stmt);
 
@@ -40,7 +46,11 @@ if (isset($_POST['get_d_id_1'])) {
                 $result = mysqli_stmt_execute($stmt);
 
                 if ($result) {
-                    echo "The record was inserted successfully with ID: " . $insertedId;
+                    $sql_update = "UPDATE get_repair SET get_send = '1' ,get_add_price = NULL WHERE get_r_id = '$get_r_id'";
+                    $resultUpdate = mysqli_query($conn, $sql_update);
+                    if ($resultUpdate) {
+                        echo "The record was inserted successfully with ID: " . $insertedId;
+                    }
                 } else {
                     $_SESSION['add_data_alert'] = 1;
                     header("location:../detail_status.php?id=$get_r_id");
@@ -50,7 +60,7 @@ if (isset($_POST['get_d_id_1'])) {
                 header("location:../detail_status.php?id=$get_r_id");
             }
         } else {
-            
+
             // The record already exists, update it
             $t_id = $row['t_id'];
             $sql = "UPDATE get_detail SET get_t_id = ? WHERE get_d_id = ?";
@@ -60,7 +70,7 @@ if (isset($_POST['get_d_id_1'])) {
         }
         $i++;
     }
-    
+
     $_SESSION['add_data_alert'] = 0;
     header("location:../detail_status.php?id=$get_r_id");
 }

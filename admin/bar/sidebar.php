@@ -138,15 +138,15 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">รายละเอียด :</h6>
                 <a class="collapse-item" href="listview_company.php"><i class="	fa fa-building"></i> ข้อมูลบริษัท</a>
-                <a class="collapse-item" href="add_company.php"><i class="fa fa-plus-square"></i> เพิ่มข้อมูล</a>
+                <a class="collapse-item" href="add_company.php"><i class="fa fa-plus-square"></i> เพิ่มข้อมูลบริษัท</a>
                 <hr>
                 <h6 class="collapse-header">บริษัทขนส่งอะไหล่ :</h6>
                 <a class="collapse-item" href="listview_company_parts.php"><i class="	fa fa-paper-plane"></i> ข้อมูลบริษัทขนส่ง</a>
-                <a class="collapse-item" href="add_company_parts.php"><i class="fa fa-plus-square"></i> เพิ่มข้อมูล</a>
+                <a class="collapse-item" href="add_company_parts.php"><i class="fa fa-plus-square"></i> เพิ่มข้อมูลขนส่ง</a>
                 <hr>
                 <h6 class="collapse-header">บริษัทไปรษณีย์ :</h6>
                 <a class="collapse-item" href="listview_company_transpost.php"><i class="	fa fa-paper-plane"></i> ข้อมูลบริษัทไปรษณีย์</a>
-                <a class="collapse-item" href="add_company_transpost.php"><i class="fa fa-plus-square"></i> เพิ่มข้อมูล</a>
+                <a class="collapse-item" href="add_company_transpost.php"><i class="fa fa-plus-square"></i> เพิ่มข้อมูลไปรษณีย์</a>
             </div>
         </div>
     </li>
@@ -204,7 +204,7 @@
                 <h6 class="collapse-header">รายละเอียด :</h6>
                 <a class="collapse-item" href="report_parts.php"><i class="	fa fa-cogs"></i> ยอดอะไหล่</a>
                 <a class="collapse-item" href="report_employee.php"><i class="	fa fa-address-book"></i> ยอดบุคลากร</a>
-                <a class="collapse-item" href="report_repair.php"> <i class="fa fa-wrench"></i> ยอดการซ่อม</a>
+                <!-- <a class="collapse-item" href="report_repair.php"> <i class="fa fa-wrench"></i> ยอดการซ่อม</a> -->
                 <!-- <a class="collapse-item" href="report_profit.php">ยอดรายได้การซ่อม</a> -->
             </div>
         </div>

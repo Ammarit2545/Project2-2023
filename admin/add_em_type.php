@@ -65,7 +65,7 @@ if (!isset($_SESSION['role_id'])) {
                         </div>
 
                         <div class="mb-3 row">
-                            <label for="staticEmail" class="col-sm-1 col-form-label">ประเภทอะไหล่</label>
+                            <label for="staticEmail" class="col-sm-1 col-form-label">แผนกพนักงาน</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <div class="row">

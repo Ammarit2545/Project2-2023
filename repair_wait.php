@@ -28,6 +28,7 @@ $row = mysqli_fetch_array($result);
     </script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 </head>
+
 <body>
 
     <!-- navbar-->
@@ -76,7 +77,9 @@ $row = mysqli_fetch_array($result);
     </div>
 
     <!-- footer-->
+    <div style="margin-top:8%"></div>
     <?php include('footer/footer.php') ?>
+    </div>
     <!-- end footer-->
 
     <script>
@@ -90,4 +93,5 @@ $row = mysqli_fetch_array($result);
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

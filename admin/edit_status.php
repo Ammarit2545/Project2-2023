@@ -66,7 +66,7 @@ if (!isset($_SESSION['role_id'])) {
 
                         <!-- Page Heading -->
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                            <h1 class="h3 mb-0 text-gray-800">เพิ่มประเภทของสถานะ</h1>
+                            <h1 class="h3 mb-0 text-gray-800">แก้ไขประเภทของสถานะ</h1>
                         </div>
 
                         <div class="mb-3 row">

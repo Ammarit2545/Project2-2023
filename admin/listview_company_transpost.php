@@ -64,7 +64,7 @@ if (!isset($_SESSION['role_id'])) {
                     <!-- Page Heading -->
                     <br>
                     <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ข้อมูลบริษัท</h1>
-                    <a href="add_company_transpost.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มข้อมูลบริษัทขนส่งหรือไม่?</a>
+                    <a href="add_company_transpost.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มข้อมูลบริษัทไปรษณีย์หรือไม่?</a>
                     <br>
                     <br>
 
