@@ -61,13 +61,23 @@ if (!isset($_SESSION['role_id'])) {
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <?php
-                    $sql_nofi = "SELECT *
-                    FROM get_repair
-                    LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
-                    LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                    WHERE get_repair.del_flg = '0'
-                    GROUP BY get_repair.get_r_id
-                    ORDER BY get_repair.get_r_id DESC;
+                    $sql_nofi = "SELECT g1.max_get_r_id, GR.*, r1.max_r_id, R.*
+                    FROM get_repair AS GR
+                    LEFT JOIN (
+                        SELECT get_r_id, MAX(get_r_id) AS max_get_r_id
+                        FROM get_repair
+                        WHERE del_flg = '0'
+                        GROUP BY get_r_id
+                    ) AS g1 ON GR.get_r_id = g1.get_r_id
+                    LEFT JOIN get_detail AS GD ON GR.get_r_id = GD.get_r_id
+                    LEFT JOIN (
+                        SELECT r_id, MAX(r_id) AS max_r_id
+                        FROM repair
+                        GROUP BY r_id
+                    ) AS r1 ON GD.r_id = r1.r_id
+                    LEFT JOIN repair AS R ON GD.r_id = R.r_id
+                    ORDER BY g1.max_get_r_id DESC;
+                    ;
                      ";
                     $result_nofi = mysqli_query($conn, $sql_nofi);
                     $num_rows = mysqli_fetch_array($result_nofi_count);

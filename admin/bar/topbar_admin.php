@@ -121,7 +121,16 @@
                 </h6>
 
                 <?php
+                $sql_nofi = "SELECT get_repair.get_r_id, get_detail.get_d_id, repair.r_id, COUNT(*) as count,repair.*
+                            FROM get_repair
+                            LEFT JOIN get_detail ON get_repair.get_r_id = get_detail.get_r_id
+                            LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                            WHERE get_repair.del_flg = '0' AND repair.del_flg = '0'
+                            GROUP BY get_repair.get_r_id, get_detail.get_d_id, repair.r_id
+                            ORDER BY get_repair.get_r_id DESC
+                            LIMIT 3;";
 
+                $result_nofi = mysqli_query($conn, $sql_nofi);
 
                 while ($row_nofi = mysqli_fetch_array($result_nofi)) {
                     $dateString = date('d-m-Y', strtotime($row_nofi['get_r_date_in']));
@@ -153,10 +162,11 @@
 
                 <!-- <a class="dropdown-item d-flex align-items-center" href="detail_repair.html">
                     <div class="mr-3">
-                    <div class="icon-circle bg-success">
-                        <i class="fas fa-donate text-white"></i>
+                        <div class="icon-circle bg-success">
+                            <i class="fas fa-donate text-white"></i>
+                        </div>
                     </div>
-                </div> -->
+                </a> -->
                 <!-- <div>
                         <div class="small text-gray-500">December 7, 2019</div>
                         <span class="font-weight-bold">Garrett Winters</span> <br />
