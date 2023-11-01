@@ -2075,64 +2075,6 @@ $part_check = 0;
             </div>
         </div>
     </div>
-
-
-    <!-- Modal -->
-    <div class="modal fade" id="coolModal" tabindex="-1" aria-labelledby="coolModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="coolModalLabel">
-                        <h2>หมายเลขพัสดุจากท่าน</h2>
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Some really cool content here -->
-                    <!-- <h2>หมายเลขพัสดุจากท่าน</h2> -->
-                    <br>
-                    <?php
-                    $id_get_r = $_GET['id'];
-                    $sql_com_m = "  SELECT * FROM get_detail
-                            LEFT JOIN get_repair ON get_detail.get_r_id = get_repair.get_r_id 
-                            LEFT JOIN tracking ON get_detail.get_t_id = tracking.t_id 
-                            LEFT JOIN repair ON repair.r_id = get_detail.r_id WHERE get_repair.get_r_id = '$id_get_r' AND repair.del_flg = '0' AND get_detail.get_d_conf = '0'";
-                    $result_com_m = mysqli_query($conn, $sql_com_m);
-
-                    $count_com = 0;
-                    while ($row_com_m = mysqli_fetch_array($result_com_m)) {
-                        if ($row_com_m['t_parcel'] != NULL) {
-                            $count_com += 1;
-                    ?>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="<?= $row_com_m['r_serial_number'] ?>">
-                                <div class="alert alert-secondary">
-                                    <p>
-                                        <span class="badge bg-secondary"><?= $count_com ?> </span> :
-                                        <span class="inline"><?= $row_com_m['r_brand'] . ' ' . $row_com_m['r_model'] . ' - ' . $row_com_m['t_parcel'] ?></span>
-                                        <!-- <span id="tooltip"><?= $row_com_m['r_serial_number'] ?></span> -->
-                                    </p>
-                                </div>
-                            </a>
-                        <?php
-                        }
-                    }
-                    if ($count_com == 0) {
-                        ?> <center>
-                            <hr><br>
-                            <h5 class="f-red-5">*** ไม่มีข้อมูล ***</h5>
-                        </center> <?php
-                                }
-                                    ?>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ออก</button>
-                    <!-- <button type="button" class="btn btn-primary">Save Changes</button> -->
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop_unique" aria-labelledby="offcanvasTopLabel" style="height: 70%">
         <div class="offcanvas-header">
         </div>
@@ -2301,7 +2243,7 @@ ORDER BY rs.rs_date_time DESC
         echo "Error: " . mysqli_error($conn);
     }
     $sql2 = "SELECT rs.rs_id, rs.status_id, st.status_color, rs.rs_conf, rs.rs_date_time, rs.rs_detail,
-                    gr.get_tel, gr.get_add, gr.get_wages, gr.get_add_price, gr.get_add_price, gr.get_config, gr.get_deli, gr.get_send
+                    gr.get_tel, gr.get_add, gr.get_wages, gr.get_add_price, gr.get_add_price, gr.get_config
                 FROM get_repair gr
                 LEFT JOIN repair_status rs ON gr.get_r_id = rs.get_r_id 
                 LEFT JOIN status_type st ON rs.status_id = st.status_id 
@@ -2333,7 +2275,7 @@ ORDER BY rs.rs_date_time DESC
     }
     // Assuming $id_get_r is your parameterized value
     $sql2 = "SELECT rs.rs_id, rs.status_id, st.status_color, rs.rs_conf, rs.rs_date_time, rs.rs_detail,st.status_name,
-                    gr.get_tel, gr.get_add, gr.get_wages, gr.get_add_price, gr.get_add_price, gr.get_deli, gr.get_send
+                    gr.get_tel, gr.get_add, gr.get_wages, gr.get_add_price, gr.get_add_price
                 FROM get_repair gr
                 LEFT JOIN repair_status rs ON gr.get_r_id = rs.get_r_id 
                 LEFT JOIN status_type st ON rs.status_id = st.status_id 
@@ -2692,44 +2634,19 @@ ORDER BY rs.rs_date_time DESC
                         </div>
                     <?php  }
                 }
-                $sqlSend = "SELECT get_send FROM get_repair WHERE get_r_id = '$id_get_r' AND del_flg = 0";
-                $resultSend = mysqli_query($conn, $sqlSend);
-                $rowSend = mysqli_fetch_array($resultSend);
 
-                if ($row_2['status_id'] == 5 && $row_c['get_t_id'] == NULL && $rowSend['get_send'] == NULL ||  $rowSend['get_send'] == '') {
+                if ($row_2['status_id'] == 5 && $row_c['get_t_id'] == NULL) {
                     ?>
                     <div class="alert alert-secondary">
                         <div class="alert alert-warning" role="alert">
-                            <i class="fa fa-paper-plane"></i> กรุณาเลือกวิธีการส่งอุปกรณ์ไปยังที่ร้าน <?php echo $rowSend['get_send']; ?>
+                            <i class="fa fa-paper-plane"></i> กรุณาเลือกวิธีการส่งอุปกรณ์ไปยังที่ร้าน
                         </div>
                         <br>
                         <p>
                             <center>
-                                <a class="btn btn-primary" id="deliveryBtn" href="action/update_deli.php?deli=0&id=<?= $id_get_r ?>">
+                                <a class="btn btn-primary">
                                     <i class="fa fa-user-circle"></i> จัดส่งด้วยตัวเอง
                                 </a>
-
-                                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                                <script>
-                                    document.getElementById('deliveryBtn').addEventListener('click', function(event) {
-                                        event.preventDefault();
-                                        Swal.fire({
-                                            title: 'ต้องการยืนยันหรีอไม่?',
-                                            text: 'การเลือกนี้ไม่สามารถแก้ไขได้?',
-                                            icon: 'warning',
-                                            showCancelButton: true,
-                                            confirmButtonText: 'ยืนยัน',
-                                            cancelButtonText: 'ยกเลิก',
-                                            reverseButtons: true
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                window.location.href = document.getElementById('deliveryBtn').getAttribute('href');
-                                            }
-                                        });
-                                    });
-                                </script>
-
-
                                 <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                                     <i class="fa fa-paper-plane"></i> จัดส่งด้วยผู้ให้ขนส่ง
                                 </button>
@@ -3319,12 +3236,7 @@ ORDER BY rs.rs_date_time DESC
 
                                         </p>
                                         <?php if ($row_c['get_t_id'] != NULL) { ?>
-                                            <!-- Button trigger modal -->
-                                            <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#coolModal">
-                                                Launch Awesome Modal
-                                            </button> -->
-                                            <a type="button" data-bs-toggle="modal" data-bs-target="#coolModal"><u>หมายเลขพัสดุจากคุณ</u></a>
-                                            <!-- <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_unique" aria-controls="offcanvasTop_unique"><u>หมายเลขพัสดุจากคุณ</u></a> -->
+                                            <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_unique" aria-controls="offcanvasTop_unique"><u>หมายเลขพัสดุจากคุณ</u></a>
 
 
 
@@ -5400,19 +5312,6 @@ ORDER BY rs.rs_date_time DESC
                         icon: 'success',
                         title: 'ดำเนินการส่งคำร้องเสร็จสิ้น',
                         html: 'ระบบได้ทำการส่งคำร้องไปที่พนักงานแล้ว<br>กด Accept เพื่อออก',
-                        confirmButtonText: 'Accept'
-                    });
-                </script>
-
-            <?php
-                unset($_SESSION['add_data_alert']);
-            } else if ($_SESSION['add_data_alert'] == 3) {
-            ?>
-                <script>
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'ทำการยืนยันวิธีการส่งเสร็จสิ้น',
-                        html: 'กด Accept เพื่อออก',
                         confirmButtonText: 'Accept'
                     });
                 </script>
