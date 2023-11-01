@@ -9,10 +9,19 @@ if (!isset($_SESSION['role_id'])) {
 // ใส่สถานะที่ต้องการตอบกลับ ตรงนี้
 $excludedStatusIDs = [];
 
-$excludedStatusIDs = ($_SESSION['role_id'] == 1) ? [1, 25, 20] : [];
-$excludedStatusIDs = ($_SESSION['role_id'] == 2) ? [1] : [];
-$excludedStatusIDs = ($_SESSION['role_id'] == 3) ? [25] : [];
-$excludedStatusIDs = [1,2,3,4,5,6,7,8,9];
+if ($_SESSION['role_id'] == 1) {
+    $excludedStatusIDs = ($_SESSION['role_id'] == 1) ? [1, 25, 20] : [];
+}
+if ($_SESSION['role_id'] == 2) {
+
+    $excludedStatusIDs = ($_SESSION['role_id'] == 2) ? [1] : [];
+}
+if ($_SESSION['role_id'] == 3) {
+
+    $excludedStatusIDs = ($_SESSION['role_id'] == 3) ? [25] : [];
+}
+
+// $excludedStatusIDs = [1,2,3,4,5,6,7,8,9];
 // role_id = 2  ------ 1, 2, 4, 5, 6, 10, 11, 12, 13, 14, 15, 17, 18, 19, 24
 // role_id = 3  ------ 3, 8, 9, 25, 26
 
