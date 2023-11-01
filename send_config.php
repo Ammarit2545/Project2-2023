@@ -75,7 +75,7 @@ $row = mysqli_fetch_array($result);
             <div class="row">
                 <label for="formFile" class="form-label">ชื่อ</label>
                 <input type="text" class="form-control" placeholder="กรุณากรอกชื่อของคุณ" value="<?= $row['m_fname'] . " " . $row['m_lname'] ?>" disabled>
-                <input type="text" class="form-control" name="m_id" placeholder="กรุณากรอกชื่อของคุณ" value="<?= $m_id  ?>" disabled>
+                <input type="text" class="form-control" name="m_id" placeholder="กรุณากรอกชื่อของคุณ" value="<?= $m_id  ?>" disabled hidden>
             </div>
             <div class="row">
                 <label for="myfile1">Select a file:</label>
