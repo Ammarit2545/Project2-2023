@@ -204,7 +204,7 @@
                 <h6 class="collapse-header">รายละเอียด :</h6>
                 <a class="collapse-item" href="report_parts.php"><i class="	fa fa-cogs"></i> ยอดอะไหล่</a>
                 <a class="collapse-item" href="report_employee.php"><i class="	fa fa-address-book"></i> ยอดบุคลากร</a>
-                <a class="collapse-item" href="report_repair.php"> <i class="fa fa-wrench"></i> ยอดการซ่อม</a>
+                <!-- <a class="collapse-item" href="report_repair.php"> <i class="fa fa-wrench"></i> ยอดการซ่อม</a> -->
                 <!-- <a class="collapse-item" href="report_profit.php">ยอดรายได้การซ่อม</a> -->
             </div>
         </div>
