@@ -64,7 +64,6 @@ if (!isset($_SESSION['role_id'])) {
                     <!-- Page Heading -->
                     <br>
                     <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ข้อมูลอะไหล่</h1>
-                    <a href="add_parts.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มอะไหล่หรือไม่?</a>
                     <br>
                     <br>
 

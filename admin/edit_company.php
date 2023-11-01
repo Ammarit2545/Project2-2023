@@ -60,7 +60,7 @@ if (!isset($_SESSION['role_id'])) {
                     <form action="action/edit_company.php" method="POST">
                         <!-- Page Heading -->
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                            <h1 class="h3 mb-0 text-gray-800">เพิ่มข้อมูลบริษัท</h1>
+                            <h1 class="h3 mb-0 text-gray-800">แก้ไขข้อมูลบริษัท</h1>
                         </div>
 
                         <div class="mb-3 row">

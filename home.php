@@ -184,7 +184,7 @@ if ($_SESSION["log_login"] == 0) {
             <p class="text-center">
               <center>
                 <p>Don’t have an Account?
-                  <a href="#" style="color: #0066CC; text-decoration:none;" data-bs-toggle="modal" data-bs-target="#Register" >Create yours now.</a>
+                  <a href="#" style="color: #0066CC; text-decoration:none;" data-bs-toggle="modal" data-bs-target="#Register">Create yours now.</a>
                 </p>
               </center>
             </p>
@@ -442,11 +442,38 @@ if ($_SESSION["log_login"] == 0) {
       <p class="lead mb-4" data-aos="fade-up" data-aos-delay="100">จำหน่ายและซ่อมเครื่องเสียงทุกชนิด โดยทีมงานมืออาชีพมากประสบการณ์ที่พร้อมจะบริการ การันตรีทั้งคุณภาพและประสิทธิภาพของผลลัพธ์</p>
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center" data-aos="fade-up" data-aos-delay="100">
         <a href="listview_repair.php" class="btn btn-primary btn-lg px-4 gap-3" style="box-shadow: 0px 5px 25px rgba(65, 84, 241, 0.3);">ส่งซ่อม</a>
-        <button type="button" class="btn btn-outline-secondary btn-lg px-4">วิธีการส่งซ่อม</button>
+        <button type="button" class="btn btn-outline-secondary btn-lg px-4" data-bs-toggle="modal" data-bs-target="#howto">วิธีการส่งซ่อม</button>
       </div>
     </div>
   </div>
   <!-- End Hero -->
+  <!-- วิธีการส่งซ่อม -->
+  <div class="modal fade " id="howto" tabindex="-1" aria-labelledby="coolModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="coolModalLabel">วิธีการส่งซ่อม</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h6>1.กด "ส่งซ่อม"</h6>
+          <h6>2.กดปุ่ม "+" เพื่อเพิ่มการส่งซ่อม</h6>
+          <h6>3.กรอกรายละเอียดการซ่อมของท่าน</h6>
+          <h6>4.กด "ยืนยัน"</h6>
+          <h6>5.ตรวจสอบความถูกต้องของข้อมูล หากกรอกผิดให้กด "แก้ไข"</h6>
+          <h6>6.กด "ยืนยัน"</h6>
+          <h6>7.หากท่านต้องการเพิ่มอุปกรณ์ที่ซ่อมอีก ให้กดปุ่ม "+"" เพื่อเพิ่มอุปกรณ์อีก</h6>
+          <h6>8.กด "ยืนยัน" การส่งข้อมูล</h6>
+          <h6>9.เพิ่มข้อมูลการติดต่อของท่านและเลือกวิธีการรับอุปกรณ์ หากต้องการใช้ที่อยู่ใหม่ให้กด "ต้องการใช้ที่อยู่ใหม่" และหากต้องการแก้ไขข้อมูลอุปกรณ์ ให้กด "กลับไปแก้ไขข้อมูลอุปกรณ์"</h6>
+          <h6>10.กด "ยืนยัน" การส่งข้อมูล</h6>
+          <h6>11.รอการตอบกลับ 1-2 วันทำการ</h6>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <section id="why-us" class="why-us section-bg" style="margin-top: 60px;">
     <div class="container" data-aos="fade-up">

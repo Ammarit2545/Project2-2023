@@ -425,7 +425,7 @@
               $count_toast++;
               $sql_watch1 = "SELECT * FROM repair_status 
                             LEFT JOIN status_type ON status_type.status_id = repair_status.status_id
-                            WHERE repair_status.get_r_id = '$get_r_id_nofi' AND repair_status.del_flg = 0 ORDER BY repair_status.rs_id DESC LIMIT 1";
+                            WHERE repair_status.get_r_id = '$get_r_id_nofi'  AND repair_status.del_flg = 0 ORDER BY repair_status.rs_id DESC LIMIT 1";
               $result_watch1 = mysqli_query($conn, $sql_watch1);
               $row_last = mysqli_fetch_array($result_watch1);
 
@@ -441,11 +441,11 @@
                     <h5 style="display: inline;">หมายเลขซ่อม #<?= $get_r_id_nofi ?></h5>
                   </a>
 
-                  <p style="color: gray; display: inline;"><?= $formattedDate . '  ' . $formattedTime ?></p>
+                  <p class="float-end" style="color: gray; display: inline;"><?= $formattedDate . '  ' . $formattedTime ?></p>
 
                   <br><br>
                   <span>
-                    <p class="mt-4" id="nofication_1" style="font-size: 18px; display: inline;">เปลี่ยนเป็นสถานะ <span class="badge shadow nofication_1" style="color: <?= $row_last['status_color'] ?>; font-size: 18px;"> <?= $row_last['status_name'] ?></span> </p>
+                    <p class="mt-4" id="nofication_1" style="font-size: 18px; display: inline;">เปลี่ยนเป็นสถานะ<span class="badge nofication_1" style="color: <?= $row_last['status_color'] ?>; font-size: 18px;"> <?= $row_last['status_name'] ?></span> </p>
                     <p style=" display: inline;" class="nofication_1">
                       <a href="detail_status.php?id=<?= $get_r_id_nofi ?>" onclick="customButton(<?= $get_r_id_nofi ?>)" title="กดเพื่อดูรายละเอียดหมายเลขซ่อมนี้">ดูรายละเอียด</a>
                     </p>
@@ -630,10 +630,10 @@ while ($row_get_r = mysqli_fetch_array($result_get_r)) {
         <strong class="me-auto">หมายเลขซ่อม <?= $get_r_id_nofi ?></strong>
         <button type="button" class="btn-close " data-bs-dismiss="toast" id="closeToast" onclick="customButton(<?= $get_r_id_nofi ?>)" style="color: white;"></button>
       </div>
-      <div class="toast-body" style="background-color: white; border-radius: 10px;">
-        <p style="color:gray"><?= $formattedDate; ?> </p>
-        <p id="nofication_1" style="font-size: 18px;">เปลี่ยนเป็นสถานะ <span class="badge shadow nofication_1" style="background-color: <?= $row_last['status_color'] ?>; font-size: 18px;"> <?= $row_last['status_name'] ?></span> </p>
+      <div class="toast-body" style="background-color: white; border-radius: 0px 0px 10px 10px;">
+        <p id="nofication_1" style="font-size: 18px;">เปลี่ยนเป็นสถานะ &nbsp;<span class="badge shadow nofication_1" style="background-color: <?= $row_last['status_color'] ?>; font-size: 18px;"> <?= $row_last['status_name'] ?></span> </p>
         <p class="nofication_1">แล้วในขณะนี้ <a href="detail_status.php?id=<?= $get_r_id_nofi ?>" onclick="customButton(<?= $get_r_id_nofi ?>)" title="กดเพื่อดูรายละเอียดหมายเลขซ่อมนี้">ดูรายละเอียด</a></p>
+        <p style="color:gray; margin-bottom: 0rem;" class="text-end"><?= $formattedDate; ?> </p>
       </div>
     </div>
     <style>

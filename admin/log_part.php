@@ -66,7 +66,7 @@ if (isset($_GET['st_id'])) {
 
                     <!-- Page Heading -->
                     <br>
-                    <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ประวัติการจัดการ "อะไหล่"</h1>
+                    <h1 class="h3 mb-2 text-gray-800" style="display:inline-block">ประวัติการเพิ่ม "อะไหล่"</h1>
                     <!-- <a href="add_employee.php" style="display:inline-block; margin-left: 10px; position :relative">คุณต้องการเพิ่มรายชื่อพนักงานหรือไม่?</a> -->
                     <hr>
                     <p>ค้นหาเพิ่มเติมด้วยประเภท</p>

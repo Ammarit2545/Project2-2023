@@ -45,10 +45,15 @@
   .fade-in {
     opacity: 1;
   }
+  .height-expand {
+    margin-top: 6%;
+}
+
 </style>
+
 <!-- Footer -->
 <br><br>
-<footer style="background: #E7F0FE;">
+<footer style="background: #E7F0FE;" class="height-expand">
   <div class="container">
     <div class="row py-4">
       <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">

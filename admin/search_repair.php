@@ -218,9 +218,9 @@ if (!isset($_SESSION['role_id'])) {
                                             <button type="submit" id="search-button">Search</button>
                                         </div> -->
 
-                                        <div id="search-results">
+                                        <!-- <div id="search-results">
                                             ค้นหาอุปกรณ์ที่คุณต้องการ....
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <br>
                                     <nav aria-label="Page navigation example">

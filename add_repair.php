@@ -620,7 +620,7 @@ $row = mysqli_fetch_array($result);
 
             <div class="text-center py-4">
                 <br>
-                <a href="repair_have.php" class="btn btn-outline-primary p-2"><p> กดที่นี่ : <u>หากท่านต้องการใช้ข้อมูลอุปกรณ์เดิม...</u> </p></a>
+                <a href="repair_have.php" class="btn btn-outline-primary p-2"><p style="margin-bottom: 0rem;"> กดที่นี่ : <u>หากท่านต้องการใช้ข้อมูลอุปกรณ์เดิม</u> </p></a>
                 <br>
                 <a class="btn btn-danger mt-4" onclick="cancel_edit()" id="bounce-item">ยกเลิก</a>
              

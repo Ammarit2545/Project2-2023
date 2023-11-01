@@ -98,7 +98,7 @@ if (!isset($_SESSION['role_id'])) {
                             <td scope="row" style="font-size: 25px; font-weight: bold;">ร้าน อนันต์อิเล็กทรอนิกส์</td>
                         </tr>
                         <tr>
-                            <td scope="row" style="font-size: 11px">รายยอดคงเหลืออะไหล่(แบบสรุป) ณ วันที่ <span id="currentDate"></span></td>
+                            <td scope="row" style="font-size: 11px">รายงานยอดซ่อม(แบบสรุป) ณ วันที่ <span id="currentDate"></span></td>
 
                             <script>
                                 // Get the current date and format it
@@ -107,7 +107,7 @@ if (!isset($_SESSION['role_id'])) {
                             </script>
                         </tr>
                         <tr>
-                            <td scope="row" style="font-size: 11px">Sales of spare parts (summary form) as of date</td>
+                            <td scope="row" style="font-size: 11px">Repair total report (summary form) as of date</td>
                         </tr>
                     </tbody>
                 </table>
@@ -131,9 +131,10 @@ if (!isset($_SESSION['role_id'])) {
                 $i = 0;
                 $p_stock = 0;
                 $sql = "SELECT * FROM get_repair 
-                        LEFT JOIN repair ON repair.r_id = get_repair.r_id 
-                        LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id 
-                        WHERE get_repair.del_flg = '0' AND repair_status.status_id = '3'";
+                LEFT JOIN repair ON repair.r_id = get_repair.get_r_id 
+                LEFT JOIN repair_status ON repair_status.get_r_id = get_repair.get_r_id 
+                WHERE get_repair.del_flg = '0' AND repair_status.status_id = '3'
+                ";
                 $result = mysqli_query($conn, $sql);
                 while ($row = mysqli_fetch_array($result)) {
                     $i += 1;

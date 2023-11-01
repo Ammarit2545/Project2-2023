@@ -98,7 +98,7 @@ if (!isset($_SESSION['role_id'])) {
                             <td scope="row" style="font-size: 25px; font-weight: bold;">ร้าน อนันต์อิเล็กทรอนิกส์</td>
                         </tr>
                         <tr>
-                            <td scope="row" style="font-size: 11px">รายยอดคงเหลืออะไหล่(แบบสรุป) ณ วันที่ <span id="currentDate"></span></td>
+                            <td scope="row" style="font-size: 11px">รายงานยอดบุคลากร(แบบสรุป) ณ วันที่ <span id="currentDate"></span></td>
 
                             <script>
                                 // Get the current date and format it
@@ -107,7 +107,7 @@ if (!isset($_SESSION['role_id'])) {
                             </script>
                         </tr>
                         <tr>
-                            <td scope="row" style="font-size: 11px">Sales of spare parts (summary form) as of date</td>
+                            <td scope="row" style="font-size: 11px">Personnel balance report (summary form) as of date</td>
                         </tr>
                     </tbody>
                 </table>

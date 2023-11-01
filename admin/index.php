@@ -26,10 +26,15 @@ if (!isset($_SESSION['role_id'])) {
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
+    <!-- Include SweetAlert library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
     <style>
-        <?php include('../css/all_page.css'); ?>
+        <?php include('../css/all_page.css'); ?>a:hover {
+            text-decoration: none;
+        }
     </style>
 
 </head>
@@ -59,7 +64,6 @@ if (!isset($_SESSION['role_id'])) {
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Dashboard /ภาพรวมระบบ</h1>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
                     </div>
 
                     <?php
@@ -177,23 +181,22 @@ if (!isset($_SESSION['role_id'])) {
                             <!-- Earnings (Monthly) Card Example -->
 
                             <div class="col-xl-3 col-md-6 mb-4">
+                                <a href="listview_repair.php?status_select=1">
+                                    <div class="card border-left-primary shadow h-100 py-2" id="bounce-item">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                        คำขอซ่อม</div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $status_req; ?></div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
 
-                                <div class="card border-left-primary shadow h-100 py-2" id="bounce-item">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                    คำขอซ่อม</div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $status_req; ?></div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                               
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                
                                 </a>
                                 <!-- <span class="tooltip">กดเพื่อดูรายละเอียดคำขอซ่อม</span> -->
                             </div>
@@ -766,8 +769,25 @@ if (!isset($_SESSION['role_id'])) {
         <i class="fas fa-angle-up"></i>
     </a>
 
-
-
+    <!-- Sweet Alert Show Start -->
+    <?php
+    if (isset($_SESSION['add_data_alert'])) {
+        if ($_SESSION['add_data_alert'] == 0) {
+            $id = 123; // Replace 123 with the actual ID you want to pass to the deletion action
+    ?>
+            <script>
+                Swal.fire({
+                    title: 'เข้าสู่ระบบเสร็จสิ้น',
+                    text: 'กด Accept เพื่อออก',
+                    icon: 'success',
+                    confirmButtonText: 'Accept'
+                });
+            </script>
+    <?php
+            unset($_SESSION['add_data_alert']);
+        }
+    }
+    ?>
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

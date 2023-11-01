@@ -402,14 +402,23 @@ if (isset($_GET["status_id"])) {
 
                                         // Data In Get_repair Select r_id From Repair
                                         $sql_detail = "SELECT get_repair.*, repair.*
-                                    FROM get_detail
-                                    LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
-                                    LEFT JOIN repair ON get_detail.r_id = repair.r_id
-                                    WHERE repair.m_id = '$id' 
-                                    ORDER BY get_repair.get_r_date_in DESC;";
+                                                        FROM get_detail
+                                                        LEFT JOIN get_repair ON get_repair.get_r_id = get_detail.get_r_id
+                                                        LEFT JOIN repair ON get_detail.r_id = repair.r_id
+                                                        WHERE repair.m_id = '$id' 
+                                                        ORDER BY get_repair.get_r_date_in DESC;";
                                         $result_detail = mysqli_query($conn, $sql_detail);
                                         $row_detail = mysqli_fetch_array($result_detail);
 
+
+                                        $text = $row_c['get_r_detail'];
+                                        $summary = strlen($text) > 100 ? substr($text, 0, 200) . "..." : $text;
+
+                                        // จัดการเวลาและวันที่
+                                        $dateString = $row_detail['get_r_date_in'];
+                                        $dateTime = new DateTime($dateString);
+                                        $formattedDate = $dateTime->format('j F Y');
+                                        $time = $dateTime->format('H:i:s');
                                         if ($row_count_p[0] == 1) { ?>
                                             <ul class="list-group list-group-flush">
                                                 <li class="list-group-item">
@@ -419,12 +428,7 @@ if (isset($_GET["status_id"])) {
                                                     <p style="text-align: start" id="body_text">Model: <?= $row_detail['r_number_model'] ?></p>
                                                 </li>
                                                 <?php if ($row_c['get_r_detail'] != NULL) {
-                                                    $text = $row_c['get_r_detail'];
-                                                    $summary = strlen($text) > 100 ? substr($text, 0, 200) . "..." : $text;
 
-                                                    $dateString = date('d-m-Y', strtotime($row_detail['get_r_date_in']));
-                                                    $date = DateTime::createFromFormat('d-m-Y', $dateString);
-                                                    $formattedDate = $date->format('d F Y');
                                                 ?>
                                                     <li class="list-group-item">
                                                         <h5 style="color: blue" id="head_text">รายละเอียดการส่งซ่อม :</h5>
@@ -435,14 +439,14 @@ if (isset($_GET["status_id"])) {
                                                 <li class="list-group-item">
                                                     <br>
                                                     <h5 style="color: gray" id="date_time">
-                                                        ส่งเรื่องล่าสุดวันที่: <?= $formattedDate ?>, เวลา: <?= date('H:i:s', strtotime($row1['get_r_date_in'])); ?>
+                                                        ส่งเรื่องล่าสุดวันที่: <?= $formattedDate ?>, เวลา: <?= $time ?>
                                                     </h5>
                                                 </li>
                                             </ul>
                                             <span class="tooltip">#หมายเลขส่งซ่อมที่ <?= $id_r ?></span>
                                         <?php } else {
                                             $sql_get_count = "SELECT COUNT(get_r_id) FROM get_detail 
-                                         WHERE get_r_id = '$id_r' AND get_detail.del_flg = 0";
+                                                        WHERE get_r_id = '$id_r' AND get_detail.del_flg = 0";
                                             $result_get_count = mysqli_query($conn, $sql_get_count);
                                             $row_get_count = mysqli_fetch_array($result_get_count);
                                         ?>
@@ -463,17 +467,28 @@ if (isset($_GET["status_id"])) {
 
                                                             <hr>
                                                             <?php
+                                                            $id_r;
+
+                                                            $sqlDATE = "SELECT get_r_date_in FROM get_repair WHERE get_repair.get_r_id = '$id_r' AND get_repair.del_flg = 0";
+                                                            $resultDate = mysqli_query($conn, $sqlDATE);
+                                                            $rowDate = mysqli_fetch_array($resultDate);
+
                                                             $count_get_no = 0;
+
+                                                            // จัดการเวลาและวันที่
+                                                            $dateString = $rowDate['get_r_date_in'];
+                                                            $dateTime = new DateTime($dateString);
+                                                            $formattedDate = $dateTime->format('j F Y');
+                                                            $time1 = $dateTime->format('H:i:s');
+
                                                             $sql_get = "SELECT * FROM get_detail 
                                                                     LEFT JOIN repair ON repair.r_id = get_detail.r_id
                                                                     WHERE get_detail.get_r_id = '$id_r' AND get_detail.del_flg = 0";
                                                             $result_count = mysqli_query($conn, $sql_get);
                                                             $result_get = mysqli_query($conn, $sql_get);
                                                             while ($row_get = mysqli_fetch_array($result_get)) {
-                                                                $dateString = date('d-m-Y', strtotime($row1['get_r_date_in']));
-                                                                $date = DateTime::createFromFormat('d-m-Y', $dateString);
-                                                                $formattedDate = $date->format('d F Y');
-                                                                $count_get_no++;
+                                                                // จัดการเวลาและวันที่
+
                                                             ?>
 
                                                                 <p style="text-align:start" id="body_text"> <span class="btn btn-secondary"><?= $count_get_no ?></span> : <?= $row_get['r_brand'] ?> <?= $row_get['r_model'] ?> | Serial Number : <?= $row_get['r_serial_number'] ?> <?php if ($row_get['get_d_record'] > 1) {
@@ -493,7 +508,7 @@ if (isset($_GET["status_id"])) {
                                                 <li class="list-group-item">
                                                     <br>
                                                     <h5 style="color : gray" id="date_time">
-                                                        ส่งเรื่องล่าสุดวันที่ :<?= $formattedDate ?>, เวลา : <?= date('H:i:s', strtotime($row1['get_r_date_in'])); ?>
+                                                        ส่งเรื่องล่าสุดวันที่ :<?= $formattedDate ?>, เวลา : <?= $time1  ?>
                                                     </h5>
                                                 </li>
                                             </ul>
