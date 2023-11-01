@@ -54,7 +54,7 @@ $row = mysqli_fetch_array($result);
         .grid-item:hover {
             transform: scale(1.1);
             /* Increase size on hover */
-            box-shadow: 0px 0px 10px rgba(0, 1, 65, 0.5);
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
             /* Increase shadow size and intensity on hover */
 
         }
@@ -190,11 +190,11 @@ $row = mysqli_fetch_array($result);
     </center>
     <br><br>
     <div class="container">
-        <div class="grid" style="height: 225px;">
+        <div class="grid">
             <div class="grid-item">
                 <!-- <a href="add_repair_information.php" class="card-show"> -->
                 <a href="add_repair.php" class="card-show">
-                    <div class="alert alert-secondary" id="card-show" style="background-color: #E7F0FE;">
+                    <div class="alert alert-secondary" id="card-show">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                     </div>
                     <span class="tooltip">เพิ่มการส่งซ่อมใหม่</span>
