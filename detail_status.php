@@ -2539,7 +2539,7 @@ ORDER BY rs.rs_date_time DESC
             <h3><i class="fa fa-check-square-o"></i> ช่างกำลังดำเนินการตรวจเช็ค</h3>
             <p>ช่างกำลังดำเนินการตรวจเช็คและทดสอบอุปกรณ์ของท่านอยู่ในขณะนี้</p>
         <?php  } ?>
-        <?php if ($row_2['status_id'] == 12) { ?>
+        <?php if ($row_2['status_id'] == 12 | $row_2['status_id'] == 11) { ?>
             <h3><i class="fa fa-check-square-o"></i> ทำการยกเลิกคำสั่งซ่อมแล้ว</h3>
             <p>การยกเลิกสำเร็จเสร็จสิ้น</p>
         <?php  } ?>
